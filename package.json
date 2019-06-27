@@ -1,0 +1,40 @@
+{
+  "name": "kuruit-bedan-fash5",
+  "version": "0.1.0",
+  "description": "Kuruit Bedan Fash5 (Cards Against Humanity Bi Masri)",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "dev": "webpack-dev-server --config webpack.config.dev.js --mode development",
+    "build": "webpack --config webpack.config.prod.js --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/hpj/kuruit-bedan-fash5.git"
+  },
+  "author": "Herp Project",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/hpj/kuruit-bedan-fash5/issues"
+  },
+  "homepage": "https://gitlab.com/hpj/kuruit-bedan-fash5#readme",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.0.0",
+    "eslint": "^6.0.1",
+    "eslint-plugin-react": "^7.14.2",
+    "react-hot-loader": "^4.11.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
+  }
+}
