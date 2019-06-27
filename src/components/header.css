@@ -13,9 +13,14 @@
   color: white;
 }
 
-.header.logo svg
+.header svg
 {
   fill: white;
-  
+
   width: 30vh;
+}
+
+.header.hpj
+{
+  flex-grow: 1;
 }
