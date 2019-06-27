@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './app.js';
+import Header from './components/header.js';
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+import './body.css';
+
+ReactDOM.render(<Header/>, document.getElementById('root'));
 
 if (module.hot)
   module.hot.accept();

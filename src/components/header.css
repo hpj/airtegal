@@ -1,0 +1,21 @@
+.header.container
+{
+  display: flex;
+  justify-content: flex-end;
+
+  background-color: black;
+
+  padding: 45px;
+}
+
+.header.title
+{
+  color: white;
+}
+
+.header.logo svg
+{
+  fill: white;
+  
+  width: 30vh;
+}
