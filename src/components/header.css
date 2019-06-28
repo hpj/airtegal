@@ -1,26 +1,70 @@
 .header.container
 {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
 
-  background-color: black;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "hpj kbf" "cards kbf";
 
-  padding: 45px;
+  background-color: var(--grey-background);
+
+  padding: 5vh 5vw;
 }
 
 .header.title
 {
-  color: white;
+  color: var(--white-text);
 }
 
-.header svg
+.header > svg
 {
-  fill: white;
+  fill: var(--white-text);
+  
+  width: 15vw;
+}
 
-  width: 30vh;
+.header.kbf
+{
+  display: flex;
+
+  grid-area: kbf;
 }
 
 .header.hpj
 {
+  grid-area: hpj;
   flex-grow: 1;
+
+  width: fit-content;
+}
+
+.header.hpj > svg:hover
+{
+  cursor: pointer;
+
+  margin-bottom: -2px;
+  border-bottom: 2px var(--white-text) solid;
+}
+
+.header.cards
+{
+  grid-area: cards;
+  display: flex;
+
+  justify-content: center;
+
+  margin: 5% 15% 0 0;
+}
+
+/* each card on display is rotated so it won't look boring */
+
+.header.cards > * > *[type="black"]
+{
+  left: 10px;
+  transform: rotateZ(5deg);
+}
+
+.header.cards > * > *[type="white"]
+{
+  transform: rotateZ(-10deg);
 }

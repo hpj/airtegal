@@ -1,8 +1,19 @@
-@import url('https://fonts.googleapis.com/css?family=Baloo+Bhaijaan|Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Cairo|Raleway&display=swap');
+
+html
+{
+  --white-text: #ffffff;
+  --white-background: #ffffff;
+
+  --black-text: #000000;
+  --black-background: #000000;
+
+  --grey-background: #423f3f;
+}
 
 body
 {
   margin: 0;
 
-  font-family: 'Raleway', 'Baloo Bhaijaan', sans-serif;
+  font-family: 'Raleway', 'Cairo', sans-serif;
 }

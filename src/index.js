@@ -5,7 +5,11 @@ import Header from './components/header.js';
 
 import './body.css';
 
-ReactDOM.render(<Header/>, document.getElementById('root'));
+ReactDOM.render(
+  <div>
+    <Header>
+    </Header>
+  </div>, document.body.querySelector('#app'));
 
 if (module.hot)
   module.hot.accept();

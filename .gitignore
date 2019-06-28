@@ -1,6 +1,6 @@
 **/node_modules
 
-.electron-cache
+cards.json
 
 /compiled
 /public
