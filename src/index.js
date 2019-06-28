@@ -1,15 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Header from './components/header.js';
+import Homepage from './components/homepage.js';
 
-import './body.css';
+import './app.css';
 
-ReactDOM.render(
-  <div>
-    <Header>
-    </Header>
-  </div>, document.body.querySelector('#app'));
+ReactDOM.render(<Homepage/>, document.body.querySelector('#app'));
 
 if (module.hot)
   module.hot.accept();

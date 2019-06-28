@@ -15,13 +15,15 @@ class Header extends React.Component
   render()
   {
     return (
-      <div className='header container'>
-        <InlineSVG className='header hpj' src={hpjLogo}></InlineSVG>
-        <InlineSVG className='header kbf' src={gameLogo}></InlineSVG>
+      <div className='header wrapper'>
+        <div className='header container'>
+          <InlineSVG className='header hpj' src={hpjLogo}></InlineSVG>
+          <InlineSVG className='header kbf' src={gameLogo}></InlineSVG>
 
-        <div className="header cards">
-          <Card type="white" content={cards.white}></Card>
-          <Card type="black" content={cards.black}></Card>
+          <div className="header cards">
+            <Card type="black" content={cards.black}></Card>
+            <Card type="white" content={cards.white}></Card>
+          </div>
         </div>
       </div>
     );

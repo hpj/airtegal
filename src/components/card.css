@@ -47,14 +47,10 @@
   grid-area: content;
   display: flex;
 
-  direction: rtl;
   justify-content: center;
-  
   user-select: none;
-  font-weight: 900;
 
   padding: 7.5%;
-
   font-size: calc(12px + 25%);
 }
 

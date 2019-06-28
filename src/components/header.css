@@ -1,14 +1,22 @@
+.header.wrapper
+{
+  background: radial-gradient(circle, rgba(32,25,25,1) 0%, rgba(31,28,28,1) 16%, rgba(0,0,0,1) 100%);
+}
+
 .header.container
 {
   display: grid;
 
-  grid-template-columns: 1fr auto;
-  grid-template-rows: 1fr auto;
-  grid-template-areas: "hpj kbf" "cards kbf";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "hpj cards" "kbf cards";
 
-  background-color: var(--grey-background);
+  grid-column-gap: 15px;
+
+  max-width: 850px;
 
   padding: 5vh 5vw;
+  margin: auto;
 }
 
 .header.title
@@ -19,8 +27,10 @@
 .header > svg
 {
   fill: var(--white-text);
-  
-  width: 15vw;
+
+  min-width: 130px;
+  max-width: 320px;
+  width: 55%;
 }
 
 .header.kbf
@@ -38,12 +48,15 @@
   width: fit-content;
 }
 
-.header.hpj > svg:hover
+.header.hpj > svg
 {
   cursor: pointer;
+}
 
-  margin-bottom: -2px;
+.header.hpj > svg:hover
+{
   border-bottom: 2px var(--white-text) solid;
+  margin-bottom: -2px;
 }
 
 .header.cards
@@ -51,9 +64,9 @@
   grid-area: cards;
   display: flex;
 
-  justify-content: center;
+  justify-content: flex-end;
 
-  margin: 5% 15% 0 0;
+  margin: 5%;
 }
 
 /* each card on display is rotated so it won't look boring */

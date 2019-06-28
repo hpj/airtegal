@@ -17,7 +17,7 @@ class Card extends Component
     return (
       <div className='card wrapper'>
         <div className='card container' type={this.props.type}>
-          <div className='card content'>{this.props.content}.</div>
+          <div className='card content'>{this.props.content}</div>
           <InlineSVG className='card bottom' src={gameLogo}></InlineSVG>
         </div>
       </div>
