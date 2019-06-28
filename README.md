@@ -15,4 +15,4 @@ This project is licensed under the [MIT](https://gitlab.com/hpj/kuruit-bedan-fas
 
 # Acknowledgments
 
-While is game is heavily inspired by Cards Against Humanity, we only follow the same game rules, we don't have any cards from Cards Against Humanity in our game, so as far as we know, we don't have to follow the [Creative Commons BY-NC-SA 2.0](https://creativecommons.org/licenses/by-nc-sa/2.0/) license, if you think we are wrong, we do wanna know, so, please contact us.
+Cards Against Humanity is available under a [Creative Commons BY-NC-SA 2.0](https://creativecommons.org/licenses/by-nc-sa/2.0/) license. That means we can use, remix, and share the game for free, but we can’t sell it or use its name without permission. 
