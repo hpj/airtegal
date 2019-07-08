@@ -1,33 +1,33 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import InlineSVG from 'svg-inline-react';
+
 import gameLogo from '../../build/kbf-logo-ar.svg';
 
-import './card.css';
+import './styles/card.css';
 
-/**
-* @augments { Component<{ content: string, type: "white" | "black" }> }
+/** @param { { content: string, type: 'black' | 'white' } } param0
 */
-class Card extends Component
+const Card = ({
+  content,
+  type
+}) =>
 {
-  render()
-  {
-    return (
-      <div className='card wrapper'>
-        <div className='card container' type={this.props.type}>
-          <div className='card content'>{this.props.content}</div>
-          <InlineSVG className='card bottom' src={gameLogo}></InlineSVG>
-        </div>
+  return (
+    <div className='card wrapper'>
+      <div className='card container' type={type}>
+        <div className='card content'>{content}</div>
+        <InlineSVG className='card bottom' src={gameLogo}></InlineSVG>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 Card.propTypes = {
   content: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired
+  type: PropTypes.oneOf([ 'white', 'black' ]).isRequired
 };
 
 export default Card;

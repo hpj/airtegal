@@ -11,7 +11,7 @@ All Kuruit Bedan Fash5 cards and expansions are crowdsourced meaning that all th
 # Licenses
 This project is licensed under the [MIT](https://gitlab.com/hpj/kuruit-bedan-fash5/blob/master/LICENSE) License.
 
-<!-- All icons inside the [icons](https://gitlab.com/hpj/kuruit-bedan-fash5/tree/master/res) folder are made by us and are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). -->
+<!-- All icons inside the [icons](https://gitlab.com/hpj/kuruit-bedan-fash5/tree/master/assets) folder are made by us and are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). -->
 
 # Acknowledgments
 
