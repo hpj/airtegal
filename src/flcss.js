@@ -30,8 +30,6 @@ const classRegex = /^[a-z]/i;
 
 const betweenRegex = /[^{}]+(?=})/;
 
-// TODO add theming support
-
 /** Creates a stylesheet,
 * the returned object can be used to style elements via class names property
 * @param { T } styles
@@ -84,9 +82,9 @@ export function createStyle(styles)
 
 /** @param { string } key
 * @param { {} } obj
-* @param { boolean } nested
+* @param { string } nest
 */
-function handleStyle(key, obj, parent, nested)
+function handleStyle(key, obj, rootStylesheet, nest)
 {
   let css = '';
   let additionalCss = '';
@@ -106,7 +104,7 @@ function handleStyle(key, obj, parent, nested)
     // it was designed to duplicate style instead of adding the extend-ee class name
     // so that you can use extent inside of attributes and  pseudo-classes
     // we removed the class name extending to simplify the code and not have both functions
-    if (rule === 'extend' && parent)
+    if (rule === 'extend' && rootStylesheet)
     {
       if (!Array.isArray(values[i]))
         values[i] = [ values[i] ];
@@ -114,7 +112,7 @@ function handleStyle(key, obj, parent, nested)
       values[i].forEach((v) =>
       {
         if (typeof v === 'string')
-          css = css + parent[v].match(betweenRegex)[0];
+          css = css + rootStylesheet[v].match(betweenRegex)[0];
       });
     }
     else if (
@@ -128,7 +126,14 @@ function handleStyle(key, obj, parent, nested)
     {
       if (typeof values[i] === 'object')
       {
-        additionalCss = additionalCss + `.${className}${rule}${handleStyle(rule, values[i], parent, true)}`;
+        let nextParent = '';
+
+        if (nest)
+          nextParent = `${nest}${rule}`;
+        else
+          nextParent = `${className}${rule}`;
+
+        additionalCss = additionalCss + `.${nextParent}${handleStyle(rule, values[i], rootStylesheet, nextParent)}`;
       }
     }
     // class selector
@@ -149,7 +154,7 @@ function handleStyle(key, obj, parent, nested)
     }
   });
 
-  if (!nested)
+  if (!nest)
   {
     return {
       className: className,
@@ -158,7 +163,7 @@ function handleStyle(key, obj, parent, nested)
   }
   else
   {
-    return `{${css}}`;
+    return `{${css}}${additionalCss}`;
   }
 }
 
