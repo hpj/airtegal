@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import Homepage from './components/homepage.js';
 
-import './app.css';
+import './body.css';
 
 ReactDOM.render(<Homepage/>, document.body.querySelector('#app'));
 

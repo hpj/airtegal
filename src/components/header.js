@@ -8,17 +8,19 @@ import hpjLogo from '../../build/hpj-logo-ar-horizontal.svg';
 
 import cards from '../../cards.json';
 
-import './styles/header.css';
+import { whiteText } from '../theme.js';
+
+import { createStyle } from '../flcss.js';
 
 const Header = () =>
 {
   return (
-    <div className='header wrapper'>
-    <div className='header container'>
-      <InlineSVG className='header hpj' src={hpjLogo}></InlineSVG>
-      <InlineSVG className='header kbf' src={gameLogo}></InlineSVG>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <InlineSVG className={styles.hpj} src={hpjLogo}></InlineSVG>
+        <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
-        <div className="header cards">
+        <div className={styles.cards}>
           <Card type='black' content={cards.black[0]}></Card>
           <Card type='white' content={cards.white[0]}></Card>
         </div>
@@ -26,5 +28,73 @@ const Header = () =>
     </div>
   );
 };
+
+const styles = createStyle({
+  wrapper: { background: 'radial-gradient(circle, rgba(32,25,25,1) 0%, rgba(31,28,28,1) 16%, rgba(0,0,0,1) 100%)' },
+
+  container: {
+    display: 'grid',
+
+    gridTemplateColumns: 'auto 1fr',
+    gridTemplateRows: 'auto 1fr',
+    gridTemplateAreas: '"hpj cards" "kbf cards"',
+  
+    gridColumnGap: '15px',
+  
+    maxWidth: '850px',
+  
+    padding: '5vh 5vw',
+    margin: 'auto'
+  },
+
+  icon: {
+    fill: whiteText,
+
+    minWidth: '130px',
+    maxWidth: '320px',
+    width: '55%'
+  },
+
+  hpj: {
+    gridArea: 'hpj',
+    flexGrow: 1,
+  
+    width: 'fit-content',
+
+    '> svg': {
+      extend: 'icon',
+      cursor: 'pointer'
+    },
+
+    '> svg:hover': {
+      borderBottom: `2px ${whiteText} solid`,
+      marginBottom: '-2px'
+    }
+  },
+
+  kbf: {
+    display: 'flex',
+
+    gridArea: 'kbf',
+
+    '> svg': { extend: 'icon' }
+  },
+
+  cards: {
+    gridArea: 'cards',
+    display: 'flex',
+  
+    justifyContent: 'flex-end',
+  
+    margin: '5%',
+
+    '> * > *[type="black"]': {
+      left: 10,
+      transform: 'rotateZ(5deg)'
+    },
+
+    '> * > *[type="white"]': { transform: 'rotateZ(-10deg)' }
+  }
+});
 
 export default Header;
