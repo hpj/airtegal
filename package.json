@@ -7,7 +7,7 @@
   "scripts": {
     "svgo:build": "svgo --config='{ \"plugins\": [ { \"removeAttrs\": { \"attrs\": \"(fill|stroke)\" } } ] }' ./build",
     "start": "webpack-dev-server --config webpack.config.dev.js --mode development",
-    "build": "npm run svgo:build && webpack --config webpack.config.prod.js --mode production"
+    "build": "webpack --config webpack.config.prod.js --mode production"
   },
   "repository": {
     "type": "git",
