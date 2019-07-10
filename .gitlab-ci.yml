@@ -6,8 +6,11 @@ pages:
   stage: deploy
   image: node:latest
   script:
-    # install dependencies & build the code
-    - "npm install"
-    - "npm run build"
+  # install dependencies & build the code
+  - "npm install"
+  - "npm run build"
+  artifacts:
+    paths:
+    - public
   only:
-    - release
+    - master
