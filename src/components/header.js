@@ -30,6 +30,7 @@ const Header = () =>
 };
 
 const styles = createStyle({
+  // wrapper: { background: 'linear-gradient(to right, #780206, #061161)' },
   wrapper: { background: 'radial-gradient(circle, rgba(32,25,25,1) 0%, rgba(31,28,28,1) 16%, rgba(0,0,0,1) 100%)' },
 
   container: {
@@ -59,17 +60,14 @@ const styles = createStyle({
     gridArea: 'hpj',
     flexGrow: 1,
   
-    width: 'fit-content',
+    width: 'min-content',
 
     '> svg': {
       extend: 'icon',
       cursor: 'pointer'
     },
 
-    '> svg:hover': {
-      borderBottom: `2px ${whiteText} solid`,
-      marginBottom: '-2px'
-    }
+    '> svg:hover': { fill: 'red' }
   },
 
   kbf: {

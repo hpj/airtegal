@@ -1,0 +1,13 @@
+cache:
+  paths:
+  - node_modules
+
+pages:
+  stage: deploy
+  image: node:latest
+  script:
+    # install dependencies & build the code
+    - "npm install"
+    - "npm run build"
+  only:
+    - release

@@ -1,6 +1,7 @@
 **/node_modules
 
+/compiled
+
+bundle.js*
 cards.json
 
-/compiled
-/public

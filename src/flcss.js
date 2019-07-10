@@ -26,7 +26,7 @@
 
 const camelRegex = /[A-Z]/g;
 const selectorsRegex = /^\s|^>|^\+|^~/;
-const classRegex = /^[a-z]/i;
+const classRegex = /^[a-z]|^-/i;
 
 const betweenRegex = /[^{}]+(?=})/;
 
