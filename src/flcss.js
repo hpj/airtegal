@@ -41,7 +41,7 @@ const betweenRegex = /[^{}]+(?=})/;
 *    bigBlue: {
 *    color: 'blue',
 *    fontWeight: 'bold',
-*    fontSize: 30
+*    fontSize: '12px'
 *  }});
 *
 *  return <div className={styles.bigBlue}/>;
@@ -64,7 +64,7 @@ export function createStyle(styles)
     const {
       className,
       css
-    } = handleStyle(key, obj, directory);
+    } = handleStyle(key, obj, newStyles, directory);
 
     // overall css string (all classes)
     allCss = allCss + css;
@@ -82,9 +82,11 @@ export function createStyle(styles)
 
 /** @param { string } key
 * @param { {} } obj
+* @param { {} } rootDirectory
+* @param { {} } rootStylesheet
 * @param { string } nest
 */
-function handleStyle(key, obj, rootStylesheet, nest)
+function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
 {
   let css = '';
   let additionalCss = '';
@@ -108,11 +110,14 @@ function handleStyle(key, obj, rootStylesheet, nest)
     {
       if (!Array.isArray(values[i]))
         values[i] = [ values[i] ];
-
+      
       values[i].forEach((v) =>
       {
+        const replace = rootDirectory[v];
+        const extendCss = rootStylesheet[v].replace(new RegExp(replace, 'g'), className);
+
         if (typeof v === 'string')
-          css = css + rootStylesheet[v].match(betweenRegex)[0];
+          additionalCss = additionalCss + extendCss;
       });
     }
     else if (
@@ -133,7 +138,7 @@ function handleStyle(key, obj, rootStylesheet, nest)
         else
           nextParent = `${className}${rule}`;
 
-        additionalCss = additionalCss + `.${nextParent}${handleStyle(rule, values[i], rootStylesheet, nextParent)}`;
+        additionalCss = additionalCss + `.${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}`;
       }
     }
     // class selector
