@@ -1,6 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Cairo|Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Cairo:400,700|Raleway:400,700,900&display=swap&subset=arabic"');
 
 body
 {
   margin: 0;
+}
+
+#app
+{
+  margin: 0;
+  direction: rtl;
+
+  font-family: "Raleway", "Cairo", sans-serif;
+  font-size: calc(8px + 0.45vw + 0.45vh);
+  font-weight: 600;
 }

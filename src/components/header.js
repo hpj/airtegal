@@ -4,11 +4,13 @@ import InlineSVG from 'svg-inline-react';
 import Card from './card.js';
 
 import gameLogo from '../../build/kbf-logo-ar.svg';
-import hpjLogo from '../../build/hpj-logo-ar-horizontal.svg';
+import hpjLogoHorizontal from '../../build/hpj-logo-ar-horizontal.svg';
 
 import cards from '../../cards.json';
 
-import { whiteText } from '../theme.js';
+import {
+  whiteText, hpjBrand
+} from '../theme.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -17,7 +19,7 @@ const Header = () =>
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <InlineSVG className={styles.hpj} src={hpjLogo}></InlineSVG>
+        <InlineSVG className={styles.hpj} src={hpjLogoHorizontal}></InlineSVG>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
         <div className={styles.cards}>
@@ -48,34 +50,42 @@ const styles = createStyle({
     margin: 'auto'
   },
 
-  icon: {
-    fill: whiteText,
-
-    minWidth: '130px',
-    maxWidth: '320px',
-    width: '55%'
-  },
-
   hpj: {
     gridArea: 'hpj',
     flexGrow: 1,
-  
-    width: 'min-content',
+
+    minWidth: '92px',
+    maxWidth: '150px',
+    width: '80%',
+    height: '100%',
 
     '> svg': {
-      extend: 'icon',
+      width: '100%',
+      height: '100%',
+      
+      fill: whiteText,
+
       cursor: 'pointer'
     },
 
-    '> svg:hover': { fill: 'red' }
+    ':hover > svg': { fill: hpjBrand }
   },
 
   kbf: {
     display: 'flex',
-
     gridArea: 'kbf',
 
-    '> svg': { extend: 'icon' }
+    minWidth: '95px',
+    maxWidth: '185px',
+    width: '80%',
+    height: '100%',
+
+    '> svg': {
+      width: '100%',
+      height: '100%',
+
+      fill: whiteText
+    }
   },
 
   cards: {
