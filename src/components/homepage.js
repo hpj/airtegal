@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import axios from 'axios';
 
 import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
 
+import Placeholder from './placeholder.js';
 import Header from './header.js';
 
 import { createStyle } from '../flcss.js';
@@ -13,67 +16,101 @@ import * as colors from '../colors.js';
 
 const Homepage = () =>
 {
-  return (
-    <div>
-      <Header></Header>
+  const [ country, setCountry ] = useState('');
+  const [ error, setError ] = useState('');
 
-      <div className={qaStyles.wrapper}>
-        <div className={qaStyles.container}>
-          <p className={qaStyles.question}>
-            يعني ايه كروت بضان فشخ؟
-          </p>
+  axios({ url: 'http://ip-api.com/json' })
+    .then((response) => setCountry(response.data.country))
+    .catch((err) =>
+    {
+      if (err.message === 'Network Error')
+        setError('You need internet to play this game.');
+      else
+        setError(err.message);
+    });
 
-          <p className={qaStyles.answer}>
-            اللعبه بسيطه. كل دور لاعب بيسال سؤال من كرت اسود, و باقي اللعيبه بيجاوبوا عليه باكثر كرت ابيض بيضحك في ايدهم.
-          </p>
-
-          <p className={qaStyles.question}>
-            ليه اللعبه عنصرية و بتشجع علي الكراهية؟
-          </p>
-
-          <p className={qaStyles.answer}>
-            كل الكروت ال في اللعبه تم اقتراحها و التصويت عليها من المجتمع.
-            <br/>
-            لحماية القانون الدولي لحرية التعبير و الرأي تحت المادة 19 من العهد الدولي و لحماية الحقوق الفكرية لصانعي الكروت هيرب بروجكت لن تتدخل في عمليه الاقتراح و التصويت.
-            <br/>
-            لمعلومات اكثر ممكن تقرأ سياسة الخصوصية و الشروط و الاحكام.
-          </p>
-        </div>
-      </div>
-    
-      <div className={pStyles.wrapper}>
-        <div className={pStyles.container}>
-          <p className={pStyles.title}>
-            اللعبة لم تصدر بعد!
-          </p>
-        </div>
-      </div>
-
-      <div className={bStyles.wrapper}>
-        <div className={bStyles.container}>
-          <InlineSVG className={bStyles.hpj} src={hpjLogoHorizontal}></InlineSVG>
-          <div className={bStyles.patreon}>
-            <PatreonIcon/>
-            BECOME A PATRON
+  if (country && country === 'Egypt')
+  {
+    return (
+      <div>
+        <Header></Header>
+  
+        <div className={qaStyles.wrapper}>
+          <div className={qaStyles.container}>
+            <p className={qaStyles.question}>
+              يعني ايه كروت بضان فشخ؟
+            </p>
+  
+            <p className={qaStyles.answer}>
+              اللعبه بسيطه. كل دور لاعب بيسال سؤال من كرت اسود, و باقي اللعيبه بيجاوبوا عليه باكثر كرت ابيض بيضحك في ايدهم.
+            </p>
+  
+            <p className={qaStyles.question}>
+              ليه اللعبه عنصرية و بتشجع علي الكراهية؟
+            </p>
+  
+            <p className={qaStyles.answer}>
+              كل الكروت ال في اللعبه تم اقتراحها و التصويت عليها من المجتمع.
+              <br/>
+              لحماية القانون الدولي لحرية التعبير و الرأي تحت المادة 19 من العهد الدولي و لحماية الحقوق الفكرية لصانعي الكروت هيرب بروجكت لن تتدخل في عمليه الاقتراح و التصويت.
+              <br/>
+              لمعلومات اكثر ممكن تقرأ سياسة الخصوصية و الشروط و الاحكام.
+            </p>
           </div>
-          <div className={bStyles.sitemap}>
-            <div className={bStyles.use}>الشروط و الاحكام</div>
-            -
-            <div className={bStyles.privacy}>سياسة الخصوصية</div>
+        </div>
+      
+        <div className={pStyles.wrapper}>
+          <div className={pStyles.container}>
+            <p className={pStyles.title}>
+              اللعبة لم تصدر بعد!
+            </p>
           </div>
-          <p className={bStyles.copyright}>
-            تتوفر
-            Cards Against Humanity
-            تحت رخصة
-            Creative Commons BY-NC-SA 2.0
-            هذا يعني انة يمكننا استخدام اللعبة واعادة خلطها و مشاركتها مجاناً
-            لكن لا يمكن لنا تحقيق اي ربح مادي منها
-            او استخدام اسمها دون اذن.
-          </p>
+        </div>
+  
+        <div className={bStyles.wrapper}>
+          <div className={bStyles.container}>
+            <InlineSVG className={bStyles.hpj} src={hpjLogoHorizontal}></InlineSVG>
+            <div className={bStyles.patreon}>
+              <PatreonIcon/>
+              BECOME A PATRON
+            </div>
+            <div className={bStyles.sitemap}>
+              <div className={bStyles.use}>الشروط و الاحكام</div>
+              -
+              <div className={bStyles.privacy}>سياسة الخصوصية</div>
+            </div>
+            <p className={bStyles.copyright}>
+              تتوفر
+              Cards Against Humanity
+              تحت رخصة
+              Creative Commons BY-NC-SA 2.0
+              هذا يعني انة يمكننا استخدام اللعبة واعادة خلطها و مشاركتها مجاناً
+              لكن لا يمكن لنا تحقيق اي ربح مادي منها
+              او استخدام اسمها دون اذن.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+  else if (country && country !== 'Egypt')
+  {
+    return (
+      <Placeholder type='not-available'/>
+    );
+  }
+  else if (error)
+  {
+    return (
+      <Placeholder type='error' content={error}/>
+    );
+  }
+  else
+  {
+    return (
+      <Placeholder type='loading'/>
+    );
+  }
 };
 
 const qaStyles = createStyle({
@@ -88,10 +125,7 @@ const qaStyles = createStyle({
     margin: 'auto'
   },
 
-  question: {
-    fontSize: 'calc(9px + 0.55vw + 0.55vh)',
-    margin: '0 0 3px 0'
-  },
+  question: { margin: '0 0 3px 0' },
 
   answer: {
     fontWeight: 400,

@@ -9,14 +9,26 @@ import { createStyle } from '../flcss.js';
 
 import * as colors from '../colors.js';
 
-/** @param { { type: 'loading' | 'not-available' | 'maintenance' } } param0
+/** @param { { type: 'loading' | 'error' | 'not-available' | 'maintenance' } } param0
 */
-const Placeholder = ({ type }) =>
+const Placeholder = ({
+  type, content
+}) =>
 {
   let element;
 
   if (type === 'loading')
-    element = <InlineSVG className={styles.kbf} src={kbfLogo}/>;
+    element = <InlineSVG className={styles.loading} src={kbfLogo}/>;
+
+  if (type === 'error')
+    element = <p className={styles.error}>{content}.</p>;
+
+  if (type === 'not-available')
+    element = <p className={styles.notAvailable}>Kuruit Bedan Fash5 is not available in your country.</p>;
+
+
+  if (type === 'maintenance')
+    element = <p className={styles.maintenance}>{'Game is currently under maintenance, We\'ll be back soon.'}</p>;
 
   return (
     <div className={styles.placeholder}>
@@ -25,11 +37,15 @@ const Placeholder = ({ type }) =>
   );
 };
 
-Placeholder.propTypes = { type: PropTypes.oneOf([
-  'loading',
-  'not-available',
-  'maintenance'
-]) };
+Placeholder.propTypes = {
+  type: PropTypes.oneOf([
+    'loading',
+    'error',
+    'not-available',
+    'maintenance'
+  ]).isRequired,
+  content: PropTypes.string
+};
 
 const styles = createStyle({
   placeholder: {
@@ -37,10 +53,12 @@ const styles = createStyle({
     justifyContent: 'center',
     alignItems: 'center',
 
+    direction: 'ltr',
+
     width: '100vw',
     height: '100vh'
   },
-  kbf: {
+  loading: {
     width: '80px',
     height: '100%',
 

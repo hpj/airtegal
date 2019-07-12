@@ -1,23 +1,11 @@
-import React, {
-  Suspense,
-  lazy
-} from 'react';
-
+import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Placeholder from './components/placeholder.js';
+import Homepage from './components/homepage.js';
 
 import './body.css';
 
-const Homepage = lazy(() => import('./components/homepage.js'));
-
-ReactDOM.render(
-  <Suspense fallback={
-    <Placeholder type='loading'/>
-  }>
-    <Homepage/>
-  </Suspense>
-  , document.body.querySelector('#app'));
+ReactDOM.render(<Homepage/>, document.body.querySelector('#app'));
 
 if (module.hot)
   module.hot.accept();
