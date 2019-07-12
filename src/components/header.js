@@ -3,14 +3,12 @@ import React from 'react';
 import InlineSVG from 'svg-inline-react';
 import Card from './card.js';
 
-import gameLogo from '../../build/kbf-logo-ar.svg';
+import gameLogo from '../../build/kbf.svg';
 import hpjLogoHorizontal from '../../build/hpj-logo-ar-horizontal.svg';
 
 import cards from '../../cards.json';
 
-import {
-  whiteText, hpjBrand
-} from '../theme.js';
+import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -54,7 +52,7 @@ const styles = createStyle({
     gridArea: 'hpj',
     flexGrow: 1,
 
-    minWidth: '92px',
+    minWidth: '100px',
     maxWidth: '150px',
     width: '80%',
     height: '100%',
@@ -63,12 +61,12 @@ const styles = createStyle({
       width: '100%',
       height: '100%',
       
-      fill: whiteText,
+      fill: colors.whiteText,
 
       cursor: 'pointer'
     },
 
-    ':hover > svg': { fill: hpjBrand }
+    ':hover > svg': { fill: colors.accentColor }
   },
 
   kbf: {
@@ -84,7 +82,7 @@ const styles = createStyle({
       width: '100%',
       height: '100%',
 
-      fill: whiteText
+      fill: colors.whiteText
     }
   },
 

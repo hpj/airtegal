@@ -6,11 +6,9 @@ import InlineSVG from 'svg-inline-react';
 
 import { createStyle } from '../flcss.js';
 
-import gameLogo from '../../build/kbf-logo-ar.svg';
+import gameLogo from '../../build/kbf.svg';
 
-import {
-  whiteBackground, blackText, whiteText, blackBackground
-} from '../theme.js';
+import * as colors from '../colors.js';
 
 /** @param { { content: string, type: 'black' | 'white' } } param0
 */
@@ -64,17 +62,17 @@ const styles = createStyle({
     borderRadius: '10px',
 
     '[type="white"]': {
-      color: blackText,
-      backgroundColor: whiteBackground,
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground,
 
-      '> * > svg': { fill: blackText }
+      '> * > svg': { fill: colors.blackText }
     },
 
     '[type="black"]': {
-      color: whiteText,
-      backgroundColor: blackBackground,
+      color: colors.whiteText,
+      backgroundColor: colors.blackBackground,
 
-      '> * > svg': { fill: whiteText }
+      '> * > svg': { fill: colors.whiteText }
     }
   },
 

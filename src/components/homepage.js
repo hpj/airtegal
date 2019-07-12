@@ -9,11 +9,7 @@ import { createStyle } from '../flcss.js';
 
 import hpjLogoHorizontal from '../../build/hpj-logo-ar-horizontal.svg';
 
-import {
-  whiteBackground, blackText, whiteText,
-  blackBackground, greyText, patreonBrand,
-  hpjBrand, accentColor
-} from '../theme.js';
+import * as colors from '../colors.js';
 
 const Homepage = () =>
 {
@@ -48,7 +44,7 @@ const Homepage = () =>
       <div className={pStyles.wrapper}>
         <div className={pStyles.container}>
           <p className={pStyles.title}>
-            العب الان
+            اللعبة لم تصدر بعد!
           </p>
         </div>
       </div>
@@ -76,18 +72,17 @@ const Homepage = () =>
           </p>
         </div>
       </div>
-
     </div>
   );
 };
 
 const qaStyles = createStyle({
-  wrapper: { backgroundColor: whiteBackground },
+  wrapper: { backgroundColor: colors.whiteBackground },
 
   container: {
     maxWidth: '850px',
 
-    color: blackText,
+    color: colors.blackText,
   
     padding: '5vh 5vw',
     margin: 'auto'
@@ -121,13 +116,15 @@ const pStyles = createStyle({
   },
 
   title: {
-    color: whiteText,
+    color: colors.whiteText,
     cursor: 'pointer',
     
     border: '3px solid',
-    borderColor: whiteText,
+    borderColor: colors.whiteText,
 
     userSelect: 'none',
+    pointerEvents: 'none',
+
     fontSize: 'calc(12px + 0.65vw + 0.65vh)',
 
     padding: '5% 8%',
@@ -144,7 +141,7 @@ const pStyles = createStyle({
 });
 
 const bStyles = createStyle({
-  wrapper: { backgroundColor: blackBackground },
+  wrapper: { backgroundColor: colors.blackBackground },
 
   container: {
     display: 'grid',
@@ -166,7 +163,7 @@ const bStyles = createStyle({
 
     cursor: 'pointer',
 
-    minWidth: '92px',
+    minWidth: '100px',
     maxWidth: '132px',
     width: '35%',
     height: '100%',
@@ -175,24 +172,28 @@ const bStyles = createStyle({
       width: '100%',
       height: '100%',
 
-      fill: whiteText
+      fill: colors.whiteText
     },
 
-    ':hover > svg': { fill: hpjBrand }
+    ':hover > svg': { fill: colors.accentColor }
   },
 
   patreon: {
     gridArea: 'patreon',
+    justifySelf: 'self-start',
+
     display: 'flex',
     alignItems: 'center',
+
+    width: 'fit-content',
     
     userSelect: 'none',
     cursor: 'pointer',
 
     direction: 'ltr',
-    color: whiteText,
+    color: colors.whiteText,
 
-    ':hover': { color: patreonBrand },
+    ':hover': { color: colors.accentColor },
 
     '> svg': { padding: '0 5px 0 0' }
   },
@@ -202,21 +203,21 @@ const bStyles = createStyle({
     display: 'flex',
 
     userSelect: 'none',
-    color: whiteText,
+    color: colors.whiteText,
   },
 
   privacy: {
     cursor: 'pointer',
     padding: '0 5px',
 
-    ':hover': { color: accentColor }
+    ':hover': { color: colors.accentColor }
   },
 
   use: { extend: 'privacy' },
 
   copyright: {
     gridArea: 'copyright',
-    color: greyText,
+    color: colors.greyText,
 
     margin: 0
   }

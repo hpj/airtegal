@@ -28,7 +28,7 @@ const camelRegex = /[A-Z]/g;
 const selectorsRegex = /^\s|^>|^\+|^~/;
 const classRegex = /^[a-z]|^-/i;
 
-const betweenRegex = /[^{}]+(?=})/;
+// const betweenRegex = /[^{}]+(?=})/;
 
 /** Creates a stylesheet,
 * the returned object can be used to style elements via class names property
