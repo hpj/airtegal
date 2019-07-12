@@ -8,7 +8,6 @@ body
 #app
 {
   margin: 0;
-  direction: rtl;
 
   font-family: "Raleway", "Cairo", sans-serif;
   font-size: calc(8px + 0.45vw + 0.45vh);

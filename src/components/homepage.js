@@ -62,7 +62,7 @@ const Homepage = () =>
         <div className={pStyles.wrapper}>
           <div className={pStyles.container}>
             <p className={pStyles.title}>
-              اللعبة لم تصدر بعد!
+              !اللعبة لم تصدر بعد
             </p>
           </div>
         </div>
@@ -120,6 +120,7 @@ const qaStyles = createStyle({
     maxWidth: '850px',
 
     color: colors.blackText,
+    direction: 'rtl',
   
     padding: '5vh 5vw',
     margin: 'auto'
@@ -181,7 +182,7 @@ const bStyles = createStyle({
     display: 'grid',
 
     gridTemplateColumns: '50% 50%',
-    gridTemplateAreas: '"hpj patreon" "sitemap sitemap" "copyright copyright"',
+    gridTemplateAreas: '"patreon hpj" "sitemap sitemap" "copyright copyright"',
   
     gridRowGap: '10px',
     
@@ -195,6 +196,7 @@ const bStyles = createStyle({
     gridArea: 'hpj',
     display: 'flex',
 
+    justifySelf: 'end',
     cursor: 'pointer',
 
     minWidth: '100px',
@@ -236,6 +238,8 @@ const bStyles = createStyle({
     gridArea: 'sitemap',
     display: 'flex',
 
+    justifySelf: 'end',
+
     userSelect: 'none',
     color: colors.whiteText,
   },
@@ -251,7 +255,9 @@ const bStyles = createStyle({
 
   copyright: {
     gridArea: 'copyright',
+    
     color: colors.greyText,
+    direction: 'rtl',
 
     margin: 0
   }

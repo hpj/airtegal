@@ -21,8 +21,8 @@ const Header = () =>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
         <div className={styles.cards}>
-          <Card type='black' content={cards.black[0]}></Card>
           <Card type='white' content={cards.white[0]}></Card>
+          <Card type='black' content={cards.black[0]}></Card>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ const styles = createStyle({
 
     gridTemplateColumns: 'auto 1fr',
     gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"hpj cards" "kbf cards"',
+    gridTemplateAreas: '"cards hpj" "cards kbf"',
   
     gridColumnGap: '15px',
   

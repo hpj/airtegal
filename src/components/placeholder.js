@@ -26,7 +26,6 @@ const Placeholder = ({
   if (type === 'not-available')
     element = <p className={styles.notAvailable}>Kuruit Bedan Fash5 is not available in your country.</p>;
 
-
   if (type === 'maintenance')
     element = <p className={styles.maintenance}>{'Game is currently under maintenance, We\'ll be back soon.'}</p>;
 
@@ -58,6 +57,8 @@ const styles = createStyle({
     width: '100vw',
     height: '100vh'
   },
+  // on an installed PWA, it has a splash screen that we
+  // should match its style
   loading: {
     width: '80px',
     height: '100%',
