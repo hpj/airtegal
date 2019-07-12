@@ -82,9 +82,12 @@ const styles = createStyle({
   
     justifyContent: 'center',
     userSelect: 'none',
-  
-    padding: '7.5%',
-    fontSize: 'calc(12px + 25%)'
+
+    fontFamily: 'sans-serif',
+    fontSize: 'calc(12px + 25%)',
+    fontWeight: 700,
+    
+    padding: '7.5%'
   },
 
   bottom: {

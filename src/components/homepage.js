@@ -10,7 +10,7 @@ import Header from './header.js';
 
 import { createStyle } from '../flcss.js';
 
-import hpjLogoHorizontal from '../../build/hpj-logo-ar-horizontal.svg';
+import hpjLogo from '../../build/hpj-logo-ar.svg';
 
 import * as colors from '../colors.js';
 
@@ -42,7 +42,7 @@ const Homepage = () =>
             </p>
   
             <p className={qaStyles.answer}>
-              اللعبه بسيطه. كل دور لاعب بيسال سؤال من كرت اسود, و باقي اللعيبه بيجاوبوا عليه باكثر كرت ابيض بيضحك في ايدهم.
+              اللعبه بسيطه. كل دور لاعب بيسال سؤال من كرت اسود و باقي اللعيبه بيجاوبوا عليه باكثر كرت ابيض بيضحك في ايدهم.
             </p>
   
             <p className={qaStyles.question}>
@@ -52,7 +52,7 @@ const Homepage = () =>
             <p className={qaStyles.answer}>
               كل الكروت ال في اللعبه تم اقتراحها و التصويت عليها من المجتمع.
               <br/>
-              لحماية القانون الدولي لحرية التعبير و الرأي تحت المادة 19 من العهد الدولي و لحماية الحقوق الفكرية لصانعي الكروت هيرب بروجكت لن تتدخل في عمليه الاقتراح و التصويت.
+              لحماية القانون الدولي لحقوق الانسان في التعبير و الرأي تحت المادة 19 من العهد الدولي و لحماية الحقوق الفكرية لصانعي الكروت هيرب بروجكت لن تتدخل في عمليه الاقتراح و التصويت.
               <br/>
               لمعلومات اكثر ممكن تقرأ سياسة الخصوصية و الشروط و الاحكام.
             </p>
@@ -69,14 +69,14 @@ const Homepage = () =>
   
         <div className={bStyles.wrapper}>
           <div className={bStyles.container}>
-            <InlineSVG className={bStyles.hpj} src={hpjLogoHorizontal}></InlineSVG>
+            <InlineSVG className={bStyles.hpj} src={hpjLogo}></InlineSVG>
             <div className={bStyles.patreon}>
               <PatreonIcon/>
               BECOME A PATRON
             </div>
             <div className={bStyles.sitemap}>
               <div className={bStyles.use}>الشروط و الاحكام</div>
-              -
+              _
               <div className={bStyles.privacy}>سياسة الخصوصية</div>
             </div>
             <p className={bStyles.copyright}>
@@ -120,17 +120,21 @@ const qaStyles = createStyle({
     maxWidth: '850px',
 
     color: colors.blackText,
+
+    fontFamily: '"Cairo", sans-serif',
     direction: 'rtl',
   
     padding: '5vh 5vw',
     margin: 'auto'
   },
 
-  question: { margin: '0 0 3px 0' },
+  question: {
+    fontWeight: 700,
+
+    margin: '0 0 3px 0',
+  },
 
   answer: {
-    fontWeight: 400,
-
     margin: 0,
 
     '+ p': { margin: '20px 0 3px 0' }
@@ -160,6 +164,7 @@ const pStyles = createStyle({
     userSelect: 'none',
     pointerEvents: 'none',
 
+    fontWeight: 700,
     fontSize: 'calc(12px + 0.65vw + 0.65vh)',
 
     padding: '5% 8%',
@@ -187,6 +192,9 @@ const bStyles = createStyle({
     gridRowGap: '10px',
     
     maxWidth: '850px',
+
+    fontFamily: '"Raleway", "Cairo", sans-serif',
+    fontWeight: 700,
   
     padding: '5vh 5vw',
     margin: 'auto'

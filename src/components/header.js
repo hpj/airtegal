@@ -4,7 +4,7 @@ import InlineSVG from 'svg-inline-react';
 import Card from './card.js';
 
 import gameLogo from '../../build/kbf.svg';
-import hpjLogoHorizontal from '../../build/hpj-logo-ar-horizontal.svg';
+import hpjLogo from '../../build/hpj-logo-ar.svg';
 
 import cards from '../../cards.json';
 
@@ -17,7 +17,7 @@ const Header = () =>
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <InlineSVG className={styles.hpj} src={hpjLogoHorizontal}></InlineSVG>
+        <InlineSVG className={styles.hpj} src={hpjLogo}></InlineSVG>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
         <div className={styles.cards}>
@@ -50,7 +50,9 @@ const styles = createStyle({
 
   hpj: {
     gridArea: 'hpj',
+
     flexGrow: 1,
+    justifySelf: 'end',
 
     minWidth: '100px',
     maxWidth: '150px',
@@ -72,9 +74,11 @@ const styles = createStyle({
   kbf: {
     display: 'flex',
     gridArea: 'kbf',
+    
+    justifySelf: 'end',
 
     minWidth: '95px',
-    maxWidth: '185px',
+    maxWidth: '152px',
     width: '80%',
     height: '100%',
 
