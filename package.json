@@ -21,6 +21,7 @@
   "homepage": "https://gitlab.com/hpj/kuruit-bedan-fash5#readme",
   "dependencies": {
     "axios": "^0.19.0",
+    "jsonp": "^0.2.1",
     "mdi-react": "^5.4.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",

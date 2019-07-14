@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import axios from 'axios';
+import jsonp from 'jsonp';
 
 import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
@@ -19,15 +19,20 @@ const Homepage = () =>
   const [ country, setCountry ] = useState('');
   const [ error, setError ] = useState('');
 
-  axios({ url: 'http://ip-api.com/json' })
-    .then((response) => setCountry(response.data.country))
-    .catch((err) =>
+  jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
+  {
+    if (err)
     {
       if (err.message === 'Network Error')
         setError('You need internet to play this game.');
       else
         setError(err.message);
-    });
+      
+      return;
+    }
+
+    setCountry(response.country_name);
+  });
 
   if (country && country === 'Egypt')
   {
