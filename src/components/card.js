@@ -36,9 +36,11 @@ const styles = createStyle({
   wrapper: {
     position: 'relative',
 
-    // TODO fix card sizes
-    minWidth: '215px',
+    minWidth: '115px',
     maxWidth: '215px',
+    width: 'calc(50px + 8vw + 8vh)',
+
+    height: 'fit-content',
 
     ':before': {
       content: '""',
@@ -80,11 +82,12 @@ const styles = createStyle({
     gridArea: 'content',
     display: 'flex',
   
+    direction: 'rtl',
     justifyContent: 'center',
     userSelect: 'none',
 
     fontFamily: 'sans-serif',
-    fontSize: 'calc(12px + 25%)',
+    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
     fontWeight: 700,
     
     padding: '7.5%'
@@ -92,9 +95,9 @@ const styles = createStyle({
 
   bottom: {
     gridArea: 'bottom',
-    padding: '3% 5%',
+    padding: '5% 8%',
 
-    '> svg': { width: '15%' }
+    '> svg': { width: '18%' }
   }
 });
 

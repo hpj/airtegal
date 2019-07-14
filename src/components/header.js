@@ -41,9 +41,10 @@ const styles = createStyle({
     gridTemplateAreas: '"cards hpj" "cards kbf"',
   
     gridColumnGap: '15px',
-  
+    
     maxWidth: '850px',
-  
+    overflow: 'hidden',
+    
     padding: '5vh 5vw',
     margin: 'auto'
   },
@@ -74,7 +75,7 @@ const styles = createStyle({
   kbf: {
     display: 'flex',
     gridArea: 'kbf',
-    
+
     justifySelf: 'end',
 
     minWidth: '95px',
@@ -94,12 +95,14 @@ const styles = createStyle({
     gridArea: 'cards',
     display: 'flex',
   
+    alignItems: 'center',
     justifyContent: 'flex-end',
-  
-    margin: '5%',
+    
+    '> *': {
+      margin: '0 10px'
+    },
 
     '> * > *[type="black"]': {
-      left: 10,
       transform: 'rotateZ(5deg)'
     },
 
