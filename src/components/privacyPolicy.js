@@ -7,6 +7,8 @@ const PrivacyPolicy = () =>
   // on url change reset scroll position
   useEffect(() =>
   {
+    document.title = 'Privacy Policy';
+    
     window.scrollTo(0, 0);
   }, [ window.location ]);
   

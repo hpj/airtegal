@@ -7,6 +7,8 @@ const TermsAndConditions = () =>
   // on url change reset scroll position
   useEffect(() =>
   {
+    document.title = 'Terms and Conditions';
+
     window.scrollTo(0, 0);
   }, [ window.location ]);
 

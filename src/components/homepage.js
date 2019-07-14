@@ -20,6 +20,8 @@ const Homepage = () =>
   // on url change reset scroll position
   useEffect(() =>
   {
+    document.title = 'Kuruit Bedan Fash5';
+
     window.scrollTo(0, 0);
   }, [ window.location ]);
 
