@@ -17,7 +17,9 @@ const Header = () =>
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <InlineSVG className={styles.hpj} src={hpjLogo}></InlineSVG>
+        <a className={styles.hpj} href='https://herpproject.com'>
+          <InlineSVG src={hpjLogo}></InlineSVG>
+        </a>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
         <div className={styles.cards}>
@@ -60,7 +62,7 @@ const styles = createStyle({
     width: '80%',
     height: '100%',
 
-    '> svg': {
+    '> i > svg': {
       width: '100%',
       height: '100%',
       
@@ -69,7 +71,7 @@ const styles = createStyle({
       cursor: 'pointer'
     },
 
-    ':hover > svg': { fill: colors.accentColor }
+    ':hover > i > svg': { fill: colors.accentColor }
   },
 
   kbf: {

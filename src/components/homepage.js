@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import jsonp from 'jsonp';
 
@@ -16,6 +17,12 @@ import * as colors from '../colors.js';
 
 const Homepage = () =>
 {
+  // on url change reset scroll position
+  useEffect(() =>
+  {
+    window.scrollTo(0, 0);
+  }, [ window.location ]);
+
   const [ country, setCountry ] = useState('');
   const [ error, setError ] = useState('');
 
@@ -75,15 +82,17 @@ const Homepage = () =>
   
         <div className={bStyles.wrapper}>
           <div className={bStyles.container}>
-            <InlineSVG className={bStyles.hpj} src={hpjLogo}></InlineSVG>
-            <div className={bStyles.patreon}>
+            <a className={bStyles.hpj} href='https://herpproject.com'>
+              <InlineSVG src={hpjLogo}></InlineSVG>
+            </a>
+            <a className={bStyles.patreon} href='https://www.patreon.com/hpj'>
               <PatreonIcon/>
               BECOME A PATRON
-            </div>
+            </a>
             <div className={bStyles.sitemap}>
-              <div className={bStyles.use}>الشروط والاحكام</div>
+              <Link className={bStyles.use} to='/tac/'>الشروط والاحكام</Link>
               _
-              <div className={bStyles.privacy}>سياسة الخصوصية</div>
+              <Link className={bStyles.privacy} to='/pt/'>سياسة الخصوصية</Link>
             </div>
             <p className={bStyles.copyright}>
               تتوفر
@@ -209,7 +218,6 @@ const bStyles = createStyle({
 
   hpj: {
     gridArea: 'hpj',
-    display: 'flex',
 
     justifySelf: 'end',
     cursor: 'pointer',
@@ -219,14 +227,14 @@ const bStyles = createStyle({
     width: '35%',
     height: '100%',
 
-    '> svg': {
+    '> i > svg': {
       width: '100%',
       height: '100%',
 
       fill: colors.whiteText
     },
 
-    ':hover > svg': { fill: colors.accentColor }
+    ':hover > i > svg': { fill: colors.accentColor }
   },
 
   patreon: {
@@ -235,13 +243,14 @@ const bStyles = createStyle({
 
     display: 'flex',
     alignItems: 'center',
-
+    
     width: 'fit-content',
     
     userSelect: 'none',
     cursor: 'pointer',
-
+    
     direction: 'ltr',
+    textDecoration: 'none',
     color: colors.whiteText,
 
     ':hover': { color: colors.accentColor },
@@ -256,12 +265,15 @@ const bStyles = createStyle({
     justifySelf: 'end',
 
     userSelect: 'none',
-    color: colors.whiteText,
+    color: colors.whiteText
   },
 
   privacy: {
     cursor: 'pointer',
     padding: '0 5px',
+
+    color: colors.whiteText,
+    textDecoration: 'none',
 
     ':hover': { color: colors.accentColor }
   },
