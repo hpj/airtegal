@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import jsonp from 'jsonp';
+// import io from 'socket.io-client';
 
 import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
@@ -17,31 +18,30 @@ import * as colors from '../colors.js';
 
 const Homepage = () =>
 {
-  // on url change reset scroll position
+  const [ country, setCountry ] = useState('');
+  const [ error, setError ] = useState('');
+  
+  // on url change
   useEffect(() =>
   {
     document.title = 'Kuruit Bedan Fash5';
-
+    
     window.scrollTo(0, 0);
-  }, [ window.location ]);
 
-  const [ country, setCountry ] = useState('');
-  const [ error, setError ] = useState('');
+    // const socket = io('https://localhost:3000/');
 
-  jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
-  {
-    if (err)
+    jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
     {
-      if (err.message === 'Network Error')
-        setError('You need internet to play this game.');
-      else
+      if (err)
+      {
         setError(err.message);
-      
-      return;
-    }
-
-    setCountry(response.country_name);
-  });
+        
+        return;
+      }
+  
+      setCountry(response.country_name);
+    });
+  }, [ window.location ]);
 
   if (country && country === 'Egypt')
   {
@@ -148,7 +148,7 @@ const qaStyles = createStyle({
   question: {
     fontWeight: 700,
 
-    margin: '0 0 3px 0',
+    margin: '0 0 3px 0'
   },
 
   answer: {

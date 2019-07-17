@@ -1,16 +1,25 @@
 import React from 'react';
 
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
 import InlineSVG from 'svg-inline-react';
+
 import Card from './card.js';
 
 import gameLogo from '../../build/kbf.svg';
 import hpjLogo from '../../build/hpj-logo-ar.svg';
 
-import cards from '../../cards.json';
-
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
+
+const GET_CARDS = gql`
+{card {
+    content
+    type
+  }}
+`;
 
 const Header = () =>
 {
@@ -22,10 +31,22 @@ const Header = () =>
         </a>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
-        <div className={styles.cards}>
-          <Card type='white' content={cards.white[0]}></Card>
-          <Card type='black' content={cards.black[0]}></Card>
-        </div>
+        <Query query={GET_CARDS}>
+          {({ loading, error, data }) =>
+          {
+            if (!loading && !error)
+            {
+              return (
+                <div className={styles.cards}>
+                  <Card type={data.card[1].type} content={data.card[1].content}></Card>
+                  <Card type={data.card[0].type} content={data.card[0].content}></Card>
+                </div>
+              );
+            }
+            
+            return '';
+          }}
+        </Query>
       </div>
     </div>
   );
