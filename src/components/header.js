@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+// import { Query } from 'react-apollo';
+// import gql from 'graphql-tag';
 
 import InlineSVG from 'svg-inline-react';
 
@@ -14,12 +14,14 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-const GET_CARDS = gql`
-{card {
-    content
-    type
-  }}
-`;
+// const GET_CARDS = gql`
+// {
+//   card {
+//     content
+//     type
+//   }
+// }
+// `;
 
 const Header = () =>
 {
@@ -31,7 +33,7 @@ const Header = () =>
         </a>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
-        <Query query={GET_CARDS}>
+        {/* <Query query={GET_CARDS}>
           {({ loading, error, data }) =>
           {
             if (!loading && !error)
@@ -46,14 +48,13 @@ const Header = () =>
             
             return '';
           }}
-        </Query>
+        </Query> */}
       </div>
     </div>
   );
 };
 
 const styles = createStyle({
-  // wrapper: { background: 'linear-gradient(to right, #780206, #061161)' },
   wrapper: { background: 'radial-gradient(circle, rgba(32,25,25,1) 0%, rgba(31,28,28,1) 16%, rgba(0,0,0,1) 100%)' },
 
   container: {
