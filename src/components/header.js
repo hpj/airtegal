@@ -1,7 +1,4 @@
-import React from 'react';
-
-// import { Query } from 'react-apollo';
-// import gql from 'graphql-tag';
+import React, { useState, useEffect } from 'react';
 
 import InlineSVG from 'svg-inline-react';
 
@@ -14,17 +11,21 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-// const GET_CARDS = gql`
-// {
-//   card {
-//     content
-//     type
-//   }
-// }
-// `;
-
 const Header = () =>
 {
+  const [ cards, setCards ] = useState([]);
+
+  // on url change
+  useEffect(() =>
+  {
+    fetch(process.env.API_URI + '/cards').then((response) =>
+    {
+      response.json().then((data) => setCards(data));
+
+    }).catch(console.error);
+
+  }, [ window.location ]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
@@ -33,22 +34,12 @@ const Header = () =>
         </a>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
-        {/* <Query query={GET_CARDS}>
-          {({ loading, error, data }) =>
-          {
-            if (!loading && !error)
-            {
-              return (
-                <div className={styles.cards}>
-                  <Card type={data.card[1].type} content={data.card[1].content}></Card>
-                  <Card type={data.card[0].type} content={data.card[0].content}></Card>
-                </div>
-              );
-            }
-            
-            return '';
-          }}
-        </Query> */}
+        <div className={styles.cards}>
+
+          {cards.reverse().map((card) => <Card key={card.id.toString()} type={card.type} content={card.content}/>)}
+        
+        </div>
+
       </div>
     </div>
   );
