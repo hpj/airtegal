@@ -82,7 +82,6 @@ const styles = createStyle({
     gridArea: 'content',
     display: 'flex',
   
-    direction: 'rtl',
     justifyContent: 'center',
     userSelect: 'none',
 

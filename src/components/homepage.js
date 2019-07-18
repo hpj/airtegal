@@ -138,7 +138,7 @@ const qaStyles = createStyle({
 
     color: colors.blackText,
 
-    fontFamily: '"Cairo", sans-serif',
+    fontFamily: '"Noto Arabic", sans-serif',
     direction: 'rtl',
   
     padding: '5vh 5vw',
@@ -182,7 +182,7 @@ const pStyles = createStyle({
     pointerEvents: 'none',
 
     fontWeight: 700,
-    fontFamily: '"Cairo", sans-serif',
+    fontFamily: '"Noto Arabic", sans-serif',
     fontSize: 'calc(12px + 0.65vw + 0.65vh)',
 
     padding: '5% 8%',
@@ -211,7 +211,7 @@ const bStyles = createStyle({
     
     maxWidth: '850px',
 
-    fontFamily: '"Raleway", "Cairo", sans-serif',
+    fontFamily: '"Raleway", "Noto Arabic", sans-serif',
     fontWeight: 700,
   
     padding: '5vh 5vw',

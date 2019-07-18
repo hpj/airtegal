@@ -1,0 +1,37 @@
+@font-face
+{
+  font-family: "Raleway";
+  src: url("./Raleway-Regular.ttf") format("truetype");
+}
+
+@font-face
+{
+  font-family: "Raleway";
+  src: url("./Raleway-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face
+{
+  font-family: "Noto Arabic";
+  src: url("./NotoSansArabic-SemiCondensed.ttf") format("truetype");
+}
+
+@font-face
+{
+  font-family: "Noto Arabic";
+  src: url("./NotoSansArabic-SemiCondensedBold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+body
+{
+  margin: 0;
+}
+
+#app
+{
+  margin: 0;
+
+  font-size: calc(6px + 0.45vw + 0.45vh);
+}

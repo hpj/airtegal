@@ -1,7 +1,7 @@
 module.exports = {
   'globDirectory': 'public',
   'globPatterns': [
-    '*.{png,html,json,js}'
+    '*.{png,html,json,js,ttf}'
   ],
   'globIgnores': [
     '**/node_modules/**/*',

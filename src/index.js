@@ -7,8 +7,6 @@ import Homepage from './components/homepage.js';
 import TermsAndConditions from './components/useTerms.js';
 import PrivacyPolicy from './components/privacyPolicy.js';
 
-import './body.css';
-
 // if on production mode
 if (process.env.NODE_ENV === 'production')
 {

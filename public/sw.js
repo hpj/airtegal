@@ -43,59 +43,35 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "1dc75eb064a3504f72d60362186fe88b"
+    "revision": "2d55d4c599cceb7e2ee679c4324ef15f"
   },
   {
     "url": "manifest.json",
     "revision": "e8b2f3ff517a2efcb010cf5c1602cd30"
+  },
+  {
+    "url": "NotoSansArabic-SemiCondensed.ttf",
+    "revision": "9fbebac13507b4cf9996b7950b17b9cd"
+  },
+  {
+    "url": "NotoSansArabic-SemiCondensedBold.ttf",
+    "revision": "a2a915fbf7560f887f61c46bc1983dc3"
+  },
+  {
+    "url": "Raleway-Bold.ttf",
+    "revision": "2f99a85426a45e0c7f8707aae53af803"
+  },
+  {
+    "url": "Raleway-Regular.ttf",
+    "revision": "84abe14c9756256a4b91300ba3e4ec62"
   }
 ]);
 
-// Cache the bundle.js file which has all css and icons and modules with stale-while-revalidate strategy
+// Cache the bundle.js file with a network-first strategy
 workbox.routing.registerRoute(
   new RegExp('bundle.js'),
-  new workbox.strategies.StaleWhileRevalidate({
+  new workbox.strategies.NetworkFirst({
     cacheName: 'kbf-cache'
-  }));
-
-// Cache the Google Fonts stylesheets with a stale-while-revalidate strategy
-workbox.routing.registerRoute(
-  new RegExp('https://fonts.googleapis.com'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'google-fonts-stylesheets'
-  })
-);
-
-// Cache the underlying font files with a cache-first strategy for 1 year
-workbox.routing.registerRoute(
-  new RegExp('https://fonts.gstatic.com'),
-  new workbox.strategies.CacheFirst({
-    cacheName: 'google-fonts-webfonts',
-    plugins: [
-      new workbox.cacheableResponse.Plugin({
-        statuses: [ 0, 200 ]
-      }),
-      new workbox.expiration.Plugin({
-        maxAgeSeconds: 60 * 60 * 24 * 365,
-        maxEntries: 30
-      })
-    ]
-  })
-);
-
-// Cache the geoip check with a cache-first strategy for 1 day
-workbox.routing.registerRoute(
-  new RegExp('https://geoip-db.com/jsonp'),
-  new workbox.strategies.CacheFirst({
-    cacheName: 'kbf-cache',
-    plugins: [
-      new workbox.cacheableResponse.Plugin({
-        statuses: [ 0, 200 ]
-      }),
-      new workbox.expiration.Plugin({
-        maxAgeSeconds: 60 * 60 * 24 * 1
-      })
-    ]
   })
 );
 
@@ -118,5 +94,7 @@ workbox.routing.registerRoute(
 // Cache cards and packs with a network-first strategy
 workbox.routing.registerRoute(
   new RegExp('https://kbf.herokuapp.com'),
-  new workbox.strategies.NetworkFirst()
+  new workbox.strategies.NetworkFirst({
+    cacheName: 'kbf-cache'
+  })
 );
