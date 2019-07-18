@@ -14,13 +14,13 @@
 @font-face
 {
   font-family: "Noto Arabic";
-  src: url("./NotoSansArabic-SemiCondensed.ttf") format("truetype");
+  src: url("./NotoSansArabic-Regular.ttf") format("truetype");
 }
 
 @font-face
 {
   font-family: "Noto Arabic";
-  src: url("./NotoSansArabic-SemiCondensedBold.ttf") format("truetype");
+  src: url("./NotoSansArabic-Bold.ttf") format("truetype");
   font-weight: bold;
 }
 

@@ -11,7 +11,7 @@ self.addEventListener('message', (event) =>
 workbox.precaching.precacheAndRoute([
   {
     "url": "Icon-144.png",
-    "revision": "d0f62307c6eafcd889857b8eb7d5d3da"
+    "revision": "ddbe46224704e861d7ad54aefcb19686"
   },
   {
     "url": "Icon-16.png",
@@ -19,7 +19,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "Icon-192.png",
-    "revision": "0233ce04759e6b9dc505af077dd09b58"
+    "revision": "69ea483a0819509a9c891de60ff4a3fb"
   },
   {
     "url": "Icon-36.png",
@@ -27,19 +27,19 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "Icon-48.png",
-    "revision": "a08c4248f1139d752d52641203e0a497"
+    "revision": "1027f74579f421bc8e95cff420bcafdf"
   },
   {
     "url": "Icon-512.png",
-    "revision": "1c1b08355f7044ca71678cc00e57e8dc"
+    "revision": "543a835123727cd6e0f26557eb6630c1"
   },
   {
     "url": "Icon-72.png",
-    "revision": "dde2bb21c845863885e44b1b403bf738"
+    "revision": "310230e07fb95d839e72de6b6ead27ea"
   },
   {
     "url": "Icon-96.png",
-    "revision": "cfbd8d64689fa0318e156552aa340c9e"
+    "revision": "485878dc6561b69dd02d6e634f6cef36"
   },
   {
     "url": "index.html",
@@ -50,12 +50,12 @@ workbox.precaching.precacheAndRoute([
     "revision": "e8b2f3ff517a2efcb010cf5c1602cd30"
   },
   {
-    "url": "NotoSansArabic-SemiCondensed.ttf",
-    "revision": "9fbebac13507b4cf9996b7950b17b9cd"
+    "url": "NotoSansArabic-Bold.ttf",
+    "revision": "793944f4ca6e09ce8703078ce3841526"
   },
   {
-    "url": "NotoSansArabic-SemiCondensedBold.ttf",
-    "revision": "a2a915fbf7560f887f61c46bc1983dc3"
+    "url": "NotoSansArabic-Regular.ttf",
+    "revision": "9f563abf8532ead724f2d6231983b5d4"
   },
   {
     "url": "Raleway-Bold.ttf",
