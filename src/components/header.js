@@ -36,7 +36,7 @@ const Header = () =>
 
         <div className={styles.cards}>
 
-          {cards.reverse().map((card) => <Card key={card.id.toString()} type={card.type} content={card.content}/>)}
+          {cards.splice(0, 2).reverse().map((card) => <Card key={card.id.toString()} type={card.type} content={card.content}/>)}
         
         </div>
 
