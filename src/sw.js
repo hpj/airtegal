@@ -10,10 +10,10 @@ self.addEventListener('message', (event) =>
 
 workbox.precaching.precacheAndRoute([]);
 
-// Cache the bundle.js file with a network-first strategy
+// Cache the bundle.js file with a stale-while-revalidate strategy
 workbox.routing.registerRoute(
   new RegExp('bundle.js'),
-  new workbox.strategies.NetworkFirst({
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: 'kbf-cache'
   })
 );
@@ -34,7 +34,8 @@ workbox.routing.registerRoute(
   })
 );
 
-// Cache cards and packs with a network-first strategy
+// Cache cards and packs with a stale-while-revalidate strategy
+// // This might cause problems while in lobby with players having mis-matched cards and packs
 workbox.routing.registerRoute(
   new RegExp('https://kbf.herokuapp.com'),
   new workbox.strategies.NetworkFirst({
