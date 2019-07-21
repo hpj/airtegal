@@ -15,13 +15,17 @@ import PrivacyPolicy from './components/privacyPolicy.js';
 
 const body = document.body.querySelector('#app');
 
-// CORS only works on this origin
-if (process.env.NODE_ENV === 'production' && location.hostname.search('gitlab.io') > -1)
-  location.href = 'https://bedan.herpproject.com';
-
 // if on production mode
 if (process.env.NODE_ENV === 'production')
 {
+  // CORS only works on this origin
+  // meaning we need to move the client to that origin
+  console.log(location.hostname);
+  console.log(location.hostname.search('gitlab.io'));
+
+  if (location.hostname.search('gitlab.io') > -1)
+    location.replace('https://bedan.herpproject.com');
+
   process.env.API_URI = 'https://kbf.herokuapp.com';
   
   // if the browser supports service workers
