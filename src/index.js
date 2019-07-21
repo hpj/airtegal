@@ -16,7 +16,7 @@ import PrivacyPolicy from './components/privacyPolicy.js';
 const body = document.body.querySelector('#app');
 
 // CORS only works on this origin
-if (process.env.NODE_ENV !== 'production' && location.hostname.search('gitlab.io') > -1)
+if (process.env.NODE_ENV === 'production' && location.hostname.search('gitlab.io') > -1)
   location.href = 'https://bedan.herpproject.com';
 
 // if on production mode
