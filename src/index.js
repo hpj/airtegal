@@ -20,9 +20,6 @@ if (process.env.NODE_ENV === 'production')
 {
   // CORS only works on this origin
   // meaning we need to move the client to that origin
-  console.log(location.hostname);
-  console.log(location.hostname.search('gitlab.io'));
-
   if (location.hostname.search('gitlab.io') > -1)
     location.replace('https://bedan.herpproject.com');
 
