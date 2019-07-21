@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import jsonp from 'jsonp';
 // import io from 'socket.io-client';
 
 import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
 
-import Placeholder from './placeholder.js';
 import Header from './header.js';
 
 import { createStyle } from '../flcss.js';
@@ -18,9 +16,6 @@ import * as colors from '../colors.js';
 
 const Homepage = () =>
 {
-  const [ country, setCountry ] = useState('');
-  const [ error, setError ] = useState('');
-  
   // on url change
   useEffect(() =>
   {
@@ -28,109 +23,76 @@ const Homepage = () =>
     
     window.scrollTo(0, 0);
 
-    // const socket = io('https://localhost:3000/');
-
-    jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
-    {
-      if (err)
-      {
-        setError(err.message);
-        
-        return;
-      }
-  
-      setCountry(response.country_name);
-    });
+    // const socket = io('process.env.API_URI');
   }, [ window.location ]);
 
-  if (country && country === 'Egypt')
-  {
-    return (
-      <div>
-        <Header></Header>
-  
-        <div className={qaStyles.wrapper}>
-          <div className={qaStyles.container}>
-            <p className={qaStyles.question}>
-              يعني ايه كروت بضان فشخ؟
-            </p>
-  
-            <p className={qaStyles.answer}>
-              اللعبه بسيطه. كل دور لاعب بيسال سؤال من كرت اسود وباقي اللعيبه بيجاوبوا عليه باكثر كرت ابيض بيضحك في ايدهم.
-            </p>
-  
-            <p className={qaStyles.question}>
-              ليه اللعبه عنصرية و بتشجع علي الكراهية؟
-            </p>
-  
-            <p className={qaStyles.answer}>
-              كل الكروت ال في اللعبه تم اقتراحها والتصويت عليها من المجتمع.
-              <br/>
-              لحماية حرية التعبير والرائ بموجب المادة رقم 19 من الإعلان العالمي لحقوق الإنسان
-              ولحماية الحقوق الفكرية لصانعي الكروت هيرب بروجكت لن تتدخل في عمليه الاقتراح والتصويت.
-              <br/>
-              لمعلومات اكثر ممكن تقرأ سياسة الخصوصية والشروط والاحكام.
-            </p>
-          </div>
-        </div>
-      
-        <div className={pStyles.wrapper}>
-          <div className={pStyles.container}>
-            <p className={pStyles.title}>
-              !قريباً
-            </p>
-          </div>
-        </div>
-  
-        <div className={bStyles.wrapper}>
-          <div className={bStyles.container}>
-            <a className={bStyles.hpj} href='https://herpproject.com'>
-              <InlineSVG src={hpjLogo}></InlineSVG>
-            </a>
-            <a className={bStyles.patreon} href='https://www.patreon.com/hpj'>
-              <PatreonIcon/>
-              BECOME A PATRON
-            </a>
-            <div className={bStyles.sitemap}>
-              <Link className={bStyles.use} to='/tac/'>الشروط والاحكام</Link>
-              _
-              <Link className={bStyles.privacy} to='/pt/'>سياسة الخصوصية</Link>
-            </div>
-            <p className={bStyles.copyright}>
-              تتوفر كروت
-              Cards Against Humanity
-              تحت رخصة
-              Creative Commons BY-NC-SA 2.0
-              هذا يعني انة يمكننا استخدام الكروت والتعديل عليها ومشاركتها مجاناً
-              لكن لا يمكن لنا تحقيق اي ربح مادي منها
-              او استخدام اسمها ترويجياُ دون اذن.
-              <br/>
-              لكن يتوفر باقي الموقع واللعبة تحت
-              حقوق الطبع والنشر 2019-2020 ل هيرب بروجيكت.
-            </p>
-          </div>
+  return (
+    <div>
+      <Header></Header>
+
+      <div className={qaStyles.wrapper}>
+        <div className={qaStyles.container}>
+          <p className={qaStyles.question}>
+            يعني ايه كروت بضان فشخ؟
+          </p>
+
+          <p className={qaStyles.answer}>
+            اللعبه بسيطه. كل دور لاعب بيسال سؤال من كرت اسود وباقي اللعيبه بيجاوبوا عليه باكثر كرت ابيض بيضحك في ايدهم.
+          </p>
+
+          <p className={qaStyles.question}>
+            ليه اللعبه عنصرية و بتشجع علي الكراهية؟
+          </p>
+
+          <p className={qaStyles.answer}>
+            كل الكروت ال في اللعبه تم اقتراحها والتصويت عليها من المجتمع.
+            <br/>
+            لحماية حرية التعبير والرائ بموجب المادة رقم 19 من الإعلان العالمي لحقوق الإنسان
+            ولحماية الحقوق الفكرية لصانعي الكروت هيرب بروجكت لن تتدخل في عمليه الاقتراح والتصويت.
+            <br/>
+            لمعلومات اكثر ممكن تقرأ سياسة الخصوصية والشروط والاحكام.
+          </p>
         </div>
       </div>
-    );
-  }
-  else if (country && country !== 'Egypt')
-  {
-    return (
-      <Placeholder type='not-available'/>
-    );
-  }
-  else if (error)
-  {
-    return (
-      <Placeholder type='error' content={error}/>
-    );
-  }
-  else
-  {
-    return (
-      <Placeholder type='loading'/>
-    );
-  }
+    
+      <div className={pStyles.wrapper}>
+        <div className={pStyles.container}>
+          {
+            (process.env.NODE_ENV === 'production') ? <p className={pStyles.title}>!قريباً</p> : <Link className={pStyles.title} to='/play'>ابدا</Link>
+          }
+        </div>
+      </div>
+
+      <div className={bStyles.wrapper}>
+        <div className={bStyles.container}>
+          <a className={bStyles.hpj} href='https://herpproject.com'>
+            <InlineSVG src={hpjLogo}></InlineSVG>
+          </a>
+          <a className={bStyles.patreon} href='https://www.patreon.com/hpj'>
+            <PatreonIcon/>
+            BECOME A PATRON
+          </a>
+          <div className={bStyles.sitemap}>
+            <Link className={bStyles.use} to='/tac'>الشروط والاحكام</Link>
+            _
+            <Link className={bStyles.privacy} to='/pt'>سياسة الخصوصية</Link>
+          </div>
+          <p className={bStyles.copyright}>
+            تتوفر كروت
+            Cards Against Humanity
+            تحت رخصة
+            Creative Commons BY-NC-SA 2.0
+            هذا يعني انة يمكننا استخدام الكروت والتعديل عليها ومشاركتها مجاناً
+            لكن لا يمكن لنا تحقيق اي ربح مادي منها
+            او استخدام اسمها ترويجياُ دون اذن.
+            <br/>
+            لكن يتوفر باقي الموقع واللعبة تحت
+            حقوق الطبع والنشر 2019-2020 ل هيرب بروجيكت.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const qaStyles = createStyle({
@@ -181,14 +143,20 @@ const pStyles = createStyle({
     border: '3px solid',
     borderColor: colors.whiteText,
 
-    userSelect: 'none',
     pointerEvents: 'none',
+    userSelect: 'none',
 
     fontWeight: 700,
     fontFamily: '"Noto Arabic", sans-serif',
     fontSize: 'calc(12px + 0.65vw + 0.65vh)',
 
+    textDecoration: 'none',
+
     padding: '5% 8%',
+
+    '[href]': {
+      pointerEvents: 'all'
+    },
 
     ':hover': {
       background: 'linear-gradient(to right, #009fff, #ec2f4b)',
@@ -224,13 +192,14 @@ const bStyles = createStyle({
   hpj: {
     gridArea: 'hpj',
 
-    justifySelf: 'end',
     cursor: 'pointer',
 
     minWidth: '100px',
     maxWidth: '132px',
     width: '35%',
     height: '100%',
+    
+    margin: '0 0 0 auto',
 
     '> i > svg': {
       width: '100%',
@@ -244,11 +213,11 @@ const bStyles = createStyle({
 
   patreon: {
     gridArea: 'patreon',
-    justifySelf: 'self-start',
 
     display: 'flex',
     alignItems: 'center',
     
+    color: colors.whiteText,
     width: 'fit-content',
     
     userSelect: 'none',
@@ -256,7 +225,8 @@ const bStyles = createStyle({
     
     direction: 'ltr',
     textDecoration: 'none',
-    color: colors.whiteText,
+
+    margin: '0 auto 0 0',
 
     ':hover': { color: colors.accentColor },
 
@@ -267,7 +237,7 @@ const bStyles = createStyle({
     gridArea: 'sitemap',
     display: 'flex',
 
-    justifySelf: 'end',
+    margin: '0 0 0 auto',
 
     userSelect: 'none',
     color: colors.whiteText

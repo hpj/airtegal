@@ -36,7 +36,9 @@ const Header = () =>
 
         <div className={styles.cards}>
 
-          {cards.splice(0, 2).reverse().map((card) => <Card key={card.id.toString()} type={card.type} content={card.content}/>)}
+          {
+            cards.splice(0, 2).reverse().map((card) => <Card key={card.id.toString()} type={card.type} content={card.content}/>)
+          }
         
         </div>
 
@@ -68,12 +70,13 @@ const styles = createStyle({
     gridArea: 'hpj',
 
     flexGrow: 1,
-    justifySelf: 'end',
 
     minWidth: '100px',
     maxWidth: '150px',
     width: '80%',
     height: '100%',
+
+    margin: '0 0 0 auto',
 
     '> i > svg': {
       width: '100%',
@@ -91,12 +94,12 @@ const styles = createStyle({
     display: 'flex',
     gridArea: 'kbf',
 
-    justifySelf: 'end',
-
     minWidth: '95px',
     maxWidth: '152px',
     width: '80%',
     height: '100%',
+
+    margin: '0 0 0 auto',
 
     '> svg': {
       width: '100%',
