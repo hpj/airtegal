@@ -62,8 +62,8 @@ jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
           (process.env.NODE_ENV === 'production') ? <div/> : <Route exact path="/play" component={Game}/>
         }
 
-        <Route path="/tac" component={TermsAndConditions}/>
-        <Route path="/pt" component={PrivacyPolicy}/>
+        <Route path="/terms" component={TermsAndConditions}/>
+        <Route path="/privacy" component={PrivacyPolicy}/>
       
       </Router>, body);
   }

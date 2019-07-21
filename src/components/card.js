@@ -57,7 +57,7 @@ const styles = createStyle({
     width: '100%',
     height: '100%',
   
-    fontFamily: '"Noto Arabic", sans-serif',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: 700,
 

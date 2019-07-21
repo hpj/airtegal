@@ -140,7 +140,7 @@ const TermsAndConditions = () =>
 
 const styles = createStyle({
   container: {
-    fontFamily: '"Raleway", sans-serif',
+    fontFamily: '"Montserrat", sans-serif',
 
     padding: '5vh 5vw'
   }

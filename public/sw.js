@@ -11,7 +11,7 @@ self.addEventListener('message', (event) =>
 workbox.precaching.precacheAndRoute([
   {
     "url": "body.css",
-    "revision": "db9c19089653020ba220b63a7bb09551"
+    "revision": "da4544882bda27d9948eb1bebc837fea"
   },
   {
     "url": "Icon-144.png",
@@ -54,20 +54,20 @@ workbox.precaching.precacheAndRoute([
     "revision": "e8b2f3ff517a2efcb010cf5c1602cd30"
   },
   {
+    "url": "Montserrat-Bold.ttf",
+    "revision": "a3b387c93882604792867736aecd56c8"
+  },
+  {
+    "url": "Montserrat-Regular.ttf",
+    "revision": "a8a117360e71de94ae3b0b0f8d15b44d"
+  },
+  {
     "url": "NotoSansArabic-Bold.ttf",
     "revision": "793944f4ca6e09ce8703078ce3841526"
   },
   {
     "url": "NotoSansArabic-Regular.ttf",
     "revision": "9f563abf8532ead724f2d6231983b5d4"
-  },
-  {
-    "url": "Raleway-Bold.ttf",
-    "revision": "2f99a85426a45e0c7f8707aae53af803"
-  },
-  {
-    "url": "Raleway-Regular.ttf",
-    "revision": "84abe14c9756256a4b91300ba3e4ec62"
   }
 ]);
 

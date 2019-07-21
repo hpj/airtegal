@@ -73,9 +73,9 @@ const Homepage = () =>
             BECOME A PATRON
           </a>
           <div className={bStyles.sitemap}>
-            <Link className={bStyles.use} to='/tac'>الشروط والاحكام</Link>
+            <Link className={bStyles.use} to='/terms'>الشروط والاحكام</Link>
             _
-            <Link className={bStyles.privacy} to='/pt'>سياسة الخصوصية</Link>
+            <Link className={bStyles.privacy} to='/privacy'>سياسة الخصوصية</Link>
           </div>
           <p className={bStyles.copyright}>
             تتوفر كروت
@@ -103,7 +103,7 @@ const qaStyles = createStyle({
 
     color: colors.blackText,
 
-    fontFamily: '"Noto Arabic", sans-serif',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     direction: 'rtl',
   
     padding: '5vh 5vw',
@@ -147,7 +147,7 @@ const pStyles = createStyle({
     userSelect: 'none',
 
     fontWeight: 700,
-    fontFamily: '"Noto Arabic", sans-serif',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(12px + 0.65vw + 0.65vh)',
 
     textDecoration: 'none',
@@ -182,7 +182,7 @@ const bStyles = createStyle({
     
     maxWidth: '850px',
 
-    fontFamily: '"Raleway", "Noto Arabic", sans-serif',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontWeight: 700,
   
     padding: '5vh 5vw',

@@ -1,13 +1,13 @@
 @font-face
 {
-  font-family: "Raleway";
-  src: url("./Raleway-Regular.ttf") format("truetype");
+  font-family: "Montserrat";
+  src: url("./Montserrat-Regular.ttf") format("truetype");
 }
 
 @font-face
 {
-  font-family: "Raleway";
-  src: url("./Raleway-Bold.ttf") format("truetype");
+  font-family: "Montserrat";
+  src: url("./Montserrat-Bold.ttf") format("truetype");
   font-weight: bold;
 }
 
