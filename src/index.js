@@ -16,10 +16,15 @@ import Game from './components/game.js';
 import TermsAndConditions from './components/useTerms.js';
 import PrivacyPolicy from './components/privacyPolicy.js';
 
+export let API_URI;
+
+let keepLoading = false;
+
 let country = '';
 let error = '';
 
-const body = document.body.querySelector('#app');
+const app = document.body.querySelector('#app');
+const placeholder = document.body.querySelector('#placeholder');
 
 /** when all required assets are loaded
 */
@@ -27,28 +32,44 @@ function loaded()
 {
   if (country && country === 'Egypt')
   {
-    ReactDOM.render(
-      <Router>
+    const pages =
+    <Router>
       
-        <Route exact path="/" component={Homepage}/>
-        
-        {
-          (process.env.NODE_ENV === 'production') ? <div/> : <Route exact path="/play" component={Game}/>
-        }
+      <Route exact path="/" component={Homepage}/>
+    
+      {
+        (process.env.NODE_ENV === 'production') ? <div/> : <Route exact path="/play" component={Game}/>
+      }
 
-        <Route path="/terms" component={TermsAndConditions}/>
-        <Route path="/privacy" component={PrivacyPolicy}/>
-      
-      </Router>, body);
+      <Route path="/terms" component={TermsAndConditions}/>
+      <Route path="/privacy" component={PrivacyPolicy}/>
+  
+    </Router>;
+    
+    ReactDOM.render(pages, app);
+    
+    if (!keepLoading)
+      hideLoadingScreen();
   }
   else if (country && country !== 'Egypt')
   {
-    ReactDOM.render(<Placeholder type='not-available'/>, body);
+    ReactDOM.render(<Placeholder type='not-available'/>, placeholder);
   }
   else if (error)
   {
-    ReactDOM.render(<Placeholder type='error' content={error}/>, body);
+    ReactDOM.render(<Placeholder type='error' content={error}/>, placeholder);
   }
+}
+
+export function holdLoadingScreen()
+{
+  keepLoading = true;
+}
+
+export function hideLoadingScreen()
+{
+  if (document.body.contains(placeholder))
+    document.body.removeChild(placeholder);
 }
 
 // if on production mode
@@ -59,7 +80,7 @@ if (process.env.NODE_ENV === 'production')
   if (location.hostname.search('gitlab.io') > -1)
     location.replace('https://bedan.herpproject.com');
 
-  process.env.API_URI = 'https://kbf.herokuapp.com';
+  API_URI = 'https://kbf.herokuapp.com';
   
   // if the browser supports service workers
   if ('serviceWorker' in navigator)
@@ -74,7 +95,7 @@ if (process.env.NODE_ENV === 'production')
 }
 else
 {
-  process.env.API_URI = 'https://localhost:3000';
+  API_URI = 'https://kbf.herokuapp.com';
 }
 
 const webFontPromise = new Promise((resolve) =>
@@ -106,7 +127,7 @@ const countryPromise = new Promise((resolve) =>
 Promise.all([ countryPromise, webFontPromise ]).then(loaded);
 
 // render loading screen
-ReactDOM.render(<Placeholder type='loading'/>, body);
+ReactDOM.render(<Placeholder type='loading'/>, placeholder);
 
 if (module.hot)
   module.hot.accept();

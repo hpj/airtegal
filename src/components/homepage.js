@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
 
+// import { API_URI } from '../index.js';
+
 import Header from './header.js';
 
 import { createStyle } from '../flcss.js';
@@ -23,7 +25,7 @@ const Homepage = () =>
     
     window.scrollTo(0, 0);
 
-    // const socket = io('process.env.API_URI');
+    // const socket = io('API_URI');
   }, [ window.location ]);
 
   return (

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import AutosizeInput from 'react-input-autosize';
 import RefreshIcon from 'mdi-react/RefreshIcon';
+
+import autoSizeInput from 'autosize-input';
+
+import { holdLoadingScreen, hideLoadingScreen } from '../index.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -11,6 +14,8 @@ import stupidName from '../stupidName.js';
 
 const Game = () =>
 {
+  holdLoadingScreen();
+
   const [ username, setUsername ] = useState(stupidName);
 
   const usernameChangeEvent = (event) =>
@@ -28,6 +33,11 @@ const Game = () =>
   {
     document.title = 'Kuruit Bedan Fash5';
 
+    // auto-size the username input-box
+    autoSizeInput(document.querySelector(`.${oStyles.username}`));
+
+    hideLoadingScreen();
+    
     window.scrollTo(0, 0);
   }, [ window.location ]);
 
@@ -38,7 +48,7 @@ const Game = () =>
         
         <div className={oStyles.container}>
 
-          <AutosizeInput className={oStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
+          <input className={oStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
           <p className={oStyles.welcome}>اهلا</p>
         </div>
 
@@ -94,31 +104,28 @@ const oStyles = createStyle({
   },
 
   username: {
-    margin: '0 5px 0 auto',
+    margin: '0 5px -2px auto',
+    direction: 'rtl',
 
-    '> input': {
+    fontWeight: '700',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    
+    padding: 0,
+    border: 0,
+    borderBottom: `2px ${colors.blackText} solid`,
 
-      direction: 'rtl',
-      fontWeight: '700',
-      fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-      
-      padding: '2px 0',
-  
-      border: 0,
-      borderBottom: `2px ${colors.blackText} solid`,
+    '::placeholder': {
+      color: colors.red
+    },
 
-      '::placeholder': {
-        color: colors.red
-      },
+    ':focus': {
+      'outline': 'none'
+    },
 
-      ':focus': {
-        'outline': 'none'
-      },
-
-      ':not(:valid)':
-      {
-        borderColor: colors.red
-      }
+    ':not(:valid)':
+    {
+      borderColor: colors.red
     }
   }
 });

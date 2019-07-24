@@ -20,12 +20,12 @@
   },
   "homepage": "https://gitlab.com/hpj/kuruit-bedan-fash5#readme",
   "dependencies": {
+    "autosize-input": "^1.0.2",
     "jsonp": "^0.2.1",
     "mdi-react": "^5.5.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-input-autosize": "^2.2.1",
     "react-router-dom": "^5.0.1",
     "react-spring": "^8.0.27",
     "socket.io-client": "^2.2.0",
