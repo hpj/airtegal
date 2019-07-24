@@ -1,29 +1,3 @@
-@font-face
-{
-  font-family: "Montserrat";
-  src: url("./Montserrat-Regular.ttf") format("truetype");
-}
-
-@font-face
-{
-  font-family: "Montserrat";
-  src: url("./Montserrat-Bold.ttf") format("truetype");
-  font-weight: bold;
-}
-
-@font-face
-{
-  font-family: "Noto Arabic";
-  src: url("./NotoSansArabic-Regular.ttf") format("truetype");
-}
-
-@font-face
-{
-  font-family: "Noto Arabic";
-  src: url("./NotoSansArabic-Bold.ttf") format("truetype");
-  font-weight: bold;
-}
-
 body
 {
   margin: 0;

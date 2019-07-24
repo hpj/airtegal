@@ -1,6 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
+;
 import { HashRouter as Router, Route } from 'react-router-dom';
+
+import WebFont from 'webfontloader';
 
 import jsonp from 'jsonp';
 
@@ -13,7 +16,40 @@ import Game from './components/game.js';
 import TermsAndConditions from './components/useTerms.js';
 import PrivacyPolicy from './components/privacyPolicy.js';
 
+let country = '';
+let error = '';
+
 const body = document.body.querySelector('#app');
+
+/** when all required assets are loaded
+*/
+function loaded()
+{
+  if (country && country === 'Egypt')
+  {
+    ReactDOM.render(
+      <Router>
+      
+        <Route exact path="/" component={Homepage}/>
+        
+        {
+          (process.env.NODE_ENV === 'production') ? <div/> : <Route exact path="/play" component={Game}/>
+        }
+
+        <Route path="/terms" component={TermsAndConditions}/>
+        <Route path="/privacy" component={PrivacyPolicy}/>
+      
+      </Router>, body);
+  }
+  else if (country && country !== 'Egypt')
+  {
+    ReactDOM.render(<Placeholder type='not-available'/>, body);
+  }
+  else if (error)
+  {
+    ReactDOM.render(<Placeholder type='error' content={error}/>, body);
+  }
+}
 
 // if on production mode
 if (process.env.NODE_ENV === 'production')
@@ -41,42 +77,35 @@ else
   process.env.API_URI = 'https://localhost:3000';
 }
 
-jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
+const webFontPromise = new Promise((resolve) =>
 {
-  let country = '';
-  let error = '';
-
-  if (err)
-    error = err.message;
-  else
-    country = response.country_name;
-
-  if (country && country === 'Egypt')
-  {
-    ReactDOM.render(
-      <Router>
-      
-        <Route exact path="/" component={Homepage}/>
-        
-        {
-          (process.env.NODE_ENV === 'production') ? <div/> : <Route exact path="/play" component={Game}/>
-        }
-
-        <Route path="/terms" component={TermsAndConditions}/>
-        <Route path="/privacy" component={PrivacyPolicy}/>
-      
-      </Router>, body);
-  }
-  else if (country && country !== 'Egypt')
-  {
-    ReactDOM.render(<Placeholder type='not-available'/>, body);
-  }
-  else if (error)
-  {
-    ReactDOM.render(<Placeholder type='error' content={error}/>, body);
-  }
+  WebFont.load({
+    active: resolve,
+    inactive: resolve,
+    custom: {
+      families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ],
+      urls: [ '/fonts.css' ]
+    }
+  });
 });
 
+const countryPromise = new Promise((resolve) =>
+{
+  jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
+  {
+    if (err)
+      error = err.message;
+    else
+      country = response.country_name;
+
+    resolve();
+  });
+});
+
+// called when loading is finished to show the real app
+Promise.all([ countryPromise, webFontPromise ]).then(loaded);
+
+// render loading screen
 ReactDOM.render(<Placeholder type='loading'/>, body);
 
 if (module.hot)

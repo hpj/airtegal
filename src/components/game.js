@@ -1,55 +1,150 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
+import AutosizeInput from 'react-input-autosize';
 import RefreshIcon from 'mdi-react/RefreshIcon';
-import InlineSVG from 'svg-inline-react';
 
 import { createStyle } from '../flcss.js';
 
-import gameLogo from '../../build/kbf.svg';
-
 import * as colors from '../colors.js';
+
+import stupidName from '../stupidName.js';
 
 const Game = () =>
 {
+  const [ username, setUsername ] = useState(stupidName);
+
+  const usernameChangeEvent = (event) =>
+  {
+    setUsername(event.target.value.replace(/\s+/g, ' '));
+  };
+
+  const usernameBlurEvent = (event) =>
+  {
+    setUsername(event.target.value.trim());
+  };
+
   // on url change reset scroll position
   useEffect(() =>
   {
     document.title = 'Kuruit Bedan Fash5';
-    
+
     window.scrollTo(0, 0);
   }, [ window.location ]);
 
   return (
-    <div className={wStyles.wrapper}>
+    <div className={mStyles.wrapper}>
 
-      <div  className={rStyles.container}>
+      <div className={mStyles.container}>
         
-        <RefreshIcon className={rStyles.refresh}/>
-        <p className={rStyles.title}>الغرف المتاحة</p>
+        <div className={oStyles.container}>
 
-      </div>
+          <AutosizeInput className={oStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
+          <p className={oStyles.welcome}>اهلا</p>
+        </div>
 
-      <div className={sStyles.container}>
+        <div className={hStyles.container}>
 
-        <p className={sStyles.welcome}>,اهلا</p>
-        <p className={sStyles.username}>.طيز السمكة</p>
+          <div className={hStyles.button}>اصنع غرفتك</div>
+          <div className={hStyles.button}>غرفة عشؤئية</div>
 
+        </div>
+
+        <div className={rStyles.container}>
+
+          <RefreshIcon className={rStyles.refresh}/>
+          <p className={rStyles.title}>الغرف المتاحة</p>
+          
+        </div>
       </div>
     </div>
   );
 };
 
-const wStyles = createStyle({
+const mStyles = createStyle({
   wrapper: {
-    display: 'flex',
 
     backgroundColor: colors.whiteBackground,
-    color: colors.blackText,
 
     width: '100vw',
-    height: '100vh',
+    height: '100vh'
+  },
+  
+  container: {
+    color: colors.blackText,
+    
+    maxWidth: '850px',
 
-    fontFamily: '"Noto Arabic", sans-serif'
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    margin: 'auto'
+  }
+});
+
+const oStyles = createStyle({
+  container: {
+    display: 'flex',
+
+    fontWeight: '700',
+
+    padding: '3vh 3vw 5px 3vw'
+  },
+
+  welcome: {
+    margin: '0'
+  },
+
+  username: {
+    margin: '0 5px 0 auto',
+
+    '> input': {
+
+      direction: 'rtl',
+      fontWeight: '700',
+      fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+      
+      padding: '2px 0',
+  
+      border: 0,
+      borderBottom: `2px ${colors.blackText} solid`,
+
+      '::placeholder': {
+        color: colors.red
+      },
+
+      ':focus': {
+        'outline': 'none'
+      },
+
+      ':not(:valid)':
+      {
+        borderColor: colors.red
+      }
+    }
+  }
+});
+
+const hStyles = createStyle({
+  container: {
+    display: 'grid',
+
+    gridTemplateAreas: '". ."',
+    gridColumnGap: '5%',
+
+    fontWeight: '700',
+    padding: '0 3vw'
+  },
+
+  button: {
+    display: 'flex',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    borderRadius: '5px',
+    border: `1px ${colors.blackText} solid`,
+
+    padding: '5px 0',
+    margin: '5% 0'
   }
 });
 
@@ -58,7 +153,7 @@ const rStyles = createStyle({
     display: 'flex',
     flexGrow: 1,
 
-    padding: '3vh 3vw 0 3vw'
+    padding: '3vh 3vw'
   },
 
   title: {
@@ -72,29 +167,6 @@ const rStyles = createStyle({
 
   refresh: {
 
-  }
-});
-
-const sStyles = createStyle({
-  container: {
-    display: 'grid',
-    gridTemplateAreas: '"welcome" "username" "."',
-    gridTemplateRows: 'auto auto 1fr',
-
-    width: '30%',
-
-    fontWeight: '700',
-    padding: '3vh 3vw 0 0'
-  },
-
-  welcome: {
-    gridArea: 'welcome',
-    margin: '0 0 0 auto'
-  },
-
-  username: {
-    gridArea: 'username',
-    margin: '0 0 0 auto'
   }
 });
 

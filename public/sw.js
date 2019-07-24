@@ -11,7 +11,11 @@ self.addEventListener('message', (event) =>
 workbox.precaching.precacheAndRoute([
   {
     "url": "body.css",
-    "revision": "da4544882bda27d9948eb1bebc837fea"
+    "revision": "e43b79c4f12937881ec09d88d6d4eb57"
+  },
+  {
+    "url": "fonts.css",
+    "revision": "96c0f7881407d44eafc15b1e21153aad"
   },
   {
     "url": "Icon-144.png",
