@@ -8,13 +8,13 @@ import InlineSVG from 'svg-inline-react';
 
 // import { API_URI } from '../index.js';
 
-import Header from './header.js';
+import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
 import hpjLogo from '../../build/hpj-logo-ar.svg';
 
-import * as colors from '../colors.js';
+import Header from './header.js';
 
 const Homepage = () =>
 {
@@ -154,7 +154,7 @@ const pStyles = createStyle({
 
     textDecoration: 'none',
 
-    padding: '5% 8%',
+    padding: '5% 12%',
 
     '[href]': {
       pointerEvents: 'all'

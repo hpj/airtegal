@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 
 import InlineSVG from 'svg-inline-react';
 
-import Card from './card.js';
-
-import gameLogo from '../../build/kbf.svg';
-import hpjLogo from '../../build/hpj-logo-ar.svg';
+import { API_URI } from '../index.js';
 
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
+
+import gameLogo from '../../build/kbf.svg';
+import hpjLogo from '../../build/hpj-logo-ar.svg';
+
+import Card from './card.js';
 
 const Header = () =>
 {
@@ -18,7 +20,7 @@ const Header = () =>
   // on url change
   useEffect(() =>
   {
-    fetch(process.env.API_URI + '/cards').then((response) =>
+    fetch(API_URI + '/cards').then((response) =>
     {
       response.json().then((data) => setCards(data));
 

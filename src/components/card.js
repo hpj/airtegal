@@ -2,9 +2,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { createStyle } from '../flcss.js';
-
 import * as colors from '../colors.js';
+
+import { createStyle } from '../flcss.js';
 
 /** @param { { content: string, type: 'black' | 'white' } } param0
 */

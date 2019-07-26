@@ -68,6 +68,9 @@ export function holdLoadingScreen()
 
 export function hideLoadingScreen()
 {
+  // will cause an issue if more than one component are holding the loading
+  // incase that happens an ID system for every hold will be the most efficient flexDirection: 
+  
   if (document.body.contains(placeholder))
     document.body.removeChild(placeholder);
 }
@@ -95,7 +98,7 @@ if (process.env.NODE_ENV === 'production')
 }
 else
 {
-  API_URI = 'https://kbf.herokuapp.com';
+  API_URI = 'https://localhost:3000';
 }
 
 const webFontPromise = new Promise((resolve) =>

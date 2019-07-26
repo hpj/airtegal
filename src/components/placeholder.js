@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import InlineSVG from 'svg-inline-react';
 
-import kbfLogo from '../../build/kbf.svg';
+import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import * as colors from '../colors.js';
+import kbfLogo from '../../build/kbf.svg';
 
 /** @param { { type: 'loading' | 'error' | 'not-available' | 'maintenance' } } param0
 */
