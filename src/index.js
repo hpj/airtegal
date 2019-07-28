@@ -7,14 +7,14 @@ import WebFont from 'webfontloader';
 
 import jsonp from 'jsonp';
 
-import Placeholder from './components/placeholder.js';
+import Placeholder from './screens/placeholder.js';
 
-import Homepage from './components/homepage.js';
+import Homepage from './screens/homepage.js';
 
-import Game from './components/game.js';
+import Game from './screens/game.js';
 
-import TermsAndConditions from './components/useTerms.js';
-import PrivacyPolicy from './components/privacyPolicy.js';
+import TermsAndConditions from './screens/useTerms.js';
+import PrivacyPolicy from './screens/privacyPolicy.js';
 
 export let API_URI;
 

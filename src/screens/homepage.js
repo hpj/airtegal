@@ -14,7 +14,7 @@ import { createStyle } from '../flcss.js';
 
 import hpjLogo from '../../build/hpj-logo-ar.svg';
 
-import Header from './header.js';
+import Header from '../components/header.js';
 
 const Homepage = () =>
 {
