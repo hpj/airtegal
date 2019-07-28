@@ -32,8 +32,6 @@ const TermsAndConditions = () =>
 
       <h3><strong>Legal</strong></h3>
 
-      {/* <p>Kuruit Bedan Fash5 is an open-sourced project and is licensed under the <a href='https://gitlab.com/hpj/kuruit-bedan-fash5/raw/master/LICENSE'>MIT</a> License.</p> */}
-
       <p>{'We urge the people not use the \'Kuruit Bedan Fash5\' name, Out of fear that it might cause confusion and misinformation, However we don\'t own the \'Kuruit Bedan Fash5\' name'}</p>
       <p>{'If you are the user, don\'t trust anything published under the \'Kuruit Bedan Fash5\' name unless it\'s published from Herp Project owned domains'}</p>
 
