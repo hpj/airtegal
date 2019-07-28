@@ -16,17 +16,23 @@ const PrivacyPolicy = () =>
     <div className={styles.container}>
       <h1><strong>Privacy Policy</strong></h1>
 
-      <p>At Kuruit Bedan Fash5, accessible from https://herpproject.com/bedan, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Kuruit Bedan Fash5 and how we use it.</p>
+      <p>At Kuruit Bedan Fash5, accessible from https://bedan.herpproject.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Kuruit Bedan Fash5 and how we use it.</p>
+
+      <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us through email at hello@herpproject.com</p>
 
       <h2>Cookies and Web Beacons</h2>
 
       <p>{'Like any other website, Kuruit Bedan Fash5 uses \'cookies\'. These cookies are used to store information including visitors\' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users\' experience by customizing our web page content based on visitors\' browser type and/or other information.'}</p>
 
-      <p>{'You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the browsers\' respective websites. What Are Cookies?'}</p>
+      <h2>Google DoubleClick DART Cookie</h2>
+
+      <p>Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to https://bedan.herpproject.com, and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL – <a href="https://policies.google.com/technologies/ads">https://policies.google.com/technologies/ads</a></p>
 
       <h2>Privacy Policies</h2>
 
-      <p>Kuruit Bedan Fash5 does not knowingly use any third-party ad servers on this website.</p>
+      <p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on Kuruit Bedan Fash5, which are sent directly to {'users\''} browser. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.</p>
+
+      <p>Note that Kuruit Bedan Fash5 has no access to or control over these cookies that are used by third-party advertisers.</p>
 
       <p>Kuruit Bedan Fash5 does collect data from the users, however this data is collected anonymously, the data we collect contains but are not limited to:</p><p/>
 
@@ -35,6 +41,12 @@ const PrivacyPolicy = () =>
         <li>the most played cards in-game.</li>
         <li>the most popular card combinations.</li>
       </ul>
+
+      <h2>Third Party Privacy Policies</h2>
+
+      <p>Kuruit Bedan {'Fash5\'s'} Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information. It may include their practices and instructions about how to opt-out of certain options. You may find a complete list of these Privacy Policies and their links here: Privacy Policy Links.</p>
+
+      <p>You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the {'browsers\''} respective websites. What Are Cookies?</p>
 
       <h2>{'Children\'s Information'}</h2>
 

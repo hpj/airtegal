@@ -80,15 +80,7 @@ const Homepage = () =>
             <Link className={footerStyles.privacy} to='/privacy'>سياسة الخصوصية</Link>
           </div>
           <p className={footerStyles.copyright}>
-            تتوفر كروت
-            Cards Against Humanity
-            تحت رخصة
-            Creative Commons BY-NC-SA 2.0
-            هذا يعني انة يمكننا استخدام الكروت والتعديل عليها ومشاركتها مجاناً
-            لكن لا يمكن لنا تحقيق اي ربح مادي منها
-            او استخدام اسمها ترويجياُ دون اذن.
-            <br/>
-            لكن يتوفر باقي الموقع واللعبة تحت
+            يتوفر الموقع واللعبة تحت
             حقوق الطبع والنشر 2019-2020 ل هيرب بروجيكت.
           </p>
         </div>
