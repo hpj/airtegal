@@ -43,7 +43,7 @@ const Homepage = () =>
           </p>
 
           <p className={qaStyles.question}>
-            ليه اللعبه عنصرية و بتشجع علي الكراهية؟
+            ليه اللعبه عنصرية و بتشجع علي الكراهية والاهانة؟
           </p>
 
           <p className={qaStyles.answer}>

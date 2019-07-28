@@ -47,7 +47,7 @@ const TermsAndConditions = () =>
 
       <p>Herp Project does however hold community-created card for review to see if they fit the gameplay rules, not similar to any other already added cards, and are correctly spelled.</p>
 
-      <p>{'Herp Project won\'t remove any cards from the game per a user request, or per any authority request, to protect the creators rights and the Freedom of speech and expression.'}</p>
+      <p>{'Herp Project won\'t remove any cards from the game per a user request, or per any authority request, to protect the creators rights and the Freedom of speech and expression, except in some exceptional cases.'}</p>
 
       <p>{'Herp Project also don\'t revel or collect the names of the people how create cards, also to protect the creators rights and Freedom of speech and expression.'}</p>
 
