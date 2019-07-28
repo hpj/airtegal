@@ -57,29 +57,29 @@ const Homepage = () =>
         </div>
       </div>
     
-      <div className={pStyles.wrapper}>
-        <div className={pStyles.container}>
+      <div className={playStyles.wrapper}>
+        <div className={playStyles.container}>
           {
-            (process.env.NODE_ENV === 'production') ? <p className={pStyles.title}>!قريباً</p> : <Link className={pStyles.title} to='/play'>ابدا</Link>
+            (process.env.NODE_ENV === 'production') ? <p className={playStyles.title}>!قريباً</p> : <Link className={playStyles.title} to='/play'>ابدا</Link>
           }
         </div>
       </div>
 
-      <div className={bStyles.wrapper}>
-        <div className={bStyles.container}>
-          <a className={bStyles.hpj} href='https://herpproject.com'>
+      <div className={footerStyles.wrapper}>
+        <div className={footerStyles.container}>
+          <a className={footerStyles.hpj} href='https://herpproject.com'>
             <InlineSVG src={hpjLogo}></InlineSVG>
           </a>
-          <a className={bStyles.patreon} href='https://www.patreon.com/hpj'>
+          <a className={footerStyles.patreon} href='https://www.patreon.com/hpj'>
             <PatreonIcon/>
             BECOME A PATRON
           </a>
-          <div className={bStyles.sitemap}>
-            <Link className={bStyles.use} to='/terms'>الشروط والاحكام</Link>
+          <div className={footerStyles.sitemap}>
+            <Link className={footerStyles.use} to='/terms'>الشروط والاحكام</Link>
             _
-            <Link className={bStyles.privacy} to='/privacy'>سياسة الخصوصية</Link>
+            <Link className={footerStyles.privacy} to='/privacy'>سياسة الخصوصية</Link>
           </div>
-          <p className={bStyles.copyright}>
+          <p className={footerStyles.copyright}>
             تتوفر كروت
             Cards Against Humanity
             تحت رخصة
@@ -98,7 +98,9 @@ const Homepage = () =>
 };
 
 const qaStyles = createStyle({
-  wrapper: { backgroundColor: colors.whiteBackground },
+  wrapper: {
+    backgroundColor: colors.whiteBackground
+  },
 
   container: {
     maxWidth: '850px',
@@ -121,12 +123,16 @@ const qaStyles = createStyle({
   answer: {
     margin: 0,
 
-    '+ p': { margin: '20px 0 3px 0' }
+    '+ p': {
+      margin: '20px 0 3px 0'
+    }
   }
 });
 
-const pStyles = createStyle({
-  wrapper: { background: 'linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%)' },
+const playStyles = createStyle({
+  wrapper: {
+    background: 'linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%)'
+  },
 
   container: {
     display: 'flex',
@@ -171,7 +177,7 @@ const pStyles = createStyle({
   }
 });
 
-const bStyles = createStyle({
+const footerStyles = createStyle({
   wrapper: { backgroundColor: colors.blackBackground },
 
   container: {

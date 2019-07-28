@@ -69,7 +69,7 @@ export function holdLoadingScreen()
 export function hideLoadingScreen()
 {
   // will cause an issue if more than one component are holding the loading
-  // incase that happens an ID system for every hold will be the most efficient flexDirection: 
+  // incase that happens an ID system for every hold will be the most efficient
   
   if (document.body.contains(placeholder))
     document.body.removeChild(placeholder);

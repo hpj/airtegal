@@ -1,4 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
+import { Value } from 'animated';
+
+import PropTypes from 'prop-types';
+
+import Interactable from 'react-interactable/noNative';
+
+import { withWindowSizeListener } from 'react-window-size-listener';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
 
@@ -12,13 +19,23 @@ import { createStyle } from '../flcss.js';
 
 import stupidName from '../stupidName.js';
 
-const Game = () =>
+const overlayRef = createRef();
+const overlayAnimatedX = new Value(0);
+
+/** @param { { windowSize: { windowWidth: number, windowHeight: number } } } param0
+*/
+const Game = ({ windowSize }) =>
 {
   // safe to be called multiple times
   // only works on app start if the loading screen wasn't hidden already
   holdLoadingScreen();
 
   const [ username, setUsername ] = useState(stupidName);
+  const [ overlayHolderOpacity, setOverlayHolderOpacity ] = useState(0);
+  const [ overlayHidden, setOverlayHidden ] = useState(true);
+  const [ overlayDrag, setOverlayDrag ] = useState(true);
+
+  // TODO when user enter a game sett overlayDrag to false and snap overlay to index 0
 
   const usernameChangeEvent = (event) =>
   {
@@ -30,49 +47,116 @@ const Game = () =>
     setUsername(event.target.value.trim());
   };
 
+  const overlaySnap= (event) =>
+  {
+    // TODO on snap to 0 disable drag (if not working then we have to disable drag first then snap)
+  };
+
+  overlayAnimatedX.addListener(({ value }) =>
+  {
+    // (windowSize.windowWidth * 2) doubles the width to make the max number 0.5
+    // instead of 1 because 1 is a complete black background
+
+    // (0.5 - $) reverses the number to make far left 0 and far right 0.5
+
+    setOverlayHolderOpacity(0.5 - (value / (windowSize.windowWidth * 2)));
+
+    // hide the overlay and overlay holder when they are off-screen
+
+    if (value >= windowSize.windowWidth)
+      setOverlayHidden(true);
+    else
+      setOverlayHidden(false);
+  });
+
   // on url change reset scroll position
   useEffect(() =>
   {
     document.title = 'Kuruit Bedan Fash5';
 
-    // auto-size the username input-box
-    autoSizeInput(document.querySelector(`.${oStyles.username}`));
-
     window.scrollTo(0, 0);
-    
+
     hideLoadingScreen();
   }, [ window.location ]);
 
+  // auto-size the username input-box
+  // called every render so that it can resize properly
+  if (document.querySelector(`.${optionsStyles.username}`))
+    autoSizeInput(document.querySelector(`.${optionsStyles.username}`));
+
   return (
-    <div className={mStyles.wrapper}>
+    <div className={mainStyles.wrapper}>
 
-      <div className={mStyles.container}>
+      <div className={mainStyles.container}>
         
-        <div className={oStyles.container}>
+        <div className={optionsStyles.container}>
 
-          <input className={oStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
-          <p className={oStyles.welcome}>اهلا</p>
+          <input className={optionsStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
+          <p className={optionsStyles.welcome}>اهلا</p>
         </div>
 
-        <div className={hStyles.container}>
+        <div className={headerStyles.container}>
 
-          <div className={hStyles.button}>اصنع غرفتك</div>
-          <div className={hStyles.button}>غرفة عشؤئية</div>
+          <div className={headerStyles.button}>اصنع غرفتك</div>
+          <div className={headerStyles.button}>غرفة عشؤئية</div>
 
         </div>
 
-        <div className={rStyles.container}>
+        <div className={roomsStyles.container}>
 
-          <RefreshIcon className={rStyles.refresh}/>
-          <p className={rStyles.title}>الغرف المتاحة</p>
+          <RefreshIcon className={roomsStyles.refresh}/>
+          <p className={roomsStyles.title}>الغرف المتاحة</p>
           
         </div>
       </div>
+
+      <div style={{
+        display: (overlayHidden) ? 'none' : '',
+        opacity: overlayHolderOpacity
+      }} className={overlayStyles.holder}/>
+    
+      <Interactable.View
+        ref={overlayRef}
+
+        style={{
+          display: (overlayHidden) ? 'none' : '',
+          position: 'fixed',
+
+          backgroundColor: colors.whiteBackground,
+          
+          top: 0,
+          width: '120vw' // workaround an animation issue
+        }}
+
+        animatedValueX={overlayAnimatedX}
+
+        dragEnabled={overlayDrag}
+
+        horizontalOnly={true}
+        initialPosition={{ x: windowSize.windowWidth }}
+        snapPoints={[ { x: -28 }, { x: 0 }, { x: windowSize.windowWidth } ]}
+        boundaries={{
+          left: (overlayDrag) ? 0 : -28,
+          right: windowSize.windowWidth
+        }}
+      >
+
+        <div className={overlayStyles.wrapper}>
+          <div className={overlayStyles.handler}/>
+          <div className={overlayStyles.container}/>
+        </div>
+        
+      </Interactable.View>
+
     </div>
   );
 };
 
-const mStyles = createStyle({
+Game.propTypes = {
+  windowSize: PropTypes.object
+};
+
+const mainStyles = createStyle({
   wrapper: {
     width: '100vw',
     height: '100vh'
@@ -91,11 +175,11 @@ const mStyles = createStyle({
   }
 });
 
-const oStyles = createStyle({
+const optionsStyles = createStyle({
   container: {
     display: 'flex',
 
-    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
 
     padding: '3vh 3vw 5px 3vw'
@@ -109,7 +193,7 @@ const oStyles = createStyle({
     margin: '0 5px -2px auto',
     direction: 'rtl',
 
-    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     
@@ -132,7 +216,7 @@ const oStyles = createStyle({
   }
 });
 
-const hStyles = createStyle({
+const headerStyles = createStyle({
   container: {
     display: 'grid',
 
@@ -175,7 +259,7 @@ const hStyles = createStyle({
   }
 });
 
-const rStyles = createStyle({
+const roomsStyles = createStyle({
   container: {
     display: 'flex',
     flexGrow: 1,
@@ -205,7 +289,7 @@ const rStyles = createStyle({
     padding: '5px',
     borderRadius: '50%',
 
-    transform: 'rotateZ(0deg)',
+    transform: 'rotateZ(0deg) scale(1)',
     transition: 'transform 0.25s, background-color 0.25s, fill 0.25s',
 
     ':hover': {
@@ -213,8 +297,45 @@ const rStyles = createStyle({
       backgroundColor: colors.blackBackground,
 
       transform: 'rotateZ(22deg)'
+    },
+
+    ':active': {
+      transform: 'scale(0.95) rotateZ(22deg)'
     }
   }
 });
 
-export default Game;
+const overlayStyles = createStyle({
+  wrapper: {
+    display: 'flex',
+
+    width: '100vw',
+    height: '100vh'
+  },
+
+  container: {
+    marginLeft: '28px'
+  },
+
+  holder: {
+    position: 'fixed',
+    
+    backgroundColor: colors.blackBackground,
+
+    top: 0,
+    width: '100vw',
+    height: '100vh'
+  },
+
+  handler: {
+    backgroundColor: colors.handler,
+
+    width: '8px',
+    height: 'calc(5px + 5%)',
+
+    margin: 'auto 10px',
+    borderRadius: '8px'
+  }
+});
+
+export default withWindowSizeListener(Game);

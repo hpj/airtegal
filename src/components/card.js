@@ -8,16 +8,15 @@ import { createStyle } from '../flcss.js';
 
 /** @param { { content: string, type: 'black' | 'white' } } param0
 */
-const Card = ({
-  content,
-  type
-}) =>
+const Card = ({ content, type }) =>
 {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container} type={type}>
+
         <div className={styles.content}>{content}</div>
         <p className={styles.bottom}>كروت بضان فشخ</p>
+        
       </div>
     </div>
   );
