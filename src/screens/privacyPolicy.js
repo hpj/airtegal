@@ -18,11 +18,13 @@ const PrivacyPolicy = () =>
 
       <p>At Kuruit Bedan Fash5, accessible from https://bedan.herpproject.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Kuruit Bedan Fash5 and how we use it.</p>
 
+      <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us through email at hello@herpproject.com</p>
+
       <h2>Cookies and Web Beacons</h2>
 
       <p>{'Like any other website, Kuruit Bedan Fash5 uses \'cookies\'. These cookies are used to store information including visitors\' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users\' experience by customizing our web page content based on visitors\' browser type and/or other information.'}</p>
 
-      <p>{'You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the browsers\' respective websites. What Are Cookies?'}</p>
+      <p>You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the {'browsers\''} respective websites. What Are Cookies?</p>
 
       <h2>Privacy Policies</h2>
 
