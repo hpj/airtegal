@@ -11,7 +11,7 @@ self.addEventListener('message', (event) =>
 workbox.precaching.precacheAndRoute([
   {
     "url": "body.css",
-    "revision": "5e4e6ccac8aada2ab4c9a8ca85b4643f"
+    "revision": "2598c7d31461b8c5b74471ddd7098729"
   },
   {
     "url": "fonts.css",

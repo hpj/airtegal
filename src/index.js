@@ -38,7 +38,7 @@ function loaded()
       <Route exact path="/" component={Homepage}/>
     
       {
-        (process.env.NODE_ENV === 'production') ? <div/> : <Route exact path="/play" component={Game}/>
+        (process.env.NODE_ENV === 'production') ? <div/> : <Route path="/play" component={Game}/>
       }
 
       <Route path="/terms" component={TermsAndConditions}/>
