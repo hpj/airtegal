@@ -100,8 +100,6 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
   // loop though the rules
   Object.keys(obj).forEach((rule, i) =>
   {
-    // TODO add support for media queries
-
     // extent support
     // it was designed to duplicate style instead of adding the extend-ee class name
     // so that you can use extent inside of attributes and  pseudo-classes
@@ -140,6 +138,13 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
 
         additionalCss = additionalCss + `.${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}`;
       }
+    }
+    // at-rule selector
+    else if (rule.startsWith('@'))
+    {
+      const nextParent = `${className}`;
+      
+      additionalCss = additionalCss + `${rule}{.${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}}`;
     }
     // class selector
     else if (classRegex.test(rule))
