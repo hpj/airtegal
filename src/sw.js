@@ -37,7 +37,7 @@ workbox.routing.registerRoute(
 // Cache cards and packs with a stale-while-revalidate strategy
 // This might cause problems while in lobby with players having mis-matched cards and packs
 workbox.routing.registerRoute(
-  new RegExp('https://kbf.herokuapp.com'),
+  new RegExp('https://kbf.herokuapp.com/v1/'),
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: 'kbf-cache'
   })
