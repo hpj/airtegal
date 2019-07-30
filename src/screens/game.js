@@ -1,7 +1,5 @@
 import React, { useState, useEffect, createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import RefreshIcon from 'mdi-react/RefreshIcon';
 
 import autoSizeInput from 'autosize-input';
@@ -14,12 +12,11 @@ import { createStyle } from '../flcss.js';
 
 import stupidName from '../stupidName.js';
 
-import GameOverlay from '../components/gameOverlay.js';
+import RoomOverlay from '../components/roomOverlay.js';
 
 const inputRef = createRef();
+const overlayUtils = {};
 
-/** @param { { windowSize: { windowWidth: number, windowHeight: number } } } param0
-*/
 const Game = () =>
 {
   // safe to be called multiple times
@@ -38,39 +35,51 @@ const Game = () =>
     setUsername(event.target.value.trim());
   };
 
+  const openRoom = () =>
+  {
+    overlayUtils.openRoom();
+  };
+
   // on url change reset scroll position
   useEffect(() =>
   {
     document.title = 'Kuruit Bedan Fash5';
+
+    // TODO how to get query parameters
+    // const query = new URLSearchParams(window.location.href.match(/(?=\?).+/)[0]);
+    // console.log(query.get('q'));
 
     window.scrollTo(0, 0);
 
     // auto-size the username input-box
     autoSizeInput(inputRef.current);
 
+    // auto-size the username input-box on resize
+    window.addEventListener('resize', () =>
+    {
+      autoSizeInput(inputRef.current);
+    });
+
     hideLoadingScreen();
   }, [ window.location ]);
-
-  // auto-size the username input-box
-  // called every render so that it can resize properly
-  if (inputRef.current)
-    autoSizeInput(inputRef.current);
-
+  
   return (
+    
     <div className={mainStyles.wrapper}>
 
       <div className={mainStyles.container}>
-        
+
         <div className={optionsStyles.container}>
 
           <input ref={inputRef} className={optionsStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
           <p className={optionsStyles.welcome}>اهلا</p>
+
         </div>
 
         <div className={headerStyles.container}>
 
-          <div className={headerStyles.button}>اصنع غرفتك</div>
-          <div className={headerStyles.button}>غرفة عشؤئية</div>
+          <div className={headerStyles.button} onClick={openRoom}>اصنع غرفتك</div>
+          <div className={headerStyles.button} onClick={openRoom}>غرفة عشؤئية</div>
 
         </div>
 
@@ -82,13 +91,9 @@ const Game = () =>
         </div>
       </div>
     
-      <GameOverlay/>
+      <RoomOverlay utils={overlayUtils}/>
     </div>
   );
-};
-
-Game.propTypes = {
-  windowSize: PropTypes.object
 };
 
 const mainStyles = createStyle({

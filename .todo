@@ -1,9 +1,19 @@
 Performance Issues and Bugs: 
+  ☐ header change layout on smaller screens
+  ☐ PWA support auto-rotate on phones
 
 Testing:
 
 Features:
 
 UI/UX:
+  Game Overlay:
+    ☐ show player number
+    ☐ show player names
+
+    ☐ auto start game when all players are ready
+
+    ☐ field interactable
+    ☐ hand interactable
 
 CI/CD:
