@@ -112,6 +112,14 @@ else
 
 const availabilityPromise = new Promise((resolve) =>
 {
+  // bypass availability test if running on a development build
+  if (process.env.NODE_ENV === 'development')
+  {
+    resolve();
+
+    return;
+  }
+
   fetch(API_URI).then((response) =>
   {
     response.json().then(resolve);
