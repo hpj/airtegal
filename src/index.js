@@ -69,8 +69,19 @@ export function hideLoadingScreen()
   // will cause an issue if more than one component are holding the loading
   // incase that happens an ID system for every hold will be the most efficient
   
-  if (document.body.contains(placeholder))
-    document.body.removeChild(placeholder);
+  if (document.body.classList.contains('placeholder-active'))
+    document.body.classList.remove('placeholder-active');
+}
+
+/** @param { string } error
+*/
+export function errorScreen(error)
+{
+  // if placeholder is not visible, make it visible
+  if (!document.body.classList.contains('placeholder-active'))
+    document.body.classList.add('placeholder-active');
+
+  ReactDOM.render(<Placeholder type='error' content={error}/>, placeholder);
 }
 
 // if on production mode
@@ -99,6 +110,19 @@ else
   API_URI = 'https://localhost:3000';
 }
 
+const availabilityPromise = new Promise((resolve) =>
+{
+  fetch(API_URI).then((response) =>
+  {
+    response.json().then(resolve);
+  }).catch(() =>
+  {
+    API_URI = undefined;
+
+    resolve();
+  });
+});
+
 const webFontPromise = new Promise((resolve) =>
 {
   WebFont.load({
@@ -124,8 +148,7 @@ const countryPromise = new Promise((resolve) =>
   });
 });
 
-// called when loading is finished to show the real app
-Promise.all([ countryPromise, webFontPromise ]).then(loaded);
+Promise.all([ availabilityPromise, webFontPromise, countryPromise ]).then(loaded);
 
 // render loading screen
 ReactDOM.render(<Placeholder type='loading'/>, placeholder);

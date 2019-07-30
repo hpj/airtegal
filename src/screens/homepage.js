@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
 
-// import { API_URI } from '../index.js';
+import { API_URI } from '../index.js';
 
 import * as colors from '../colors.js';
 
@@ -60,7 +60,9 @@ const Homepage = () =>
       <div className={playStyles.wrapper}>
         <div className={playStyles.container}>
           {
-            (process.env.NODE_ENV === 'production') ? <p className={playStyles.title}>!قريباً</p> : <Link className={playStyles.title} to='/play'>العب</Link>
+            (API_URI) ?
+              <Link className={playStyles.title} to='/play'>العب</Link> :
+              <p className={playStyles.title}>السيرفر خارج الخدمة</p>
           }
         </div>
       </div>

@@ -4,7 +4,7 @@ import RefreshIcon from 'mdi-react/RefreshIcon';
 
 import autoSizeInput from 'autosize-input';
 
-import { holdLoadingScreen, hideLoadingScreen } from '../index.js';
+import { API_URI, holdLoadingScreen, errorScreen, hideLoadingScreen } from '../index.js';
 
 import * as colors from '../colors.js';
 
@@ -60,7 +60,10 @@ const Game = () =>
       autoSizeInput(inputRef.current);
     });
 
-    hideLoadingScreen();
+    if (API_URI)
+      hideLoadingScreen();
+    else
+      errorScreen('السيرفر خارج الخدمة');
   }, [ window.location ]);
   
   return (

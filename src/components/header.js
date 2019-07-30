@@ -20,12 +20,11 @@ const Header = () =>
   // on url change
   useEffect(() =>
   {
-    fetch(API_URI + '/cards').then((response) =>
-    {
-      response.json().then((data) => setCards(data));
+    // fetch(API_URI + '/cards').then((response) =>
+    // {
+    //   response.json().then((data) => setCards(data));
 
-    }).catch(console.error);
-
+    // }).catch(console.error);
   }, [ window.location ]);
 
   return (
@@ -36,13 +35,13 @@ const Header = () =>
         </a>
         <InlineSVG className={styles.kbf} src={gameLogo}></InlineSVG>
 
-        <div className={styles.cards}>
+        {/* <div className={styles.cards}>
 
           {
             cards.splice(0, 2).reverse().map((card) => <Card key={card.id.toString()} type={card.type} content={card.content}/>)
           }
         
-        </div>
+        </div> */}
 
       </div>
     </div>
@@ -55,9 +54,13 @@ const styles = createStyle({
   container: {
     display: 'grid',
 
-    gridTemplateColumns: 'auto 1fr',
+    // gridTemplateColumns: 'auto 1fr',
+    // gridTemplateRows: 'auto 1fr',
+    // gridTemplateAreas: '"cards hpj" "cards kbf"',
+
+    gridTemplateColumns: '1fr auto 1fr',
     gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"cards hpj" "cards kbf"',
+    gridTemplateAreas: '". hpj ." ". kbf ."',
   
     gridColumnGap: '15px',
     

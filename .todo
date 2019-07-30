@@ -7,13 +7,17 @@ Testing:
 Features:
 
 UI/UX:
-  Game Overlay:
+  Homepage:
+    ☐ cards showcase (animations after cards are fetch if fetched) 
+
+  Game:
     ☐ show player number
     ☐ show player names
 
     ☐ auto start game when all players are ready
 
-    ☐ field interactable
     ☐ hand interactable
+    
+    ☐ card as interactable
 
 CI/CD:

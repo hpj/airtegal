@@ -9,7 +9,7 @@ import { createStyle } from '../flcss.js';
 
 import kbfLogo from '../../build/kbf.svg';
 
-/** @param { { type: 'loading' | 'error' | 'not-available' | 'maintenance' } } param0
+/** @param { { type: 'loading' | 'error' | 'not-available' } } param0
 */
 const Placeholder = ({
   type, content
@@ -21,13 +21,10 @@ const Placeholder = ({
     element = <InlineSVG className={styles.loading} src={kbfLogo}/>;
 
   if (type === 'error')
-    element = <p className={styles.error}>{content}.</p>;
+    element = <p className={styles.error}>{content}</p>;
 
   if (type === 'not-available')
-    element = <p className={styles.notAvailable}>Kuruit Bedan Fash5 is not available in your country.</p>;
-
-  if (type === 'maintenance')
-    element = <p className={styles.maintenance}>{'Game is currently under maintenance, We\'ll be back soon.'}</p>;
+    element = <p className={styles.notAvailable}>Kuruit Bedan Fash5 is not available in your country</p>;
 
   return (
     <div className={styles.placeholder}>
@@ -40,22 +37,26 @@ Placeholder.propTypes = {
   type: PropTypes.oneOf([
     'loading',
     'error',
-    'not-available',
-    'maintenance'
+    'not-available'
   ]).isRequired,
   content: PropTypes.string
 };
 
 const styles = createStyle({
   placeholder: {
+    zIndex: 999,
+    position: 'absolute',
     display: 'flex',
+
     justifyContent: 'center',
     alignItems: 'center',
+    
+    backgroundColor: colors.whiteBackground,
 
     direction: 'ltr',
 
-    width: '100vw',
-    height: '100vh'
+    minWidth: '100vw',
+    minHeight: '100vh'
   },
   // on an installed PWA, it has a splash screen that we
   // should match its style
