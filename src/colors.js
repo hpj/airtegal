@@ -10,4 +10,7 @@ export const greyText = '#6e6767';
 export const handler = '#867878';
 export const accentColor = '#454545';
 
+export const fieldBackground = '#545454';
+export const handBackground = '#C4C4C4';
+
 export const red = 'red';

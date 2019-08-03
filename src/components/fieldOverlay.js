@@ -23,6 +23,11 @@ const FieldOverlay = ({ utils, children, size }) =>
   // set utils
   utils.openField = () =>
   {
+    overlayRef.current.snapTo({ index: 1 });
+  };
+
+  utils.closeField = () =>
+  {
     overlayRef.current.snapTo({ index: 0 });
   };
 
@@ -48,10 +53,15 @@ const FieldOverlay = ({ utils, children, size }) =>
       style={{
         display: (overlayHidden) ? 'none' : '',
 
-        backgroundColor: 'red',
+        backgroundColor: colors.fieldBackground,
 
-        width: '120%',
-        height: '100%'
+        overflow: 'hidden',
+
+        top: 0,
+        width: '100%',
+        height: '100%',
+
+        paddingRight: '20vw'
       }}
 
       animatedValueX={overlayAnimatedX}
@@ -59,16 +69,16 @@ const FieldOverlay = ({ utils, children, size }) =>
       dragEnabled={false}
 
       horizontalOnly={true}
-      initialPosition={{ x: size.width }}
+      initialPosition={{ x: size.width, y: 0 }}
 
-      snapPoints={[ { x: 0 }, { x: size.width } ]}
+      snapPoints={[ { x: size.width }, { x: 0 } ]}
 
       boundaries={{
         left: 0,
         right: size.width
       }}
     >
-      <div className={styles.container}>
+      <div className={styles.wrapper}>
         {children}
       </div>
     </Interactable.View>
@@ -85,8 +95,9 @@ FieldOverlay.propTypes = {
 };
 
 const styles = createStyle({
-  container: {
-
+  wrapper: {
+    width: '100%',
+    height: '100%'
   }
 });
 

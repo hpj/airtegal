@@ -160,6 +160,3 @@ Promise.all([ availabilityPromise, webFontPromise, countryPromise ]).then(loaded
 
 // render loading screen
 ReactDOM.render(<Placeholder type='loading'/>, placeholder);
-
-if (module.hot)
-  module.hot.accept();

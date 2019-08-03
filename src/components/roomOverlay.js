@@ -15,6 +15,7 @@ import Trackbar from './roomTrackbar.js';
 import RoomContent from './roomContent.js';
 
 import FieldOverlay from './fieldOverlay.js';
+import HandOverlay from './handOverlay.js';
 
 const overlayRef = createRef();
 const overlayAnimatedX = new Value(0);
@@ -37,13 +38,14 @@ const RoomOverlay = ({ utils, size }) =>
   utils.startGame = () =>
   {
     // make overlay un-drag-able (also hides the handler)
-    // setOverlayDrag(false);
+    setOverlayDrag(false);
     
     // refresh overlay position to hide the handler
     requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
 
     // open game field
     utils.openField();
+    utils.openHand();
   };
 
   // on overlay position changes
@@ -86,8 +88,10 @@ const RoomOverlay = ({ utils, size }) =>
           backgroundColor: colors.whiteBackground,
           
           top: 0,
-          width: '120vw', // workaround an animation issue
-          height: '100%'
+          width: (overlayDrag) ? '100vw' : 'calc(100vw + 28px)',
+          height: '100%',
+
+          paddingRight: '20vw'
         }}
 
         animatedValueX={overlayAnimatedX}
@@ -95,7 +99,7 @@ const RoomOverlay = ({ utils, size }) =>
         dragEnabled={overlayDrag}
 
         horizontalOnly={true}
-        initialPosition={{ x: size.width }}
+        initialPosition={{ x: size.width, y: 0 }}
         
         snapPoints={[ { x: (overlayDrag) ? 0 : -28 }, { x: size.width } ]}
 
@@ -113,6 +117,7 @@ const RoomOverlay = ({ utils, size }) =>
           <RoomContent>
             
             <FieldOverlay utils={utils}/>
+            <HandOverlay utils={utils}/>
 
           </RoomContent>
 
@@ -137,8 +142,8 @@ const styles = createStyle({
     gridTemplateRows: '100vh',
     gridTemplateAreas: '"handler side content"',
 
-    width: '100vw',
-    height: '100vh',
+    width: '100%',
+    height: '100%',
     
     '@media screen and (max-width: 980px)': {
       gridTemplateColumns: 'auto 1fr',
@@ -164,7 +169,7 @@ const styles = createStyle({
     width: '8px',
     height: 'calc(5px + 5%)',
 
-    margin: '50vh 10px',
+    margin: 'auto 10px',
     borderRadius: '8px'
   }
 });

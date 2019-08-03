@@ -11,13 +11,13 @@ UI/UX:
     ☐ cards showcase (animations after cards are fetch if fetched) 
 
   Game:
+    ☐ closing and re-open all 3 interactable (room, field and hand) after a game
+    
     ☐ show player number
     ☐ show player names
 
     ☐ auto start game when all players are ready
 
-    ☐ hand interactable
-    
     ☐ card as interactable
 
 CI/CD:

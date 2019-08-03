@@ -1,6 +1,3 @@
-
-const webpack = require('webpack');
-
 module.exports = {
   entry: './src/index.js',
   devtool: 'source-map',
@@ -20,9 +17,6 @@ module.exports = {
   resolve: {
     extensions: [ '*', '.js', '.jsx' ]
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ],
   devServer: {
     contentBase: './public',
     hot: true

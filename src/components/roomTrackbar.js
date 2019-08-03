@@ -25,10 +25,22 @@ Trackbar.propTypes = {
 
 const styles = createStyle({
   container: {
+    zIndex: 1,
     gridArea: 'side',
+    
+    backgroundColor: colors.whiteBackground,
+    
+    width: 'calc(100% + 15px)',
+    height: '100%',
 
-    marginLeft: '28px',
-    border: '1px black solid'
+    borderRadius: '0 15px 15px 0',
+
+    '@media screen and (max-width: 980px)': {
+      width: '100%',
+      height: 'calc(100% + 15px)',
+
+      borderRadius: '0 0 15px 15px'
+    }
   }
 });
 
