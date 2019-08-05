@@ -45,7 +45,14 @@ const Game = () =>
   {
     document.title = 'Kuruit Bedan Fash5';
 
+    // disable back button
+
+    window.history.pushState(undefined, document.title, window.location.href);
+    
+    window.addEventListener('popstate', () => window.history.pushState(undefined, document.title,  window.location.href));
+
     // TODO how to get query parameters
+
     // const query = new URLSearchParams(window.location.href.match(/(?=\?).+/)[0]);
     // console.log(query.get('q'));
 
@@ -67,7 +74,6 @@ const Game = () =>
   }, [ window.location ]);
   
   return (
-    
     <div className={mainStyles.wrapper}>
 
       <div className={mainStyles.container}>
@@ -81,8 +87,8 @@ const Game = () =>
 
         <div className={headerStyles.container}>
 
-          <div className={headerStyles.button} onClick={openRoom}>اصنع غرفتك</div>
           <div className={headerStyles.button} onClick={openRoom}>غرفة عشؤئية</div>
+          <div className={headerStyles.button} onClick={openRoom}>اصنع غرفتك</div>
 
         </div>
 

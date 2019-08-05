@@ -7,6 +7,9 @@ Testing:
 Features:
 
 UI/UX:
+  ☐ add an adult only warning prompt that the user have to accept,
+      starts on Homepage and carries on to Game.
+
   Homepage:
     ☐ cards showcase (animations after cards are fetch if fetched) 
 
