@@ -46,9 +46,9 @@
      "density": "5.0"
     }
    ],
-  "start_url": ".",
+  "start_url": "./#/play",
   "display": "standalone",
-  "orientation": "landscape",
+  "orientation": "any",
   "theme_color": "#454545",
   "background_color": "#ffffff"
 }
