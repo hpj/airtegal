@@ -5,6 +5,8 @@ Performance Issues and Bugs:
 Testing:
 
 Features:
+  ☐ setup sentry error tracking
+  ☐ setup crowdl i18n
 
 UI/UX:
   ☐ add an adult only warning prompt that the user have to accept,

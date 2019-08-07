@@ -18,7 +18,7 @@ const TermsAndConditions = () =>
 
       <p>Welcome to Kuruit Bedan Fash5.</p>
 
-      <p>{'These terms and conditions outline the rules and regulations for the use of this Herp Project\'s Web App, located at https://bedan.herpproject.com'}</p>
+      <p>These terms and conditions outline the rules and regulations for the use of this Herp Project{'\''}s Web App, located at https://bedan.herpproject.com</p>
 
       <p>By accessing this website we assume you accept these terms and conditions. Do not continue to use Kuruit Bedan Fash5 if you do not agree to take all of the terms and conditions stated on this page.</p>
 
@@ -26,28 +26,29 @@ const TermsAndConditions = () =>
 
       <h3><strong>Cookies</strong></h3>
 
-      <p>{'We employ the use of cookies. By accessing Kuruit Bedan Fash5, you agreed to use cookies in agreement with the Herp Project\'s Privacy Policy.'}</p>
+      <p>We employ the use of cookies. By accessing Kuruit Bedan Fash5, you agreed to use cookies in agreement with the Herp Project{'\''}s Privacy Policy.</p>
 
       <p>Most interactive websites use cookies to retrieve the user’s details for each visit. Cookies are used by our website to enable the functionality of certain areas to make it easier for people visiting our website. Some of our affiliate/advertising partners may also use cookies.</p>
 
       <h3><strong>Legal</strong></h3>
 
-      <p>{'We urge the people not use the \'Kuruit Bedan Fash5\' name, Out of fear that it might cause confusion and misinformation, However we don\'t own the \'Kuruit Bedan Fash5\' name'}</p>
-      <p>{'If you are the user, don\'t trust anything published under the \'Kuruit Bedan Fash5\' name unless it\'s published from Herp Project owned domains'}</p>
+      <p>We urge the people not use the {'\''}Kuruit Bedan Fash5{'\''} name, Out of fear that it might cause confusion and misinformation, However we don{'\''}t own the {'\''}Kuruit Bedan Fash5{'\''} name</p>
 
-      <p>{'Kuruit Bedan Fash5 is a cards game, ALL cards in the game are create by the game\'s community, then are voted on also by the game\'s community, the most popular community-created cards are the added the game occasionally.'}</p>
+      <p>If you are the user, don{'\''}t trust anything published under the {'\''}Kuruit Bedan Fash5{'\''} name unless it{'\''}s published from Herp Project owned domains</p>
 
-      <p>Nor Herp Project nor and any of its employees can be held responsible for any offensive, racist, sexist or inappropriate community-created cards.</p>
+      <p>Kuruit Bedan Fash5 is a cards game, ALL cards in the game are create by the game{'\''}s community, then are voted on also by the game{'\''}s community, the most popular community-created cards are the added the game occasionally.</p>
 
-      <p>{'Herp Project won\'t filter or edit any community-created cards no matter what they contain, This is to protect the Freedom of speech and expression of users.'}</p>
+      <p>Nor Herp Project nor any of its employees can be held responsible for any offensive, racist, sexist or inappropriate community-created cards.</p>
+
+      <p>Herp Project won{'\''}t filter or edit any community-created cards no matter what they contain, This is to protect the users{'\''} Freedom of expression.</p>
 
       <p>{'Freedom of expression is recognized as a human right under article 19 of the Universal Declaration of Human Rights (UDHR) and recognized in international human rights law in the International Covenant on Civil and Political Rights (ICCPR). Article 19 of the UDHR states that "everyone shall have the right to hold opinions without interference" and "everyone shall have the right to freedom of expression; this right shall include freedom to seek, receive and impart information and ideas of all kinds, regardless of frontiers, either orally, in writing or in print, in the form of art, or through any other media of his choice".'}</p>
 
       <p>Herp Project does however hold community-created card for review to see if they fit the gameplay rules, not similar to any other already added cards, and are correctly spelled.</p>
 
-      <p>{'Herp Project won\'t remove any cards from the game per a user request, or per any authority request, to protect the creators rights and the Freedom of speech and expression, except in some exceptional cases.'}</p>
+      <p>Herp Project won{'\''}t immediately remove cards from the game per a user request or per any authority request except in some exceptional cases.</p>
 
-      <p>{'Herp Project also don\'t revel or collect the names of the people how create cards, also to protect the creators rights and Freedom of speech and expression.'}</p>
+      <p>Herp Project also don{'\''}t and won{'\''}t collect the names of the card creators, to protect their privacy</p>
 
       <h2>Children</h2>
 
@@ -94,7 +95,7 @@ const TermsAndConditions = () =>
         <li>By use of any other description of our Website being linked to that makes sense within the context and format of content on the linking party’s site.</li>
       </ul>
 
-      <p>{'No use of Herp Project\'s logo or other artwork will be allowed for linking absent a trademark license agreement.'}</p>
+      <p>No use of Herp Project{'\''}s logo or other artwork will be allowed for linking absent a trademark license agreement.</p>
 
       <h3><strong>iFrames</strong></h3>
 

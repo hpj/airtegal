@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import Interactable from 'react-interactable/noNative';
 
+import * as game from '../game.js';
+
 import * as colors from '../colors.js';
 
 import { Value } from 'animated';
@@ -14,21 +16,15 @@ import { createStyle } from '../flcss.js';
 const overlayRef = createRef();
 const overlayAnimatedX = new Value(0);
 
-/** @param { { utils: {}, children: [], size: { width: number, height: number } } } } param0
+/** @param { { children: [], size: { width: number, height: number } } } } param0
 */
-const FieldOverlay = ({ utils, children, size }) =>
+const FieldOverlay = ({ children, size }) =>
 {
   const [ overlayHidden, setOverlayHidden ] = useState(true);
 
-  // set utils
-  utils.openField = () =>
+  game.requires.fieldVisibility = (visible) =>
   {
-    overlayRef.current.snapTo({ index: 1 });
-  };
-
-  utils.closeField = () =>
-  {
-    overlayRef.current.snapTo({ index: 0 });
+    overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
   };
 
   // on overlay position changes
@@ -86,7 +82,6 @@ const FieldOverlay = ({ utils, children, size }) =>
 };
 
 FieldOverlay.propTypes = {
-  utils: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

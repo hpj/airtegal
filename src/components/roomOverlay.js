@@ -7,6 +7,8 @@ import Interactable from 'react-interactable/noNative';
 
 import withSize from '../react-size.js';
 
+import * as game from '../game.js';
+
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
@@ -20,9 +22,9 @@ import HandOverlay from './handOverlay.js';
 const overlayRef = createRef();
 const overlayAnimatedX = new Value(0);
 
-/** @param { { utils: {}, size: { width: number, height: number } } } param0
+/** @param { { size: { width: number, height: number } } } param0
 */
-const RoomOverlay = ({ utils, size }) =>
+const RoomOverlay = ({ size }) =>
 {
   const [ overlayHolderOpacity, setOverlayHolderOpacity ] = useState(0);
   const [ overlayHidden, setOverlayHidden ] = useState(true);
@@ -30,22 +32,31 @@ const RoomOverlay = ({ utils, size }) =>
 
   // set utils
 
-  utils.openRoom = () =>
+  game.requires.createRoom = () =>
   {
     overlayRef.current.snapTo({ index: 0 });
   };
 
-  utils.startGame = () =>
+  game.requires.joinRoom = () =>
   {
-    // make overlay un-drag-able (also hides the handler)
-    setOverlayDrag(false);
-    
-    // refresh overlay position to hide the handler
-    requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
+    overlayRef.current.snapTo({ index: 0 });
+  };
 
-    // open game field
-    utils.openField();
-    utils.openHand();
+  game.requires.startGame = () =>
+  {
+    game.handVisibility(true);
+    game.fieldVisibility(true);
+
+    game.handlerVisibility(false);
+  };
+
+  game.requires.handlerVisibility = (visible) =>
+  {
+    // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
+    setOverlayDrag(visible);
+    
+    // refresh overlay position to show the handler
+    requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
   };
 
   // on overlay position changes
@@ -112,12 +123,12 @@ const RoomOverlay = ({ utils, size }) =>
         <div className={styles.wrapper}>
           <div className={styles.handler}/>
 
-          <Trackbar utils={utils}/>
+          <Trackbar/>
 
           <RoomContent>
             
-            <FieldOverlay utils={utils}/>
-            <HandOverlay utils={utils}/>
+            <FieldOverlay/>
+            <HandOverlay/>
 
           </RoomContent>
 
@@ -130,7 +141,6 @@ const RoomOverlay = ({ utils, size }) =>
 };
 
 RoomOverlay.propTypes = {
-  utils: PropTypes.object,
   size: PropTypes.object
 };
 

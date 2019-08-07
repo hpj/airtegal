@@ -4,6 +4,8 @@ import RefreshIcon from 'mdi-react/RefreshIcon';
 
 import autoSizeInput from 'autosize-input';
 
+import { connect, createRoom, joinRoom } from '../game.js';
+
 import { API_URI, holdLoadingScreen, errorScreen, hideLoadingScreen } from '../index.js';
 
 import * as colors from '../colors.js';
@@ -15,7 +17,6 @@ import stupidName from '../stupidName.js';
 import RoomOverlay from '../components/roomOverlay.js';
 
 const inputRef = createRef();
-const overlayUtils = {};
 
 const Game = () =>
 {
@@ -35,11 +36,6 @@ const Game = () =>
     setUsername(event.target.value.trim());
   };
 
-  const openRoom = () =>
-  {
-    overlayUtils.openRoom();
-  };
-
   // on url change reset scroll position
   useEffect(() =>
   {
@@ -51,11 +47,6 @@ const Game = () =>
     
     window.addEventListener('popstate', () => window.history.pushState(undefined, document.title,  window.location.href));
 
-    // TODO how to get query parameters
-
-    // const query = new URLSearchParams(window.location.href.match(/(?=\?).+/)[0]);
-    // console.log(query.get('q'));
-
     window.scrollTo(0, 0);
 
     // auto-size the username input-box
@@ -66,11 +57,23 @@ const Game = () =>
     {
       autoSizeInput(inputRef.current);
     });
-
+    
     if (API_URI)
-      hideLoadingScreen();
+    {
+      // connect to the socket.io server
+      connect(API_URI + '/io')
+        .then(hideLoadingScreen)
+        .catch((err) =>
+        {
+          errorScreen('السيرفر خارج الخدمة');
+
+          console.error(err);
+        });
+    }
     else
+    {
       errorScreen('السيرفر خارج الخدمة');
+    }
   }, [ window.location ]);
   
   return (
@@ -87,8 +90,8 @@ const Game = () =>
 
         <div className={headerStyles.container}>
 
-          <div className={headerStyles.button} onClick={openRoom}>غرفة عشؤئية</div>
-          <div className={headerStyles.button} onClick={openRoom}>اصنع غرفتك</div>
+          <div className={headerStyles.button} onClick={joinRoom}>غرفة عشؤئية</div>
+          <div className={headerStyles.button} onClick={createRoom}>اصنع غرفتك</div>
 
         </div>
 
@@ -100,7 +103,7 @@ const Game = () =>
         </div>
       </div>
     
-      <RoomOverlay utils={overlayUtils}/>
+      <RoomOverlay/>
     </div>
   );
 };

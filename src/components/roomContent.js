@@ -6,9 +6,9 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-/** @param { { utils: {}, children: [] } } param0
+/** @param { { children: [] } } param0
 */
-const RoomContent = ({ utils, children }) =>
+const RoomContent = ({ children }) =>
 {
   return (
     <div className={styles.container}>
@@ -20,7 +20,6 @@ const RoomContent = ({ utils, children }) =>
 };
 
 RoomContent.propTypes = {
-  utils: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

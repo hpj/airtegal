@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import Interactable from 'react-interactable/noNative';
 
+import * as game from '../game.js';
+
 import * as colors from '../colors.js';
 
 import { Value } from 'animated';
@@ -16,25 +18,20 @@ const overlayAnimatedY = new Value(0);
 
 const percent = (size, percent) => (size / 100) * percent;
 
-/** @param { { utils: {}, children: [], size: { width: number, height: number } } } } param0
+/** @param { { children: [], size: { width: number, height: number } } } } param0
 */
-const HandOverlay = ({ utils, children, size }) =>
+const HandOverlay = ({ children, size }) =>
 {
   const [ overlayYLimit, setOverlayYLimit ] = useState(size.height);
   const [ overlayHidden, setOverlayHidden ] = useState(true);
 
-  // set utils
-  
-  utils.openHand = () =>
+  game.requires.handVisibility = (visible) =>
   {
-    overlayRef.current.snapTo({ index: 1 });
-  };
+    // if hidden then set limit to off-screen
+    if (!visible)
+      setOverlayYLimit(size.height);
 
-  utils.closeHand = () =>
-  {
-    setOverlayYLimit(size.height);
-
-    overlayRef.current.snapTo({ index: 0 });
+    overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
   };
 
   // on overlay position changes
@@ -99,7 +96,6 @@ const HandOverlay = ({ utils, children, size }) =>
 };
 
 HandOverlay.propTypes = {
-  utils: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

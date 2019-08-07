@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-// import io from 'socket.io-client';
-
 import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
 
@@ -25,7 +23,6 @@ const Homepage = () =>
     
     window.scrollTo(0, 0);
 
-    // const socket = io('API_URI');
   }, [ window.location ]);
 
   return (
@@ -51,7 +48,7 @@ const Homepage = () =>
           <p className={qaStyles.answer}>
             هيرب بروجكت هي شركة سوفتيور وترفية مصرية بدات في 2015 بنطور منتجات ل السوق الغربي اغلب الوقت.
             <br/>
-            بس اللعبة دي هي محاولة منا لدخول السوق المصري هدفنا هو رفع مستوي تطوير السوفتوير في مصر من تحت الارض.
+            بس اللعبة دي هي اول محاولة منا لدخول السوق المصري بهدف رفع مستوي تطوير السوفتوير في مصر من تحت الارض و هيبقي لنا حملات كثير في مصر الفترة الجيه.
           </p>
 
           <p className={qaStyles.question}>

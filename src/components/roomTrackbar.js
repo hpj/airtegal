@@ -1,35 +1,31 @@
 import React, { useState, createRef } from 'react';
 
-import PropTypes from 'prop-types';
+import * as game from '../game.js';
 
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-/** @param { { utils: {} } } param0
-*/
-const Trackbar = ({ utils }) =>
+const Trackbar = () =>
 {
   return (
-    <div className={styles.container}>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
 
-      <p onClick={utils.startGame}>Ready</p>
+        <div onClick={game.startGame}>Ready</div>
 
+      </div>
     </div>
   );
 };
 
-Trackbar.propTypes = {
-  utils: PropTypes.object
-};
-
 const styles = createStyle({
-  container: {
+  wrapper: {
     zIndex: 1,
     gridArea: 'side',
-    
+
     backgroundColor: colors.whiteBackground,
-    
+
     width: 'calc(100% + 15px)',
     height: '100%',
 
@@ -40,6 +36,17 @@ const styles = createStyle({
       height: 'calc(100% + 15px)',
 
       borderRadius: '0 0 15px 15px'
+    }
+  },
+
+  container: {
+    display: 'flex',
+    
+    width: '100%',
+    height: '100%',
+    
+    '@media screen and (max-width: 980px)': {
+      alignItems: 'center'
     }
   }
 });

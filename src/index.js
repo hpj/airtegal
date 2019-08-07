@@ -120,15 +120,17 @@ const availabilityPromise = new Promise((resolve) =>
     return;
   }
 
-  fetch(API_URI).then((response) =>
-  {
-    response.json().then(resolve);
-  }).catch(() =>
-  {
-    API_URI = undefined;
+  fetch(API_URI)
+    .then(() =>
+    {
+      resolve();
+    })
+    .catch(() =>
+    {
+      API_URI = undefined;
 
-    resolve();
-  });
+      resolve();
+    });
 });
 
 const webFontPromise = new Promise((resolve) =>
