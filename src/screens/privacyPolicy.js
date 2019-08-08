@@ -16,7 +16,7 @@ const PrivacyPolicy = () =>
     <div className={styles.container}>
       <h1><strong>Privacy Policy</strong></h1>
 
-      <p>At Kuruit Bedan Fash5, accessible from https://bedan.herpproject.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Kuruit Bedan Fash5 and how we use it.</p>
+      <p>At Kuruit Bedan Fash5, accessible from https://kbf.herpproject.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Kuruit Bedan Fash5 and how we use it.</p>
 
       <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us through email at hello@herpproject.com</p>
 
