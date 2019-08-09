@@ -1,4 +1,4 @@
-import React, { useState, createRef } from 'react';
+import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -7,7 +7,7 @@ import Interactable from 'react-interactable/noNative';
 
 import withSize from '../react-size.js';
 
-import * as game from '../game.js';
+import { socket } from '../screens/game.js';
 
 import * as colors from '../colors.js';
 
@@ -20,128 +20,165 @@ import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
 
 const overlayRef = createRef();
+
+const handOverlayRef = createRef();
+const fieldOverlayRef = createRef();
+
 const overlayAnimatedX = new Value(0);
 
-/** @param { { size: { width: number, height: number } } } param0
-*/
-const RoomOverlay = ({ size }) =>
+class RoomOverlay extends React.Component
 {
-  const [ overlayHolderOpacity, setOverlayHolderOpacity ] = useState(0);
-  const [ overlayHidden, setOverlayHidden ] = useState(true);
-  const [ overlayDrag, setOverlayDrag ] = useState(true);
+  constructor()
+  {
+    super();
+    
+    this.state = {
+      overlayHolderOpacity: 0,
+      overlayHidden: true,
+      overlayDrag: true
+    };
 
-  // set utils
+    this.handlerVisibility.bind(this);
+  }
 
-  game.requires.createRoom = () =>
+  createRoom()
   {
     overlayRef.current.snapTo({ index: 0 });
-  };
 
-  game.requires.joinRoom = () =>
+    socket.emit('create');
+  }
+
+  joinRoom(id)
   {
     overlayRef.current.snapTo({ index: 0 });
-  };
 
-  game.requires.startGame = () =>
+    if (typeof id !== 'string')
+      id = undefined;
+  
+    socket.emit('join', id);
+  }
+
+  leaveRoom()
   {
-    game.handVisibility(true);
-    game.fieldVisibility(true);
+    socket.emit('leave');
+  }
 
-    game.handlerVisibility(false);
-  };
+  startGame()
+  {
+    this.handlerVisibility(false);
+    
+    handOverlayRef.current.visibility(true);
+    fieldOverlayRef.current.visibility(true);
+  }
 
-  game.requires.handlerVisibility = (visible) =>
+  handlerVisibility(visible)
   {
     // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
-    setOverlayDrag(visible);
-    
+    this.setState({ overlayDrag: visible });
+
     // refresh overlay position to show the handler
     requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
-  };
+  }
 
-  // on overlay position changes
-  overlayAnimatedX.addListener(({ value }) =>
+  onSnap({ index })
   {
-    // (size.width * 2) doubles the width to make the max number 0.5
-    // instead of 1 because 1 is a complete black background
+    // if the room overlay is hidden then ake sure the server knows that
+    // the user isn't in any room
+    if (index === 1)
+      this.leaveRoom();
+  }
 
-    // (0.5 - $) reverses the number to make far left 0 and far right 0.5
+  render()
+  {
+    const { size } = this.props;
 
-    setOverlayHolderOpacity(0.5 - (value / (size.width * 2)));
+    // on overlay position changes
+    overlayAnimatedX.removeAllListeners();
 
-    // hide the overlay and overlay holder when they are off-screen
+    overlayAnimatedX.addListener(({ value }) =>
+    {
+      // (size.width * 2) doubles the width to make the max number 0.5
+      // instead of 1 because 1 is a complete black background
+      // (0.5 - $) reverses the number to make far left 0 and far right 0.5
+      this.setState({ overlayHolderOpacity: 0.5 - (value / (size.width * 2)) });
 
-    if (value >= size.width)
-      setOverlayHidden(true);
-    else
-      setOverlayHidden(false);
-  });
+      // hide the overlay and overlay holder when they are off-screen
+      if (value >= size.width)
+        this.setState({ overlayHidden: true });
+      else
+        this.setState({ overlayHidden: false });
+    });
 
-  // if size is not calculated yet
-  if (!size.width)
-    return <div/>;
-
-  return (
-    <div>
-
-      <div style={{
-        display: (overlayHidden) ? 'none' : '',
-        opacity: overlayHolderOpacity || 0
-      }} className={styles.holder}/>
+    // // if size is not calculated yet
+    if (!size.width)
+      return <div/>;
     
-      <Interactable.View
-        ref={overlayRef}
+    return (
+      <div>
 
-        style={{
-          display: (overlayHidden) ? 'none' : '',
-          position: 'fixed',
+        <div style={{
+          zIndex: 1,
+          display: (this.state.overlayHidden) ? 'none' : '',
+          opacity: this.state.overlayHolderOpacity || 0
+        }} className={styles.holder}/>
+    
+        <Interactable.View
+          ref={overlayRef}
 
-          backgroundColor: colors.whiteBackground,
+          style={{
+            zIndex: 1,
+            position: 'fixed',
+            display: (this.state.overlayHidden) ? 'none' : '',
+
+            backgroundColor: colors.whiteBackground,
           
-          top: 0,
-          width: (overlayDrag) ? '100vw' : 'calc(100vw + 28px)',
-          height: '100%',
+            top: 0,
+            width: (this.state.overlayDrag) ? '100vw' : 'calc(100vw + 28px)',
+            height: '100%',
 
-          paddingRight: '20vw'
-        }}
+            paddingRight: '20vw'
+          }}
 
-        animatedValueX={overlayAnimatedX}
+          animatedValueX={overlayAnimatedX}
 
-        dragEnabled={overlayDrag}
+          dragEnabled={this.state.overlayDrag}
+          
+          horizontalOnly={true}
+          initialPosition={{ x: size.width, y: 0 }}
+          
+          onSnap={this.onSnap.bind(this)}
+          snapPoints={[ { x: (this.state.overlayDrag) ? 0 : -28 }, { x: size.width } ]}
 
-        horizontalOnly={true}
-        initialPosition={{ x: size.width, y: 0 }}
-        
-        snapPoints={[ { x: (overlayDrag) ? 0 : -28 }, { x: size.width } ]}
+          boundaries={{
+            left: (this.state.overlayDrag) ? 0 : -28,
+            right: size.width
+          }}
+        >
 
-        boundaries={{
-          left: (overlayDrag) ? 0 : -28,
-          right: size.width
-        }}
-      >
+          <div className={styles.wrapper}>
+            <div className={styles.handler}/>
 
-        <div className={styles.wrapper}>
-          <div className={styles.handler}/>
+            <Trackbar startGame={this.startGame.bind(this)} />
 
-          <Trackbar/>
-
-          <RoomContent>
+            <RoomContent>
             
-            <FieldOverlay/>
-            <HandOverlay/>
+              <HandOverlay ref={handOverlayRef}/>
+              <FieldOverlay ref={fieldOverlayRef}/>
 
-          </RoomContent>
+            </RoomContent>
 
-        </div>
+          </div>
         
-      </Interactable.View>
+        </Interactable.View>
 
-    </div>
-  );
-};
+      </div>
+    );
+  }
+}
 
 RoomOverlay.propTypes = {
-  size: PropTypes.object
+  size: PropTypes.object,
+  socket: PropTypes.object
 };
 
 const styles = createStyle({
@@ -184,4 +221,4 @@ const styles = createStyle({
   }
 });
 
-export default withSize(RoomOverlay, { keepSize: true });
+export default withSize(RoomOverlay);

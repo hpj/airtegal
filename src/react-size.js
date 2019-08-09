@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { createRef, forwardRef } from 'react';
 
 import { ResizeObserver } from 'resize-observer';
 
@@ -6,7 +6,7 @@ export default (WrappedComponent, config) =>
 {
   config = config || {};
 
-  return class extends React.Component
+  class WithSize extends React.Component
   {
     constructor()
     {
@@ -43,11 +43,19 @@ export default (WrappedComponent, config) =>
 
     render()
     {
+      // eslint-disable-next-line react/prop-types
+      const { forwardedRef, ...rest } = this.props;
+
       return (
-        <div ref={this.ref} style={{ width: '100%', height: '100%' }}>
-          <WrappedComponent size={this.state.size} { ...this.props }/>
+        <div style={{ width: '100%', height: '100%' }} ref={this.ref}>
+          <WrappedComponent ref={forwardedRef} size={this.state.size} { ...rest }/>
         </div>
       );
     }
-  };
+  }
+
+  return forwardRef((props, ref) =>
+  {
+    return <WithSize { ...props } forwardedRef={ref}/>;
+  });
 };

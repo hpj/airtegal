@@ -1,10 +1,8 @@
-import React, { useState, createRef } from 'react';
+import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
 import Interactable from 'react-interactable/noNative';
-
-import * as game from '../game.js';
 
 import * as colors from '../colors.js';
 
@@ -16,70 +14,83 @@ import { createStyle } from '../flcss.js';
 const overlayRef = createRef();
 const overlayAnimatedX = new Value(0);
 
-/** @param { { children: [], size: { width: number, height: number } } } } param0
-*/
-const FieldOverlay = ({ children, size }) =>
+class FieldOverlay extends React.Component
 {
-  const [ overlayHidden, setOverlayHidden ] = useState(true);
+  constructor()
+  {
+    super();
 
-  game.requires.fieldVisibility = (visible) =>
+    this.state = {
+      overlayHidden: true
+    };
+  }
+
+  /** @param { boolean } visible
+  */
+  visibility(visible)
   {
     overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
-  };
+  }
 
-  // on overlay position changes
-  overlayAnimatedX.addListener(({ value }) =>
+  render()
   {
-    // hide the overlay and overlay holder when they are off-screen
+    const { children, size } = this.props;
 
-    if (value >= size.width)
-      setOverlayHidden(true);
-    else
-      setOverlayHidden(false);
-  });
+    // on overlay position changes
+    overlayAnimatedX.removeAllListeners();
 
-  // if size is not calculated yet
-  if (!size.width)
-    return <div/>;
+    overlayAnimatedX.addListener(({ value }) =>
+    {
+      // hide the overlay and overlay holder when they are off-screen
+      if (value >= size.width)
+        this.setState({ overlayHidden: true });
+      else
+        this.setState({ overlayHidden: false });
+    });
 
-  return (
-    <Interactable.View
-      ref={overlayRef}
+    // if size is not calculated yet
+    if (!size.width)
+      return <div/>;
 
-      style={{
-        display: (overlayHidden) ? 'none' : '',
+    return (
+      <Interactable.View
+        ref={overlayRef}
 
-        backgroundColor: colors.fieldBackground,
+        style={{
+          display: (this.state.overlayHidden) ? 'none' : '',
 
-        overflow: 'hidden',
+          backgroundColor: colors.fieldBackground,
 
-        top: 0,
-        width: '100%',
-        height: '100%',
+          overflow: 'hidden',
 
-        paddingRight: '20vw'
-      }}
+          top: '-100%',
+          width: '100%',
+          height: '100%',
 
-      animatedValueX={overlayAnimatedX}
+          paddingRight: '20vw'
+        }}
 
-      dragEnabled={false}
+        animatedValueX={overlayAnimatedX}
 
-      horizontalOnly={true}
-      initialPosition={{ x: size.width, y: 0 }}
+        dragEnabled={false}
 
-      snapPoints={[ { x: size.width }, { x: 0 } ]}
+        horizontalOnly={true}
+        initialPosition={{ x: size.width, y: 0 }}
 
-      boundaries={{
-        left: 0,
-        right: size.width
-      }}
-    >
-      <div className={styles.wrapper}>
-        {children}
-      </div>
-    </Interactable.View>
-  );
-};
+        snapPoints={[ { x: size.width }, { x: 0 } ]}
+
+        boundaries={{
+          left: 0,
+          right: size.width
+        }}
+      >
+        <div className={styles.wrapper}>
+          {children}
+        </div>
+      </Interactable.View>
+    );
+  }
+}
 
 FieldOverlay.propTypes = {
   children: PropTypes.oneOfType([

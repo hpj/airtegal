@@ -4,7 +4,8 @@ import RefreshIcon from 'mdi-react/RefreshIcon';
 
 import autoSizeInput from 'autosize-input';
 
-import { connect, createRoom, joinRoom } from '../game.js';
+// eslint-disable-next-line no-unused-vars
+import io, { Socket } from 'socket.io-client';
 
 import { API_URI, holdLoadingScreen, errorScreen, hideLoadingScreen } from '../index.js';
 
@@ -16,7 +17,24 @@ import stupidName from '../stupidName.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
 
+/** @type { Socket }
+*/
+export let socket;
+
 const inputRef = createRef();
+const overlayRef = createRef();
+
+/** connect the socket.io client to the socket.io server
+*/
+export function connect()
+{
+  return new Promise((resolve, reject) =>
+  {
+    socket = io.connect(API_URI + '/io');
+
+    socket.on('connect', resolve).on('error', reject);
+  });
+}
 
 const Game = () =>
 {
@@ -41,6 +59,11 @@ const Game = () =>
   {
     document.title = 'Kuruit Bedan Fash5';
 
+    // TODO how to get query parameters
+
+    // const query = new URLSearchParams(window.location.href.match(/(?=\?).+/)[0]);
+    // console.log(query.get('q'));
+
     // disable back button
 
     window.history.pushState(undefined, document.title, window.location.href);
@@ -61,7 +84,7 @@ const Game = () =>
     if (API_URI)
     {
       // connect to the socket.io server
-      connect(API_URI + '/io')
+      connect()
         .then(hideLoadingScreen)
         .catch((err) =>
         {
@@ -78,7 +101,6 @@ const Game = () =>
   
   return (
     <div className={mainStyles.wrapper}>
-
       <div className={mainStyles.container}>
 
         <div className={optionsStyles.container}>
@@ -90,8 +112,8 @@ const Game = () =>
 
         <div className={headerStyles.container}>
 
-          <div className={headerStyles.button} onClick={joinRoom}>غرفة عشؤئية</div>
-          <div className={headerStyles.button} onClick={createRoom}>اصنع غرفتك</div>
+          <div className={headerStyles.button} onClick={() => overlayRef.current.joinRoom()}>غرفة عشؤئية</div>
+          <div className={headerStyles.button} onClick={() => overlayRef.current.createRoom()}>اصنع غرفتك</div>
 
         </div>
 
@@ -102,8 +124,9 @@ const Game = () =>
           
         </div>
       </div>
+      
+      <RoomOverlay ref={overlayRef}/>
     
-      <RoomOverlay/>
     </div>
   );
 };

@@ -1,27 +1,31 @@
-import React, { useState, createRef } from 'react';
+import React from 'react';
 
-import * as game from '../game.js';
+import PropTypes from 'prop-types';
 
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-const Trackbar = () =>
+const Trackbar = ({ startGame }) =>
 {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
 
-        <div onClick={game.startGame}>Ready</div>
+        <div onClick={startGame}>Ready</div>
 
       </div>
     </div>
   );
 };
 
+Trackbar.propTypes = {
+  startGame: PropTypes.func
+};
+
 const styles = createStyle({
   wrapper: {
-    zIndex: 1,
+    zIndex: 2,
     gridArea: 'side',
 
     backgroundColor: colors.whiteBackground,
