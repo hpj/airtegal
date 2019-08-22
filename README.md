@@ -6,4 +6,5 @@ All Kuruit Bedan Fash5 cards and expansions are crowdsourced meaning that all th
 
 # Acknowledgments
 
-Cards Against Humanity is available under a [Creative Commons BY-NC-SA 2.0](https://creativecommons.org/licenses/by-nc-sa/2.0/) license. That means we can use, remix, and share the game for free, but we can’t sell it or use its name without permission. 
+This game is clearly inspired by Cards Against Humanity, but we do not have any Cards Against Humanity cards in the game.
+All KBF cards are mad by the KBF players.
