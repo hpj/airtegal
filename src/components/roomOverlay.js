@@ -43,19 +43,23 @@ class RoomOverlay extends React.Component
 
   createRoom()
   {
+    const { username } = this.props;
+    
     overlayRef.current.snapTo({ index: 0 });
 
-    socket.emit('create');
+    socket.emit('create', { username: username });
   }
 
   joinRoom(id)
   {
+    const { username } = this.props;
+    
     overlayRef.current.snapTo({ index: 0 });
 
     if (typeof id !== 'string')
       id = undefined;
   
-    socket.emit('join', id);
+    socket.emit('join', { username: username, id: id });
   }
 
   leaveRoom()
@@ -82,7 +86,7 @@ class RoomOverlay extends React.Component
 
   onSnap({ index })
   {
-    // if the room overlay is hidden then ake sure the server knows that
+    // if the room overlay is hidden then aka sure the server knows that
     // the user isn't in any room
     if (index === 1)
       this.leaveRoom();
@@ -178,7 +182,7 @@ class RoomOverlay extends React.Component
 
 RoomOverlay.propTypes = {
   size: PropTypes.object,
-  socket: PropTypes.object
+  username: PropTypes.string
 };
 
 const styles = createStyle({

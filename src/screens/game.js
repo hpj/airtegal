@@ -106,6 +106,7 @@ const Game = () =>
         <div className={optionsStyles.container}>
 
           <input ref={inputRef} className={optionsStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
+
           <p className={optionsStyles.welcome}>اهلا</p>
 
         </div>
@@ -125,7 +126,7 @@ const Game = () =>
         </div>
       </div>
       
-      <RoomOverlay ref={overlayRef}/>
+      <RoomOverlay ref={overlayRef} username={username}/>
     
     </div>
   );

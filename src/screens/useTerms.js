@@ -40,15 +40,15 @@ const TermsAndConditions = () =>
 
       <p>Nor Herp Project nor any of its employees can be held responsible for any offensive, racist, sexist or inappropriate community-created cards.</p>
 
-      <p>Herp Project won{'\''}t filter or edit any community-created cards no matter what they contain, This is to protect the users{'\''} Freedom of expression.</p>
+      <p>Herp Project doesn{'\''}t filter or edit any community-created cards, no matter what they contain.</p>
 
       <p>{'Freedom of expression is recognized as a human right under article 19 of the Universal Declaration of Human Rights (UDHR) and recognized in international human rights law in the International Covenant on Civil and Political Rights (ICCPR). Article 19 of the UDHR states that "everyone shall have the right to hold opinions without interference" and "everyone shall have the right to freedom of expression; this right shall include freedom to seek, receive and impart information and ideas of all kinds, regardless of frontiers, either orally, in writing or in print, in the form of art, or through any other media of his choice".'}</p>
 
-      <p>Herp Project does however hold community-created card for review to see if they fit the gameplay rules, not similar to any other already added cards, and are correctly spelled.</p>
+      <p>However, If a card is offending to a person or an organization, and Herp Project receives a complaint directly from said the person/organization, Herp Project will remove the card (s) from the game.</p>
 
-      <p>Herp Project won{'\''}t immediately remove cards from the game per a user request or per any authority request except in some exceptional cases.</p>
+      <p>Herp Project does hold the popular community voted cards for review to see if they fit the gameplay rules, not similar to any other already added cards and are correctly spelled, before adding them to the game.</p>
 
-      <p>Herp Project also don{'\''}t and won{'\''}t collect the names of the card creators, to protect their privacy</p>
+      <p>Herp Project don{'\''}t collect the names of the card creators, this is to protect their privacy and rights.</p>
 
       <h2>Children</h2>
 
