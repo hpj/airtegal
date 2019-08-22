@@ -7,4 +7,4 @@ All Kuruit Bedan Fash5 cards and expansions are crowdsourced meaning that all th
 # Acknowledgments
 
 This game is clearly inspired by Cards Against Humanity, but we do not have any Cards Against Humanity cards in the game.
-All KBF cards are mad by the KBF players.
+All KBF cards are made by the KBF players.
