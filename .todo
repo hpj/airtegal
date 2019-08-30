@@ -9,20 +9,17 @@ Features:
   ☐ setup crowdl i18n
 
 UI/UX:
-  ☐ add an adult only warning prompt that the user have to accept,
-      starts on Homepage and carries on to Game.
-
   Homepage:
     ☐ cards showcase (animations after cards are fetch if fetched) 
 
   Game:
-    ☐ closing and re-open all 3 interactable (room, field and hand) after a game
-    
-    ☐ show player number
-    ☐ show player names
+  ☐ show players count
+  ☐ show player usernames
 
-    ☐ auto start game when all players are ready
+  ☐ auto start game when all players are ready
+  
+  ☐ card as interactable (player able to drag his cards to field)
 
-    ☐ card as interactable
+  ☐ closing and re-open all 3 interactable (room, field and hand) after a game
 
 CI/CD:

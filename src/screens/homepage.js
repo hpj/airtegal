@@ -270,8 +270,10 @@ const footerStyles = createStyle({
     gridArea: 'copyright',
     
     color: colors.greyText,
-    direction: 'rtl',
 
+    userSelect: 'none',
+    direction: 'rtl',
+    
     margin: 0
   }
 });

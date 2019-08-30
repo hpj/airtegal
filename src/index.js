@@ -15,6 +15,7 @@ import Game from './screens/game.js';
 
 import TermsAndConditions from './screens/useTerms.js';
 import PrivacyPolicy from './screens/privacyPolicy.js';
+import Warning from './components/warning.js';
 
 export let API_URI;
 
@@ -34,7 +35,13 @@ function loaded()
   {
     const pages =
     <Router>
-      
+
+      <Warning
+        storageKey='kbf-adults-warning'
+        text={'اللعبه دي معموله للكبار بس... لو انت تحت سن ال18 فاحنا لازم نقولك تمشي من هنا.'}
+        button='تمام'
+      />
+
       <Route exact path="/" component={Homepage}/>
     
       <Route path="/play" component={Game}/>
