@@ -97,7 +97,7 @@ if (process.env.NODE_ENV === 'production')
   // CORS only works on this origin
   // meaning we need to move the client to that origin
   if (location.hostname.search('gitlab.io') > -1)
-    location.replace('https://kbf.herpproject.com');
+    location.replace('https://bedan.me');
 
   API_URI = 'https://kbf.herokuapp.com';
   
