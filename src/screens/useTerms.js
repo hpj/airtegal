@@ -18,7 +18,7 @@ const TermsAndConditions = () =>
 
       <p>Welcome to Kuruit Bedan Fash5.</p>
 
-      <p>These terms and conditions outline the rules and regulations for the use of this Herp Project{'\''}s Web App, located at https://kbf.herpproject.com</p>
+      <p>These terms and conditions outline the rules and regulations for the use of this Herp Project{'\''}s Web App, located at https://bedan.me</p>
 
       <p>By accessing this website we assume you accept these terms and conditions. Do not continue to use Kuruit Bedan Fash5 if you do not agree to take all of the terms and conditions stated on this page.</p>
 
