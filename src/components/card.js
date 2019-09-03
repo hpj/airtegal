@@ -51,6 +51,8 @@ const styles = createStyle({
     display: 'grid',
     gridTemplateRows: '1fr auto',
     gridTemplateAreas: '"content" "bottom"',
+
+    direction: 'rtl',
   
     top: 0,
     width: '100%',

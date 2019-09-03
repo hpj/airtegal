@@ -24,7 +24,7 @@ const Placeholder = ({
     element = <p className={styles.error}>{content}</p>;
 
   if (type === 'not-available')
-    element = <p className={styles.notAvailable}>Kuruit Bedan Fash5 is not available in your country</p>;
+    element = <p className={styles.notAvailable}>This app is not available in your country.</p>;
 
   return (
     <div className={styles.placeholder}>

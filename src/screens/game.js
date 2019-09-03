@@ -15,6 +15,7 @@ import { createStyle } from '../flcss.js';
 
 import stupidName from '../stupidName.js';
 
+import Warning from '../components/warning.js';
 import RoomOverlay from '../components/roomOverlay.js';
 
 /** @type { Socket }
@@ -101,6 +102,14 @@ const Game = () =>
   
   return (
     <div className={mainStyles.wrapper}>
+
+      <Warning
+        style={{ padding: '50vh 5vw' }}
+        storageKey='kbf-adults-warning'
+        text={'اللعبه دي معموله للكبار بس... لو انت تحت سن ال16 فاحنا لازم نقولك تمشي من هنا.'}
+        button='تمام'
+      />
+      
       <div className={mainStyles.container}>
 
         <div className={optionsStyles.container}>

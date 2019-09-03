@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import PatreonIcon from 'mdi-react/PatreonIcon';
 import InlineSVG from 'svg-inline-react';
 
 import { API_URI } from '../index.js';
@@ -10,9 +9,11 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
+import gameLogo from '../../build/kbf.svg';
 import hpjLogo from '../../build/hpj-logo-ar.svg';
 
-import Header from '../components/header.js';
+import Warning from '../components/warning.js';
+import CardShowcase from '../components/cardShowcase.js';
 
 const Homepage = () =>
 {
@@ -27,7 +28,26 @@ const Homepage = () =>
 
   return (
     <div>
-      <Header></Header>
+      <Warning
+        style={{ padding: '12vh 5vw' }}
+        storageKey='kbf-adults-warning'
+        text={'اللعبه دي معموله للكبار بس... لو انت تحت سن ال16 فاحنا لازم نقولك تمشي من هنا.'}
+        button='تمام'
+      />
+      
+      <div className={headerStyles.container}>
+        <CardShowcase/>
+
+        <div className={headerStyles.title}>
+
+          <a className={headerStyles.hpj} href='https://herpproject.com'>
+            <InlineSVG src={hpjLogo}></InlineSVG>
+          </a>
+
+          <InlineSVG className={headerStyles.kbf} src={gameLogo}></InlineSVG>
+          
+        </div>
+      </div>
 
       <div className={qaStyles.wrapper}>
         <div className={qaStyles.container}>
@@ -46,7 +66,7 @@ const Homepage = () =>
           <p className={qaStyles.answer}>
             هيرب بروجكت هي شركة سوفتيور وترفية وتعليم مصرية بدات في 2015 بنطور منتجات ل السوق الغربي اغلب الوقت.
             <br/>
-            بس اللعبة دي هي اول محاولة منا لدخول السوق المصري بهدف رفع مستوي حجات كثير في مصر من تحت الارض و هيبقي لنا حملات كثير في مصر الفترة الجيه.
+            بس اللعبة دي محاولة منا لدخول السوق المصري بهدف رفع مستوي حجات كثير في مصر.
           </p>
 
           <p className={qaStyles.question}>
@@ -57,10 +77,10 @@ const Homepage = () =>
             كل الكروت ال في اللعبه تم اقتراحها والتصويت عليها من المجتمع.
             <br/>
             لحماية حرية التعبير والرائ بموجب المادة رقم 19 من الإعلان العالمي لحقوق الإنسان
-            ولحماية الحقوق الفكرية لصانعي الكروت هيرب بروجكت لن تتدخل في عمليه الاقتراح والتصويت
+            هيرب بروجكت لن تتدخل في عمليه الاقتراح والتصويت
             لمعلومات اكثر ممكن تقرأ سياسة الخصوصية والشروط والاحكام.
             <br/>
-            يعني بختصار ده مجتمعك و دي حقيقته من غير صفافير وحيطان اسمنت
+            بس بختصار ده مجتمعك و دي حقيقتة من غير صفافير وطوب احمر
             و لو انت شايف دي مشكله في انت بتشتكي ل الناس الغلط.
           </p>
         </div>
@@ -81,10 +101,6 @@ const Homepage = () =>
           <a className={footerStyles.hpj} href='https://herpproject.com'>
             <InlineSVG src={hpjLogo}></InlineSVG>
           </a>
-          <a className={footerStyles.patreon} href='https://www.patreon.com/hpj'>
-            <PatreonIcon/>
-            BECOME A PATRON
-          </a>
           <div className={footerStyles.sitemap}>
             <Link className={footerStyles.use} to='/terms'>الشروط والاحكام</Link>
             _
@@ -99,6 +115,57 @@ const Homepage = () =>
     </div>
   );
 };
+
+const headerStyles = createStyle({
+  container: {
+    display: 'flex',
+
+    background: 'radial-gradient(circle, rgba(32,25,25,1) 0%, rgba(31,28,28,1) 16%, rgba(0,0,0,1) 100%)',
+
+    padding: '0 5vw'
+  },
+
+  title: {
+    display: 'grid',
+
+    overflow: 'hidden',
+    
+    padding: '5vh 0',
+    margin: 'auto'
+  },
+
+  hpj: {
+    minWidth: '95px',
+    maxWidth: '140px',
+
+    margin: 'auto',
+
+    '> i > svg': {
+      width: '100%',
+      height: '100%',
+      
+      fill: colors.whiteText,
+
+      cursor: 'pointer'
+    },
+
+    ':hover > i > svg': { fill: colors.accentColor }
+  },
+
+  kbf: {
+    minWidth: '95px',
+    maxWidth: '140px',
+
+    margin: 'auto',
+
+    '> svg': {
+      width: '100%',
+      height: '100%',
+
+      fill: colors.whiteText
+    }
+  }
+});
 
 const qaStyles = createStyle({
   wrapper: {

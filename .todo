@@ -1,25 +1,32 @@
-Performance Issues and Bugs: 
-  ☐ header change layout on smaller screens
-  ☐ PWA support auto-rotate on phones
+Performance Issues and Bugs:
+  ☐ better icon for the app @high 
+  ☐ hide card showcase if screen width is lower than 630px
 
 Testing:
 
 Features:
-  ☐ setup sentry error tracking
-  ☐ setup crowdl i18n
+  ☐ setup sentry for error tracking
+  ☐ setup crowdl for i18n
 
 UI/UX:
   Homepage:
-    ☐ cards showcase (animations after cards are fetch if fetched) 
+    ☐ card showcase
+      ✔ expand width (move title to the right) @done(19-09-02 08:49)
+
+      ☐ render two cards at correct positions
+
+      ☐ render three cards at correct positions
+
+      ☐ attempt animating card using css native motions
 
   Game:
-  ☐ show players count
-  ☐ show player usernames
+    ☐ show players count
+    ☐ show player usernames
 
-  ☐ auto start game when all players are ready
-  
-  ☐ card as interactable (player able to drag his cards to field)
+    ☐ auto start game when all players are ready
+    
+    ☐ card as interactable (player able to drag his cards to field)
 
-  ☐ closing and re-open all 3 interactable (room, field and hand) after a game
+    ☐ closing and re-open all 3 interactable (room, field and hand) after a game
 
 CI/CD:

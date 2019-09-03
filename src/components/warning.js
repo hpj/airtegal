@@ -6,7 +6,7 @@ import { createStyle } from '../flcss.js';
 
 import * as colors from '../colors.js';
 
-const Warning = ({ storageKey, text, button }) =>
+const Warning = ({ storageKey, style, text, button }) =>
 {
   // starts hidden, so it won't appear and disappear again if the user turned it off
   const [ visible, changeVisibility ] = useState(false);
@@ -33,7 +33,7 @@ const Warning = ({ storageKey, text, button }) =>
   // if the waring is visible
   if (visible)
     return (
-      <div className={styles.wrapper}>
+      <div style={style} className={styles.wrapper}>
         <div className={styles.container}>
           <div className={styles.text}>
             {text}
@@ -56,6 +56,7 @@ Warning.propTypes = {
 
 const styles = createStyle({
   wrapper: {
+    zIndex: 5,
     position: 'fixed',
     backgroundColor: colors.warningBackground,
 
@@ -63,7 +64,7 @@ const styles = createStyle({
     width: '90vw',
 
     userSelect: 'none',
-    padding: '12px 5vw'
+    padding: '20px 5vw'
   },
 
   container: {
