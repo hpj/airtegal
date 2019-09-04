@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createRef } from 'react';
 
-import { API_URI } from '../index.js';
+import { API_ENDPOINT } from '../index.js';
 
 import { createStyle } from '../flcss.js';
 

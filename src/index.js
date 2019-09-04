@@ -5,9 +5,11 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 
 import WebFont from 'webfontloader';
 
+import axios from 'axios';
+
 import jsonp from 'jsonp';
 
-import Placeholder from './screens/placeholder.js';
+import Loading from './components/loading.js';
 
 import Homepage from './screens/homepage.js';
 
@@ -16,12 +18,12 @@ import Game from './screens/game.js';
 import TermsAndConditions from './screens/useTerms.js';
 import PrivacyPolicy from './screens/privacyPolicy.js';
 
-export let API_URI;
+export let country;
+export let API_ENDPOINT;
+
+let availability;
 
 let keepLoading = false;
-
-let country = '';
-let error = '';
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
@@ -30,31 +32,42 @@ const placeholder = document.body.querySelector('#placeholder');
 */
 function loaded()
 {
-  if (country && country === 'Egypt')
-  {
-    const pages =
-    <Router>
-      <Route exact path="/" component={Homepage}/>
-    
-      <Route path="/play" component={Game}/>
-      
-      <Route path="/terms" component={TermsAndConditions}/>
-      <Route path="/privacy" component={PrivacyPolicy}/>
+  const pages =
+  <Router>
+    <Route exact path="/" component={Homepage}/>
   
-    </Router>;
+    <Route path="/play" component={Game}/>
     
-    ReactDOM.render(pages, app);
-    
+    <Route path="/terms" component={TermsAndConditions}/>
+    <Route path="/privacy" component={PrivacyPolicy}/>
+
+  </Router>;
+
+  ReactDOM.render(pages, app, () =>
+  {
+    // if on production mode, register the service worker
+    if (process.env.NODE_ENV === 'production')
+      registerServiceWorker();
+
     if (!keepLoading)
       hideLoadingScreen();
-  }
-  else if (country && country !== 'Egypt')
+  });
+
+  console.log(`User's country is ${country}.`);
+  console.log(`Availability is ${availability}.`);
+}
+
+function registerServiceWorker()
+{
+  // if the browser supports service workers
+  if ('serviceWorker' in navigator)
   {
-    ReactDOM.render(<Placeholder type='not-available'/>, placeholder);
-  }
-  else if (error)
-  {
-    ReactDOM.render(<Placeholder type='error' content={error}/>, placeholder);
+    navigator.serviceWorker.register('sw.js')
+      .catch((err) =>
+      {
+        // failed registration, service worker won’t be installed
+        console.error('Service worker registration failed:', err);
+      });
   }
 }
 
@@ -67,70 +80,14 @@ export function hideLoadingScreen()
 {
   // will cause an issue if more than one component are holding the loading
   // incase that happens an ID system for every hold will be the most efficient
-  
-  if (document.body.classList.contains('placeholder-active'))
-    document.body.classList.remove('placeholder-active');
+
+  ReactDOM.unmountComponentAtNode(placeholder);
 }
 
-/** @param { string } error
-*/
-export function errorScreen(error)
+export function errorScreen()
 {
-  // if placeholder is not visible, make it visible
-  if (!document.body.classList.contains('placeholder-active'))
-    document.body.classList.add('placeholder-active');
-
-  ReactDOM.render(<Placeholder type='error' content={error}/>, placeholder);
+  console.error('error screen requested');
 }
-
-// if on production mode
-if (process.env.NODE_ENV === 'production')
-{
-  // CORS only works on this origin
-  // meaning we need to move the client to that origin
-  if (location.hostname.search('gitlab.io') > -1)
-    location.replace('https://bedan.me');
-
-  API_URI = 'https://kbf.herokuapp.com';
-  
-  // if the browser supports service workers
-  if ('serviceWorker' in navigator)
-  {
-    navigator.serviceWorker.register('sw.js')
-      .catch((err) =>
-      {
-        // failed registration, service worker won’t be installed
-        console.error('Service worker registration failed:', err);
-      });
-  }
-}
-else
-{
-  API_URI = 'https://localhost:3000';
-}
-
-const availabilityPromise = new Promise((resolve) =>
-{
-  // bypass availability test if running on a development build
-  if (process.env.NODE_ENV === 'development')
-  {
-    resolve();
-
-    return;
-  }
-
-  fetch(API_URI)
-    .then(() =>
-    {
-      resolve();
-    })
-    .catch(() =>
-    {
-      API_URI = undefined;
-
-      resolve();
-    });
-});
 
 const webFontPromise = new Promise((resolve) =>
 {
@@ -144,20 +101,61 @@ const webFontPromise = new Promise((resolve) =>
   });
 });
 
+const availabilityPromise = new Promise((resolve) =>
+{
+  // bypass availability test if running on a development build
+  // if (process.env.NODE_ENV === 'development')
+  // {
+  //   availability = true;
+  //   API_ENDPOINT = 'https://localhost:3000';
+
+  //   resolve();
+
+  //   return;
+  // }
+
+  axios({
+    url: API_ENDPOINT,
+    timeout: 3500
+  })
+    .then(() =>
+    {
+      availability = true;
+
+      resolve();
+    })
+    .catch(() =>
+    {
+      availability = false;
+      API_ENDPOINT = undefined;
+
+      resolve();
+    });
+});
+
 const countryPromise = new Promise((resolve) =>
 {
-  jsonp('https://geoip-db.com/jsonp', { name: 'callback' }, (err, response) =>
+  jsonp('https://geoip-db.com/jsonp', {
+    name: 'callback',
+    timeout: 3500
+  }, (err, response) =>
   {
-    if (err)
-      error = err.message;
-    else
+    if (response && response.country_name)
       country = response.country_name;
 
     resolve();
   });
 });
 
-Promise.all([ availabilityPromise, webFontPromise, countryPromise ]).then(loaded);
+// CORS only works on this origin
+// meaning we need to move the client to that origin
+if (location.hostname.search('gitlab.io') > -1)
+  location.replace('https://bedan.me');
+
+// set the game's API endpoint
+API_ENDPOINT = 'https://kbf.herokuapp.com';
+
+Promise.all([ webFontPromise, availabilityPromise, countryPromise ]).then(loaded);
 
 // render loading screen
-ReactDOM.render(<Placeholder type='loading'/>, placeholder);
+ReactDOM.render(<Loading/>, placeholder);

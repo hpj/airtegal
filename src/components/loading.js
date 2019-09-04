@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import InlineSVG from 'svg-inline-react';
 
@@ -9,41 +8,17 @@ import { createStyle } from '../flcss.js';
 
 import kbfLogo from '../../build/kbf.svg';
 
-/** @param { { type: 'loading' | 'error' | 'not-available' } } param0
-*/
-const Placeholder = ({
-  type, content
-}) =>
+const Loading = () =>
 {
-  let element;
-
-  if (type === 'loading')
-    element = <InlineSVG className={styles.loading} src={kbfLogo}/>;
-
-  if (type === 'error')
-    element = <p className={styles.error}>{content}</p>;
-
-  if (type === 'not-available')
-    element = <p className={styles.notAvailable}>This app is not available in your country.</p>;
-
   return (
-    <div className={styles.placeholder}>
-      {element}
+    <div className={styles.container}>
+      <InlineSVG className={styles.loading} src={kbfLogo}/>
     </div>
   );
 };
 
-Placeholder.propTypes = {
-  type: PropTypes.oneOf([
-    'loading',
-    'error',
-    'not-available'
-  ]).isRequired,
-  content: PropTypes.string
-};
-
 const styles = createStyle({
-  placeholder: {
+  container: {
     zIndex: 999,
     position: 'absolute',
     display: 'flex',
@@ -73,5 +48,5 @@ const styles = createStyle({
   }
 });
 
-export default Placeholder;
+export default Loading;
 

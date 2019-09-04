@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import InlineSVG from 'svg-inline-react';
 
-import { API_URI } from '../index.js';
+import { API_ENDPOINT } from '../index.js';
 
 import * as colors from '../colors.js';
 
@@ -89,7 +89,7 @@ const Homepage = () =>
       <div className={playStyles.wrapper}>
         <div className={playStyles.container}>
           {
-            (API_URI) ?
+            (API_ENDPOINT) ?
               <Link className={playStyles.title} to='/play'>العب</Link> :
               <p className={playStyles.title}>السيرفر خارج الخدمة</p>
           }
@@ -120,7 +120,7 @@ const headerStyles = createStyle({
   container: {
     display: 'flex',
 
-    background: 'radial-gradient(circle, rgba(32,25,25,1) 0%, rgba(31,28,28,1) 16%, rgba(0,0,0,1) 100%)',
+    background: 'linear-gradient( 135deg, #F05F57 10%, #360940 100%);',
 
     padding: '0 5vw'
   },

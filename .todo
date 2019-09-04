@@ -1,23 +1,25 @@
 Performance Issues and Bugs:
-  ☐ better icon for the app @high 
   ☐ hide card showcase if screen width is lower than 630px
+  ☐ better icon for the app @high 
 
 Testing:
 
 Features:
-  ☐ setup sentry for error tracking
   ☐ setup crowdl for i18n
+  ☐ setup sentry for error tracking
 
 UI/UX:
   Homepage:
+    ☐ country and language secretors
+
     ☐ card showcase
       ✔ expand width (move title to the right) @done(19-09-02 08:49)
 
-      ☐ render two cards at correct positions
+      ✔ render two cards at correct positions @done(19-09-03 12:56)
 
-      ☐ render three cards at correct positions
+      ✔ attempt animating card using css native motions @done(19-09-03 12:56)
 
-      ☐ attempt animating card using css native motions
+      ☐ switching cards every 5 seconds
 
   Game:
     ☐ show players count
@@ -28,5 +30,8 @@ UI/UX:
     ☐ card as interactable (player able to drag his cards to field)
 
     ☐ closing and re-open all 3 interactable (room, field and hand) after a game
+
+    ☐ support for pick (2) black cards
+    ☐ support for blank white cards
 
 CI/CD:

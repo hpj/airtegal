@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createRef } from 'react';
+import ReactDOM from 'react-dom';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
 
@@ -7,7 +8,7 @@ import autoSizeInput from 'autosize-input';
 // eslint-disable-next-line no-unused-vars
 import io, { Socket } from 'socket.io-client';
 
-import { API_URI, holdLoadingScreen, errorScreen, hideLoadingScreen } from '../index.js';
+import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen } from '../index.js';
 
 import * as colors from '../colors.js';
 
@@ -15,15 +16,26 @@ import { createStyle } from '../flcss.js';
 
 import stupidName from '../stupidName.js';
 
+import Error from '../components/error.js';
 import Warning from '../components/warning.js';
+
 import RoomOverlay from '../components/roomOverlay.js';
+
+const placeholder = document.body.querySelector('#placeholder');
+
+const inputRef = createRef();
+const overlayRef = createRef();
 
 /** @type { Socket }
 */
 export let socket;
 
-const inputRef = createRef();
-const overlayRef = createRef();
+/** @param { string } error
+*/
+function errorScreen(error)
+{
+  ReactDOM.render(<Error error={error}/>, placeholder);
+}
 
 /** connect the socket.io client to the socket.io server
 */
@@ -31,7 +43,7 @@ export function connect()
 {
   return new Promise((resolve, reject) =>
   {
-    socket = io.connect(API_URI + '/io');
+    socket = io.connect(API_ENDPOINT + '/io');
 
     socket.on('connect', resolve).on('error', reject);
   });
@@ -82,7 +94,7 @@ const Game = () =>
       autoSizeInput(inputRef.current);
     });
     
-    if (API_URI)
+    if (API_ENDPOINT)
     {
       // connect to the socket.io server
       connect()
