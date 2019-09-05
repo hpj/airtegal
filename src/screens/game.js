@@ -43,9 +43,34 @@ export function connect()
 {
   return new Promise((resolve, reject) =>
   {
-    socket = io.connect(API_ENDPOINT + '/io');
+    try
+    {
+      socket = io.connect(API_ENDPOINT + '/io');
 
-    socket.on('connect', resolve).on('error', reject);
+      socket.once('connect', resolve).once('error', (e) =>
+      {
+        socket.close();
+          
+        reject(e);
+      });
+
+      // connecting timeout
+      setTimeout(() =>
+      {
+        if (!socket.connected)
+        {
+          socket.close();
+          
+          reject('Error: Connecting Timeout');
+        }
+      }, 3500);
+    }
+    catch (e)
+    {
+      socket.close();
+
+      reject(e);
+    }
   });
 }
 

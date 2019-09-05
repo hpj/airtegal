@@ -84,11 +84,6 @@ export function hideLoadingScreen()
   ReactDOM.unmountComponentAtNode(placeholder);
 }
 
-export function errorScreen()
-{
-  console.error('error screen requested');
-}
-
 const webFontPromise = new Promise((resolve) =>
 {
   WebFont.load({
@@ -104,15 +99,14 @@ const webFontPromise = new Promise((resolve) =>
 const availabilityPromise = new Promise((resolve) =>
 {
   // bypass availability test if running on a development build
-  // if (process.env.NODE_ENV === 'development')
-  // {
-  //   availability = true;
-  //   API_ENDPOINT = 'https://localhost:3000';
+  if (process.env.NODE_ENV === 'development')
+  {
+    availability = true;
 
-  //   resolve();
+    resolve();
 
-  //   return;
-  // }
+    return;
+  }
 
   axios({
     url: API_ENDPOINT,
@@ -153,7 +147,10 @@ if (location.hostname.search('gitlab.io') > -1)
   location.replace('https://bedan.me');
 
 // set the game's API endpoint
-API_ENDPOINT = 'https://kbf.herokuapp.com';
+if (process.env.NODE_ENV === 'production')
+  API_ENDPOINT = 'https://kbf.herokuapp.com';
+else
+  API_ENDPOINT = 'https://localhost:3000';
 
 Promise.all([ webFontPromise, availabilityPromise, countryPromise ]).then(loaded);
 
