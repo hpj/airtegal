@@ -6,64 +6,70 @@ import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
 
+let lastSetIndex;
+
 const cardsContainer = createRef();
 
 const CardShowcase = () =>
 {
   const [ cards, setCards ] = useState([]);
+  const [ cardsOnShow, setCardsOnShow ] = useState([]);
+
+  function randomSet()
+  {
+    if (cards.length <= 0)
+      return;
+
+    setCardsOnShow(cards[randomIndex()]);
+  }
+
+  function randomIndex()
+  {
+    let i = lastSetIndex;
+
+    while (i === lastSetIndex)
+    {
+      i = Math.round(Math.random() * (cards.length - 1));
+    }
+
+    lastSetIndex = i;
+    
+    return i;
+  }
 
   // on url change
   useEffect(() =>
   {
-    // Debug Code Starts
+    // TODO set a server query to return good hand-picked combinations of white and black cards
+    // the graphql query should be something like this
+    //   setCards([
+    //     [
+    //       {
+    //         id: '1',
+    //         type: 'black',
+    //         content: 'كرت 1'
+    //       },
+    //       {
+    //         id: '2',
+    //         type: 'white',
+    //         content: 'كرت 2'
+    //       }
+    //     ],
+    //     [
+    //       {
+    //         id: '1',
+    //         type: 'black',
+    //         content: 'كرت 3'
+    //       },
+    //       {
+    //         id: '2',
+    //         type: 'white',
+    //         content: 'كرت 4'
+    //       }
+    //     ]
+    //   ]);
 
-    setTimeout(() =>
-    {
-      // animation trigger: moves title rom center to the right
-      cardsContainer.current.style.width = '100%';
-
-      // waiting the animation duration
-      setTimeout(() =>
-      {
-        setCards([
-          {
-            id: '1',
-            type: 'black',
-            content: '______.'
-          },
-          {
-            id: '2',
-            type: 'white',
-            content: 'بطاطس.'
-          }
-        ]);
-        
-        // wait until render is done
-        requestAnimationFrame(() =>
-        {
-          cardsContainer.current.childNodes.forEach((v) =>
-          {
-            // hide cards so they won't appear on screen just yet
-            v.classList.add('hide');
-
-            // animation trigger: plays an animation of the cards enter the screen
-            requestAnimationFrame(() =>  v.classList.remove('hide'));
-          });
-        });
-      }, 1000);
-    }, 1500);
-
-    setTimeout(() =>
-    {
-      // cardsContainer.current.childNodes.forEach((v) =>
-      // {
-      //   v.classList.remove('hide');
-      // });
-    }, 3000);
-
-    // Debug Code Ends
-
-    // fetch(API_URI + '/cards').then((response) =>
+    // axios(API_URI + '/cards').then((response) =>
     // {
     //   response.json().then((data) =>
     //   {
@@ -73,11 +79,63 @@ const CardShowcase = () =>
     // }).catch(console.error);
   }, [ window.location ]);
 
+  // happens once after cards are fetched from server
+  useEffect(() =>
+  {
+    if (cards.length <= 0)
+      return;
+    
+    // animation trigger: moves title rom center to the right
+    cardsContainer.current.style.width = '100%';
+
+    // cards start hidden to wait for the title movment
+    cardsContainer.current.classList.add('hide');
+
+    // waiting the animation duration (title clearing space for the showcase element)
+    setTimeout(() =>
+    {
+      // then show the cards
+      randomSet();
+    }, 1000);
+    
+    // cycle between different sets of cards every 5 seconds
+    const interval = setInterval(() =>
+    {
+      cardsContainer.current.classList.add('hide');
+      
+      setTimeout(() => randomSet(), 1000);
+    }, 5000);
+
+    // clear the interval on unmount
+    return () => clearInterval(interval);
+  }, [ cards ]);
+
+  // happens every 5 seconds, cards on display changes
+  useEffect(() =>
+  {
+    if (cardsOnShow.length <= 0)
+      return;
+
+    cardsContainer.current.classList.remove('hide');
+  }, [ cardsOnShow ]);
+
   return (
     <div ref={cardsContainer} className={styles.cards}>
 
       {
-        cards.splice(0, 2).reverse().map((card) => <Card key={card.id.toString()} type={card.type} content={card.content}/>)
+        cardsOnShow.map((card) =>
+        {
+          if (card.type === 'white')
+            return <Card key={card.id.toString()} type='white' content={card.content}/>;
+        })
+      }
+
+      {
+        cardsOnShow.map((card) =>
+        {
+          if (card.type === 'black')
+            return <Card key={card.id.toString()} type='black' content={card.content}/>;
+        })
       }
 
     </div>
@@ -95,11 +153,14 @@ const styles = createStyle({
 
     maxWidth: '850px',
     width: '0px',
-    // width: '100%',
 
     transition: 'width 1s',
     transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     
+    '@media screen and (max-width: 830px)': {
+      display: 'none'
+    },
+
     '> div': {
       transform: 'scale(1.35) translate(35%, 15%)',
       margin: '0 4.5%'
@@ -117,12 +178,17 @@ const styles = createStyle({
       transitionTimingFunction: 'cubic-bezier(0.22, 0.61, 0.36, 1)'
     },
 
-    '> .hide:nth-child(2) > div': {
-      transform: 'translate(15%, 100%) rotateZ(60deg)'
-    },
+    '.hide':
+    {
+      '> :nth-child(2) > div':
+      {
+        transform: 'translate(15%, 100%) rotateZ(60deg)'
+      },
 
-    '> .hide:nth-child(1) > div': {
-      transform: 'translate(-10%, 100%) rotateZ(-60deg)'
+      '> :nth-child(1) > div':
+      {
+        transform: 'translate(-10%, 100%) rotateZ(-60deg)'
+      }
     }
   }
 });

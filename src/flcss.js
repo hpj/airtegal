@@ -121,6 +121,10 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
     else if (
       // it must be an attribute
       rule.startsWith('[') ||
+      // it must be an class
+      rule.startsWith('.') ||
+      // it must be an tag
+      rule.startsWith('#') ||
       // it must be pseudo-class or pseudo-element
       rule.startsWith(':') ||
       // other selectors

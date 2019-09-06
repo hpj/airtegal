@@ -1,6 +1,5 @@
 Performance Issues and Bugs:
-  ☐ hide card showcase if screen width is lower than 630px
-  ☐ better icon for the app @high 
+  ☐ better icon for the app 
 
 Testing:
 
@@ -10,16 +9,7 @@ Features:
 
 UI/UX:
   Homepage:
-    ☐ country and language secretors
-
-    ☐ card showcase
-      ✔ expand width (move title to the right) @done(19-09-02 08:49)
-
-      ✔ render two cards at correct positions @done(19-09-03 12:56)
-
-      ✔ attempt animating card using css native motions @done(19-09-03 12:56)
-
-      ☐ switching cards every 5 seconds
+    ☐ country and language secretors @high 
 
   Game:
     ☐ show players count

@@ -21,6 +21,7 @@ import Warning from '../components/warning.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
 
+const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
 const inputRef = createRef();
@@ -35,6 +36,7 @@ export let socket;
 function errorScreen(error)
 {
   ReactDOM.render(<Error error={error}/>, placeholder);
+  ReactDOM.unmountComponentAtNode(app);
 }
 
 /** connect the socket.io client to the socket.io server

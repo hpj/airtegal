@@ -83,6 +83,17 @@ const Homepage = () =>
             بس بختصار ده مجتمعك و دي حقيقتة من غير صفافير وطوب احمر
             و لو انت شايف دي مشكله في انت بتشتكي ل الناس الغلط.
           </p>
+
+          <p className={qaStyles.question}>
+            ازاي اقترح كروت؟
+          </p>
+
+          <p className={qaStyles.answer}>
+            حاليا الاقتراح والتصويت مقفول علشان اللعبه في فترة تجربية.
+            <br/>
+            بس بيبقي من خلال صفحة تانيه في الموقع دة.
+          </p>
+
         </div>
       </div>
     
@@ -243,6 +254,10 @@ const playStyles = createStyle({
 
       borderImage: 'linear-gradient(to right, #009fff, #ec2f4b)',
       borderImageSlice: 1
+    },
+
+    ':active': {
+      transform: 'scale(0.9)'
     }
   }
 });
