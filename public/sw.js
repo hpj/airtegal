@@ -11,11 +11,19 @@ self.addEventListener('message', (event) =>
 workbox.precaching.precacheAndRoute([
   {
     "url": "body.css",
-    "revision": "bef9c5c82e2ac87febd66db98fc4f8f4"
+    "revision": "2598c7d31461b8c5b74471ddd7098729"
+  },
+  {
+    "url": "card.png",
+    "revision": "6c2e154f0287fdfb7c692039f6f8e238"
   },
   {
     "url": "fonts.css",
     "revision": "96c0f7881407d44eafc15b1e21153aad"
+  },
+  {
+    "url": "google92d94755931a0391.html",
+    "revision": "343596c7544c5333db385515c52c5053"
   },
   {
     "url": "Icon-144.png",
@@ -51,7 +59,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "8440d9bf5c55bcfc61296f917a5cdd22"
+    "revision": "cf60ad2695455ed14e1d5e7828fe9198"
   },
   {
     "url": "manifest.json",
