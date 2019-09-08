@@ -42,32 +42,32 @@ const CardShowcase = () =>
   {
     // TODO set a server query to return good hand-picked combinations of white and black cards
     // the graphql query should be something like this
-    //   setCards([
-    //     [
-    //       {
-    //         id: '1',
-    //         type: 'black',
-    //         content: 'كرت 1'
-    //       },
-    //       {
-    //         id: '2',
-    //         type: 'white',
-    //         content: 'كرت 2'
-    //       }
-    //     ],
-    //     [
-    //       {
-    //         id: '1',
-    //         type: 'black',
-    //         content: 'كرت 3'
-    //       },
-    //       {
-    //         id: '2',
-    //         type: 'white',
-    //         content: 'كرت 4'
-    //       }
-    //     ]
-    //   ]);
+    // setCards([
+    //   [
+    //     {
+    //       id: '1',
+    //       type: 'black',
+    //       content: 'كرت 1'
+    //     },
+    //     {
+    //       id: '2',
+    //       type: 'white',
+    //       content: 'كرت 2'
+    //     }
+    //   ],
+    //   [
+    //     {
+    //       id: '1',
+    //       type: 'black',
+    //       content: 'كرت 3'
+    //     },
+    //     {
+    //       id: '2',
+    //       type: 'white',
+    //       content: 'كرت 4'
+    //     }
+    //   ]
+    // ]);
 
     // axios(API_URI + '/cards').then((response) =>
     // {

@@ -95,7 +95,7 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
   const values = Object.values(obj);
 
   // create a class name using the original class name as a prefix and a random characters
-  const className = `${key}-${Math.random().toString(36).substr(2, 7)}`;
+  const className = `flcss-${key}-${Math.random().toString(36).substr(2, 7)}`;
 
   // loop though the rules
   Object.keys(obj).forEach((rule, i) =>

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import InlineSVG from 'svg-inline-react';
+import Select from 'react-select';
 
 import { API_ENDPOINT } from '../index.js';
 
@@ -14,6 +15,10 @@ import hpjLogo from '../../build/hpj-logo-ar.svg';
 
 import Warning from '../components/warning.js';
 import CardShowcase from '../components/cardShowcase.js';
+
+const countries = [
+  { value: 'egypt', label: 'مصر' }
+];
 
 const Homepage = () =>
 {
@@ -34,18 +39,39 @@ const Homepage = () =>
         text={'اللعبه دي معموله للكبار بس... لو انت تحت سن ال16 فاحنا لازم نقولك تمشي من هنا.'}
         button='تمام'
       />
-      
-      <div className={headerStyles.container}>
-        <CardShowcase/>
 
-        <div className={headerStyles.title}>
+      <div className={headerStyles.wrapper}>
 
-          <a className={headerStyles.hpj} href='https://herpproject.com'>
-            <InlineSVG src={hpjLogo}></InlineSVG>
-          </a>
+        <div className={headerStyles.regionalOptions}>
+          <Select
+            className={headerStyles.select}
+            classNamePrefix='react-select'
+            defaultValue={countries[0]}
+            isRtl={true}
+            isSearchable={true}
+            options={countries}
+            theme={theme => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary: '#ffffff'
+              }
+            })}
+          />
+        </div>
 
-          <InlineSVG className={headerStyles.kbf} src={gameLogo}></InlineSVG>
+        <div className={headerStyles.container}>
+          <CardShowcase/>
+
+          <div className={headerStyles.title}>
+
+            <a className={headerStyles.hpj} href='https://herpproject.com'>
+              <InlineSVG src={hpjLogo}></InlineSVG>
+            </a>
+
+            <InlineSVG className={headerStyles.kbf} src={gameLogo}></InlineSVG>
           
+          </div>
         </div>
       </div>
 
@@ -128,12 +154,70 @@ const Homepage = () =>
 };
 
 const headerStyles = createStyle({
-  container: {
-    display: 'flex',
-
+  wrapper: {
     background: 'linear-gradient( 135deg, #F05F57 10%, #360940 100%);',
 
     padding: '0 5vw'
+  },
+
+  container: {
+    display: 'flex'
+  },
+
+  regionalOptions: {
+    width: 'auto',
+    fontWeight: 700,
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    padding: '10px 0 0 0'
+  },
+
+  select: {
+    ':focus': {
+      outline: colors.whiteText
+    },
+
+    ' .react-select__option': {
+      cursor: 'pointer'
+    },
+
+    ' .react-select__option--is-selected': {
+      backgroundColor: '#3B5FFF',
+
+      ':active': {
+        backgroundColor: '#3B5FFF'
+      }
+    },
+    ' .react-select__input': {
+      color: colors.whiteText
+    },
+
+    ' .react-select__control': {
+      cursor: 'pointer',
+
+      background: 'none',
+      border: 'none'
+    },
+
+    ' .react-select__control--is-focused': {
+      outline: colors.whiteText
+    },
+
+    ' .react-select__single-value': {
+      color: colors.whiteText
+    },
+
+    ' .react-select__indicator-separator': {
+      display: 'none'
+    },
+
+    ' .react-select__indicator': {
+      color: colors.whiteText
+    },
+
+    ' .react-select__indicator:hover': {
+      color: colors.whiteText
+    }
   },
 
   title: {

@@ -56,11 +56,11 @@ function loaded()
 
   // REMOVE this block and add country selector on homepage
   // the app will only be blocked in certin countries only
-  if (availability && country !== 'Egypt')
-  {
-    ReactDOM.render(<Error error='This app is not available in your country.'/>, placeholder);
-    ReactDOM.unmountComponentAtNode(app);
-  }
+  // if (availability && country !== 'Egypt')
+  // {
+  //   ReactDOM.render(<Error error='This app is not available in your country.'/>, placeholder);
+  //   ReactDOM.unmountComponentAtNode(app);
+  // }
 
   console.log(`User's country is ${country}.`);
   console.log(`Availability is ${availability}.`);

@@ -31,6 +31,7 @@
     "react-interactable": "^0.6.4",
     "react-panresponder-web": "^1.0.2",
     "react-router-dom": "^5.0.1",
+    "react-select": "^3.0.4",
     "resize-observer": "^1.0.0",
     "socket.io-client": "^2.2.0",
     "webfontloader": "^1.6.28"
