@@ -18,9 +18,9 @@ workbox.routing.registerRoute(
   })
 );
 
-// Cache the geoip check with a cache-first strategy for 1 day
+// Cache the ip check with a cache-first strategy for 1 day
 workbox.routing.registerRoute(
-  new RegExp('https://geoip-db.com/jsonp'),
+  new RegExp('https://kbf.herokuapp.com/check/'),
   new workbox.strategies.CacheFirst({
     cacheName: 'kbf-cache',
     plugins: [
