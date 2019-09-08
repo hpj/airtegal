@@ -6,7 +6,6 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import WebFont from 'webfontloader';
 
 import axios from 'axios';
-
 import jsonp from 'jsonp';
 
 import Error from './components/error.js';
@@ -44,6 +43,38 @@ function loaded()
 
   </Router>;
 
+  console.log(`User's country is ${country}.`);
+  console.log(`Availability is ${availability}.`);
+
+  // the app is blocked in certain countries only
+
+  if (!country)
+  {
+    ReactDOM.render(<Error error='Connection Error.'/>, placeholder);
+
+    return;
+  }
+  
+  if (
+    country === 'Turkey' ||
+    country === 'Qatar' ||
+    country === 'Syrian Arab Republic'
+  )
+  {
+    ReactDOM.render(<Error error='This app was blocked in your country because of political tension.'/>, placeholder);
+
+    return;
+  }
+
+  if (country === 'Saudi Arabia')
+  {
+    ReactDOM.render(<Error error='This kind of app is considered a taboo in your country.'/>, placeholder);
+
+    return;
+  }
+
+  // everything is fine render the app
+
   ReactDOM.render(pages, app, () =>
   {
     // if on production mode, register the service worker
@@ -53,17 +84,6 @@ function loaded()
     if (!keepLoading)
       hideLoadingScreen();
   });
-
-  // REMOVE this block and add country selector on homepage
-  // the app will only be blocked in certin countries only
-  // if (availability && country !== 'Egypt')
-  // {
-  //   ReactDOM.render(<Error error='This app is not available in your country.'/>, placeholder);
-  //   ReactDOM.unmountComponentAtNode(app);
-  // }
-
-  console.log(`User's country is ${country}.`);
-  console.log(`Availability is ${availability}.`);
 }
 
 function registerServiceWorker()
@@ -93,6 +113,19 @@ export function hideLoadingScreen()
   ReactDOM.unmountComponentAtNode(placeholder);
 }
 
+// CORS only works on this origin
+// meaning we need to move the client to that origin
+if (location.hostname.search('gitlab.io') > -1)
+  location.replace('https://bedan.me');
+
+// set the game's API endpoint
+if (process.env.NODE_ENV === 'production')
+  API_ENDPOINT = 'https://kbf.herokuapp.com';
+else
+  API_ENDPOINT = 'https://localhost:3000';
+
+// request few promises
+
 const webFontPromise = new Promise((resolve) =>
 {
   WebFont.load({
@@ -108,22 +141,24 @@ const webFontPromise = new Promise((resolve) =>
 const availabilityPromise = new Promise((resolve) =>
 {
   // bypass availability test if running on a development build
-  if (process.env.NODE_ENV === 'development')
-  {
-    availability = true;
+  // if (process.env.NODE_ENV === 'development')
+  // {
+  //   availability = true;
 
-    resolve();
+  //   resolve();
 
-    return;
-  }
+  //   return;
+  // }
 
   axios({
     url: API_ENDPOINT,
     timeout: 3500
   })
-    .then(() =>
+    .then((response) =>
     {
       availability = true;
+
+      console.log(response.data);
 
       resolve();
     })
@@ -143,25 +178,19 @@ const countryPromise = new Promise((resolve) =>
     timeout: 3500
   }, (err, response) =>
   {
-    if (response && response.country_name)
-      country = response.country_name;
-
-    resolve();
+    if (response && (response.country_name))
+    {
+      // resolve();
+    }
+    else
+    {
+      resolve();
+    }
   });
 });
 
-// CORS only works on this origin
-// meaning we need to move the client to that origin
-if (location.hostname.search('gitlab.io') > -1)
-  location.replace('https://bedan.me');
-
-// set the game's API endpoint
-if (process.env.NODE_ENV === 'production')
-  API_ENDPOINT = 'https://kbf.herokuapp.com';
-else
-  API_ENDPOINT = 'https://localhost:3000';
+// show a loading screen until the promises resolve
 
 Promise.all([ webFontPromise, availabilityPromise, countryPromise ]).then(loaded);
 
-// render loading screen
 ReactDOM.render(<Loading/>, placeholder);
