@@ -6,7 +6,6 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import WebFont from 'webfontloader';
 
 import axios from 'axios';
-import jsonp from 'jsonp';
 
 import Error from './components/error.js';
 import Loading from './components/loading.js';
@@ -32,6 +31,12 @@ const placeholder = document.body.querySelector('#placeholder');
 */
 function loaded()
 {
+  console.log(`User's country is ${country}.`);
+  console.log(`Availability is ${availability}.`);
+
+  if (!availability)
+    return;
+
   const pages =
   <Router>
     <Route exact path="/" component={Homepage}/>
@@ -42,38 +47,6 @@ function loaded()
     <Route path="/privacy" component={PrivacyPolicy}/>
 
   </Router>;
-
-  console.log(`User's country is ${country}.`);
-  console.log(`Availability is ${availability}.`);
-
-  // the app is blocked in certain countries only
-
-  if (!country)
-  {
-    ReactDOM.render(<Error error='Connection Error.'/>, placeholder);
-
-    return;
-  }
-  
-  if (
-    country === 'Turkey' ||
-    country === 'Qatar' ||
-    country === 'Syrian Arab Republic'
-  )
-  {
-    ReactDOM.render(<Error error='This app was blocked in your country because of political tension.'/>, placeholder);
-
-    return;
-  }
-
-  if (country === 'Saudi Arabia')
-  {
-    ReactDOM.render(<Error error='This kind of app is considered a taboo in your country.'/>, placeholder);
-
-    return;
-  }
-
-  // everything is fine render the app
 
   ReactDOM.render(pages, app, () =>
   {
@@ -119,10 +92,10 @@ if (location.hostname.search('gitlab.io') > -1)
   location.replace('https://bedan.me');
 
 // set the game's API endpoint
-if (process.env.NODE_ENV === 'production')
-  API_ENDPOINT = 'https://kbf.herokuapp.com';
-else
-  API_ENDPOINT = 'https://localhost:3000';
+// if (process.env.NODE_ENV === 'production')
+API_ENDPOINT = 'https://kbf.herokuapp.com';
+// else
+//   API_ENDPOINT = 'https://localhost:3000';
 
 // request few promises
 
@@ -138,11 +111,12 @@ const webFontPromise = new Promise((resolve) =>
   });
 });
 
-const availabilityPromise = new Promise((resolve) =>
+const ipCheck = new Promise((resolve) =>
 {
   // bypass availability test if running on a development build
   // if (process.env.NODE_ENV === 'development')
   // {
+  // country = 'Egypt';
   //   availability = true;
 
   //   resolve();
@@ -151,46 +125,39 @@ const availabilityPromise = new Promise((resolve) =>
   // }
 
   axios({
-    url: API_ENDPOINT,
-    timeout: 3500
+    url: API_ENDPOINT + '/check',
+    timeout: 20000
   })
     .then((response) =>
     {
-      availability = true;
+      if (response.status !== 200)
+      {
+        ReactDOM.render(<Error error={response.data}/>, placeholder);
 
-      console.log(response.data);
+        API_ENDPOINT = country = undefined;
+        availability = false;
+      }
+      else
+      {
+        country = response.data.country;
+        availability = true;
+      }
 
       resolve();
     })
-    .catch(() =>
+    .catch((e) =>
     {
+      ReactDOM.render(<Error error={e.response.data.message}/>, placeholder);
+      
+      API_ENDPOINT = country = undefined;
       availability = false;
-      API_ENDPOINT = undefined;
 
       resolve();
     });
 });
 
-const countryPromise = new Promise((resolve) =>
-{
-  jsonp('https://geoip-db.com/jsonp', {
-    name: 'callback',
-    timeout: 3500
-  }, (err, response) =>
-  {
-    if (response && (response.country_name))
-    {
-      // resolve();
-    }
-    else
-    {
-      resolve();
-    }
-  });
-});
-
 // show a loading screen until the promises resolve
 
-Promise.all([ webFontPromise, availabilityPromise, countryPromise ]).then(loaded);
+Promise.all([ webFontPromise, ipCheck ]).then(loaded);
 
 ReactDOM.render(<Loading/>, placeholder);
