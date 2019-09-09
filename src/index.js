@@ -147,7 +147,8 @@ const ipCheck = new Promise((resolve) =>
     })
     .catch((e) =>
     {
-      ReactDOM.render(<Error error={e.response.data.message}/>, placeholder);
+      if (e.response)
+        ReactDOM.render(<Error error={e.response.data.message}/>, placeholder);
       
       API_ENDPOINT = country = undefined;
       availability = false;
