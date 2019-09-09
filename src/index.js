@@ -149,9 +149,13 @@ const ipCheck = new Promise((resolve) =>
     {
       if (e.response)
         ReactDOM.render(<Error error={e.response.data.message}/>, placeholder);
-      
+        
       API_ENDPOINT = country = undefined;
-      availability = false;
+
+      if (e.statusCode === 503)
+        availability = true;
+      else
+        availability = false;
 
       resolve();
     });
