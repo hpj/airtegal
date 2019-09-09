@@ -126,10 +126,9 @@ const Homepage = () =>
       <div className={playStyles.wrapper}>
         <div className={playStyles.container}>
           {
-            (process.env.NODE_ENV === 'production') ? <p className={playStyles.title}>قريباً</p> :
-              (API_ENDPOINT) ?
-                <Link className={playStyles.title} to='/play'>العب</Link> :
-                <p className={playStyles.title}>السيرفر خارج الخدمة</p>
+            (API_ENDPOINT) ?
+              <Link className={playStyles.title} to='/play'>العب</Link> :
+              <p className={playStyles.title}>السيرفر خارج الخدمة</p>
           }
         </div>
       </div>

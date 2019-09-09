@@ -78,13 +78,6 @@ export function connect()
 
 const Game = () =>
 {
-  if (process.env.NODE_ENV === 'production')
-  {
-    errorScreen('قريباً');
-    
-    return;
-  }
-
   // safe to be called multiple times
   // only works on app start if the loading screen wasn't hidden already
   holdLoadingScreen();
