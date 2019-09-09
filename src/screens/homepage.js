@@ -126,9 +126,10 @@ const Homepage = () =>
       <div className={playStyles.wrapper}>
         <div className={playStyles.container}>
           {
-            (API_ENDPOINT) ?
-              <Link className={playStyles.title} to='/play'>العب</Link> :
-              <p className={playStyles.title}>السيرفر خارج الخدمة</p>
+            (process.env.NODE_ENV === 'production') ? <p className={playStyles.title}>قريباً</p> :
+              (API_ENDPOINT) ?
+                <Link className={playStyles.title} to='/play'>العب</Link> :
+                <p className={playStyles.title}>السيرفر خارج الخدمة</p>
           }
         </div>
       </div>
