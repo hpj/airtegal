@@ -152,6 +152,8 @@ const ipCheck = new Promise((resolve) =>
         
       API_ENDPOINT = country = undefined;
 
+      console.log(e);
+
       if (e.statusCode === 503)
         availability = true;
       else
