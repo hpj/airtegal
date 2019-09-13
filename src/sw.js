@@ -42,3 +42,27 @@ workbox.routing.registerRoute(
     cacheName: 'kbf-cache'
   })
 );
+
+const clientId = '622201604992401437';
+
+const host = '127.0.0.1';
+const port = 6463;
+
+const url = `ws://${host}:${port}/?v=1&client_id=${clientId}&encoding=json`;
+
+const ws = new WebSocket(url);
+
+ws.onopen = () =>
+{
+  console.log('socket opened');
+};
+
+ws.onclose = ws.onerror = (e) =>
+{
+  console.warn(e);
+};
+
+ws.onmessage = (event) =>
+{
+  console.log(JSON.parse(event.data));
+};
