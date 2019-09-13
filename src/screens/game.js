@@ -65,7 +65,7 @@ export function connect()
           
           reject('Error: Connecting Timeout');
         }
-      }, 10000);
+      }, 3000);
     }
     catch (e)
     {

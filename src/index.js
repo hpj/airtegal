@@ -1,7 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
-;
+import ReactDOM from 'react-dom';
 import { HashRouter as Router, Route } from 'react-router-dom';
+
+// import { connect } from './rpc.js';
+
+// import 'fuckadblock';
 
 import WebFont from 'webfontloader';
 
@@ -33,7 +36,7 @@ function loaded()
 {
   console.log(`User's country is ${country}.`);
   console.log(`Availability is ${availability}.`);
-
+  
   if (!availability)
     return;
 
@@ -51,8 +54,8 @@ function loaded()
   ReactDOM.render(pages, app, () =>
   {
     // if on production mode, register the service worker
-    if (process.env.NODE_ENV === 'production')
-      registerServiceWorker();
+    // if (process.env.NODE_ENV === 'production')
+    registerServiceWorker();
 
     if (!keepLoading)
       hideLoadingScreen();
@@ -86,16 +89,17 @@ export function hideLoadingScreen()
   ReactDOM.unmountComponentAtNode(placeholder);
 }
 
-// CORS only works on this origin
-// meaning we need to move the client to that origin
+// CORS only works on this custom domain (origin)
+// meaning we need to move the client to that remote url
+// if they were viewing the app from the host url
 if (location.hostname.search('gitlab.io') > -1)
   location.replace('https://bedan.me');
 
-// set the game's API endpoint
-// if (process.env.NODE_ENV === 'production')
-API_ENDPOINT = 'https://kbf.herokuapp.com';
-// else
-//   API_ENDPOINT = 'https://localhost:3000';
+// set the API endpoint
+if (process.env.NODE_ENV === 'production')
+  API_ENDPOINT = 'https://kbf.herokuapp.com';
+else
+  API_ENDPOINT = 'https://localhost:3000';
 
 // request few promises
 
@@ -113,16 +117,16 @@ const webFontPromise = new Promise((resolve) =>
 
 const ipCheck = new Promise((resolve) =>
 {
-  // bypass availability test if running on a development build
-  // if (process.env.NODE_ENV === 'development')
-  // {
-  // country = 'Egypt';
-  //   availability = true;
+  // bypass check if on a development builds
+  if (process.env.NODE_ENV === 'development')
+  {
+    country = 'Egypt';
+    availability = true;
 
-  //   resolve();
+    resolve();
 
-  //   return;
-  // }
+    return;
+  }
 
   axios({
     url: API_ENDPOINT + '/check',
@@ -152,7 +156,8 @@ const ipCheck = new Promise((resolve) =>
         
       API_ENDPOINT = country = undefined;
 
-      if (e.message === 'Network Error')
+      // TODO offline mode and server unavailable should be handled better
+      if (!e.response && e.message === 'Network Error')
         availability = true;
       else
         availability = false;
@@ -166,3 +171,13 @@ const ipCheck = new Promise((resolve) =>
 Promise.all([ webFontPromise, ipCheck ]).then(loaded);
 
 ReactDOM.render(<Loading/>, placeholder);
+
+// ad-block detection
+
+// window.fuckAdBlock.on(true, () =>
+// {
+//   console.log('Blocking Ads: Yes');
+// });
+
+// TODO
+// connect().then(() => console.log('ready')).catch(console.error);
