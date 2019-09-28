@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
-// import { connect } from './rpc.js';
-
 // import 'fuckadblock';
 
 import WebFont from 'webfontloader';
@@ -54,8 +52,8 @@ function loaded()
   ReactDOM.render(pages, app, () =>
   {
     // if on production mode, register the service worker
-    // if (process.env.NODE_ENV === 'production')
-    registerServiceWorker();
+    if (process.env.NODE_ENV === 'production')
+      registerServiceWorker();
 
     if (!keepLoading)
       hideLoadingScreen();

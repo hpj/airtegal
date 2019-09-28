@@ -7,9 +7,17 @@ Features:
   ☐ setup crowdl for i18n
   ☐ setup sentry for error tracking
 
+API & Database:
+  ☐ create a query and endpoint for card showcase
+
 UI/UX:
   Homepage:
-    ☐ country and language secretors @high 
+
+  Lobby:
+    ☐ show rooms
+
+    ☐ show google ad
+    ☐ show a window about ad-block if detected
 
   Game:
     ☐ show players count

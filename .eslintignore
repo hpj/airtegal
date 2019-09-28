@@ -1,7 +1,5 @@
 **/node_modules
 
-afterPack.js
 babel.config.js
 
-/compiled
 /public
