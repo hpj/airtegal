@@ -80,6 +80,51 @@ export function createStyle(styles)
   return newStyles;
 }
 
+/** Creates a CSS animation
+* @param { { keyframes: string, duration: string, timingFunction, delay: string, iterationCount, direction, fillMode } } animation
+*
+* @example
+*
+* const animationA = createAnimation({
+*    duration: '4s',
+*    keyframes: `
+*    from: { background-color: red; }
+*    to: { background-color: yellow; }
+*    `,
+* });
+*
+* const styles = createStyle({
+*    someMovingThingy: {
+*    width: '35%',
+*    height: '15%',
+*    animation: animationA
+*  }});
+*
+*  return <div className={styles.someMovingThingy}/>;
+*/
+export function createAnimation(animation)
+{
+  // make sure that no strings equal 'undefined'
+  // set default values
+  animation.timingFunction = animation.timingFunction || 'ease';
+  animation.delay = animation.delay || '0s';
+  animation.iterationCount = animation.iterationCount || '1';
+  animation.direction = animation.direction || 'normal';
+  animation.fillMode = animation.fillMode || 'none';
+
+  // generate a random name for the animation
+  const animationName = `flcss-animation-${Math.random().toString(36).substr(2, 7)}`;
+
+  // the animation's css string
+  const css = `@keyframes ${animationName}{${animation.keyframes}}`;
+
+  // append the css string to DOM
+  appendToDOM(css);
+
+  // return a string the developers can use with createStyle()
+  return `${animationName} ${animation.duration} ${animation.timingFunction} ${animation.delay} ${animation.iterationCount} ${animation.direction} ${animation.fillMode}`.replace(/\s+/g, ' ');
+}
+
 /** @param { string } key
 * @param { {} } obj
 * @param { {} } rootDirectory
@@ -192,6 +237,9 @@ function appendToDOM(css)
 
     // stylesheet is css
     stylesheetElement.type = 'text/css';
+
+    console.log(css);
+    
 
     // append the css string to the stylesheet element
     stylesheetElement.appendChild(document.createTextNode(css));
