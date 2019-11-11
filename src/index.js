@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
+// import { Client } from 'rich-presence-for-web-apps';
+
 // import 'fuckadblock';
 
 import WebFont from 'webfontloader';
@@ -170,12 +172,33 @@ Promise.all([ webFontPromise, ipCheck ]).then(loaded);
 
 ReactDOM.render(<Loading/>, placeholder);
 
-// ad-block detection
+// TODO Ad-Block Detection
 
 // window.fuckAdBlock.on(true, () =>
 // {
 //   console.log('Blocking Ads: Yes');
 // });
 
-// TODO
-// connect().then(() => console.log('ready')).catch(console.error);
+// TODO Discord RPC
+
+// const client = new Client('622201604992401437');
+
+// client.on('connected', () =>
+// {
+//   console.log('connected');
+  
+//   client.setActivity({
+//     details: 'playing',
+//     state: 'mad',
+//     startTimestamp: Date.now(),
+//     largeImageKey: '6486',
+//     largeImageText: 'Image'
+//   });
+// });
+
+// client.on('error', (err) =>
+// {
+//   // if err === 'extension is not installed' then check for discord
+//   // if it's opened then suggest that the user installs this extension
+//   console.error(err);
+// });
