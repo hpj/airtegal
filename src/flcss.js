@@ -238,9 +238,6 @@ function appendToDOM(css)
     // stylesheet is css
     stylesheetElement.type = 'text/css';
 
-    console.log(css);
-    
-
     // append the css string to the stylesheet element
     stylesheetElement.appendChild(document.createTextNode(css));
 
