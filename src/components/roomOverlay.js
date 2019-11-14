@@ -11,7 +11,7 @@ import { socket } from '../screens/game.js';
 
 import * as colors from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle, createAnimation } from '../flcss.js';
 
 import Trackbar from './roomTrackbar.js';
 import RoomContent from './roomContent.js';
@@ -33,6 +33,9 @@ class RoomOverlay extends React.Component
     super();
     
     this.state = {
+      loadingHidden: true,
+      errorHidden: true,
+      errorMessage: true,
       overlayHolderOpacity: 0,
       overlayHidden: true,
       overlayDrag: true
@@ -41,30 +44,97 @@ class RoomOverlay extends React.Component
     this.handlerVisibility.bind(this);
   }
 
+  /**
+  * @param { string } eventName
+  * @param  { {} } args
+  */
+  sendMessage(eventName, args)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      // nonce is a bunch of random numbers
+      const nonce = [
+        Math.random() * 32,
+        Math.random() * 8
+      ].join('.');
+
+      function errListen(n, err)
+      {
+        if (n !== nonce)
+          return;
+
+        reject(err);
+      }
+
+      function doneListen(n, data)
+      {
+        if (n !== nonce)
+          return;
+        
+        resolve(data);
+      }
+
+      socket.emit(eventName, { nonce, ...args });
+
+      socket.on('done', doneListen);
+      socket.on('err', errListen);
+    });
+  }
+
   createRoom()
   {
     const { username } = this.props;
-    
-    overlayRef.current.snapTo({ index: 0 });
 
-    socket.emit('create', { username: username });
+    // show a loading indictor
+    this.setState({ loadingHidden: false });
+
+    this.sendMessage('create', { username }).then(() =>
+    {
+      // hide the loading indictor
+      this.setState({ loadingHidden: true });
+
+      // show the room overlay
+      overlayRef.current.snapTo({ index: 0 });
+    }).catch((err) =>
+    {
+      // show an error message
+      this.setState({
+        errorHidden: false,
+        errorMessage: err
+      });
+    });
   }
 
   joinRoom(id)
   {
     const { username } = this.props;
     
-    overlayRef.current.snapTo({ index: 0 });
-
     if (typeof id !== 'string')
       id = undefined;
-  
-    socket.emit('join', { username: username, id: id });
+
+    // show a loading indictor
+    this.setState({ loadingHidden: false });
+
+    this.sendMessage('join', { id, username }).then(() =>
+    {
+      // hide the loading indictor
+      this.setState({ loadingHidden: true });
+
+      // show the room overlay
+      overlayRef.current.snapTo({ index: 0 });
+    }).catch((err) =>
+    {
+      // show an error message
+      this.setState({
+        errorHidden: false,
+        errorMessage: err
+      });
+    });
   }
 
   leaveRoom()
   {
-    socket.emit('leave');
+    this.sendMessage('leave').then(console.log).catch(console.error);
   }
 
   startGame()
@@ -92,6 +162,14 @@ class RoomOverlay extends React.Component
       this.leaveRoom();
   }
 
+  hideErrorMessage()
+  {
+    this.setState({
+      loadingHidden: true,
+      errorHidden: true
+    });
+  }
+
   render()
   {
     const { size } = this.props;
@@ -113,12 +191,30 @@ class RoomOverlay extends React.Component
         this.setState({ overlayHidden: false });
     });
 
-    // // if size is not calculated yet
+    // if size is not calculated yet
     if (!size.width)
       return <div/>;
     
     return (
       <div>
+
+        <div style={{
+          zIndex: 1,
+          display: (this.state.loadingHidden) ? 'none' : ''
+        }} className={styles.loading}
+        >
+          <div className={styles.loadingSpinner} style={{
+            // hide loading spinner if error is visible
+            display: (this.state.errorHidden) ? '' : 'none'
+          }}></div>
+
+          <div className={styles.error} style={{
+            display: (this.state.errorHidden) ? 'none' : ''
+            // on click hide error message
+          }} onClick={this.hideErrorMessage.bind(this)}>
+            <div className={styles.errorMessage}>{this.state.errorMessage}</div>
+          </div>
+        </div>
 
         <div style={{
           zIndex: 1,
@@ -201,6 +297,56 @@ const styles = createStyle({
       gridTemplateRows: 'auto 1fr',
       gridTemplateAreas: '"handler side" "handler content"'
     }
+  },
+
+  loading: {
+    display: 'flex',
+    position: 'fixed',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+    
+    backgroundColor: colors.blackHolder,
+
+    top: 0,
+    width: '100vw',
+    height: '100vh'
+  },
+
+  loadingSpinner: {
+    backgroundColor: 'transparent',
+
+    paddingBottom: '10%',
+    width: '10%',
+    border: '10px white solid',
+    animation: createAnimation({
+      keyframes: `
+      from { transform:rotate(0deg); }
+      to { transform:rotate(360deg); }
+      `,
+      duration: '2s',
+      timingFunction: 'linear',
+      iterationCount: 'infinite'
+    })
+  },
+
+  error: {
+    backgroundColor: colors.error,
+    maxWidth: '60%',
+
+    padding: '6px',
+    borderRadius: '5px'
+  },
+
+  errorMessage: {
+    color: colors.whiteText,
+    textTransform: 'capitalize',
+
+    cursor: 'pointer',
+
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   holder: {
