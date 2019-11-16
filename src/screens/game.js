@@ -52,8 +52,17 @@ export function connect()
       socket.once('connect', resolve).once('error', (e) =>
       {
         socket.close();
-          
+        
         reject(e);
+      });
+
+      socket.on('disconnect', () =>
+      {
+        socket.close();
+
+        errorScreen('السيرفر خارج الخدمة');
+        
+        reject('server was closed');
       });
 
       // connecting timeout
