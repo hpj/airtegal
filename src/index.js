@@ -25,6 +25,7 @@ export let API_ENDPOINT;
 
 let availability;
 
+let visibleLoading = true;
 let keepLoading = false;
 
 const app = document.body.querySelector('#app');
@@ -78,7 +79,21 @@ function registerServiceWorker()
 
 export function holdLoadingScreen()
 {
-  keepLoading = true;
+  if (visibleLoading)
+  {
+    keepLoading = true;
+
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+export function remountLoadingScreen()
+{
+  ReactDOM.render(<Loading/>, placeholder);
 }
 
 export function hideLoadingScreen()
@@ -87,6 +102,8 @@ export function hideLoadingScreen()
   // incase that happens an ID system for every hold will be the most efficient
 
   ReactDOM.unmountComponentAtNode(placeholder);
+
+  visibleLoading = false;
 }
 
 // CORS only works on this custom domain (origin)
@@ -138,7 +155,7 @@ const ipCheck = new Promise((resolve) =>
       {
         ReactDOM.render(<Error error={response.data}/>, placeholder);
 
-        API_ENDPOINT = country = undefined;
+        country = undefined;
         availability = false;
       }
       else
@@ -154,7 +171,7 @@ const ipCheck = new Promise((resolve) =>
       if (e.response)
         ReactDOM.render(<Error error={e.response.data.message}/>, placeholder);
         
-      API_ENDPOINT = country = undefined;
+      country = undefined;
 
       // TODO offline mode and server unavailable should be handled better
       if (!e.response && e.message === 'Network Error')

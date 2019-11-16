@@ -8,7 +8,7 @@ import autoSizeInput from 'autosize-input';
 // eslint-disable-next-line no-unused-vars
 import io, { Socket } from 'socket.io-client';
 
-import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen } from '../index.js';
+import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
 import * as colors from '../colors.js';
 
@@ -78,9 +78,11 @@ export function connect()
 
 const Game = () =>
 {
-  // safe to be called multiple times
-  // only works on app start if the loading screen wasn't hidden already
-  holdLoadingScreen();
+  // check if loading screen is visible
+  // if true then hold it
+  // if false then remount it
+  if (!holdLoadingScreen())
+    remountLoadingScreen();
 
   const [ username, setUsername ] = useState(stupidName);
 
@@ -121,22 +123,17 @@ const Game = () =>
       autoSizeInput(inputRef.current);
     });
     
-    if (API_ENDPOINT)
-    {
-      // connect to the socket.io server
-      connect()
-        .then(hideLoadingScreen)
-        .catch((err) =>
-        {
-          errorScreen('السيرفر خارج الخدمة');
+    // connect to the socket.io server
+    connect()
+      // if app connected successfully
+      // hide the loading screen
+      .then(hideLoadingScreen)
+      .catch((err) =>
+      {
+        errorScreen('السيرفر خارج الخدمة');
 
-          console.error(err);
-        });
-    }
-    else
-    {
-      errorScreen('السيرفر خارج الخدمة');
-    }
+        console.error(err);
+      });
   }, [ window.location ]);
   
   return (

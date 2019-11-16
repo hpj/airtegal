@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import InlineSVG from 'svg-inline-react';
 import Select from 'react-select';
 
-import { API_ENDPOINT } from '../index.js';
-
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
@@ -125,11 +123,7 @@ const Homepage = () =>
     
       <div className={playStyles.wrapper}>
         <div className={playStyles.container}>
-          {
-            (API_ENDPOINT) ?
-              <Link className={playStyles.title} to='/play'>العب</Link> :
-              <p className={playStyles.title}>السيرفر خارج الخدمة</p>
-          }
+          <Link className={playStyles.title} to='/play'>العب</Link>
         </div>
       </div>
 
@@ -145,7 +139,7 @@ const Homepage = () =>
           </div>
           <p className={footerStyles.copyright}>
             يتوفر هذا الموقع واللعبة تحت
-            حقوق الطبع والنشر 2019-2020 ل هيرب بروجيكت.
+            حقوق الطبع والنشر 2019-2020 هيرب بروجيكت.
           </p>
         </div>
       </div>

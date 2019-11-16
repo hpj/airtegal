@@ -69,7 +69,7 @@ const CardShowcase = () =>
     //   ]
     // ]);
 
-    // axios(API_URI + '/v1/cards').then((response) =>
+    // axios(API_ENDPOINT + '/v1/cards').then((response) =>
     // {
     //   response.json().then((data) =>
     //   {
