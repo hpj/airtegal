@@ -6,6 +6,8 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
+import i18n from '../i18n/eg-AR.json';
+
 /** @param { { content: string, type: 'black' | 'white' } } param0
 */
 const Card = ({ content, type }) =>
@@ -15,7 +17,7 @@ const Card = ({ content, type }) =>
       <div className={styles.container} type={type}>
 
         <div className={styles.content}>{content}</div>
-        <p className={styles.bottom}>كروت بضان فشخ</p>
+        <p className={styles.bottom}> { i18n['kuruit-bedan-fash5'] } </p>
         
       </div>
     </div>

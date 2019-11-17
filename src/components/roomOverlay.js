@@ -14,12 +14,14 @@ import * as colors from '../colors.js';
 import { createStyle, createAnimation } from '../flcss.js';
 
 import Trackbar from './roomTrackbar.js';
-import RoomContent from './roomContent.js';
+import RoomOptions from './roomOptions.js';
 
 import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
 
 const overlayRef = createRef();
+
+const roomOptionsRef = createRef();
 
 const handOverlayRef = createRef();
 const fieldOverlayRef = createRef();
@@ -260,12 +262,12 @@ class RoomOverlay extends React.Component
 
             <Trackbar startGame={this.startGame.bind(this)} />
 
-            <RoomContent>
-            
+            <div className={styles.content}>
+              <RoomOptions ref={roomOptionsRef}/>
+              
               <HandOverlay ref={handOverlayRef}/>
               <FieldOverlay ref={fieldOverlayRef}/>
-
-            </RoomContent>
+            </div>
 
           </div>
         
@@ -368,6 +370,10 @@ const styles = createStyle({
 
     margin: 'auto 10px',
     borderRadius: '8px'
+  },
+
+  content: {
+    gridArea: 'content'
   }
 });
 

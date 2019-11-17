@@ -21,6 +21,8 @@ import Warning from '../components/warning.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
 
+import i18n from '../i18n/eg-AR.json';
+
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
@@ -60,9 +62,9 @@ export function connect()
       {
         socket.close();
 
-        errorScreen('السيرفر خارج الخدمة');
-        
-        reject('server was closed');
+        errorScreen(i18n['server-unavailable']);
+
+        reject();
       });
 
       // connecting timeout
@@ -139,7 +141,7 @@ const Game = () =>
       .then(hideLoadingScreen)
       .catch((err) =>
       {
-        errorScreen('السيرفر خارج الخدمة');
+        errorScreen(i18n['server-unavailable']);
 
         console.error(err);
       });
@@ -151,31 +153,31 @@ const Game = () =>
       <Warning
         style={{ padding: '50vh 5vw' }}
         storageKey='kbf-adults-warning'
-        text={'اللعبه دي معموله للكبار بس... لو انت تحت سن ال16 فاحنا لازم نقولك تمشي من هنا.'}
-        button='تمام'
+        text={ i18n['kbf-adults-warning'] }
+        button={ i18n['ok'] }
       />
       
       <div className={mainStyles.container}>
 
         <div className={optionsStyles.container}>
 
-          <input ref={inputRef} className={optionsStyles.username} required placeholder='حط اسمك هنا' value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
+          <input ref={inputRef} className={optionsStyles.username} required placeholder={ i18n['username-input'] } value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
 
-          <p className={optionsStyles.welcome}>اهلا</p>
+          <p className={optionsStyles.welcome}> { i18n['welcome'] } </p>
 
         </div>
 
         <div className={headerStyles.container}>
 
-          <div className={headerStyles.button} onClick={() => overlayRef.current.joinRoom()}>غرفة عشؤئية</div>
-          <div className={headerStyles.button} onClick={() => overlayRef.current.createRoom()}>اصنع غرفتك</div>
+          <div className={headerStyles.button} onClick={() => overlayRef.current.joinRoom()}> { i18n['random-room'] } </div>
+          <div className={headerStyles.button} onClick={() => overlayRef.current.createRoom()}> { i18n['create-room'] } </div>
 
         </div>
 
         <div className={roomsStyles.container}>
 
           <RefreshIcon className={roomsStyles.refresh}/>
-          <p className={roomsStyles.title}>الغرف المتاحة</p>
+          <p className={roomsStyles.title}> { i18n['available-rooms'] } </p>
           
         </div>
       </div>

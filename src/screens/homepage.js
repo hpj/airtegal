@@ -14,6 +14,8 @@ import hpjLogo from '../../build/hpj-logo-ar.svg';
 import Warning from '../components/warning.js';
 import CardShowcase from '../components/cardShowcase.js';
 
+import i18n from '../i18n/eg-AR.json';
+
 const countries = [
   { value: 'egypt', label: 'مصر' }
 ];
@@ -34,8 +36,8 @@ const Homepage = () =>
       <Warning
         style={{ padding: '12vh 5vw' }}
         storageKey='kbf-adults-warning'
-        text={'اللعبه دي معموله للكبار بس... لو انت تحت سن ال16 فاحنا لازم نقولك تمشي من هنا.'}
-        button='تمام'
+        text={ i18n['kbf-adults-warning'] }
+        button={ i18n['okay'] }
       />
 
       <div className={headerStyles.wrapper}>
@@ -76,46 +78,42 @@ const Homepage = () =>
       <div className={qaStyles.wrapper}>
         <div className={qaStyles.container}>
           <p className={qaStyles.question}>
-            كروت بضان فشخ ايه؟
+            { i18n['what-is-kbf'] }
           </p>
 
           <p className={qaStyles.answer}>
-            اللعبه بسيطه. كل دور لاعب بيسال سؤال من كرت اسود وباقي اللعيبه بيجاوبوا عليه باكثر كرت ابيض بيضحك في ايدهم.
+            { i18n['this-is-kbf'] }
           </p>
 
           <p className={qaStyles.question}>
-            ويبقي مين هيرب بروجيكت دي؟
+            { i18n['who-is-hpj'] }
           </p>
 
           <p className={qaStyles.answer}>
-            هيرب بروجكت هي شركة تكنولوجيا مصرية متخصصه في الترفية والتعليم بدات في 2015 بنطور منتجات ل السوق الغربي اغلب الوقت.
-            <br/>
-            بس اللعبة دي محاولة منا لدخول السوق المصري بهدف رفع مستوي حجات كثير في مصر.
+            { i18n['this-is-hpj'] }
           </p>
 
           <p className={qaStyles.question}>
-            بس اللعبه بتشجع علي العنصرية والكراهية والاهانة؟
+            { i18n['why-is-game-raciest'] }
           </p>
 
           <p className={qaStyles.answer}>
-            كل الكروت ال في اللعبه تم اقتراحها والتصويت عليها من المجتمع.
+
+            { i18n['freedom-of-speech-1'] }
             <br/>
-            لحماية حرية التعبير والرائ بموجب المادة رقم 19 من الإعلان العالمي لحقوق الإنسان
-            هيرب بروجكت لن تتدخل في عمليه الاقتراح والتصويت
-            لمعلومات اكثر ممكن تقرأ سياسة الخصوصية والشروط والاحكام.
+
+            { i18n['freedom-of-speech-2'] }
             <br/>
-            بس بختصار ده مجتمعك و دي حقيقتة من غير صفافير وطوب احمر
-            و لو انت شايف دي مشكله في انت بتشتكي ل الناس الغلط.
+
+            { i18n['freedom-of-speech-3'] }
           </p>
 
           <p className={qaStyles.question}>
-            ازاي اقترح كروت؟
+            { i18n['how-to-suggest-cards'] }
           </p>
 
           <p className={qaStyles.answer}>
-            حاليا الاقتراح والتصويت مقفول علشان اللعبه في فترة تجربية.
-            <br/>
-            بس بيبقي من خلال صفحة تانيه في الموقع دة.
+            { i18n['suggesting-cards'] }
           </p>
 
         </div>
@@ -123,7 +121,7 @@ const Homepage = () =>
     
       <div className={playStyles.wrapper}>
         <div className={playStyles.container}>
-          <Link className={playStyles.title} to='/play'>العب</Link>
+          <Link className={playStyles.title} to='/play'> { i18n['play'] } </Link>
         </div>
       </div>
 
@@ -133,13 +131,12 @@ const Homepage = () =>
             <InlineSVG src={hpjLogo}></InlineSVG>
           </a>
           <div className={footerStyles.sitemap}>
-            <Link className={footerStyles.use} to='/terms'>الشروط والاحكام</Link>
+            <Link className={footerStyles.use} to='/terms'> { i18n['terms-and-conditions'] } </Link>
             _
-            <Link className={footerStyles.privacy} to='/privacy'>سياسة الخصوصية</Link>
+            <Link className={footerStyles.privacy} to='/privacy'> { i18n['privacy-policy'] } </Link>
           </div>
           <p className={footerStyles.copyright}>
-            يتوفر هذا الموقع واللعبة تحت
-            حقوق الطبع والنشر 2019-2020 هيرب بروجيكت.
+            { i18n['copyright-notice'] }
           </p>
         </div>
       </div>
