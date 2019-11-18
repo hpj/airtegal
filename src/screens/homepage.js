@@ -37,7 +37,7 @@ const Homepage = () =>
         style={{ padding: '12vh 5vw' }}
         storageKey='kbf-adults-warning'
         text={ i18n['kbf-adults-warning'] }
-        button={ i18n['okay'] }
+        button={ i18n['ok'] }
       />
 
       <div className={headerStyles.wrapper}>
