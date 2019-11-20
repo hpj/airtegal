@@ -14,7 +14,7 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import stupidName from '../stupidName.js';
+import stupidNames from '../stupidNames.js';
 
 import Error from '../components/error.js';
 import Warning from '../components/warning.js';
@@ -96,7 +96,8 @@ const Game = () =>
   if (!holdLoadingScreen())
     remountLoadingScreen();
 
-  const [ username, setUsername ] = useState(stupidName);
+  // TODO cache user preference
+  const [ username, setUsername ] = useState(stupidNames);
 
   const usernameChangeEvent = (event) =>
   {
