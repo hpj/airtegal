@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/hpj/kuruit-bedan-fash5.git"
+    "url": "git@gitlab.com:hpj/kbf.git"
   },
   "author": "Herp Project",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://gitlab.com/hpj/kuruit-bedan-fash5/issues"
+    "url": "https://gitlab.com/hpj/kbf/issues"
   },
-  "homepage": "https://gitlab.com/hpj/kuruit-bedan-fash5#readme",
+  "homepage": "https://bedan.me",
   "dependencies": {
     "animated": "^0.2.2",
     "autosize-input": "^1.0.2",

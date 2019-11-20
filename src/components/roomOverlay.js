@@ -139,8 +139,9 @@ class RoomOverlay extends React.Component
     this.sendMessage('leave').then(console.log).catch(console.error);
   }
 
-  startGame()
+  showFieldAndHand()
   {
+    // disable the ability to leave the room
     this.handlerVisibility(false);
     
     handOverlayRef.current.visibility(true);
@@ -170,6 +171,12 @@ class RoomOverlay extends React.Component
       loadingHidden: true,
       errorHidden: true
     });
+  }
+
+  componentWillUnmount()
+  {
+    // make sure socket is closed before component unmounts
+    socket.close();
   }
 
   render()
@@ -260,11 +267,11 @@ class RoomOverlay extends React.Component
           <div className={styles.wrapper}>
             <div className={styles.handler}/>
 
-            <Trackbar startGame={this.startGame.bind(this)} />
+            <Trackbar showFieldAndHand={this.showFieldAndHand.bind(this)} />
 
             <div className={styles.content}>
               <RoomOptions ref={roomOptionsRef}/>
-              
+
               <HandOverlay ref={handOverlayRef}/>
               <FieldOverlay ref={fieldOverlayRef}/>
             </div>
@@ -292,13 +299,14 @@ const styles = createStyle({
     gridTemplateAreas: '"handler side content"',
 
     width: '100%',
-    height: '100%',
+    height: '100%'
     
-    '@media screen and (max-width: 980px)': {
-      gridTemplateColumns: 'auto 1fr',
-      gridTemplateRows: 'auto 1fr',
-      gridTemplateAreas: '"handler side" "handler content"'
-    }
+    // TODO fix the portrait overlay
+    // '@media screen and (max-width: 980px)': {
+    //   gridTemplateColumns: 'auto 1fr',
+    //   gridTemplateRows: 'auto 1fr',
+    //   gridTemplateAreas: '"handler side" "handler content"'
+    // }
   },
 
   loading: {

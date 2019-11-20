@@ -38,6 +38,7 @@ export let socket;
 function errorScreen(error)
 {
   ReactDOM.render(<Error error={error}/>, placeholder);
+  
   ReactDOM.unmountComponentAtNode(app);
 }
 
@@ -122,7 +123,7 @@ const Game = () =>
     window.history.pushState(undefined, document.title, window.location.href);
     
     window.addEventListener('popstate', () => window.history.pushState(undefined, document.title,  window.location.href));
-
+    
     window.scrollTo(0, 0);
 
     // auto-size the username input-box
