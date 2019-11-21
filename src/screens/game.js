@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
@@ -52,12 +52,13 @@ export function connect()
     {
       socket = io.connect(API_ENDPOINT + '/io');
 
-      socket.once('connect', resolve).once('error', (e) =>
-      {
-        socket.close();
-        
-        reject(e);
-      });
+      socket.once('connect', resolve)
+        .once('error', (e) =>
+        {
+          socket.close();
+          
+          reject(e);
+        });
 
       socket.on('disconnect', () =>
       {
@@ -88,30 +89,24 @@ export function connect()
   });
 }
 
-const Game = () =>
+class Game extends React.Component
 {
-  // check if loading screen is visible
-  // if true then hold it
-  // if false then remount it
-  if (!holdLoadingScreen())
-    remountLoadingScreen();
-
-  // TODO cache user preference
-  const [ username, setUsername ] = useState(stupidNames);
-
-  const usernameChangeEvent = (event) =>
+  constructor()
   {
-    setUsername(event.target.value.replace(/\s+/g, ' '));
-  };
+    super();
 
-  const usernameBlurEvent = (event) =>
-  {
-    setUsername(event.target.value.trim());
-  };
+    // check if loading screen is visible
+    // if true then hold it
+    // if false then remount it
+    if (!holdLoadingScreen())
+      remountLoadingScreen();
 
-  // on url change reset scroll position
-  useEffect(() =>
-  {
+    // TODO cache user preference
+    this.state = {
+      username: stupidNames()
+    };
+    
+    // set the title of this screen
     document.title = 'Kuruit Bedan Fash5';
 
     // TODO how to get query parameters
@@ -124,18 +119,10 @@ const Game = () =>
     window.history.pushState(undefined, document.title, window.location.href);
     
     window.addEventListener('popstate', () => window.history.pushState(undefined, document.title,  window.location.href));
-    
+
+    // fix the scroll position
     window.scrollTo(0, 0);
 
-    // auto-size the username input-box
-    autoSizeInput(inputRef.current);
-
-    // auto-size the username input-box on resize
-    window.addEventListener('resize', () =>
-    {
-      autoSizeInput(inputRef.current);
-    });
-    
     // connect to the socket.io server
     connect()
       // if app connected successfully
@@ -147,48 +134,85 @@ const Game = () =>
 
         console.error(err);
       });
-  }, [ window.location ]);
+  }
+
+  componentDidMount()
+  {
+    // auto-size the username input-box
+    this.resizeInput();
+
+    // auto-size the username input-box on resize
+    window.addEventListener('resize', this.resizeInput);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener('resize', this.resizeInput);
+  }
+
+  resizeInput()
+  {
+    // auto-size the username input-box
+    autoSizeInput(inputRef.current);
+  }
+
+  usernameChangeEvent()
+  {
+    this.setState({
+      username: event.target.value.replace(/\s+/g, ' ')
+    });
+  }
+
+  usernameBlurEvent()
+  {
+    this.setState({
+      username: event.target.value.trim()
+    });
+  }
+
+  render()
+  {
+    return (
+      <div className={mainStyles.wrapper}>
   
-  return (
-    <div className={mainStyles.wrapper}>
-
-      <Warning
-        style={{ padding: '50vh 5vw' }}
-        storageKey='kbf-adults-warning'
-        text={ i18n['kbf-adults-warning'] }
-        button={ i18n['ok'] }
-      />
+        <Warning
+          style={{ padding: '50vh 5vw' }}
+          storageKey='kbf-adults-warning'
+          text={ i18n['kbf-adults-warning'] }
+          button={ i18n['ok'] }
+        />
+        
+        <div className={mainStyles.container}>
+  
+          <div className={optionsStyles.container}>
+  
+            <input ref={inputRef} className={optionsStyles.username} required placeholder={ i18n['username-input'] } value={this.state.username} onBlur={this.usernameBlurEvent} onChange={this.usernameChangeEvent} type='text' maxLength='18'/>
+  
+            <p className={optionsStyles.welcome}> { i18n['welcome'] } </p>
+  
+          </div>
+  
+          <div className={headerStyles.container}>
+  
+            <div className={headerStyles.button} onClick={() => overlayRef.current.joinRoom()}> { i18n['random-room'] } </div>
+            <div className={headerStyles.button} onClick={() => overlayRef.current.createRoom()}> { i18n['create-room'] } </div>
+  
+          </div>
+  
+          <div className={roomsStyles.container}>
+  
+            <RefreshIcon className={roomsStyles.refresh}/>
+            <p className={roomsStyles.title}> { i18n['available-rooms'] } </p>
+            
+          </div>
+        </div>
+        
+        <RoomOverlay ref={overlayRef} username={this.state.username}/>
       
-      <div className={mainStyles.container}>
-
-        <div className={optionsStyles.container}>
-
-          <input ref={inputRef} className={optionsStyles.username} required placeholder={ i18n['username-input'] } value={username} onBlur={usernameBlurEvent} onChange={usernameChangeEvent} type='text' maxLength='18'/>
-
-          <p className={optionsStyles.welcome}> { i18n['welcome'] } </p>
-
-        </div>
-
-        <div className={headerStyles.container}>
-
-          <div className={headerStyles.button} onClick={() => overlayRef.current.joinRoom()}> { i18n['random-room'] } </div>
-          <div className={headerStyles.button} onClick={() => overlayRef.current.createRoom()}> { i18n['create-room'] } </div>
-
-        </div>
-
-        <div className={roomsStyles.container}>
-
-          <RefreshIcon className={roomsStyles.refresh}/>
-          <p className={roomsStyles.title}> { i18n['available-rooms'] } </p>
-          
-        </div>
       </div>
-      
-      <RoomOverlay ref={overlayRef} username={username}/>
-    
-    </div>
-  );
-};
+    );
+  }
+}
 
 const mainStyles = createStyle({
   wrapper: {

@@ -36,7 +36,7 @@ const TermsAndConditions = () =>
 
       <p>If you are the user, don{'\''}t trust anything published under the {'\''}Kuruit Bedan Fash5{'\''} name unless it{'\''}s published from Herp Project owned domains</p>
 
-      <p>Kuruit Bedan Fash5 is a cards game, ALL cards in the game are create by the game{'\''}s community, then are voted on also by the game{'\''}s community, the most popular community-created cards are the added the game occasionally.</p>
+      <p>Kuruit Bedan Fash5 is a fill-in-the-blank party game where all the cards are made by the community, the community submit card ideas and vote on them, the most popular cards are then added to the game occasionally.</p>
 
       <p>Nor Herp Project nor any of its employees can be held responsible for any offensive, racist, sexist or inappropriate community-created cards.</p>
 
