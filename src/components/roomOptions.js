@@ -17,10 +17,10 @@ class RoomOptions extends React.Component
 
     this.state = {};
 
-    socket.on('room-info', (roomInfo) =>
+    socket.on('roomData', (roomData) =>
     {
       this.setState({
-        options: roomInfo.options
+        options: roomData.options
       });
     });
   }
@@ -28,7 +28,7 @@ class RoomOptions extends React.Component
   render()
   {
     return (
-      <div className={styles.container}>
+      <div className={ styles.container }>
         { JSON.stringify(this.state.options) }
         
         {/* <div>Win Method</div>
@@ -46,8 +46,10 @@ class RoomOptions extends React.Component
 
 const styles = createStyle({
   container: {
+    position: 'relative',
     backgroundColor: colors.red,
 
+    top: '-200%',
     width: '100%',
     height: '100%',
 

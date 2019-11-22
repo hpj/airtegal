@@ -1,12 +1,16 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import CrownIcon from 'mdi-react/CrownIcon';
+
+// import i18n from '../i18n/eg-AR.json';
 
 import { socket } from '../screens/game.js';
 
 import * as colors from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle, createAnimation } from '../flcss.js';
 
 class Trackbar extends React.Component
 {
@@ -17,17 +21,51 @@ class Trackbar extends React.Component
     // to avoid a high number of render() calls
     // only update state if the trackbar-related info is changed
 
-    this.state = {};
+    this.state = {
+      loadingHidden: true,
+      errorHidden: true,
+      errorMessage: undefined
+    };
 
-    socket.on('room-info', (roomInfo) =>
+    socket.on('roomData', (roomData) =>
     {
       this.setState({
         // TODO maxPlayers is part of the room options (has not been implement yet)
         maxPlayers: 8,
-        players: roomInfo.players,
-        masterId: roomInfo.master
+        players: roomData.players,
+        masterId: roomData.master
       });
     });
+  }
+
+  showErrorMessage(err)
+  {
+    this.setState({
+      errorHidden: false,
+      errorMessage: err
+    });
+  }
+
+  loadingVisibility(visible)
+  {
+    this.setState({ loadingHidden: visible = !visible });
+  }
+
+  hideErrorMessage()
+  {
+    this.setState({
+      loadingHidden: true,
+      errorHidden: true
+    });
+  }
+
+  matchRequest()
+  {
+    this.loadingVisibility(true);
+
+    this.props.sendMessage('matchRequest')
+      .then(() => this.loadingVisibility(false))
+      .catch((err) => this.showErrorMessage(err));
   }
 
   render()
@@ -39,20 +77,37 @@ class Trackbar extends React.Component
     const playerIds = Object.keys(players);
     
     return (
-      <div className={styles.wrapper}>
-        <div className={styles.container}>
+      <div className={ styles.wrapper }>
+        <div className={ styles.container }>
 
-          <div className={styles.status}>{ playerIds.length }/8</div>
+          <div style={ {
+            display: (this.state.loadingHidden) ? 'none' : ''
+          } } className={ styles.loading }
+          >
+            <div className={ styles.loadingSpinner } style={ {
+              // hide loading spinner if error is visible
+              display: (this.state.errorHidden) ? '' : 'none'
+            } }></div>
 
-          <div className={styles.players}>
+            <div className={ styles.error } style={ {
+              display: (this.state.errorHidden) ? 'none' : ''
+              // on click hide error message
+            } } onClick={ this.hideErrorMessage.bind(this) }>
+              <div className={ styles.errorMessage }>{this.state.errorMessage}</div>
+            </div>
+          </div>
+
+          <div className={ styles.status }>{ playerIds.length }/8</div>
+
+          <div className={ styles.players }>
             {
               playerIds.map((playerId) =>
               {
                 const isMaster = (this.state.masterId === playerId).toString();
 
-                return <div className={styles.player} key={playerId}>
+                return <div className={ styles.player } key={ playerId }>
 
-                  <CrownIcon className={styles.crownIcon} master={isMaster}></CrownIcon>
+                  <CrownIcon className={ styles.crownIcon } master={ isMaster }></CrownIcon>
 
                   <div>{ players[playerId].username }</div>
 
@@ -63,13 +118,27 @@ class Trackbar extends React.Component
             }
           </div>
 
-          <div className={styles.buttons}>Start</div>
+          <div className={ styles.info }>
+            {/* TODO added client-side checks for the ability of starting matches <div className={styles.inform}>Not Enough Players</div> */}
+
+            {
+              // the room's master is the only one that can start the match
+              (socket.id === this.state.masterId) ?
+                <div className={ styles.button } onClick={ this.matchRequest.bind(this) }>Start</div> :
+                <div></div>
+            }
+            
+          </div>
 
         </div>
       </div>
     );
   }
 }
+
+Trackbar.propTypes = {
+  sendMessage: PropTypes.func.isRequired
+};
 
 const styles = createStyle({
   wrapper: {
@@ -94,6 +163,7 @@ const styles = createStyle({
 
   container: {
     display: 'grid',
+    position: 'relative',
 
     gridTemplateRows: 'auto 1fr auto',
     gridTemplateAreas: '"status" "players" "buttons"',
@@ -105,6 +175,59 @@ const styles = createStyle({
     // '@media screen and (max-width: 980px)': {
     //   alignItems: 'center'
     // }
+  },
+
+  loading: {
+    display: 'flex',
+    position: 'absolute',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+    
+    backgroundColor: colors.whiteBackground,
+
+    borderRadius: '0 15px 15px 0',
+
+    width: '100%',
+    height: '100%'
+  },
+
+  loadingSpinner: {
+    backgroundColor: 'transparent',
+
+    paddingBottom: '15%',
+    width: '15%',
+
+    border: `8px ${colors.blackText} solid`,
+
+    animation: createAnimation({
+      keyframes: `
+      from { transform:rotate(0deg); }
+      to { transform:rotate(360deg); }
+      `,
+      duration: '2s',
+      timingFunction: 'linear',
+      iterationCount: 'infinite'
+    })
+  },
+
+  error: {
+    backgroundColor: colors.error,
+    maxWidth: '60%',
+
+    padding: '6px',
+    borderRadius: '5px'
+  },
+
+  errorMessage: {
+    color: colors.whiteText,
+    textTransform: 'capitalize',
+
+    cursor: 'pointer',
+
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   status: {
@@ -130,7 +253,15 @@ const styles = createStyle({
     }
   },
 
-  buttons: {
+  info: {
+    
+  },
+
+  inform: {
+    
+  },
+
+  button: {
     
   }
 });

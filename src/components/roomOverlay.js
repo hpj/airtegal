@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { Value } from 'animated';
 import Interactable from 'react-interactable/noNative';
 
+import i18n from '../i18n/eg-AR.json';
+
 import withSize from '../react-size.js';
 
 import { socket } from '../screens/game.js';
@@ -37,20 +39,25 @@ class RoomOverlay extends React.Component
     this.state = {
       loadingHidden: true,
       errorHidden: true,
-      errorMessage: true,
+      errorMessage: undefined,
+
       overlayHolderOpacity: 0,
       overlayHidden: true,
       overlayDrag: true
     };
 
+    // TODO why is this a thing?
     this.handlerVisibility.bind(this);
+
+    socket.on('matchStarted', this.matchStarted.bind(this));
   }
 
   /**
   * @param { string } eventName
   * @param  { {} } args
+  * @param  { number } [timeout]
   */
-  sendMessage(eventName, args)
+  sendMessage(eventName, args, timeout)
   {
     return new Promise((resolve, reject) =>
     {
@@ -76,8 +83,26 @@ class RoomOverlay extends React.Component
         resolve(data);
       }
 
+      // emit the message
       socket.emit(eventName, { nonce, ...args });
 
+      // set a default timeout if 5 seconds
+      if (typeof timeout !== 'number')
+        timeout = 5000;
+
+      // setup the timeout
+      if (typeof timeout === 'number' && timeout > 0)
+      {
+        setTimeout(() =>
+        {
+          socket.off('done', doneListen);
+          socket.off('err', errListen);
+
+          errListen(nonce, i18n['timeout']);
+        }, timeout);
+      }
+
+      // assign the callbacks
       socket.on('done', doneListen);
       socket.on('err', errListen);
     });
@@ -88,22 +113,19 @@ class RoomOverlay extends React.Component
     const { username } = this.props;
 
     // show a loading indictor
-    this.setState({ loadingHidden: false });
+    this.loadingVisibility(true);
 
     this.sendMessage('create', { username }).then(() =>
     {
       // hide the loading indictor
-      this.setState({ loadingHidden: true });
+      this.loadingVisibility(false);
 
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
     {
       // show an error message
-      this.setState({
-        errorHidden: false,
-        errorMessage: err
-      });
+      this.showErrorMessage(err);
     });
   }
 
@@ -115,37 +137,56 @@ class RoomOverlay extends React.Component
       id = undefined;
 
     // show a loading indictor
-    this.setState({ loadingHidden: false });
+    this.loadingVisibility(true);
 
     this.sendMessage('join', { id, username }).then(() =>
     {
       // hide the loading indictor
-      this.setState({ loadingHidden: true });
+      this.loadingVisibility(false);
 
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
     {
       // show an error message
-      this.setState({
-        errorHidden: false,
-        errorMessage: err
-      });
+      this.showErrorMessage(err);
     });
   }
 
   leaveRoom()
   {
-    this.sendMessage('leave').then(console.log).catch(console.error);
+    this.sendMessage('leave').catch(console.error);
   }
 
-  showFieldAndHand()
+  matchStarted()
   {
     // disable the ability to leave the room
     this.handlerVisibility(false);
-    
+
+    // show Field and Hand overlays
     handOverlayRef.current.visibility(true);
     fieldOverlayRef.current.visibility(true);
+  }
+
+  showErrorMessage(err)
+  {
+    this.setState({
+      errorHidden: false,
+      errorMessage: err
+    });
+  }
+
+  hideErrorMessage()
+  {
+    this.setState({
+      loadingHidden: true,
+      errorHidden: true
+    });
+  }
+
+  loadingVisibility(visible)
+  {
+    this.setState({ loadingHidden: visible = !visible });
   }
 
   handlerVisibility(visible)
@@ -163,14 +204,6 @@ class RoomOverlay extends React.Component
     // the user isn't in any room
     if (index === 1)
       this.leaveRoom();
-  }
-
-  hideErrorMessage()
-  {
-    this.setState({
-      loadingHidden: true,
-      errorHidden: true
-    });
   }
 
   componentWillUnmount()
@@ -207,34 +240,33 @@ class RoomOverlay extends React.Component
     return (
       <div>
 
-        <div style={{
-          zIndex: 1,
+        <div style={ {
           display: (this.state.loadingHidden) ? 'none' : ''
-        }} className={styles.loading}
+        } } className={ styles.loading }
         >
-          <div className={styles.loadingSpinner} style={{
+          <div className={ styles.loadingSpinner } style={ {
             // hide loading spinner if error is visible
             display: (this.state.errorHidden) ? '' : 'none'
-          }}></div>
+          } }></div>
 
-          <div className={styles.error} style={{
+          <div className={ styles.error } style={ {
             display: (this.state.errorHidden) ? 'none' : ''
             // on click hide error message
-          }} onClick={this.hideErrorMessage.bind(this)}>
-            <div className={styles.errorMessage}>{this.state.errorMessage}</div>
+          } } onClick={ this.hideErrorMessage.bind(this) }>
+            <div className={ styles.errorMessage }>{this.state.errorMessage}</div>
           </div>
         </div>
 
-        <div style={{
+        <div style={ {
           zIndex: 1,
           display: (this.state.overlayHidden) ? 'none' : '',
           opacity: this.state.overlayHolderOpacity || 0
-        }} className={styles.holder}/>
+        } } className={ styles.holder }/>
     
         <Interactable.View
-          ref={overlayRef}
+          ref={ overlayRef }
 
-          style={{
+          style={ {
             zIndex: 1,
             position: 'fixed',
             display: (this.state.overlayHidden) ? 'none' : '',
@@ -246,34 +278,34 @@ class RoomOverlay extends React.Component
             height: '100%',
 
             paddingRight: '20vw'
-          }}
+          } }
 
-          animatedValueX={overlayAnimatedX}
+          animatedValueX={ overlayAnimatedX }
 
-          dragEnabled={this.state.overlayDrag}
+          dragEnabled={ this.state.overlayDrag }
           
-          horizontalOnly={true}
-          initialPosition={{ x: size.width, y: 0 }}
+          horizontalOnly={ true }
+          initialPosition={ { x: size.width, y: 0 } }
           
-          onSnap={this.onSnap.bind(this)}
-          snapPoints={[ { x: (this.state.overlayDrag) ? 0 : -28 }, { x: size.width } ]}
+          onSnap={ this.onSnap.bind(this) }
+          snapPoints={ [ { x: (this.state.overlayDrag) ? 0 : -28 }, { x: size.width } ] }
 
-          boundaries={{
+          boundaries={ {
             left: (this.state.overlayDrag) ? 0 : -28,
             right: size.width
-          }}
+          } }
         >
 
-          <div className={styles.wrapper}>
-            <div className={styles.handler}/>
+          <div className={ styles.wrapper }>
+            <div className={ styles.handler }/>
 
-            <Trackbar showFieldAndHand={this.showFieldAndHand.bind(this)} />
+            <Trackbar sendMessage={ this.sendMessage.bind(this) }/>
 
-            <div className={styles.content}>
-              <RoomOptions ref={roomOptionsRef}/>
+            <div className={ styles.content }>
+              <HandOverlay ref={ handOverlayRef }/>
+              <FieldOverlay ref={ fieldOverlayRef }/>
 
-              <HandOverlay ref={handOverlayRef}/>
-              <FieldOverlay ref={fieldOverlayRef}/>
+              <RoomOptions ref={ roomOptionsRef }/>
             </div>
 
           </div>
@@ -316,7 +348,7 @@ const styles = createStyle({
     alignItems: 'center',
     justifyContent: 'center',
     
-    backgroundColor: colors.blackHolder,
+    backgroundColor: colors.whiteBackground,
 
     top: 0,
     width: '100vw',
@@ -326,9 +358,9 @@ const styles = createStyle({
   loadingSpinner: {
     backgroundColor: 'transparent',
 
-    paddingBottom: '10%',
-    width: '10%',
-    border: '10px white solid',
+    paddingBottom: '5%',
+    width: '5%',
+    border: `10px ${colors.blackText} solid`,
     animation: createAnimation({
       keyframes: `
       from { transform:rotate(0deg); }
@@ -370,6 +402,8 @@ const styles = createStyle({
   },
 
   handler: {
+    cursor: 'pointer',
+
     gridArea: 'handler',
     backgroundColor: colors.handler,
 

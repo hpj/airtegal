@@ -1,7 +1,8 @@
 Performance Issues and Bugs:
-  ☐ better icon for the app 
+  ☐ better favicon for the app 
 
 Testing:
+  ☐ closing and re-open all 3 interactable (room, field and hand) after a match
 
 Features:
   ☐ setup crowdl for i18n
@@ -19,17 +20,16 @@ UI/UX:
     ☐ show google ad
     ☐ show a window about ad-block if detected
 
-  Game:
-    ☐ show players count
-    ☐ show player usernames
+  Gameplay:
+    ✔ show players count @done(19-11-20 17:25)
+    ✔ show player usernames @done(19-11-20 17:25)
 
-    ☐ auto start game when all players are ready
+    ☐ if the room is full and the room's master doesn't start the match in 30 seconds
+       they should be kicked out of the room
     
     ☐ card as interactable (player able to drag his cards to field)
 
-    ☐ closing and re-open all 3 interactable (room, field and hand) after a game
-
     ☐ support for pick (2) black cards
-    ☐ support for blank white cards
+    ☐ support drawing and playing blank cards
 
 CI/CD:

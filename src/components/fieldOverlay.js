@@ -54,9 +54,10 @@ class FieldOverlay extends React.Component
 
     return (
       <Interactable.View
-        ref={overlayRef}
+        ref={ overlayRef }
 
-        style={{
+        style={ {
+          zIndex: 1,
           display: (this.state.overlayHidden) ? 'none' : '',
 
           backgroundColor: colors.fieldBackground,
@@ -68,23 +69,23 @@ class FieldOverlay extends React.Component
           height: '100%',
 
           paddingRight: '20vw'
-        }}
+        } }
 
-        animatedValueX={overlayAnimatedX}
+        animatedValueX={ overlayAnimatedX }
 
-        dragEnabled={false}
+        dragEnabled={ false }
 
-        horizontalOnly={true}
-        initialPosition={{ x: size.width, y: 0 }}
+        horizontalOnly={ true }
+        initialPosition={ { x: size.width, y: 0 } }
 
-        snapPoints={[ { x: size.width }, { x: 0 } ]}
+        snapPoints={ [ { x: size.width }, { x: 0 } ] }
 
-        boundaries={{
+        boundaries={ {
           left: 0,
           right: size.width
-        }}
+        } }
       >
-        <div className={styles.wrapper}>
+        <div className={ styles.wrapper }>
           {children}
         </div>
       </Interactable.View>

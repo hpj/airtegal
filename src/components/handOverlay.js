@@ -67,9 +67,9 @@ class HandOverlay extends React.Component
     
     return (
       <Interactable.View
-        ref={overlayRef}
+        ref={ overlayRef }
 
-        style={{
+        style={ {
           zIndex: 2,
           display: (this.state.overlayHidden) ? 'none' : '',
 
@@ -85,21 +85,21 @@ class HandOverlay extends React.Component
 
           margin: '0 auto',
           paddingBottom: '20vh'
-        }}
+        } }
 
-        animatedValueY={overlayAnimatedY}
+        animatedValueY={ overlayAnimatedY }
 
-        verticalOnly={true}
-        initialPosition={{ x: 0, y: size.height }}
+        verticalOnly={ true }
+        initialPosition={ { x: 0, y: size.height } }
 
-        snapPoints={[ { y: size.height }, { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ]}
-        boundaries={{
+        snapPoints={ [ { y: size.height }, { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ] }
+        boundaries={ {
           top: percent(size.height, 15),
           bottom: this.state.overlayYLimit
-        }}
+        } }
       >
-        <div className={styles.wrapper}>
-          <div className={styles.handler}/>
+        <div className={ styles.wrapper }>
+          <div className={ styles.handler }/>
 
           {children}
         </div>

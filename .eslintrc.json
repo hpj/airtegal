@@ -50,6 +50,7 @@
     "keyword-spacing": ["error", { "before": true, "after": true }],
     "no-trailing-spaces": ["error", { "skipBlankLines": true }],
 
-    "react/display-name": [ 0 ]
+    "react/display-name": [ 0 ],
+    "react/jsx-curly-spacing": [ 2, "always" ]
   }
 }

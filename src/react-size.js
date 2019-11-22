@@ -47,8 +47,8 @@ export default (WrappedComponent, config) =>
       const { forwardedRef, ...rest } = this.props;
 
       return (
-        <div style={{ width: '100%', height: '100%' }} ref={this.ref}>
-          <WrappedComponent ref={forwardedRef} size={this.state.size} { ...rest }/>
+        <div style={ { width: '100%', height: '100%' } } ref={ this.ref }>
+          <WrappedComponent ref={ forwardedRef } size={ this.state.size } { ...rest }/>
         </div>
       );
     }
@@ -56,6 +56,6 @@ export default (WrappedComponent, config) =>
 
   return forwardRef((props, ref) =>
   {
-    return <WithSize { ...props } forwardedRef={ref}/>;
+    return <WithSize { ...props } forwardedRef={ ref }/>;
   });
 };
