@@ -26,10 +26,14 @@ class Trackbar extends React.Component
       errorHidden: true,
       errorMessage: undefined
     };
+  }
 
+  componentDidMount()
+  {
     socket.on('roomData', (roomData) =>
     {
       this.setState({
+        roomState: roomData.state,
         // TODO maxPlayers is part of the room options (has not been implement yet)
         maxPlayers: 8,
         players: roomData.players,
@@ -121,15 +125,12 @@ class Trackbar extends React.Component
           <div className={ styles.info }>
             {/* TODO added client-side checks for the ability of starting matches <div className={styles.inform}>Not Enough Players</div> */}
 
-            {
-              // the room's master is the only one that can start the match
-              (socket.id === this.state.masterId) ?
-                <div className={ styles.button } onClick={ this.matchRequest.bind(this) }>Start</div> :
-                <div></div>
-            }
-            
-          </div>
+            { /* the start button only visible if the user is the room's master and the room's state is 'lobby' */ }
+            <div className={ styles.button } style={ {
+              display: (socket.id === this.state.masterId && this.state.roomState === 'lobby') ? '' : 'none'
+            } } onClick={ this.matchRequest.bind(this) }>Start</div>
 
+          </div>
         </div>
       </div>
     );

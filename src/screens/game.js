@@ -37,7 +37,7 @@ export let socket;
 */
 function errorScreen(error)
 {
-  ReactDOM.render(<Error error={error}/>, placeholder);
+  ReactDOM.render(<Error error={ error }/>, placeholder);
   
   ReactDOM.unmountComponentAtNode(app);
 }
@@ -103,7 +103,8 @@ class Game extends React.Component
 
     // TODO cache user preference
     this.state = {
-      username: stupidNames()
+      username: stupidNames(),
+      size: {}
     };
     
     // set the title of this screen
@@ -139,21 +140,28 @@ class Game extends React.Component
   componentDidMount()
   {
     // auto-size the username input-box
-    this.resizeInput();
+    this.resize();
 
     // auto-size the username input-box on resize
-    window.addEventListener('resize', this.resizeInput);
+    window.addEventListener('resize', this.resize.bind(this));
   }
 
   componentWillUnmount()
   {
-    window.removeEventListener('resize', this.resizeInput);
+    window.removeEventListener('resize', this.resize.bind(this));
   }
 
-  resizeInput()
+  resize()
   {
     // auto-size the username input-box
     autoSizeInput(inputRef.current);
+
+    this.setState({
+      size: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    });
   }
 
   usernameChangeEvent()
@@ -173,42 +181,41 @@ class Game extends React.Component
   render()
   {
     return (
-      <div className={mainStyles.wrapper}>
-  
+      <div className={ mainStyles.wrapper }>
+
         <Warning
-          style={{ padding: '50vh 5vw' }}
+          style={ { padding: '50vh 5vw' } }
           storageKey='kbf-adults-warning'
           text={ i18n['kbf-adults-warning'] }
           button={ i18n['ok'] }
         />
         
-        <div className={mainStyles.container}>
+        <div className={ mainStyles.container }>
   
-          <div className={optionsStyles.container}>
+          <div className={ optionsStyles.container }>
   
-            <input ref={inputRef} className={optionsStyles.username} required placeholder={ i18n['username-input'] } value={this.state.username} onBlur={this.usernameBlurEvent} onChange={this.usernameChangeEvent} type='text' maxLength='18'/>
+            <input ref={ inputRef } className={ optionsStyles.username } required placeholder={ i18n['username-input'] } value={ this.state.username } onBlur={ this.usernameBlurEvent } onChange={ this.usernameChangeEvent } type='text' maxLength='18'/>
   
-            <p className={optionsStyles.welcome}> { i18n['welcome'] } </p>
-  
-          </div>
-  
-          <div className={headerStyles.container}>
-  
-            <div className={headerStyles.button} onClick={() => overlayRef.current.joinRoom()}> { i18n['random-room'] } </div>
-            <div className={headerStyles.button} onClick={() => overlayRef.current.createRoom()}> { i18n['create-room'] } </div>
+            <p className={ optionsStyles.welcome }> { i18n['welcome'] } </p>
   
           </div>
   
-          <div className={roomsStyles.container}>
+          <div className={ headerStyles.container }>
   
-            <RefreshIcon className={roomsStyles.refresh}/>
-            <p className={roomsStyles.title}> { i18n['available-rooms'] } </p>
+            <div className={ headerStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n['random-room'] } </div>
+            <div className={ headerStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n['create-room'] } </div>
+  
+          </div>
+  
+          <div className={ roomsStyles.container }>
+  
+            <RefreshIcon className={ roomsStyles.refresh }/>
+            <p className={ roomsStyles.title }> { i18n['available-rooms'] } </p>
             
           </div>
         </div>
         
-        <RoomOverlay ref={overlayRef} username={this.state.username}/>
-      
+        <RoomOverlay ref={ overlayRef } size={ this.state.size } username={ this.state.username }/>
       </div>
     );
   }

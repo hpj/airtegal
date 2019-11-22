@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 
 import Interactable from 'react-interactable/noNative';
 
-import * as colors from '../colors.js';
-
 import { Value } from 'animated';
-import withSize from '../react-size.js';
+
+import { socket } from '../screens/game.js';
+
+import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -18,14 +19,27 @@ const percent = (size, percent) => (size / 100) * percent;
 
 class HandOverlay extends React.Component
 {
-  constructor({ size })
+  constructor()
   {
     super();
     
     this.state = {
-      overlayYLimit: size.height,
+      // at this point of code execution
+      // we can't access screen height
+      // instead we use a very big number to make sure that the overlay
+      // is off-screen
+      overlayYLimit: Number.MAX_SAFE_INTEGER,
       overlayHidden: true
     };
+  }
+
+  componentDidMount()
+  {
+    socket.on('roomData', (roomData) =>
+    {
+      // the hand overlay is only visible in matches
+      this.visibility((roomData.state === 'match') ? true : false);
+    });
   }
 
   /** @param { boolean } visible
@@ -34,7 +48,9 @@ class HandOverlay extends React.Component
   {
     const { size } = this.props;
 
-    // if hidden then set limit to off-screen
+    // if hidden then set limit to to off-screen
+    // normally the limit is somewhere on screen so that the user won't be able
+    // to drag the overlay to off-screen where they won't be able to drag it back
     if (!visible)
       this.setState({ overlayYLimit: size.height });
       
@@ -66,44 +82,46 @@ class HandOverlay extends React.Component
       return <div/>;
     
     return (
-      <Interactable.View
-        ref={ overlayRef }
+      <div style={ { width: '100%', height: '100%' } }>
+        <Interactable.View
+          ref={ overlayRef }
 
-        style={ {
-          zIndex: 2,
-          display: (this.state.overlayHidden) ? 'none' : '',
+          style={ {
+            zIndex: 3,
+            display: (this.state.overlayHidden) ? 'none' : '',
 
-          backgroundColor: colors.handBackground,
+            backgroundColor: colors.handBackground,
 
-          borderRadius: 'calc(10px + 1.5vw)',
+            borderRadius: 'calc(10px + 1.5vw)',
 
-          overflow: 'hidden',
+            overflow: 'hidden',
 
-          bottom: '0',
-          width: '85%',
-          height: '85%',
+            bottom: '0',
+            width: '85%',
+            height: '85%',
 
-          margin: '0 auto',
-          paddingBottom: '20vh'
-        } }
+            margin: '0 auto',
+            paddingBottom: '20vh'
+          } }
 
-        animatedValueY={ overlayAnimatedY }
+          animatedValueY={ overlayAnimatedY }
 
-        verticalOnly={ true }
-        initialPosition={ { x: 0, y: size.height } }
+          verticalOnly={ true }
+          initialPosition={ { x: 0, y: size.height } }
 
-        snapPoints={ [ { y: size.height }, { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ] }
-        boundaries={ {
-          top: percent(size.height, 15),
-          bottom: this.state.overlayYLimit
-        } }
-      >
-        <div className={ styles.wrapper }>
-          <div className={ styles.handler }/>
+          snapPoints={ [ { y: size.height }, { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ] }
+          boundaries={ {
+            top: percent(size.height, 15),
+            bottom: this.state.overlayYLimit
+          } }
+        >
+          <div className={ styles.wrapper }>
+            <div className={ styles.handler }/>
 
-          {children}
-        </div>
-      </Interactable.View>
+            {children}
+          </div>
+        </Interactable.View>
+      </div>
     );
   }
 }
@@ -134,4 +152,4 @@ const styles = createStyle({
   }
 });
 
-export default withSize(HandOverlay, { keepSize: true });
+export default HandOverlay;

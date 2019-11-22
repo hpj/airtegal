@@ -7,8 +7,6 @@ import Interactable from 'react-interactable/noNative';
 
 import i18n from '../i18n/eg-AR.json';
 
-import withSize from '../react-size.js';
-
 import { socket } from '../screens/game.js';
 
 import * as colors from '../colors.js';
@@ -22,11 +20,6 @@ import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
 
 const overlayRef = createRef();
-
-const roomOptionsRef = createRef();
-
-const handOverlayRef = createRef();
-const fieldOverlayRef = createRef();
 
 const overlayAnimatedX = new Value(0);
 
@@ -45,11 +38,15 @@ class RoomOverlay extends React.Component
       overlayHidden: true,
       overlayDrag: true
     };
+  }
 
-    // TODO why is this a thing?
-    this.handlerVisibility.bind(this);
-
-    socket.on('matchStarted', this.matchStarted.bind(this));
+  componentDidMount()
+  {
+    socket.on('roomData', (roomData) =>
+    {
+      // handler is only visible if user is on the match's lobby screen
+      this.handlerVisibility((roomData.state === 'lobby') ? true : false);
+    });
   }
 
   /**
@@ -156,16 +153,6 @@ class RoomOverlay extends React.Component
   leaveRoom()
   {
     this.sendMessage('leave').catch(console.error);
-  }
-
-  matchStarted()
-  {
-    // disable the ability to leave the room
-    this.handlerVisibility(false);
-
-    // show Field and Hand overlays
-    handOverlayRef.current.visibility(true);
-    fieldOverlayRef.current.visibility(true);
   }
 
   showErrorMessage(err)
@@ -302,10 +289,11 @@ class RoomOverlay extends React.Component
             <Trackbar sendMessage={ this.sendMessage.bind(this) }/>
 
             <div className={ styles.content }>
-              <HandOverlay ref={ handOverlayRef }/>
-              <FieldOverlay ref={ fieldOverlayRef }/>
+              {/* <HandOverlay/> */}
+              <HandOverlay size={ size } />
+              <FieldOverlay size={ size }/>
 
-              <RoomOptions ref={ roomOptionsRef }/>
+              <RoomOptions/>
             </div>
 
           </div>
@@ -419,4 +407,5 @@ const styles = createStyle({
   }
 });
 
-export default withSize(RoomOverlay);
+// export default withSize(RoomOverlay);
+export default RoomOverlay;

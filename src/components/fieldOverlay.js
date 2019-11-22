@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 
 import Interactable from 'react-interactable/noNative';
 
-import * as colors from '../colors.js';
-
 import { Value } from 'animated';
-import withSize from '../react-size.js';
+
+import { socket } from '../screens/game.js';
+
+import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -23,6 +24,15 @@ class FieldOverlay extends React.Component
     this.state = {
       overlayHidden: true
     };
+  }
+
+  componentDidMount()
+  {
+    socket.on('roomData', (roomData) =>
+    {
+      // the field overlay is only visible in matches
+      this.visibility((roomData.state === 'match') ? true : false);
+    });
   }
 
   /** @param { boolean } visible
@@ -48,47 +58,45 @@ class FieldOverlay extends React.Component
         this.setState({ overlayHidden: false });
     });
 
-    // if size is not calculated yet
-    if (!size.width)
-      return <div/>;
-
     return (
-      <Interactable.View
-        ref={ overlayRef }
+      <div style={ { width: '100%', height: '100%' } }>
+        <Interactable.View
+          ref={ overlayRef }
 
-        style={ {
-          zIndex: 1,
-          display: (this.state.overlayHidden) ? 'none' : '',
+          style={ {
+            zIndex: 2,
+            display: (this.state.overlayHidden) ? 'none' : '',
 
-          backgroundColor: colors.fieldBackground,
+            backgroundColor: colors.fieldBackground,
 
-          overflow: 'hidden',
+            overflow: 'hidden',
 
-          top: '-100%',
-          width: '100%',
-          height: '100%',
+            top: '-100%',
+            width: '100%',
+            height: '100%',
 
-          paddingRight: '20vw'
-        } }
+            paddingRight: '20vw'
+          } }
 
-        animatedValueX={ overlayAnimatedX }
+          animatedValueX={ overlayAnimatedX }
 
-        dragEnabled={ false }
+          dragEnabled={ false }
 
-        horizontalOnly={ true }
-        initialPosition={ { x: size.width, y: 0 } }
+          horizontalOnly={ true }
+          initialPosition={ { x: size.width, y: 0 } }
 
-        snapPoints={ [ { x: size.width }, { x: 0 } ] }
+          snapPoints={ [ { x: size.width }, { x: 0 } ] }
 
-        boundaries={ {
-          left: 0,
-          right: size.width
-        } }
-      >
-        <div className={ styles.wrapper }>
-          {children}
-        </div>
-      </Interactable.View>
+          boundaries={ {
+            left: 0,
+            right: size.width
+          } }
+        >
+          <div className={ styles.wrapper }>
+            {children}
+          </div>
+        </Interactable.View>
+      </div>
     );
   }
 }
@@ -108,6 +116,6 @@ const styles = createStyle({
   }
 });
 
-export default withSize(FieldOverlay, { keepSize: true });
+export default FieldOverlay;
 
 

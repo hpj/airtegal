@@ -13,11 +13,11 @@ import i18n from '../i18n/eg-AR.json';
 const Card = ({ content, type }) =>
 {
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container} type={type}>
+    <div className={ styles.wrapper }>
+      <div className={ styles.container } type={ type }>
 
-        <div className={styles.content}>{content}</div>
-        <p className={styles.bottom}> { i18n['kuruit-bedan-fash5'] } </p>
+        <div className={ styles.content }>{content}</div>
+        <p className={ styles.bottom }> { i18n['kuruit-bedan-fash5'] } </p>
         
       </div>
     </div>
