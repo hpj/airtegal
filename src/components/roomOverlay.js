@@ -38,15 +38,26 @@ class RoomOverlay extends React.Component
       overlayHidden: true,
       overlayDrag: true
     };
+
+    // bind functions that are use as callbacks
+
+    this.onRoomData = this.onRoomData.bind(this);
   }
 
   componentDidMount()
   {
-    socket.on('roomData', (roomData) =>
-    {
-      // handler is only visible if user is on the match's lobby screen
-      this.handlerVisibility((roomData.state === 'lobby') ? true : false);
-    });
+    socket.on('roomData', this.onRoomData);
+  }
+
+  componentWillUnmount()
+  {
+    socket.off('roomData', this.onRoomData);
+  }
+
+  onRoomData(roomData)
+  {
+    // handler is only visible if user is on the match's lobby screen
+    this.handlerVisibility((roomData.state === 'lobby') ? true : false);
   }
 
   /**

@@ -106,6 +106,10 @@ class Game extends React.Component
       username: stupidNames(),
       size: {}
     };
+
+    // bind functions that are use as callbacks
+
+    this.resize = this.resize.bind(this);
     
     // set the title of this screen
     document.title = 'Kuruit Bedan Fash5';
@@ -143,12 +147,12 @@ class Game extends React.Component
     this.resize();
 
     // auto-size the username input-box on resize
-    window.addEventListener('resize', this.resize.bind(this));
+    window.addEventListener('resize', this.resize);
   }
 
   componentWillUnmount()
   {
-    window.removeEventListener('resize', this.resize.bind(this));
+    window.removeEventListener('resize', this.resize);
   }
 
   resize()

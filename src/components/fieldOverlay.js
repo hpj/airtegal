@@ -24,15 +24,26 @@ class FieldOverlay extends React.Component
     this.state = {
       overlayHidden: true
     };
+
+    // bind functions that are use as callbacks
+
+    this.onRoomData = this.onRoomData.bind(this);
   }
 
   componentDidMount()
   {
-    socket.on('roomData', (roomData) =>
-    {
-      // the field overlay is only visible in matches
-      this.visibility((roomData.state === 'match') ? true : false);
-    });
+    socket.on('roomData', this.onRoomData);
+  }
+
+  componentWillUnmount()
+  {
+    socket.off('roomData', this.onRoomData);
+  }
+
+  onRoomData(roomData)
+  {
+    // the field overlay is only visible in matches
+    this.visibility((roomData.state === 'match') ? true : false);
   }
 
   /** @param { boolean } visible

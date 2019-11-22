@@ -26,19 +26,30 @@ class Trackbar extends React.Component
       errorHidden: true,
       errorMessage: undefined
     };
+
+    // bind functions that are use as callbacks
+
+    this.onRoomData = this.onRoomData.bind(this);
   }
 
   componentDidMount()
   {
-    socket.on('roomData', (roomData) =>
-    {
-      this.setState({
-        roomState: roomData.state,
-        // TODO maxPlayers is part of the room options (has not been implement yet)
-        maxPlayers: 8,
-        players: roomData.players,
-        masterId: roomData.master
-      });
+    socket.on('roomData', this.onRoomData);
+  }
+
+  componentWillUnmount()
+  {
+    socket.off('roomData', this.onRoomData);
+  }
+
+  onRoomData(roomData)
+  {
+    this.setState({
+      roomState: roomData.state,
+      // TODO maxPlayers is part of the room options (has not been implement yet)
+      maxPlayers: 8,
+      players: roomData.players,
+      masterId: roomData.master
     });
   }
 
