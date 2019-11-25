@@ -22,7 +22,9 @@ class FieldOverlay extends React.Component
     super();
 
     this.state = {
-      overlayHidden: true
+      overlayHidden: true,
+
+      field: []
     };
 
     // bind functions that are use as callbacks
@@ -55,7 +57,7 @@ class FieldOverlay extends React.Component
 
   render()
   {
-    const { children, size } = this.props;
+    const { size } = this.props;
 
     // on overlay position changes
     overlayAnimatedX.removeAllListeners();
@@ -104,7 +106,7 @@ class FieldOverlay extends React.Component
           } }
         >
           <div className={ styles.wrapper }>
-            {children}
+
           </div>
         </Interactable.View>
       </div>
@@ -113,10 +115,6 @@ class FieldOverlay extends React.Component
 }
 
 FieldOverlay.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]),
   size: PropTypes.object
 };
 

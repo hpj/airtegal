@@ -43,7 +43,7 @@ const styles = createStyle({
       content: '""',
       display: 'block',
     
-      paddingBottom: '130%'
+      paddingBottom: '135%'
     }
   },
 

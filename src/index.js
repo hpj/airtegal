@@ -43,12 +43,12 @@ function loaded()
 
   const pages =
   <Router>
-    <Route exact path="/" component={Homepage}/>
+    <Route exact path="/" component={ Homepage }/>
   
-    <Route path="/play" component={Game}/>
+    <Route path="/play" component={ Game }/>
     
-    <Route path="/terms" component={TermsAndConditions}/>
-    <Route path="/privacy" component={PrivacyPolicy}/>
+    <Route path="/terms" component={ TermsAndConditions }/>
+    <Route path="/privacy" component={ PrivacyPolicy }/>
 
   </Router>;
 
@@ -153,7 +153,7 @@ const ipCheck = new Promise((resolve) =>
     {
       if (response.status !== 200)
       {
-        ReactDOM.render(<Error error={response.data}/>, placeholder);
+        ReactDOM.render(<Error error={ response.data }/>, placeholder);
 
         country = undefined;
         availability = false;
@@ -169,7 +169,7 @@ const ipCheck = new Promise((resolve) =>
     .catch((e) =>
     {
       if (e.response)
-        ReactDOM.render(<Error error={e.response.data.message}/>, placeholder);
+        ReactDOM.render(<Error error={ e.response.data.message }/>, placeholder);
         
       country = undefined;
 

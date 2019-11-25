@@ -7,12 +7,14 @@ Testing:
 Features:
   ☐ setup crowdl for i18n
   ☐ setup sentry for error tracking
+  ☐ setup discord-presence-for-web-apps (need to publish the extension first)
 
 API & Database:
   ☐ create a query and endpoint for card showcase
 
 UI/UX:
   Homepage:
+    ☐ enable card showcase
 
   Lobby:
     ☐ show rooms

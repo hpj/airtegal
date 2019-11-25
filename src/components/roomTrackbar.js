@@ -46,9 +46,10 @@ class Trackbar extends React.Component
   {
     this.setState({
       roomState: roomData.state,
-      // TODO maxPlayers is part of the room options (has not been implement yet)
-      maxPlayers: 8,
+      roomProperties: roomData.properties,
+      maxPlayers: roomData.options.match.maxPlayers,
       players: roomData.players,
+      playerProperties: roomData.playerProperties,
       masterId: roomData.master
     });
   }
@@ -88,9 +89,6 @@ class Trackbar extends React.Component
     if (!this.state.players)
       return (<div></div>);
 
-    const players = this.state.players;
-    const playerIds = Object.keys(players);
-    
     return (
       <div className={ styles.wrapper }>
         <div className={ styles.container }>
@@ -112,11 +110,11 @@ class Trackbar extends React.Component
             </div>
           </div>
 
-          <div className={ styles.status }>{ playerIds.length }/8</div>
+          <div className={ styles.status }>{ this.state.roomProperties.counter }</div>
 
           <div className={ styles.players }>
             {
-              playerIds.map((playerId) =>
+              this.state.players.map((playerId) =>
               {
                 const isMaster = (this.state.masterId === playerId).toString();
 
@@ -124,9 +122,9 @@ class Trackbar extends React.Component
 
                   <CrownIcon className={ styles.crownIcon } master={ isMaster }></CrownIcon>
 
-                  <div>{ players[playerId].username }</div>
+                  <div>{ this.state.playerProperties[playerId].username }</div>
 
-                  <div>0</div>
+                  <div>{ this.state.playerProperties[playerId].score }</div>
 
                 </div>;
               })
@@ -154,7 +152,7 @@ Trackbar.propTypes = {
 
 const styles = createStyle({
   wrapper: {
-    zIndex: 2,
+    zIndex: 3,
     gridArea: 'side',
 
     backgroundColor: colors.whiteBackground,

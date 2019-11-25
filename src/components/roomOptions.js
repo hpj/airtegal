@@ -47,7 +47,7 @@ class RoomOptions extends React.Component
 const styles = createStyle({
   container: {
     position: 'relative',
-    backgroundColor: colors.red,
+    backgroundColor: colors.whiteBackground,
 
     top: '-200%',
     width: '100%',

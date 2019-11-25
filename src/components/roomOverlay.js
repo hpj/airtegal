@@ -52,6 +52,9 @@ class RoomOverlay extends React.Component
   componentWillUnmount()
   {
     socket.off('roomData', this.onRoomData);
+
+    // make sure socket is closed before component unmount
+    socket.close();
   }
 
   onRoomData(roomData)
@@ -204,12 +207,6 @@ class RoomOverlay extends React.Component
       this.leaveRoom();
   }
 
-  componentWillUnmount()
-  {
-    // make sure socket is closed before component unmounts
-    socket.close();
-  }
-
   render()
   {
     const { size } = this.props;
@@ -325,7 +322,7 @@ const styles = createStyle({
   wrapper: {
     display: 'grid',
 
-    gridTemplateColumns: 'auto 20vw 1fr',
+    gridTemplateColumns: 'auto 15vw 1fr',
     gridTemplateRows: '100vh',
     gridTemplateAreas: '"handler side content"',
 

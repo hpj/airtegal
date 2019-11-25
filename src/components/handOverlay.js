@@ -8,6 +8,8 @@ import { Value } from 'animated';
 
 import { socket } from '../screens/game.js';
 
+import Card from './card.js';
+
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
@@ -24,12 +26,10 @@ class HandOverlay extends React.Component
     super();
     
     this.state = {
-      // at this point of code execution
-      // we can't access screen height
-      // instead we use a very big number to make sure that the overlay
-      // is off-screen
-      overlayYLimit: Number.MAX_SAFE_INTEGER,
-      overlayHidden: true
+      visible: false,
+      overlayHidden: true,
+
+      hand: []
     };
 
     // bind functions that are use as callbacks
@@ -51,27 +51,56 @@ class HandOverlay extends React.Component
   {
     // the hand overlay is only visible in matches
     this.visibility((roomData.state === 'match') ? true : false);
+
+    // if there player properties object in the data
+    // and it has the hand data for this client
+    if (
+      roomData.playerProperties &&
+      roomData.playerProperties[socket.id] &&
+      roomData.playerProperties[socket.id].hand
+    )
+    {
+      this.setState({
+        hand: roomData.playerProperties[socket.id].hand
+      });
+    }
   }
 
   /** @param { boolean } visible
   */
   visibility(visible)
   {
-    const { size } = this.props;
+    this.setState({ visible: visible });
 
-    // if hidden then set limit to to off-screen
-    // normally the limit is somewhere on screen so that the user won't be able
-    // to drag the overlay to off-screen where they won't be able to drag it back
-    if (!visible)
-      this.setState({ overlayYLimit: size.height });
-      
-    overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
+    overlayRef.current.snapTo({ index: 0 });
+  }
+
+  onSnap(e)
+  {
+    // TODO set the scroll box's height to the visible area's height
+    // so that the user is able to see all cards without needing to maximize the overlay
+    
+    this.setState({
+      snapIndex: e.index
+    });
+  }
+
+  maximizeMinimize()
+  {
+
+    if (this.state.snapIndex < 2)
+      overlayRef.current.snapTo({ index: 2 });
+    else
+      overlayRef.current.snapTo({ index: 0 });
   }
 
   render()
   {
-    const { children, size } = this.props;
+    const { size } = this.props;
     
+    const visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
+    const hiddenSnapPoints = [ { y: size.height } ];
+
     // on overlay position changes
     overlayAnimatedY.removeAllListeners();
 
@@ -82,10 +111,6 @@ class HandOverlay extends React.Component
         this.setState({ overlayHidden: true });
       else
         this.setState({ overlayHidden: false });
-      
-      // to stick the overlay so the user can't drag it off the screen
-      if (value <= percent(size.height, 80))
-        this.setState({ overlayYLimit: percent(size.height, 80) });
     });
 
     // if size is not calculated yet
@@ -108,8 +133,10 @@ class HandOverlay extends React.Component
             overflow: 'hidden',
 
             bottom: '0',
+
             width: '85%',
             height: '85%',
+            maxWidth: '700px',
 
             margin: '0 auto',
             paddingBottom: '20vh'
@@ -117,19 +144,30 @@ class HandOverlay extends React.Component
 
           animatedValueY={ overlayAnimatedY }
 
+          onSnap={ this.onSnap.bind(this) }
+
           verticalOnly={ true }
           initialPosition={ { x: 0, y: size.height } }
 
-          snapPoints={ [ { y: size.height }, { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ] }
+          snapPoints={ (this.state.visible) ? visibleSnapPoints : hiddenSnapPoints }
           boundaries={ {
-            top: percent(size.height, 15),
-            bottom: this.state.overlayYLimit
+            top: percent(size.height, 15)
           } }
         >
-          <div className={ styles.wrapper }>
-            <div className={ styles.handler }/>
+          <div className={ styles.overlay }>
+            <div className={ styles.handler } onClick={ this.maximizeMinimize.bind(this) }/>
 
-            {children}
+            <div className={ styles.wrapper }>
+              <div className={ styles.container }>
+                {
+                  this.state.hand.map((cardContent, i) =>
+                  {
+                    return <Card key={ i } type='white' content={ cardContent }></Card>;
+                  })
+                }
+              </div>
+            </div>
+
           </div>
         </Interactable.View>
       </div>
@@ -138,28 +176,63 @@ class HandOverlay extends React.Component
 }
 
 HandOverlay.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]),
   size: PropTypes.object
 };
 
 const styles = createStyle({
-  wrapper: {
+  overlay: {
+    display: 'grid',
+
+    gridTemplateColumns: '100%',
+    gridTemplateRows: 'auto 1fr',
+    gridTemplateAreas: '"handler" "cards"',
+
     width: '100%',
     height: '100%'
   },
 
   handler: {
     gridArea: 'handler',
+
+    cursor: 'pointer',
     backgroundColor: colors.handler,
 
-    width: 'calc(26px + 2.5%)',
-    height: '8px',
+    width: 'calc(40px + 2.5%)',
+    height: '10px',
 
-    margin: '10px auto',
+    margin: '10px auto 0 auto',
     borderRadius: '8px'
+  },
+
+  wrapper: {
+    gridArea: 'cards',
+
+    overflowX: 'hidden',
+    overflowY: 'overlay',
+
+    '::-webkit-scrollbar':
+    {
+      width: '22px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '22px',
+      boxShadow: `inset 0 0 22px 22px ${colors.handScrollbar}`,
+      border: 'solid 8px transparent'
+    }
+  },
+
+  container: {
+    display: 'flex',
+
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+
+    '> *': {
+      width: '25%',
+      margin: '10px auto 10px 20px'
+    }
   }
 });
 

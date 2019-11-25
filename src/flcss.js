@@ -172,6 +172,7 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
       rule.startsWith('#') ||
       // it must be pseudo-class or pseudo-element
       rule.startsWith(':') ||
+      rule.startsWith('::') ||
       // other selectors
       selectorsRegex.test(rule)
     )
