@@ -15,6 +15,8 @@ import * as colors from '../colors.js';
 import { createStyle } from '../flcss.js';
 
 const overlayRef = createRef();
+const wrapperRef = createRef();
+
 const overlayAnimatedY = new Value(0);
 
 const percent = (size, percent) => (size / 100) * percent;
@@ -40,11 +42,22 @@ class HandOverlay extends React.Component
   componentDidMount()
   {
     socket.on('roomData', this.onRoomData);
+
+    window.addEventListener('resize', this.onResize);
   }
 
   componentWillUnmount()
   {
     socket.off('roomData', this.onRoomData);
+
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  onResize()
+  {
+    // it needs to be updated manually on every resize
+    // or else it can go off-screen
+    overlayRef.current.snapTo({ index: 0 });
   }
 
   onRoomData(roomData)
@@ -77,9 +90,6 @@ class HandOverlay extends React.Component
 
   onSnap(e)
   {
-    // TODO set the scroll box's height to the visible area's height
-    // so that the user is able to see all cards without needing to maximize the overlay
-    
     this.setState({
       snapIndex: e.index
     });
@@ -87,7 +97,6 @@ class HandOverlay extends React.Component
 
   maximizeMinimize()
   {
-
     if (this.state.snapIndex < 2)
       overlayRef.current.snapTo({ index: 2 });
     else
@@ -106,6 +115,18 @@ class HandOverlay extends React.Component
 
     overlayAnimatedY.addListener(({ value }) =>
     {
+      // console.log(value, percent(size.height, 15), percent(size.height, 85));
+
+      // determined the the area of the overlay that is visible on screen
+      // set set that amount as the wrapper hight
+      // so that the user can view all cards without maximizing the the overlay
+      if (wrapperRef.current)
+      {
+        const rect = wrapperRef.current.getBoundingClientRect();
+
+        this.setState({ viewableArea: size.height - rect.y });
+      }
+      
       // hide the overlay and overlay holder when they are off-screen
       if (value >= size.height)
         this.setState({ overlayHidden: true });
@@ -128,18 +149,16 @@ class HandOverlay extends React.Component
 
             backgroundColor: colors.handBackground,
 
-            borderRadius: 'calc(10px + 1.5vw)',
-
             overflow: 'hidden',
-
+            
             bottom: '0',
-
+            
             width: '85%',
-            height: '85%',
+            height: '85vh',
             maxWidth: '700px',
 
             margin: '0 auto',
-            paddingBottom: '20vh'
+            borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0',
           } }
 
           animatedValueY={ overlayAnimatedY }
@@ -157,7 +176,7 @@ class HandOverlay extends React.Component
           <div className={ styles.overlay }>
             <div className={ styles.handler } onClick={ this.maximizeMinimize.bind(this) }/>
 
-            <div className={ styles.wrapper }>
+            <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
               <div className={ styles.container }>
                 {
                   this.state.hand.map((cardContent, i) =>
@@ -167,7 +186,6 @@ class HandOverlay extends React.Component
                 }
               </div>
             </div>
-
           </div>
         </Interactable.View>
       </div>
@@ -200,7 +218,7 @@ const styles = createStyle({
     width: 'calc(40px + 2.5%)',
     height: '10px',
 
-    margin: '10px auto 0 auto',
+    margin: '10px auto',
     borderRadius: '8px'
   },
 
@@ -208,18 +226,19 @@ const styles = createStyle({
     gridArea: 'cards',
 
     overflowX: 'hidden',
-    overflowY: 'overlay',
+    overflowY: 'scroll',
+
+    margin: '0px 10px 0 0',
 
     '::-webkit-scrollbar':
     {
-      width: '22px'
+      width: '8px'
     },
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '22px',
-      boxShadow: `inset 0 0 22px 22px ${colors.handScrollbar}`,
-      border: 'solid 8px transparent'
+      borderRadius: '8px',
+      boxShadow: `inset 0 0 8px 8px ${colors.handScrollbar}`
     }
   },
 
@@ -231,7 +250,7 @@ const styles = createStyle({
 
     '> *': {
       width: '25%',
-      margin: '10px auto 10px 20px'
+      margin: '10px auto 20px 20px'
     }
   }
 });

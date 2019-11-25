@@ -28,8 +28,6 @@ UI/UX:
   
     ☐ if the room is full and the room's master doesn't start the match in 30 seconds they should be kicked out of the room
 
-    ☐ pressing the handler of the field should maximize/minimize the overlay
-    
     ☐ card as interactable (player able to drag his cards to field)
 
     ☐ support for pick (2) black cards
