@@ -62,19 +62,15 @@ class HandOverlay extends React.Component
 
   onRoomData(roomData)
   {
-    // the hand overlay is only visible in matches
-    this.visibility((roomData.state === 'match') ? true : false);
+    // the hand overlay is only visible if this client is participate in the match
+    this.visibility((roomData.playerProperties[socket.id].state === 'playing') ? true : false);
 
-    // if there player properties object in the data
+    // if the player has a secret properties object in the data
     // and it has the hand data for this client
-    if (
-      roomData.playerProperties &&
-      roomData.playerProperties[socket.id] &&
-      roomData.playerProperties[socket.id].hand
-    )
+    if (roomData.secretProperties && roomData.secretProperties.hand)
     {
       this.setState({
-        hand: roomData.playerProperties[socket.id].hand
+        hand: roomData.secretProperties.hand
       });
     }
   }
@@ -158,7 +154,7 @@ class HandOverlay extends React.Component
             maxWidth: '700px',
 
             margin: '0 auto',
-            borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0',
+            borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0'
           } }
 
           animatedValueY={ overlayAnimatedY }
@@ -247,6 +243,9 @@ const styles = createStyle({
 
     flexWrap: 'wrap',
     justifyContent: 'center',
+
+    // TODO some space away from the the scrollbar
+    // margin: '0 5px 0 0',
 
     '> *': {
       width: '25%',

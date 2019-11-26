@@ -46,7 +46,8 @@ class Trackbar extends React.Component
   {
     this.setState({
       roomState: roomData.state,
-      roomProperties: roomData.properties,
+      // TODO countdown if type is number
+      counter: roomData.counter || this.state.counter,
       maxPlayers: roomData.options.match.maxPlayers,
       players: roomData.players,
       playerProperties: roomData.playerProperties,
@@ -110,7 +111,7 @@ class Trackbar extends React.Component
             </div>
           </div>
 
-          <div className={ styles.status }>{ this.state.roomProperties.counter }</div>
+          <div className={ styles.status }>{ this.state.counter }</div>
 
           <div className={ styles.players }>
             {

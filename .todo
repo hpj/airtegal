@@ -1,5 +1,4 @@
 Performance Issues and Bugs:
-  ☐ better favicon for the app 
 
 Testing:
   ☐ closing and re-open all 3 interactable (room, field and hand) after a match
@@ -23,9 +22,6 @@ UI/UX:
     ☐ show a window about ad-block if detected
 
   Gameplay:
-    ✔ show players count @done(19-11-20 17:25)
-    ✔ show player usernames @done(19-11-20 17:25)
-  
     ☐ if the room is full and the room's master doesn't start the match in 30 seconds they should be kicked out of the room
 
     ☐ card as interactable (player able to drag his cards to field)

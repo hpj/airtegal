@@ -12,6 +12,7 @@ export const handler = '#867878';
 export const accentColor = '#454545';
 
 export const fieldBackground = '#545454';
+export const fieldScrollbar = '#262626';
 
 export const handBackground = '#C4C4C4';
 export const handScrollbar = '#949393';
@@ -20,4 +21,5 @@ export const warningBackground = '#00aeff';
 
 export const red = 'red';
 export const error = '#ad1818';
+export const transparent = 'transparent';
 

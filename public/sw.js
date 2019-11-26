@@ -27,35 +27,35 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "Icon-144.png",
-    "revision": "ddbe46224704e861d7ad54aefcb19686"
+    "revision": "243b983172828753d8d28a7505776a24"
   },
   {
     "url": "Icon-16.png",
-    "revision": "5e4787d260a9a7e455a3621fbc49c681"
+    "revision": "16a31b02c15a7b3a0a95394b0a649d27"
   },
   {
     "url": "Icon-192.png",
-    "revision": "69ea483a0819509a9c891de60ff4a3fb"
+    "revision": "6c38eced5836ba92c8bde6951297d3cb"
   },
   {
     "url": "Icon-36.png",
-    "revision": "307e3c8110918f2356161f73a19401e8"
+    "revision": "d37bced6ac7557d11d991ad87af2d539"
   },
   {
     "url": "Icon-48.png",
-    "revision": "1027f74579f421bc8e95cff420bcafdf"
+    "revision": "02e877ddc3835fd5d3d9abccd26fe734"
   },
   {
     "url": "Icon-512.png",
-    "revision": "543a835123727cd6e0f26557eb6630c1"
+    "revision": "5aa280ec3a5eb5f7aaf97f358beb456e"
   },
   {
     "url": "Icon-72.png",
-    "revision": "310230e07fb95d839e72de6b6ead27ea"
+    "revision": "2b2153c2e2904be3d14c608a82810b64"
   },
   {
     "url": "Icon-96.png",
-    "revision": "485878dc6561b69dd02d6e634f6cef36"
+    "revision": "d91819e68fd49e2444b2bafe624f580a"
   },
   {
     "url": "index.html",

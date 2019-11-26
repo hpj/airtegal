@@ -12,6 +12,8 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
+import Card from './card.js';
+
 const overlayRef = createRef();
 const overlayAnimatedX = new Value(0);
 
@@ -46,6 +48,15 @@ class FieldOverlay extends React.Component
   {
     // the field overlay is only visible in matches
     this.visibility((roomData.state === 'match') ? true : false);
+
+    // if the player has a secret properties object in the data
+    // and it has the hand data for this client
+    if (roomData.field)
+    {
+      this.setState({
+        field: roomData.field
+      });
+    }
   }
 
   /** @param { boolean } visible
@@ -80,7 +91,8 @@ class FieldOverlay extends React.Component
             zIndex: 2,
             display: (this.state.overlayHidden) ? 'none' : '',
 
-            backgroundColor: colors.fieldBackground,
+            // backgroundColor: colors.fieldBackground,
+            backgroundColor: colors.transparent,
 
             overflow: 'hidden',
 
@@ -106,7 +118,14 @@ class FieldOverlay extends React.Component
           } }
         >
           <div className={ styles.wrapper }>
-
+            <div className={ styles.container }>
+              {
+                this.state.field.map((cardContent, i) =>
+                {
+                  return <Card key={ i } type={ (i === 0) ? 'black' : 'white' } content={ cardContent }></Card>;
+                })
+              }
+            </div>
           </div>
         </Interactable.View>
       </div>
@@ -120,8 +139,37 @@ FieldOverlay.propTypes = {
 
 const styles = createStyle({
   wrapper: {
-    width: '100%',
-    height: '100%'
+    overflowX: 'hidden',
+    overflowY: 'scroll',
+
+    height: '100%',
+
+    margin: '0px 5px 0 15px',
+
+    '::-webkit-scrollbar':
+    {
+      width: '8px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '8px',
+      boxShadow: `inset 0 0 8px 8px ${colors.fieldScrollbar}`
+    }
+  },
+
+  container: {
+    display: 'flex',
+
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+
+    padding: '0 20px',
+
+    '> *': {
+      width: '15%',
+      margin: '20px'
+    }
   }
 });
 
