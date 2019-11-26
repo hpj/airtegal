@@ -157,15 +157,15 @@ const styles = createStyle({
   },
 
   container: {
-    display: 'flex',
-
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    display: 'grid',
+    
+    gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
+    justifyContent: 'space-around',
 
     padding: '0 20px',
 
     '> *': {
-      width: '15%',
+      width: 'calc(115px + 2vw + 2vh)',
       margin: '20px'
     }
   }

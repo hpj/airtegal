@@ -25,17 +25,13 @@ const Card = ({ content, type }) =>
 };
 
 Card.propTypes = {
-  content: PropTypes.string.isRequired,
+  content: PropTypes.string,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired
 };
 
 const styles = createStyle({
   wrapper: {
     position: 'relative',
-
-    minWidth: '115px',
-    maxWidth: '215px',
-    width: 'calc(50px + 8vw + 8vh)',
 
     height: 'fit-content',
 

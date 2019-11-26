@@ -26,7 +26,7 @@ class HandOverlay extends React.Component
   constructor()
   {
     super();
-    
+
     this.state = {
       visible: false,
       overlayHidden: true,
@@ -102,7 +102,7 @@ class HandOverlay extends React.Component
   render()
   {
     const { size } = this.props;
-    
+
     const visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
     const hiddenSnapPoints = [ { y: size.height } ];
 
@@ -120,7 +120,7 @@ class HandOverlay extends React.Component
 
         this.setState({ viewableArea: size.height - rect.y });
       }
-      
+
       // hide the overlay and overlay holder when they are off-screen
       if (value >= size.height)
         this.setState({ overlayHidden: true });
@@ -131,7 +131,7 @@ class HandOverlay extends React.Component
     // if size is not calculated yet
     if (!size.height)
       return <div/>;
-    
+
     return (
       <div style={ { width: '100%', height: '100%' } }>
         <Interactable.View
@@ -144,9 +144,9 @@ class HandOverlay extends React.Component
             backgroundColor: colors.handBackground,
 
             overflow: 'hidden',
-            
+
             bottom: '0',
-            
+
             width: '85%',
             height: '85vh',
             maxWidth: '700px',
@@ -237,15 +237,15 @@ const styles = createStyle({
   },
 
   container: {
-    display: 'flex',
+    display: 'grid',
 
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
+    justifyContent: 'space-around',
 
     padding: '0 10px',
 
     '> *': {
-      width: '25%',
+      width: 'calc(115px + 2vw + 2vh)',
       margin: '20px'
     }
   }
