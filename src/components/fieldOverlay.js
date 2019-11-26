@@ -142,7 +142,7 @@ const styles = createStyle({
 
     height: '100%',
 
-    margin: '0px 5px 0 15px',
+    margin: '0 5px 0 15px',
 
     '::-webkit-scrollbar':
     {

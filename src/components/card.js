@@ -8,25 +8,29 @@ import { createStyle } from '../flcss.js';
 
 import i18n from '../i18n/eg-AR.json';
 
-/** @param { { content: string, type: 'black' | 'white' } } param0
-*/
-const Card = ({ content, type }) =>
+class Card extends React.Component
 {
-  return (
-    <div className={ styles.wrapper }>
-      <div className={ styles.container } type={ type }>
+  render()
+  {
+    const { content, type, onClick } = this.props;
 
-        <div className={ styles.content }>{content}</div>
-        <p className={ styles.bottom }> { i18n['kuruit-bedan-fash5'] } </p>
-        
+    return (
+      <div className={ styles.wrapper }>
+        <div onClick={ onClick } className={ styles.container } type={ type }>
+  
+          <div className={ styles.content }>{content}</div>
+          <p className={ styles.bottom }> { i18n['kuruit-bedan-fash5'] } </p>
+          
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 Card.propTypes = {
   content: PropTypes.string,
-  type: PropTypes.oneOf([ 'white', 'black' ]).isRequired
+  type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
+  onClick: PropTypes.func
 };
 
 const styles = createStyle({

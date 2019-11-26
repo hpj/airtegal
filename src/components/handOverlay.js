@@ -99,6 +99,16 @@ class HandOverlay extends React.Component
       overlayRef.current.snapTo({ index: 0 });
   }
 
+  /** send the card the player choose to the server's match logic
+  * @param { number } cardIndex
+  */
+  playCard(cardIndex)
+  {
+    console.log(cardIndex);
+    
+    // socket.emit('matchLogic', cardIndex);
+  }
+
   render()
   {
     const { size } = this.props;
@@ -168,14 +178,16 @@ class HandOverlay extends React.Component
           } }
         >
           <div className={ styles.overlay }>
-            <div className={ styles.handler } onClick={ this.maximizeMinimize.bind(this) }/>
+            <div className={ styles.handlerWrapper }>
+              <div className={ styles.handler } onClick={ this.maximizeMinimize.bind(this) }/>
+            </div>
 
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
               <div className={ styles.container }>
                 {
                   this.state.hand.map((cardContent, i) =>
                   {
-                    return <Card key={ i } type='white' content={ cardContent }></Card>;
+                    return <Card key={ i } onClick={ () => this.playCard(i) } type='white' content={ cardContent }></Card>;
                   })
                 }
               </div>
@@ -203,6 +215,13 @@ const styles = createStyle({
     height: '100%'
   },
 
+  handlerWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+
+    margin: '10px 10px 10px 0'
+  },
+
   handler: {
     gridArea: 'handler',
 
@@ -212,7 +231,6 @@ const styles = createStyle({
     width: 'calc(40px + 2.5%)',
     height: '10px',
 
-    margin: '10px auto',
     borderRadius: '8px'
   },
 
@@ -222,7 +240,7 @@ const styles = createStyle({
     overflowX: 'hidden',
     overflowY: 'scroll',
 
-    margin: '0px 10px 0 0',
+    margin: '0 10px 0 0',
 
     '::-webkit-scrollbar':
     {
@@ -246,7 +264,7 @@ const styles = createStyle({
 
     '> *': {
       width: 'calc(115px + 2vw + 2vh)',
-      margin: '20px'
+      margin: '10px 20px 20px 20px'
     }
   }
 });
