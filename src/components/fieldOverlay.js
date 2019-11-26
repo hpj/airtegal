@@ -49,8 +49,6 @@ class FieldOverlay extends React.Component
     // the field overlay is only visible in matches
     this.visibility((roomData.state === 'match') ? true : false);
 
-    // if the player has a secret properties object in the data
-    // and it has the hand data for this client
     if (roomData.field)
     {
       this.setState({

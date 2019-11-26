@@ -111,8 +111,6 @@ class HandOverlay extends React.Component
 
     overlayAnimatedY.addListener(({ value }) =>
     {
-      // console.log(value, percent(size.height, 15), percent(size.height, 85));
-
       // determined the the area of the overlay that is visible on screen
       // set set that amount as the wrapper hight
       // so that the user can view all cards without maximizing the the overlay
@@ -242,14 +240,13 @@ const styles = createStyle({
     display: 'flex',
 
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
 
-    // TODO some space away from the the scrollbar
-    // margin: '0 5px 0 0',
+    padding: '0 10px',
 
     '> *': {
       width: '25%',
-      margin: '10px auto 20px 20px'
+      margin: '20px'
     }
   }
 });

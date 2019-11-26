@@ -44,10 +44,39 @@ class Trackbar extends React.Component
 
   onRoomData(roomData)
   {
+    if (roomData.counter)
+    {
+      // clear the pervious countdown
+      if (this.countdownInterval)
+        clearInterval(this.countdownInterval);
+
+      // if counter is number
+      // then it's a countdown
+      if (typeof roomData.counter === 'number')
+      {
+        this.countdown = Date.now() + roomData.counter;
+
+        // set a 1s interval
+        this.countdownInterval = setInterval(() =>
+        {
+          const remaining = this.countdown - Date.now();
+
+          if (remaining >= 0)
+            this.setState({ counter: this.formatMs(remaining) });
+        }, 1000);
+
+        // update the counter immediately since the first interval won't execute immediately
+        this.setState({ counter: this.formatMs(roomData.counter) });
+      }
+      // if not display it as is
+      else
+      {
+        this.setState({ counter: roomData.counter });
+      }
+    }
+
     this.setState({
       roomState: roomData.state,
-      // TODO countdown if type is number
-      counter: roomData.counter || this.state.counter,
       maxPlayers: roomData.options.match.maxPlayers,
       players: roomData.players,
       playerProperties: roomData.playerProperties,
@@ -83,6 +112,15 @@ class Trackbar extends React.Component
     this.props.sendMessage('matchRequest')
       .then(() => this.loadingVisibility(false))
       .catch((err) => this.showErrorMessage(err));
+  }
+
+  formatMs(milliseconds)
+  {
+    const minutes = Math.floor(milliseconds / 60000);
+
+    const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
+
+    return `${minutes}:${(seconds < 10) ? '0' : ''}${seconds}`;
   }
 
   render()
