@@ -198,9 +198,9 @@ class Game extends React.Component
   
           <div className={ optionsStyles.container }>
   
-            <input ref={ inputRef } className={ optionsStyles.username } required placeholder={ i18n['username-input'] } value={ this.state.username } onBlur={ this.usernameBlurEvent } onChange={ this.usernameChangeEvent } type='text' maxLength='18'/>
-  
             <p className={ optionsStyles.welcome }> { i18n['welcome'] } </p>
+  
+            <input ref={ inputRef } className={ optionsStyles.username } required placeholder={ i18n['username-input'] } value={ this.state.username } onBlur={ this.usernameBlurEvent } onChange={ this.usernameChangeEvent } type='text' maxLength='18'/>
   
           </div>
   
@@ -213,8 +213,8 @@ class Game extends React.Component
   
           <div className={ roomsStyles.container }>
   
-            <RefreshIcon className={ roomsStyles.refresh }/>
             <p className={ roomsStyles.title }> { i18n['available-rooms'] } </p>
+            <RefreshIcon className={ roomsStyles.refresh }/>
             
           </div>
         </div>
@@ -251,6 +251,7 @@ const optionsStyles = createStyle({
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
 
+    direction: 'rtl',
     padding: '3vh 3vw 5px 3vw'
   },
 
@@ -259,7 +260,7 @@ const optionsStyles = createStyle({
   },
 
   username: {
-    margin: '0 5px -2px auto',
+    margin: '0 5px -2px 0',
     direction: 'rtl',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
@@ -334,6 +335,7 @@ const roomsStyles = createStyle({
     flexGrow: 1,
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    direction: 'rtl',
 
     padding: '3vh 3vw'
   },
@@ -344,7 +346,7 @@ const roomsStyles = createStyle({
     width: 'fit-content',
     height: 'fit-content',
 
-    margin: '0 0 0 auto'
+    flexGrow: '1'
   },
 
   refresh: {

@@ -33,12 +33,10 @@ const Warning = ({ storageKey, style, text, button }) =>
   // if the waring is visible
   if (visible)
     return (
-      <div style={style} className={styles.wrapper}>
-        <div className={styles.container}>
-          <div className={styles.text}>
-            {text}
-          </div>
-          <div className={styles.button} onClick={onClick}>
+      <div style={ style } className={ styles.wrapper }>
+        <div className={ styles.container }>
+          {text}
+          <div className={ styles.button } onClick={ onClick }>
             {button}
           </div>
         </div>
@@ -73,13 +71,11 @@ const styles = createStyle({
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    
-    margin: 'auto',
-    maxWidth: '850px'
-  },
 
-  text: {
-    direction: 'rtl'
+    direction: 'rtl',
+    maxWidth: '850px',
+
+    margin: 'auto'
   },
 
   button: {
@@ -90,7 +86,7 @@ const styles = createStyle({
     border: '2px solid',
     borderColor: colors.whiteText,
 
-    margin: '10px 0 0 auto',
+    margin: '10px 0 0 0',
     padding: '2px 18px',
 
     ':hover': {

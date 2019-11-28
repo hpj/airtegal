@@ -1,15 +1,11 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import InlineSVG from 'svg-inline-react';
 import Select from 'react-select';
 
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
-
-import gameLogo from '../../build/kbf.svg';
-import hpjLogo from '../../build/hpj-logo-ar.svg';
 
 import Warning from '../components/warning.js';
 import CardShowcase from '../components/cardShowcase.js';
@@ -34,70 +30,70 @@ const Homepage = () =>
   return (
     <div>
       <Warning
-        style={{ padding: '12vh 5vw' }}
+        style={ { padding: '12vh 5vw' } }
         storageKey='kbf-adults-warning'
         text={ i18n['kbf-adults-warning'] }
         button={ i18n['ok'] }
       />
 
-      <div className={headerStyles.wrapper}>
+      <div className={ headerStyles.wrapper }>
 
-        <div className={headerStyles.regionalOptions}>
+        <div className={ headerStyles.regionalOptions }>
           <Select
-            className={headerStyles.select}
+            className={ headerStyles.select }
             classNamePrefix='react-select'
-            defaultValue={countries[0]}
-            isRtl={true}
-            isSearchable={true}
-            options={countries}
-            theme={theme => ({
+            defaultValue={ countries[0] }
+            isRtl={ true }
+            isSearchable={ true }
+            options={ countries }
+            theme={ theme => ({
               ...theme,
               colors: {
                 ...theme.colors,
                 primary: '#ffffff'
               }
-            })}
+            }) }
           />
         </div>
 
-        <div className={headerStyles.container}>
+        <div className={ headerStyles.container }>
           <CardShowcase/>
 
-          <div className={headerStyles.title}>
+          <div className={ headerStyles.title }>
 
-            <a className={headerStyles.hpj} href='https://herpproject.com'>
-              <InlineSVG src={hpjLogo}></InlineSVG>
+            <a className={ headerStyles.hpj } href='https://herpproject.com'>
+              { i18n['herp-project'] }
             </a>
 
-            <InlineSVG className={headerStyles.kbf} src={gameLogo}></InlineSVG>
+            <div className={ headerStyles.kbf }>{ i18n['kuruit-bedan-fash5'] }</div>
           
           </div>
         </div>
       </div>
 
-      <div className={qaStyles.wrapper}>
-        <div className={qaStyles.container}>
-          <p className={qaStyles.question}>
+      <div className={ qaStyles.wrapper }>
+        <div className={ qaStyles.container }>
+          <p className={ qaStyles.question }>
             { i18n['what-is-kbf'] }
           </p>
 
-          <p className={qaStyles.answer}>
+          <p className={ qaStyles.answer }>
             { i18n['this-is-kbf'] }
           </p>
 
-          <p className={qaStyles.question}>
+          <p className={ qaStyles.question }>
             { i18n['who-is-hpj'] }
           </p>
 
-          <p className={qaStyles.answer}>
+          <p className={ qaStyles.answer }>
             { i18n['this-is-hpj'] }
           </p>
 
-          <p className={qaStyles.question}>
+          <p className={ qaStyles.question }>
             { i18n['why-is-game-raciest'] }
           </p>
 
-          <p className={qaStyles.answer}>
+          <p className={ qaStyles.answer }>
 
             { i18n['freedom-of-speech-1'] }
             <br/>
@@ -108,34 +104,34 @@ const Homepage = () =>
             { i18n['freedom-of-speech-3'] }
           </p>
 
-          <p className={qaStyles.question}>
+          <p className={ qaStyles.question }>
             { i18n['how-to-suggest-cards'] }
           </p>
 
-          <p className={qaStyles.answer}>
+          <p className={ qaStyles.answer }>
             { i18n['suggesting-cards'] }
           </p>
 
         </div>
       </div>
     
-      <div className={playStyles.wrapper}>
-        <div className={playStyles.container}>
-          <Link className={playStyles.title} to='/play'> { i18n['play'] } </Link>
+      <div className={ playStyles.wrapper }>
+        <div className={ playStyles.container }>
+          <Link className={ playStyles.title } to='/play'> { i18n['play'] } </Link>
         </div>
       </div>
 
-      <div className={footerStyles.wrapper}>
-        <div className={footerStyles.container}>
-          <a className={footerStyles.hpj} href='https://herpproject.com'>
-            <InlineSVG src={hpjLogo}></InlineSVG>
+      <div className={ footerStyles.wrapper }>
+        <div className={ footerStyles.container }>
+          <a className={ footerStyles.hpj } href='https://herpproject.com'>
+            { i18n['hpj'] }
           </a>
-          <div className={footerStyles.sitemap}>
-            <Link className={footerStyles.use} to='/terms'> { i18n['terms-and-conditions'] } </Link>
+          <div className={ footerStyles.sitemap }>
+            <Link className={ footerStyles.privacy } to='/privacy'> { i18n['privacy-policy'] } </Link>
             _
-            <Link className={footerStyles.privacy} to='/privacy'> { i18n['privacy-policy'] } </Link>
+            <Link className={ footerStyles.use } to='/terms'> { i18n['terms-and-conditions'] } </Link>
           </div>
-          <p className={footerStyles.copyright}>
+          <p className={ footerStyles.copyright }>
             { i18n['copyright-notice'] }
           </p>
         </div>
@@ -152,14 +148,16 @@ const headerStyles = createStyle({
   },
 
   container: {
-    display: 'flex'
+    display: 'flex',
+    
+    fontWeight: 700,
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   regionalOptions: {
     width: 'auto',
-    fontWeight: 700,
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
+    fontWeight: 700,
     padding: '10px 0 0 0'
   },
 
@@ -221,35 +219,27 @@ const headerStyles = createStyle({
   },
 
   hpj: {
-    minWidth: '95px',
-    maxWidth: '140px',
-
+    cursor: 'pointer',
     margin: 'auto',
 
-    '> i > svg': {
-      width: '100%',
-      height: '100%',
-      
-      fill: colors.whiteText,
+    fontSize: 'calc(12px + 0.5vw + 0.5vh)',
 
-      cursor: 'pointer'
-    },
+    color: colors.whiteText,
+    textDecoration: 'none',
 
-    ':hover > i > svg': { fill: colors.accentColor }
+    ':hover': { color: colors.accentColor }
   },
 
   kbf: {
-    minWidth: '95px',
-    maxWidth: '140px',
-
     margin: 'auto',
+    fontSize: 'calc(35px + 1.5vw + 1.5vh)',
 
-    '> svg': {
-      width: '100%',
-      height: '100%',
+    lineHeight: '135%',
 
-      fill: colors.whiteText
-    }
+    color: colors.whiteText,
+    width: 'min-content',
+
+    padding: '10px 0'
   }
 });
 
@@ -343,8 +333,7 @@ const footerStyles = createStyle({
   container: {
     display: 'grid',
 
-    gridTemplateColumns: '50% 50%',
-    gridTemplateAreas: '"patreon hpj" "sitemap sitemap" "copyright copyright"',
+    gridTemplateAreas: '"hpj" "sitemap" "copyright"',
   
     gridRowGap: '10px',
     
@@ -353,59 +342,28 @@ const footerStyles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontWeight: 700,
   
+    direction: 'rtl',
     padding: '5vh 5vw',
     margin: 'auto'
   },
 
   hpj: {
     gridArea: 'hpj',
-
+    
+    padding: '0 5px',
     cursor: 'pointer',
 
-    minWidth: '100px',
-    maxWidth: '132px',
-    width: '35%',
-    height: '100%',
-    
-    margin: '0 0 0 auto',
+    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    '> i > svg': {
-      width: '100%',
-      height: '100%',
-
-      fill: colors.whiteText
-    },
-
-    ':hover > i > svg': { fill: colors.accentColor }
-  },
-
-  patreon: {
-    gridArea: 'patreon',
-
-    display: 'flex',
-    alignItems: 'center',
-    
     color: colors.whiteText,
-    width: 'fit-content',
-    
-    userSelect: 'none',
-    cursor: 'pointer',
-    
-    direction: 'ltr',
     textDecoration: 'none',
 
-    margin: '0 auto 0 0',
-
-    ':hover': { color: colors.accentColor },
-
-    '> svg': { padding: '0 5px 0 0' }
+    ':hover': { color: colors.accentColor }
   },
 
   sitemap: {
     gridArea: 'sitemap',
     display: 'flex',
-
-    margin: '0 0 0 auto',
 
     userSelect: 'none',
     color: colors.whiteText
@@ -426,12 +384,11 @@ const footerStyles = createStyle({
   copyright: {
     gridArea: 'copyright',
     
-    color: colors.greyText,
+    margin: '0',
+    padding: '0 5px',
 
-    userSelect: 'none',
-    direction: 'rtl',
-    
-    margin: 0
+    color: colors.greyText,
+    userSelect: 'none'
   }
 });
 

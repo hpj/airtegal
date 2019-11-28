@@ -1,18 +1,18 @@
 import React from 'react';
 
-import InlineSVG from 'svg-inline-react';
-
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import kbfLogo from '../../build/kbf.svg';
+import i18n from '../i18n/eg-AR.json';
 
 const Loading = () =>
 {
   return (
-    <div className={styles.container}>
-      <InlineSVG className={styles.loading} src={kbfLogo}/>
+    <div className={ styles.container }>
+
+      <div className={ styles.loading }>{ i18n['kuruit-bedan-fash5'] }</div>
+
     </div>
   );
 };
@@ -33,18 +33,19 @@ const styles = createStyle({
     minWidth: '100vw',
     minHeight: '100vh'
   },
-  // on an installed PWA, it has a splash screen that we
+
+  // TODO on an installed PWA, it has a splash screen that we
   // should match its style
+
   loading: {
-    width: '80px',
-    height: '100%',
+    fontWeight: '700',
+    fontSize: 'calc(18px + 0.8vw + 0.8vh)',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    '> svg': {
-      width: '100%',
-      height: '100%',
+    lineHeight: '135%',
 
-      fill: colors.accentColor
-    }
+    color: colors.accentColor,
+    width: 'min-content'
   }
 });
 

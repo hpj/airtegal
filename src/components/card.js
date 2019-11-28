@@ -19,7 +19,7 @@ class Card extends React.Component
         <div onClick={ onClick } className={ styles.container } type={ type }>
   
           <div className={ styles.content }>{content}</div>
-          <p className={ styles.bottom }> { i18n['kuruit-bedan-fash5'] } </p>
+          <p className={ styles.bottom }>{ i18n['kuruit-bedan-fash5'] }</p>
           
         </div>
       </div>
@@ -89,7 +89,6 @@ const styles = createStyle({
 
   bottom: {
     gridArea: 'bottom',
-    direction: 'rtl',
 
     padding: '6% 8%',
     fontSize: 'calc(3px + 0.4vw + 0.4vh)',
