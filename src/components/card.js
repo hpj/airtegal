@@ -52,6 +52,7 @@ const styles = createStyle({
 
     display: 'grid',
     gridTemplateRows: '1fr auto',
+    gridTemplateColumns: '100%',
     gridTemplateAreas: '"content" "bottom"',
 
     direction: 'rtl',
@@ -83,14 +84,15 @@ const styles = createStyle({
     display: 'flex',
   
     justifyContent: 'center',
-    
-    padding: '7.5%'
+
+    overflow: 'hidden',
+    margin: '10px'
   },
 
   bottom: {
     gridArea: 'bottom',
 
-    padding: '6% 8%',
+    padding: '10px',
     fontSize: 'calc(3px + 0.4vw + 0.4vh)',
     margin: 0
   }

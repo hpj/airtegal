@@ -52,6 +52,7 @@ class FieldOverlay extends React.Component
     if (roomData.field)
     {
       this.setState({
+        playerState: roomData.playerProperties[socket.id].state,
         field: roomData.field
       });
     }
@@ -62,6 +63,17 @@ class FieldOverlay extends React.Component
   visibility(visible)
   {
     overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
+  }
+
+  /** send the card the judge choose to the server's match logic
+  * @param { number } cardIndex
+  */
+  judgeCard(cardIndex)
+  {
+    const { sendMessage } = this.props;
+
+    if (this.state.playerState === 'judging')
+      sendMessage('matchLogic', { cardIndex });
   }
 
   render()
@@ -120,7 +132,7 @@ class FieldOverlay extends React.Component
               {
                 this.state.field.map((cardContent, i) =>
                 {
-                  return <Card key={ i } type={ (i === 0) ? 'black' : 'white' } content={ cardContent }></Card>;
+                  return <Card key={ i } onClick={ () => this.judgeCard(i) } type={ (i === 0) ? 'black' : 'white' } content={ cardContent }></Card>;
                 })
               }
             </div>
@@ -132,7 +144,8 @@ class FieldOverlay extends React.Component
 }
 
 FieldOverlay.propTypes = {
-  size: PropTypes.object
+  size: PropTypes.object,
+  sendMessage: PropTypes.func.isRequired
 };
 
 const styles = createStyle({

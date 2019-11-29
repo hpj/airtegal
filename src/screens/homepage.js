@@ -222,6 +222,7 @@ const headerStyles = createStyle({
     cursor: 'pointer',
     margin: 'auto',
 
+    userSelect: 'none',
     fontSize: 'calc(12px + 0.5vw + 0.5vh)',
 
     color: colors.whiteText,
@@ -234,6 +235,7 @@ const headerStyles = createStyle({
     margin: 'auto',
     fontSize: 'calc(35px + 1.5vw + 1.5vh)',
 
+    userSelect: 'none',
     lineHeight: '135%',
 
     color: colors.whiteText,
@@ -353,6 +355,7 @@ const footerStyles = createStyle({
     padding: '0 5px',
     cursor: 'pointer',
 
+    userSelect: 'none',
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
     color: colors.whiteText,

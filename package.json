@@ -5,7 +5,6 @@
   "main": "./src/app.js",
   "private": true,
   "scripts": {
-    "svgo": "svgo --config='{ \"plugins\": [ { \"removeAttrs\": { \"attrs\": \"(fill|stroke)\" } } ] }' ./build",
     "workbox": "workbox injectManifest workbox-config.js",
     "start": "webpack-dev-server --config webpack.config.dev.js --mode development",
     "build": "webpack --config webpack.config.prod.js --mode production"

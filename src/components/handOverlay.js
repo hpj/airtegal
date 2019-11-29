@@ -70,6 +70,7 @@ class HandOverlay extends React.Component
     if (roomData.secretProperties && roomData.secretProperties.hand)
     {
       this.setState({
+        playerState: roomData.playerProperties[socket.id].state,
         hand: roomData.secretProperties.hand
       });
     }
@@ -104,9 +105,10 @@ class HandOverlay extends React.Component
   */
   playCard(cardIndex)
   {
-    console.log(cardIndex);
-    
-    // socket.emit('matchLogic', cardIndex);
+    const { sendMessage } = this.props;
+
+    if (this.state.playerState === 'playing')
+      sendMessage('matchLogic', { cardIndex });
   }
 
   render()
@@ -200,7 +202,8 @@ class HandOverlay extends React.Component
 }
 
 HandOverlay.propTypes = {
-  size: PropTypes.object
+  size: PropTypes.object,
+  sendMessage: PropTypes.func.isRequired
 };
 
 const styles = createStyle({

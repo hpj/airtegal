@@ -62,7 +62,15 @@ class Trackbar extends React.Component
           const remaining = this.countdown - Date.now();
 
           if (remaining >= 0)
+          {
             this.setState({ counter: this.formatMs(remaining) });
+          }
+          else
+          {
+            this.setState({ counter: this.formatMs(0) });
+
+            clearInterval(this.countdownInterval);
+          }
         }, 1000);
 
         // update the counter immediately since the first interval won't execute immediately

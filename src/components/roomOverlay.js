@@ -298,10 +298,10 @@ class RoomOverlay extends React.Component
 
             <div className={ styles.content }>
               {/* <HandOverlay/> */}
-              <HandOverlay size={ size } />
-              <FieldOverlay size={ size }/>
+              <HandOverlay sendMessage={ this.sendMessage.bind(this) } size={ size } />
+              <FieldOverlay sendMessage={ this.sendMessage.bind(this) } size={ size }/>
 
-              <RoomOptions/>
+              <RoomOptions sendMessage={ this.sendMessage.bind(this) }/>
             </div>
 
           </div>

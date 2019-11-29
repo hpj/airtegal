@@ -10,8 +10,8 @@ import { createStyle } from '../flcss.js';
 const Error = ({ error }) =>
 {
   return (
-    <div className={styles.container}>
-      <p className={styles.error}>{error}</p>
+    <div className={ styles.container }>
+      <p className={ styles.error }>{error}</p>
     </div>
   );
 };
