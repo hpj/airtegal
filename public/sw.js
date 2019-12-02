@@ -59,7 +59,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "cf60ad2695455ed14e1d5e7828fe9198"
+    "revision": "c1fced792213141c688ebd9726eefb50"
   },
   {
     "url": "manifest.json",
@@ -104,14 +104,5 @@ workbox.routing.registerRoute(
         maxAgeSeconds: 60 * 60 * 24 * 1
       })
     ]
-  })
-);
-
-// Cache cards and packs with a stale-while-revalidate strategy
-// TODO This might cause problems while in lobby with players having mis-matched cards and packs
-workbox.routing.registerRoute(
-  new RegExp('https://kbf.herokuapp.com/v1/'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'kbf-cache'
   })
 );
