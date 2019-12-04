@@ -20,7 +20,7 @@ class RoomOptions extends React.Component
     socket.on('roomData', (roomData) =>
     {
       this.setState({
-        options: roomData
+        options: roomData.options
       });
     });
   }

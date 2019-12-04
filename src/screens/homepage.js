@@ -212,6 +212,8 @@ const headerStyles = createStyle({
   title: {
     display: 'grid',
 
+    direction: 'rtl',
+
     overflow: 'hidden',
     
     padding: '5vh 0',

@@ -124,8 +124,7 @@ class FieldOverlay extends React.Component
             zIndex: 2,
             display: (this.state.overlayHidden) ? 'none' : '',
 
-            // backgroundColor: colors.fieldBackground,
-            backgroundColor: colors.transparent,
+            backgroundColor: colors.fieldBackground,
 
             overflow: 'hidden',
 

@@ -12,16 +12,23 @@ class Card extends React.Component
 {
   render()
   {
-    const { content, type, onClick } = this.props;
+    const { content, type, hidden, onClick } = this.props;
 
     return (
       <div className={ styles.wrapper }>
-        <div onClick={ onClick } className={ styles.container } type={ type }>
-  
-          <div className={ styles.content }>{content}</div>
-          <p className={ styles.bottom }>{ i18n['kuruit-bedan-fash5'] }</p>
-          
-        </div>
+        {
+          (hidden) ?
+            <div className={ styles.hidden } type={ type }>
+              <div>{ i18n['kuruit-bedan-fash5'] }</div>
+            </div>
+            :
+            <div onClick={ onClick } className={ styles.container } type={ type }>
+      
+              <div className={ styles.content }>{content}</div>
+              <p className={ styles.bottom }>{ i18n['kuruit-bedan-fash5'] }</p>
+              
+            </div>
+        }
       </div>
     );
   }
@@ -29,6 +36,7 @@ class Card extends React.Component
 
 Card.propTypes = {
   content: PropTypes.string,
+  hidden: PropTypes.bool,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
   onClick: PropTypes.func
 };
@@ -44,6 +52,42 @@ const styles = createStyle({
       display: 'block',
     
       paddingBottom: '135%'
+    }
+  },
+
+  hidden: {
+    position: 'absolute',
+
+    display: 'flex',
+
+    direction: 'rtl',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+    top: 0,
+    width: '100%',
+    height: '100%',
+
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: 700,
+
+    userSelect: 'none',
+    borderRadius: '10px',
+
+    '> div': {
+      width: 'min-content',
+      lineHeight: '135%'
+    },
+
+    '[type="white"]': {
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground
+    },
+
+    '[type="black"]': {
+      color: colors.whiteText,
+      backgroundColor: colors.blackBackground
     }
   },
 
