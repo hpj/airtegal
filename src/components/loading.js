@@ -38,6 +38,8 @@ const styles = createStyle({
   // should match its style
 
   loading: {
+    direction: 'rtl',
+
     fontWeight: '700',
     fontSize: 'calc(18px + 0.8vw + 0.8vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',

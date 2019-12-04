@@ -13,7 +13,7 @@ import CardShowcase from '../components/cardShowcase.js';
 import i18n from '../i18n/eg-AR.json';
 
 const countries = [
-  { value: 'egypt', label: 'مصر' }
+  { value: 'egypt', label: 'مصري' }
 ];
 
 const Homepage = () =>
@@ -62,7 +62,7 @@ const Homepage = () =>
           <div className={ headerStyles.title }>
 
             <a className={ headerStyles.hpj } href='https://herpproject.com'>
-              { i18n['herp-project'] }
+              { i18n['hpj'] }
             </a>
 
             <div className={ headerStyles.kbf }>{ i18n['kuruit-bedan-fash5'] }</div>
@@ -126,7 +126,7 @@ const Homepage = () =>
       <div className={ footerStyles.wrapper }>
         <div className={ footerStyles.container }>
           <a className={ footerStyles.hpj } href='https://herpproject.com'>
-            { i18n['hpj'] }
+            { i18n['herp-project'] }
           </a>
           <div className={ footerStyles.sitemap }>
             <Link className={ footerStyles.privacy } to='/privacy'> { i18n['privacy-policy'] } </Link>
