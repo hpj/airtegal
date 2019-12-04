@@ -1,7 +1,7 @@
 Performance Issues and Bugs:
 
 Testing:
-  ☐ closing and re-open all 3 interactable (room, field and hand) after a match
+  ✔ closing and re-open all 3 interactable (room, field and hand) after a match @done(19-12-04 04:23)
 
 Features:
   ☐ setup crowdl for i18n
@@ -21,12 +21,12 @@ UI/UX:
     ☐ show google ad
     ☐ show a window about ad-block if detected
 
-  Gameplay:
+  Match Logic:
     ☐ if the room is full and the room's master doesn't start the match in 30 seconds they should be kicked out of the room
 
     ☐ card as interactable (player able to drag his cards to field)
 
-    ☐ support for pick (2) black cards
     ☐ support drawing and playing blank cards
+    ✔ support for pick (2) black cards @done(19-12-04 04:23)
 
 CI/CD:

@@ -31,6 +31,7 @@ class HandOverlay extends React.Component
       visible: false,
       overlayHidden: true,
 
+      entry: [],
       hand: []
     };
 
@@ -74,6 +75,13 @@ class HandOverlay extends React.Component
         hand: roomData.secretProperties.hand
       });
     }
+
+    if (roomData.field && roomData.field[0])
+    {
+      this.setState({
+        pick: roomData.field[0][0].pick
+      });
+    }
   }
 
   /** @param { boolean } visible
@@ -103,12 +111,38 @@ class HandOverlay extends React.Component
   /** send the card the player choose to the server's match logic
   * @param { number } cardIndex
   */
-  playCard(cardIndex)
+  pickCard(cardIndex)
   {
     const { sendMessage } = this.props;
+    const { entry } = this.state;
 
-    if (this.state.playerState === 'playing')
-      sendMessage('matchLogic', { cardIndex });
+    if (this.state.playerState !== 'playing')
+      return;
+
+    // if card exists in entry already
+    // then remove it
+    if (entry.indexOf(cardIndex) >= 0)
+    {
+      entry.splice(entry.indexOf(cardIndex), 1);
+    }
+    // if not then add it
+    else
+    {
+      entry.push(cardIndex);
+
+      // if entry equal the amount that should be pick
+      // then send it to match logic
+      if (entry.length === this.state.pick)
+      {
+        sendMessage('matchLogic', {
+          cardIndices: entry
+        });
+  
+        this.setState({
+          entry: []
+        });
+      }
+    }
   }
 
   render()
@@ -187,9 +221,9 @@ class HandOverlay extends React.Component
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
               <div className={ styles.container }>
                 {
-                  this.state.hand.map((cardContent, i) =>
+                  this.state.hand.map((card, i) =>
                   {
-                    return <Card key={ i } onClick={ () => this.playCard(i) } type='white' content={ cardContent }></Card>;
+                    return <Card key={ i } onClick={ () => this.pickCard(i) } type='white' content={ card.content }></Card>;
                   })
                 }
               </div>

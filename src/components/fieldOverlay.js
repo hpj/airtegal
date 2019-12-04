@@ -56,6 +56,29 @@ class FieldOverlay extends React.Component
         field: roomData.field
       });
     }
+
+    // TODO using this info show the owners of the cards (at the end of the round)
+    if (roomData.fieldSecrets)
+    {
+      //
+    }
+
+    // TODO using this info show the winner of the match
+    if (roomData.matchEnded)
+    {
+      // roomData.matchEnded.reason
+      // roomData.matchEnded.id
+    }
+
+    // TODO using this info show the card that won the round
+    // and who player what cards
+    // or if the round was canceled
+    if (roomData.roundEnded)
+    {
+      // roomData.roundEnded.reason
+      // roomData.roundEnded.winnerEntryIndex
+      // roomData.roundEnded.fieldSecrets
+    }
   }
 
   /** @param { boolean } visible
@@ -66,14 +89,14 @@ class FieldOverlay extends React.Component
   }
 
   /** send the card the judge choose to the server's match logic
-  * @param { number } cardIndex
+  * @param { number } entryIndex
   */
-  judgeCard(cardIndex)
+  judgeCard(entryIndex)
   {
     const { sendMessage } = this.props;
 
     if (this.state.playerState === 'judging')
-      sendMessage('matchLogic', { cardIndex });
+      sendMessage('matchLogic', { entryIndex });
   }
 
   render()
@@ -130,9 +153,12 @@ class FieldOverlay extends React.Component
           <div className={ styles.wrapper }>
             <div className={ styles.container }>
               {
-                this.state.field.map((cardContent, i) =>
+                this.state.field.map((entry, entryIndex) =>
                 {
-                  return <Card key={ i } onClick={ () => this.judgeCard(i) } type={ (i === 0) ? 'black' : 'white' } content={ cardContent }></Card>;
+                  return entry.map((card, cardIndex) =>
+                  {
+                    return <Card key={ cardIndex } onClick={ () => this.judgeCard(entryIndex) } type={ card.type } content={ card.content } hidden={ card.hidden }></Card>;
+                  });
                 })
               }
             </div>
