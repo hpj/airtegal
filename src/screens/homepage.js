@@ -66,6 +66,8 @@ const Homepage = () =>
             </a>
 
             <div className={ headerStyles.kbf }>{ i18n['kuruit-bedan-fash5'] }</div>
+
+            <div className={ headerStyles.beta }>({ i18n['beta'] })</div>
           
           </div>
         </div>
@@ -213,6 +215,7 @@ const headerStyles = createStyle({
     display: 'grid',
 
     direction: 'rtl',
+    userSelect: 'none',
 
     overflow: 'hidden',
     
@@ -224,7 +227,6 @@ const headerStyles = createStyle({
     cursor: 'pointer',
     margin: 'auto',
 
-    userSelect: 'none',
     fontSize: 'calc(12px + 0.5vw + 0.5vh)',
 
     color: colors.whiteText,
@@ -237,13 +239,19 @@ const headerStyles = createStyle({
     margin: 'auto',
     fontSize: 'calc(35px + 1.5vw + 1.5vh)',
 
-    userSelect: 'none',
     lineHeight: '135%',
 
     color: colors.whiteText,
     width: 'min-content',
 
     padding: '10px 0'
+  },
+
+  beta: {
+    margin: ' 0 0 0 auto',
+    fontSize: '12px',
+
+    color: colors.whiteText
   }
 });
 
