@@ -65,9 +65,9 @@ const Homepage = () =>
               { i18n['hpj'] }
             </a>
 
-            <div className={ headerStyles.kbf }>{ i18n['kuruit-bedan-fash5'] }</div>
-
-            <div className={ headerStyles.beta }>({ i18n['beta'] })</div>
+            <div className={ headerStyles.kbf }>{ i18n['kuruit-bedan-fash5'] }
+              <div className={ headerStyles.beta }>({ i18n['beta'] })</div>
+            </div>
           
           </div>
         </div>
@@ -251,7 +251,8 @@ const headerStyles = createStyle({
     margin: ' 0 0 0 auto',
     fontSize: '12px',
 
-    color: colors.whiteText
+    color: colors.whiteText,
+    lineHeight: '100%'
   }
 });
 
