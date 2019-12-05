@@ -136,7 +136,7 @@ class RoomOverlay extends React.Component
     }).catch((err) =>
     {
       // show an error message
-      this.showErrorMessage(err);
+      this.showErrorMessage(i18n[err] || err);
     });
   }
 
@@ -160,7 +160,7 @@ class RoomOverlay extends React.Component
     }).catch((err) =>
     {
       // show an error message
-      this.showErrorMessage(err);
+      this.showErrorMessage(i18n[err] || err);
     });
   }
 

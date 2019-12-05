@@ -117,7 +117,7 @@ class Trackbar extends React.Component
 
     this.props.sendMessage('matchRequest')
       .then(() => this.loadingVisibility(false))
-      .catch((err) => this.showErrorMessage(err));
+      .catch((err) => this.showErrorMessage(i18n[err] || err));
   }
 
   formatMs(milliseconds)

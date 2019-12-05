@@ -16,6 +16,18 @@
   "random-room": "غرفة عشؤئية",
   "available-rooms": "الغرف المتاحة",
 
+  "room-does-not-exists": "هذة الغرفة غير متوفرة",
+  "no-rooms-available": "لا يوجد غرف متاحة",
+  "room-is-full": "هذة الغرف كاملة العدد",
+  "room-is-busy": "هذة الغرفة مشغولة",
+
+  "user-does-not-have-permission": "لا تمتلك الصلاحية لتكمل هذة العملية",
+  "minimal-number-of-players-required": "لا يوجد عدد كافي من اللاعبين",
+
+  "not-enough-cards": "تم الغاء الجولة لعدم وجود عدد كافي من الكروت علي الساحة",
+  "judge-timeout": "تم الغاء الجولة لنفاذ الوقت",
+  "judge-left": "تم الغاء الجولة لنسحاب القاضي من المباراة",
+
   "start": "ابدا",
 
   "terms-and-conditions": "الشروط والاحكام",
