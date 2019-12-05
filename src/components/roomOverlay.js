@@ -406,7 +406,7 @@ const styles = createStyle({
     width: '8px',
     height: 'calc(5px + 5%)',
 
-    margin: 'auto 10px',
+    margin: 'auto 0px auto 10px',
     borderRadius: '8px'
   },
 

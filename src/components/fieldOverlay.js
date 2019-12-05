@@ -200,7 +200,7 @@ const styles = createStyle({
     gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
     justifyContent: 'space-around',
 
-    padding: '0 20px',
+    padding: '0 30px',
 
     '> *': {
       width: 'calc(115px + 2vw + 2vh)',

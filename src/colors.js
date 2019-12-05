@@ -17,7 +17,13 @@ export const fieldScrollbar = '#262626';
 export const handBackground = '#C4C4C4';
 export const handScrollbar = '#949393';
 
+export const lobbyScrollbar = '#000000';
+
 export const warningBackground = '#00aeff';
+
+export const master = '#00aeff';
+export const judge = '#000000';
+export const player = '#0aad3c';
 
 export const red = 'red';
 export const error = '#ad1818';

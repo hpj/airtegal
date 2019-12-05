@@ -2,9 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import CrownIcon from 'mdi-react/CrownIcon';
-
-// import i18n from '../i18n/eg-AR.json';
+import i18n from '../i18n/eg-AR.json';
 
 import { socket } from '../screens/game.js';
 
@@ -136,6 +134,12 @@ class Trackbar extends React.Component
     if (!this.state.players)
       return (<div></div>);
 
+    const isMatch = (this.state.roomState === 'match');
+
+    const isThisMaster = this.state.masterId === socket.id;
+
+    const isAllowed = (this.state.players.length >= 3 || process.env.NODE_ENV === 'development');
+
     return (
       <div className={ styles.wrapper }>
         <div className={ styles.container }>
@@ -163,13 +167,15 @@ class Trackbar extends React.Component
             {
               this.state.players.map((playerId) =>
               {
-                const isMaster = (this.state.masterId === playerId).toString();
+                const isMaster = playerId === this.state.masterId;
+                const isJudge = this.state.playerProperties[playerId].state === 'judging';
+                const isPlayer = this.state.playerProperties[playerId].state === 'playing';
 
                 return <div className={ styles.player } key={ playerId }>
 
-                  <CrownIcon className={ styles.crownIcon } master={ isMaster }></CrownIcon>
+                  <div className={ styles.led } match={ isMatch.toString() } master={ isMaster.toString() } judge={ isJudge.toString() } player={ isPlayer.toString() }></div>
 
-                  <div>{ this.state.playerProperties[playerId].username }</div>
+                  <div className={ styles.name }>{ this.state.playerProperties[playerId].username }</div>
 
                   <div>{ this.state.playerProperties[playerId].score }</div>
 
@@ -179,12 +185,9 @@ class Trackbar extends React.Component
           </div>
 
           <div className={ styles.info }>
-            {/* TODO added client-side checks for the ability of starting matches <div className={styles.inform}>Not Enough Players</div> */}
-
-            { /* the start button only visible if the user is the room's master and the room's state is 'lobby' */ }
-            <div className={ styles.button } style={ {
-              display: (socket.id === this.state.masterId && this.state.roomState === 'lobby') ? '' : 'none'
-            } } onClick={ this.matchRequest.bind(this) }>Start</div>
+            <div className={ styles.button } allowed={ isAllowed.toString() } style={ {
+              display: (isThisMaster && !isMatch) ? '' : 'none'
+            } } onClick={ this.matchRequest.bind(this) }>{ i18n['start'] }</div>
 
           </div>
         </div>
@@ -204,10 +207,11 @@ const styles = createStyle({
 
     backgroundColor: colors.whiteBackground,
 
-    width: 'calc(100% + 15px)',
-    height: '100%',
+    maxWidth: 180,
+    width: '100%',
 
-    borderRadius: '0 15px 15px 0'
+    borderRadius: '0 15px 15px 0',
+    padding: '10px 10px 20px 20px'
 
     // TODO fix the portrait overlay
     // '@media screen and (max-width: 980px)': {
@@ -225,6 +229,9 @@ const styles = createStyle({
     gridTemplateRows: 'auto 1fr auto',
     gridTemplateAreas: '"status" "players" "buttons"',
     
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
     width: '100%',
     height: '100%'
     
@@ -283,43 +290,103 @@ const styles = createStyle({
     cursor: 'pointer',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   status: {
+    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
+    margin: '0 0 0 auto',
+    padding: '0 0 15px 0'
   },
 
   players: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+
+    overflowX: 'hidden',
+    overflowY: 'scroll',
+
+    '::-webkit-scrollbar':
+    {
+      width: '8px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '8px',
+      boxShadow: `inset 0 0 8px 8px ${colors.lobbyScrollbar}`
+    }
   },
 
   player: {
     display: 'grid',
 
+    direction: 'rtl',
+    alignItems: 'center',
+
     gridTemplateColumns: 'auto 1fr auto',
     gridTemplateRows: 'auto',
-    gridTemplateAreas: '"status players buttons"'
+    gridTemplateAreas: '"status players buttons"',
+    
+    padding: '0 10px'
   },
 
-  'crownIcon': {
-    '[master="false"]': {
-      opacity: 0
+  led: {
+    width: '10px',
+    height: '10px',
+    
+    borderRadius: '10px',
+    
+    '[match="false"][master="true"]': {
+      backgroundColor: colors.master
+    },
+
+    '[match="true"][judge="true"]': {
+      backgroundColor: colors.judge
+    },
+
+    '[match="true"][player="true"]': {
+      backgroundColor: colors.player
     }
   },
 
-  info: {
-    
-  },
+  name: {
+    padding: '5px',
+    margin: '0 auto',
 
-  inform: {
-    
+    wordBreak: 'break-all',
+    fontSize: 'calc(6px + 0.35vw + 0.35vh)'
   },
 
   button: {
+    display: 'flex',
     
+    cursor: 'pointer',
+    justifyContent: 'center',
+    
+    padding: '15px',
+    margin: '10px 0 0 0',
+
+    color: colors.blackText,
+    backgroundColor: colors.whiteBackground,
+    
+    border: `1px ${colors.blackText} solid`,
+    borderRadius: '5px',
+
+    ':hover': {
+      color: colors.whiteText,
+      backgroundColor: colors.blackBackground
+    },
+
+    '[allowed="false"]': {
+      cursor: 'default',
+
+      color: colors.greyText,
+      backgroundColor: colors.whiteBackground,
+      
+      border: `1px ${colors.greyText} solid`
+    }
   }
 });
 

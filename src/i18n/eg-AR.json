@@ -11,10 +11,12 @@
   "timeout": "فشل الاتصال",
   "username-input": "حط اسمك هنا",
   "welcome": "اهلا",
-
+  
   "create-room": "اصنع غرفتك",
   "random-room": "غرفة عشؤئية",
   "available-rooms": "الغرف المتاحة",
+
+  "start": "ابدا",
 
   "terms-and-conditions": "الشروط والاحكام",
   "privacy-policy": "سياسة الخصوصية",

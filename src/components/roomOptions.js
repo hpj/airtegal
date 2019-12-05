@@ -53,7 +53,7 @@ const styles = createStyle({
     width: '100%',
     height: '100%',
 
-    paddingLeft: '15px'
+    padding: '0 0 0 30px'
   }
 });
 
