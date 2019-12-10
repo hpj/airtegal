@@ -10,11 +10,7 @@ import { createStyle } from '../flcss.js';
 import Warning from '../components/warning.js';
 import CardShowcase from '../components/cardShowcase.js';
 
-import i18n from '../i18n/eg-AR.json';
-
-const countries = [
-  { value: 'egypt', label: 'مصري' }
-];
+import i18n, { locales, locale, setLocale } from '../i18n.js';
 
 const Homepage = () =>
 {
@@ -32,8 +28,8 @@ const Homepage = () =>
       <Warning
         style={ { padding: '12vh 5vw' } }
         storageKey='kbf-adults-warning'
-        text={ i18n['kbf-adults-warning'] }
-        button={ i18n['ok'] }
+        text={ i18n('kbf-adults-warning') }
+        button={ i18n('ok') }
       />
 
       <div className={ headerStyles.wrapper }>
@@ -42,15 +38,16 @@ const Homepage = () =>
           <Select
             className={ headerStyles.select }
             classNamePrefix='react-select'
-            defaultValue={ countries[0] }
+            defaultValue={ locale }
             isRtl={ true }
             isSearchable={ true }
-            options={ countries }
+            options={ locales }
+            onChange={ (country) => setLocale(country) }
             theme={ theme => ({
               ...theme,
               colors: {
                 ...theme.colors,
-                primary: '#ffffff'
+                primary: colors.whiteText
               }
             }) }
           />
@@ -62,11 +59,11 @@ const Homepage = () =>
           <div className={ headerStyles.title }>
 
             <a className={ headerStyles.hpj } href='https://herpproject.com'>
-              { i18n['hpj'] }
+              { i18n('hpj') }
             </a>
 
-            <div className={ headerStyles.kbf }>{ i18n['kuruit-bedan-fash5'] }
-              <div className={ headerStyles.beta }>({ i18n['beta'] })</div>
+            <div className={ headerStyles.kbf }>{ i18n('kuruit-bedan-fash5') }
+              <div className={ headerStyles.beta }>({ i18n('beta') })</div>
             </div>
           
           </div>
@@ -76,42 +73,42 @@ const Homepage = () =>
       <div className={ qaStyles.wrapper }>
         <div className={ qaStyles.container }>
           <p className={ qaStyles.question }>
-            { i18n['what-is-kbf'] }
+            { i18n('what-is-kbf') }
           </p>
 
           <p className={ qaStyles.answer }>
-            { i18n['this-is-kbf'] }
+            { i18n('this-is-kbf') }
           </p>
 
           <p className={ qaStyles.question }>
-            { i18n['who-is-hpj'] }
+            { i18n('who-is-hpj') }
           </p>
 
           <p className={ qaStyles.answer }>
-            { i18n['this-is-hpj'] }
+            { i18n('this-is-hpj') }
           </p>
 
           <p className={ qaStyles.question }>
-            { i18n['why-is-game-raciest'] }
+            { i18n('why-is-game-raciest') }
           </p>
 
           <p className={ qaStyles.answer }>
 
-            { i18n['freedom-of-speech-1'] }
+            { i18n('freedom-of-speech-1') }
             <br/>
 
-            { i18n['freedom-of-speech-2'] }
+            { i18n('freedom-of-speech-2') }
             <br/>
 
-            { i18n['freedom-of-speech-3'] }
+            { i18n('freedom-of-speech-3') }
           </p>
 
           <p className={ qaStyles.question }>
-            { i18n['how-to-suggest-cards'] }
+            { i18n('how-to-suggest-cards') }
           </p>
 
           <p className={ qaStyles.answer }>
-            { i18n['suggesting-cards'] }
+            { i18n('suggesting-cards') }
           </p>
 
         </div>
@@ -119,22 +116,22 @@ const Homepage = () =>
     
       <div className={ playStyles.wrapper }>
         <div className={ playStyles.container }>
-          <Link className={ playStyles.title } to='/play'> { i18n['play'] } </Link>
+          <Link className={ playStyles.title } to='/play'> { i18n('play') } </Link>
         </div>
       </div>
 
       <div className={ footerStyles.wrapper }>
         <div className={ footerStyles.container }>
           <a className={ footerStyles.hpj } href='https://herpproject.com'>
-            { i18n['herp-project'] }
+            { i18n('herp-project') }
           </a>
           <div className={ footerStyles.sitemap }>
-            <Link className={ footerStyles.privacy } to='/privacy'> { i18n['privacy-policy'] } </Link>
+            <Link className={ footerStyles.privacy } to='/privacy'> { i18n('privacy-policy') } </Link>
             _
-            <Link className={ footerStyles.use } to='/terms'> { i18n['terms-and-conditions'] } </Link>
+            <Link className={ footerStyles.use } to='/terms'> { i18n('terms-and-conditions') } </Link>
           </div>
           <p className={ footerStyles.copyright }>
-            { i18n['copyright-notice'] }
+            { i18n('copyright-notice') }
           </p>
         </div>
       </div>

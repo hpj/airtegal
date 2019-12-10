@@ -1,7 +1,7 @@
-import i18n from './i18n/eg-AR.json';
+import i18n from './i18n.js';
 
-const firstName = i18n['stupid-first-names'];
-const lastName = i18n['stupid-last-names'];
+const firstName = i18n('stupid-first-names');
+const lastName = i18n('stupid-last-names');
 
 function randomFirstName()
 {

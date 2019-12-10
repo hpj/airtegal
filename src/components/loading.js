@@ -4,14 +4,14 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import i18n from '../i18n/eg-AR.json';
+import i18n from '../i18n.js';
 
 const Loading = () =>
 {
   return (
     <div className={ styles.container }>
 
-      <div className={ styles.loading }>{ i18n['kuruit-bedan-fash5'] }</div>
+      <div className={ styles.loading }>{ i18n('kuruit-bedan-fash5') }</div>
 
     </div>
   );

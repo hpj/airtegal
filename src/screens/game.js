@@ -21,7 +21,7 @@ import Warning from '../components/warning.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
 
-import i18n from '../i18n/eg-AR.json';
+import i18n from '../i18n.js';
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
@@ -64,7 +64,7 @@ export function connect()
       {
         socket.close();
 
-        errorScreen(i18n['server-unavailable']);
+        errorScreen(i18n('server-unavailable'));
 
         reject();
       });
@@ -135,7 +135,7 @@ class Game extends React.Component
       .then(hideLoadingScreen)
       .catch((err) =>
       {
-        errorScreen(i18n['server-unavailable']);
+        errorScreen(i18n('server-unavailable'));
 
         console.error(err);
       });
@@ -190,30 +190,30 @@ class Game extends React.Component
         <Warning
           style={ { padding: '50vh 5vw' } }
           storageKey='kbf-adults-warning'
-          text={ i18n['kbf-adults-warning'] }
-          button={ i18n['ok'] }
+          text={ i18n('kbf-adults-warning') }
+          button={ i18n('ok') }
         />
         
         <div className={ mainStyles.container }>
   
           <div className={ optionsStyles.container }>
   
-            <p className={ optionsStyles.welcome }> { i18n['welcome'] } </p>
+            <p className={ optionsStyles.welcome }> { i18n('welcome') } </p>
   
-            <input ref={ inputRef } className={ optionsStyles.username } required placeholder={ i18n['username-input'] } value={ this.state.username } onBlur={ this.usernameBlurEvent } onChange={ this.usernameChangeEvent } type='text' maxLength='18'/>
+            <input ref={ inputRef } className={ optionsStyles.username } required placeholder={ i18n('username-input') } value={ this.state.username } onBlur={ this.usernameBlurEvent } onChange={ this.usernameChangeEvent } type='text' maxLength='18'/>
   
           </div>
   
           <div className={ headerStyles.container }>
   
-            <div className={ headerStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n['random-room'] } </div>
-            <div className={ headerStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n['create-room'] } </div>
+            <div className={ headerStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
+            <div className={ headerStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
   
           </div>
   
           <div className={ roomsStyles.container }>
   
-            <p className={ roomsStyles.title }> { i18n['available-rooms'] } </p>
+            <p className={ roomsStyles.title }> { i18n('available-rooms') } </p>
             <RefreshIcon className={ roomsStyles.refresh }/>
             
           </div>

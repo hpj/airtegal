@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
+import i18n, { setLocale } from './i18n.js';
+
 // import { Client } from 'rich-presence-for-web-apps';
 
 // import 'fuckadblock';
@@ -140,6 +142,8 @@ const ipCheck = new Promise((resolve) =>
     country = 'Egypt';
     availability = true;
 
+    setLocale();
+
     resolve();
 
     return;
@@ -153,15 +157,22 @@ const ipCheck = new Promise((resolve) =>
     {
       if (response.status !== 200)
       {
-        ReactDOM.render(<Error error={ response.data }/>, placeholder);
+        ReactDOM.render(<Error error={ i18n(response.data) || response.data }/>, placeholder);
 
         country = undefined;
         availability = false;
+
+        // set the locale as 'undefined'
+        // which will get the browser's default locale
+        setLocale();
       }
       else
       {
         country = response.data.country;
         availability = true;
+
+        // try to set the locale as the country
+        setLocale(country);
       }
 
       resolve();
@@ -169,7 +180,7 @@ const ipCheck = new Promise((resolve) =>
     .catch((e) =>
     {
       if (e.response)
-        ReactDOM.render(<Error error={ e.response.data.message }/>, placeholder);
+        ReactDOM.render(<Error error={ i18n(e.response.data.message) || e.response.data.message }/>, placeholder);
         
       country = undefined;
 

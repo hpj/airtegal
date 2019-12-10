@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Value } from 'animated';
 import Interactable from 'react-interactable/noNative';
 
-import i18n from '../i18n/eg-AR.json';
+import i18n from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -109,7 +109,7 @@ class RoomOverlay extends React.Component
           socket.off('done', doneListen);
           socket.off('err', errListen);
 
-          errListen(nonce, i18n['timeout']);
+          errListen(nonce, i18n('timeout'));
         }, timeout);
       }
 
@@ -136,7 +136,7 @@ class RoomOverlay extends React.Component
     }).catch((err) =>
     {
       // show an error message
-      this.showErrorMessage(i18n[err] || err);
+      this.showErrorMessage(i18n(err) || err);
     });
   }
 
@@ -160,7 +160,7 @@ class RoomOverlay extends React.Component
     }).catch((err) =>
     {
       // show an error message
-      this.showErrorMessage(i18n[err] || err);
+      this.showErrorMessage(i18n(err) || err);
     });
   }
 

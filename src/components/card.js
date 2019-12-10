@@ -6,7 +6,7 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import i18n from '../i18n/eg-AR.json';
+import i18n from '../i18n.js';
 
 class Card extends React.Component
 {
@@ -19,13 +19,13 @@ class Card extends React.Component
         {
           (hidden) ?
             <div className={ styles.hidden } type={ type }>
-              <div>{ i18n['kuruit-bedan-fash5'] }</div>
+              <div>{ i18n('kuruit-bedan-fash5') }</div>
             </div>
             :
             <div onClick={ onClick } className={ styles.container } type={ type }>
       
               <div className={ styles.content }>{content}</div>
-              <p className={ styles.bottom }>{ i18n['kuruit-bedan-fash5'] }</p>
+              <p className={ styles.bottom }>{ i18n('kuruit-bedan-fash5') }</p>
               
             </div>
         }

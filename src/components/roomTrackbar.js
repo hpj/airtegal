@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import i18n from '../i18n/eg-AR.json';
+import i18n from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -117,7 +117,7 @@ class Trackbar extends React.Component
 
     this.props.sendMessage('matchRequest')
       .then(() => this.loadingVisibility(false))
-      .catch((err) => this.showErrorMessage(i18n[err] || err));
+      .catch((err) => this.showErrorMessage(i18n(err) || err));
   }
 
   formatMs(milliseconds)
@@ -187,7 +187,7 @@ class Trackbar extends React.Component
           <div className={ styles.info }>
             <div className={ styles.button } allowed={ isAllowed.toString() } style={ {
               display: (isThisMaster && !isMatch) ? '' : 'none'
-            } } onClick={ this.matchRequest.bind(this) }>{ i18n['start'] }</div>
+            } } onClick={ this.matchRequest.bind(this) }>{ i18n('start') }</div>
 
           </div>
         </div>
