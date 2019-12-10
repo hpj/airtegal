@@ -6,6 +6,8 @@ import { createStyle } from '../flcss.js';
 
 import * as colors from '../colors.js';
 
+import { locale } from '../i18n.js';
+
 const Warning = ({ storageKey, style, text, button }) =>
 {
   // starts hidden, so it won't appear and disappear again if the user turned it off
@@ -72,7 +74,7 @@ const styles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    direction: 'rtl',
+    direction: locale.direction,
     maxWidth: '850px',
 
     margin: 'auto'

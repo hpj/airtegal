@@ -5,6 +5,8 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
+import { locale } from '../i18n.js';
+
 /** @param { { error: string } } param0
 */
 const Error = ({ error }) =>
@@ -31,7 +33,7 @@ const styles = createStyle({
     
     backgroundColor: colors.whiteBackground,
 
-    direction: 'ltr',
+    direction: locale.direction,
 
     minWidth: '100vw',
     minHeight: '100vh'

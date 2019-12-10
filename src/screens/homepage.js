@@ -39,7 +39,7 @@ const Homepage = () =>
             className={ headerStyles.select }
             classNamePrefix='react-select'
             defaultValue={ locale }
-            isRtl={ true }
+            isRtl={ locale.direction === 'rtl' }
             isSearchable={ true }
             options={ locales }
             onChange={ (country) => setLocale(country) }
@@ -211,7 +211,7 @@ const headerStyles = createStyle({
   title: {
     display: 'grid',
 
-    direction: 'rtl',
+    direction: locale.direction,
     userSelect: 'none',
 
     overflow: 'hidden',
@@ -264,7 +264,7 @@ const qaStyles = createStyle({
     color: colors.blackText,
 
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    direction: 'rtl',
+    direction: locale.direction,
   
     padding: '5vh 5vw',
     margin: 'auto'
@@ -352,7 +352,7 @@ const footerStyles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontWeight: 700,
   
-    direction: 'rtl',
+    direction: locale.direction,
     padding: '5vh 5vw',
     margin: 'auto'
   },

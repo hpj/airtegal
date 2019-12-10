@@ -6,7 +6,7 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import i18n from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 class Card extends React.Component
 {
@@ -60,7 +60,7 @@ const styles = createStyle({
 
     display: 'flex',
 
-    direction: 'rtl',
+    direction: locale.direction,
     justifyContent: 'center',
     alignItems: 'center',
     
@@ -99,7 +99,7 @@ const styles = createStyle({
     gridTemplateColumns: '100%',
     gridTemplateAreas: '"content" "bottom"',
 
-    direction: 'rtl',
+    direction: locale.direction,
   
     top: 0,
     width: '100%',

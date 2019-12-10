@@ -4,7 +4,7 @@ import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import i18n from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 const Loading = () =>
 {
@@ -28,7 +28,7 @@ const styles = createStyle({
     
     backgroundColor: colors.whiteBackground,
 
-    direction: 'ltr',
+    direction: locale.direction,
 
     minWidth: '100vw',
     minHeight: '100vh'
@@ -38,8 +38,6 @@ const styles = createStyle({
   // should match its style
 
   loading: {
-    direction: 'rtl',
-
     fontWeight: '700',
     fontSize: 'calc(18px + 0.8vw + 0.8vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',

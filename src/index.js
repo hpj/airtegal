@@ -142,7 +142,7 @@ const ipCheck = new Promise((resolve) =>
     country = 'Egypt';
     availability = true;
 
-    setLocale();
+    setLocale(country);
 
     resolve();
 

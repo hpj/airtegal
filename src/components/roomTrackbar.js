@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import i18n from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -322,7 +322,8 @@ const styles = createStyle({
   player: {
     display: 'grid',
 
-    direction: 'rtl',
+    direction: locale.direction,
+
     alignItems: 'center',
 
     gridTemplateColumns: 'auto 1fr auto',
