@@ -31,8 +31,7 @@ class RoomOverlay extends React.Component
     
     this.state = {
       loadingHidden: true,
-      errorHidden: true,
-      errorMessage: undefined,
+      errorMessage: '',
 
       overlayHolderOpacity: 0,
       overlayHidden: true,
@@ -63,70 +62,14 @@ class RoomOverlay extends React.Component
     this.handlerVisibility((roomData.state === 'lobby') ? true : false);
   }
 
-  /**
-  * @param { string } eventName
-  * @param  { {} } args
-  * @param  { number } [timeout]
-  */
-  sendMessage(eventName, args, timeout)
-  {
-    return new Promise((resolve, reject) =>
-    {
-      // nonce is a bunch of random numbers
-      const nonce = [
-        Math.random() * 32,
-        Math.random() * 8
-      ].join('.');
-
-      function errListen(n, err)
-      {
-        if (n !== nonce)
-          return;
-
-        reject(err);
-      }
-
-      function doneListen(n, data)
-      {
-        if (n !== nonce)
-          return;
-        
-        resolve(data);
-      }
-
-      // emit the message
-      socket.emit(eventName, { nonce, ...args });
-
-      // set a default timeout if 5 seconds
-      if (typeof timeout !== 'number')
-        timeout = 5000;
-
-      // setup the timeout
-      if (typeof timeout === 'number' && timeout > 0)
-      {
-        setTimeout(() =>
-        {
-          socket.off('done', doneListen);
-          socket.off('err', errListen);
-
-          errListen(nonce, i18n('timeout'));
-        }, timeout);
-      }
-
-      // assign the callbacks
-      socket.on('done', doneListen);
-      socket.on('err', errListen);
-    });
-  }
-
   createRoom()
   {
-    const { username } = this.props;
+    const { username, sendMessage } = this.props;
 
     // show a loading indictor
     this.loadingVisibility(true);
 
-    this.sendMessage('create', { username }).then(() =>
+    sendMessage('create', { username }).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -135,6 +78,9 @@ class RoomOverlay extends React.Component
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
     {
+      // hide the loading indictor
+      this.loadingVisibility(false);
+
       // show an error message
       this.showErrorMessage(i18n(err) || err);
     });
@@ -142,7 +88,7 @@ class RoomOverlay extends React.Component
 
   joinRoom(id)
   {
-    const { username } = this.props;
+    const { username, sendMessage } = this.props;
     
     if (typeof id !== 'string')
       id = undefined;
@@ -150,7 +96,7 @@ class RoomOverlay extends React.Component
     // show a loading indictor
     this.loadingVisibility(true);
 
-    this.sendMessage('join', { id, username }).then(() =>
+    sendMessage('join', { id, username }).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -159,6 +105,9 @@ class RoomOverlay extends React.Component
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
     {
+      // hide the loading indictor
+      this.loadingVisibility(false);
+
       // show an error message
       this.showErrorMessage(i18n(err) || err);
     });
@@ -166,23 +115,14 @@ class RoomOverlay extends React.Component
 
   leaveRoom()
   {
-    this.sendMessage('leave').catch(console.error);
+    const { sendMessage } = this.props;
+
+    sendMessage('leave').catch(console.error);
   }
 
   showErrorMessage(err)
   {
-    this.setState({
-      errorHidden: false,
-      errorMessage: err
-    });
-  }
-
-  hideErrorMessage()
-  {
-    this.setState({
-      loadingHidden: true,
-      errorHidden: true
-    });
+    this.setState({ errorMessage: err });
   }
 
   loadingVisibility(visible)
@@ -209,7 +149,7 @@ class RoomOverlay extends React.Component
 
   render()
   {
-    const { size } = this.props;
+    const { size, sendMessage } = this.props;
 
     // on overlay position changes
     overlayAnimatedX.removeAllListeners();
@@ -239,17 +179,13 @@ class RoomOverlay extends React.Component
           display: (this.state.loadingHidden) ? 'none' : ''
         } } className={ styles.loading }
         >
-          <div className={ styles.loadingSpinner } style={ {
-            // hide loading spinner if error is visible
-            display: (this.state.errorHidden) ? '' : 'none'
-          } }></div>
+          <div className={ styles.loadingSpinner }></div>
+        </div>
 
-          <div className={ styles.error } style={ {
-            display: (this.state.errorHidden) ? 'none' : ''
-            // on click hide error message
-          } } onClick={ this.hideErrorMessage.bind(this) }>
-            <div className={ styles.errorMessage }>{this.state.errorMessage}</div>
-          </div>
+        <div className={ styles.error } style={ {
+          display: (this.state.errorMessage) ? '' : 'none'
+        } } onClick={ () => this.showErrorMessage('') }>
+          <div className={ styles.errorMessage }>{ this.state.errorMessage }</div>
         </div>
 
         <div style={ {
@@ -294,14 +230,13 @@ class RoomOverlay extends React.Component
           <div className={ styles.wrapper }>
             <div className={ styles.handler }/>
 
-            <Trackbar sendMessage={ this.sendMessage.bind(this) }/>
+            <Trackbar sendMessage={ sendMessage }/>
 
             <div className={ styles.content }>
-              {/* <HandOverlay/> */}
-              <HandOverlay sendMessage={ this.sendMessage.bind(this) } size={ size } />
-              <FieldOverlay sendMessage={ this.sendMessage.bind(this) } size={ size }/>
+              <HandOverlay sendMessage={ sendMessage } size={ size } />
+              <FieldOverlay sendMessage={ sendMessage } size={ size }/>
 
-              <RoomOptions sendMessage={ this.sendMessage.bind(this) }/>
+              <RoomOptions sendMessage={ sendMessage }/>
             </div>
 
           </div>
@@ -315,7 +250,8 @@ class RoomOverlay extends React.Component
 
 RoomOverlay.propTypes = {
   size: PropTypes.object,
-  username: PropTypes.string
+  username: PropTypes.string,
+  sendMessage: PropTypes.func.isRequired
 };
 
 const styles = createStyle({
@@ -369,22 +305,24 @@ const styles = createStyle({
   },
 
   error: {
-    backgroundColor: colors.error,
-    maxWidth: '60%',
+    extend: 'loading',
+    cursor: 'pointer',
 
-    padding: '6px',
-    borderRadius: '5px'
+    backgroundColor: colors.whiteBackground
   },
 
   errorMessage: {
+    backgroundColor: colors.error,
     color: colors.whiteText,
-    textTransform: 'capitalize',
 
-    cursor: 'pointer',
+    textTransform: 'capitalize',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    padding: '6px',
+    borderRadius: '5px'
   },
 
   holder: {

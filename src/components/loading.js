@@ -1,12 +1,20 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import * as colors from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
 import i18n, { locale } from '../i18n.js';
 
-const Loading = () =>
+// TODO on an installed PWA, it has a splash screen that we
+// should match its style
+
+// FIX the splash loading screen don't have the fonts loaded
+// so the kbf logo is renderer incorrectly
+
+const Loading = ({ splash }) =>
 {
   return (
     <div className={ styles.container }>
@@ -15,6 +23,10 @@ const Loading = () =>
 
     </div>
   );
+};
+
+Loading.propTypes = {
+  splash: PropTypes.bool
 };
 
 const styles = createStyle({
@@ -33,9 +45,6 @@ const styles = createStyle({
     minWidth: '100vw',
     minHeight: '100vh'
   },
-
-  // TODO on an installed PWA, it has a splash screen that we
-  // should match its style
 
   loading: {
     fontWeight: '700',

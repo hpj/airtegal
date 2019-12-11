@@ -21,8 +21,7 @@ class Trackbar extends React.Component
 
     this.state = {
       loadingHidden: true,
-      errorHidden: true,
-      errorMessage: undefined
+      errorMessage: ''
     };
 
     // bind functions that are use as callbacks
@@ -92,10 +91,7 @@ class Trackbar extends React.Component
 
   showErrorMessage(err)
   {
-    this.setState({
-      errorHidden: false,
-      errorMessage: err
-    });
+    this.setState({ errorMessage: err });
   }
 
   loadingVisibility(visible)
@@ -103,21 +99,25 @@ class Trackbar extends React.Component
     this.setState({ loadingHidden: visible = !visible });
   }
 
-  hideErrorMessage()
-  {
-    this.setState({
-      loadingHidden: true,
-      errorHidden: true
-    });
-  }
-
   matchRequest()
   {
+    // show a loading indictor
     this.loadingVisibility(true);
 
     this.props.sendMessage('matchRequest')
-      .then(() => this.loadingVisibility(false))
-      .catch((err) => this.showErrorMessage(i18n(err) || err));
+      .then(() =>
+      {
+        // hide the loading indictor
+        this.loadingVisibility(false);
+      })
+      .catch((err) =>
+      {
+        // hide the loading indictor
+        this.loadingVisibility(false);
+
+        // show an error message
+        this.showErrorMessage(i18n(err) || err);
+      });
   }
 
   formatMs(milliseconds)
@@ -148,17 +148,13 @@ class Trackbar extends React.Component
             display: (this.state.loadingHidden) ? 'none' : ''
           } } className={ styles.loading }
           >
-            <div className={ styles.loadingSpinner } style={ {
-              // hide loading spinner if error is visible
-              display: (this.state.errorHidden) ? '' : 'none'
-            } }></div>
+            <div className={ styles.loadingSpinner }></div>
+          </div>
 
-            <div className={ styles.error } style={ {
-              display: (this.state.errorHidden) ? 'none' : ''
-              // on click hide error message
-            } } onClick={ this.hideErrorMessage.bind(this) }>
-              <div className={ styles.errorMessage }>{this.state.errorMessage}</div>
-            </div>
+          <div className={ styles.error } style={ {
+            display: (this.state.errorMessage) ? '' : 'none'
+          } } onClick={ () => this.showErrorMessage('') }>
+            <div className={ styles.errorMessage }>{ this.state.errorMessage }</div>
           </div>
 
           <div className={ styles.status }>{ this.state.counter }</div>
@@ -168,12 +164,12 @@ class Trackbar extends React.Component
               this.state.players.map((playerId) =>
               {
                 const isMaster = playerId === this.state.masterId;
-                const isJudge = this.state.playerProperties[playerId].state === 'judging';
-                const isPlayer = this.state.playerProperties[playerId].state === 'playing';
+                const isClient = playerId === socket.id;
+                const isTurn = this.state.playerProperties[playerId].state === 'judging' || this.state.playerProperties[playerId].state === 'playing';
 
                 return <div className={ styles.player } key={ playerId }>
 
-                  <div className={ styles.led } match={ isMatch.toString() } master={ isMaster.toString() } judge={ isJudge.toString() } player={ isPlayer.toString() }></div>
+                  <div className={ styles.led } match={ isMatch.toString() } client={ isClient.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }></div>
 
                   <div className={ styles.name }>{ this.state.playerProperties[playerId].username }</div>
 
@@ -184,12 +180,9 @@ class Trackbar extends React.Component
             }
           </div>
 
-          <div className={ styles.info }>
-            <div className={ styles.button } allowed={ isAllowed.toString() } style={ {
-              display: (isThisMaster && !isMatch) ? '' : 'none'
-            } } onClick={ this.matchRequest.bind(this) }>{ i18n('start') }</div>
-
-          </div>
+          <div className={ styles.button } allowed={ isAllowed.toString() } style={ {
+            display: (isThisMaster && !isMatch) ? '' : 'none'
+          } } onClick={ this.matchRequest.bind(this) }>{ i18n('start') }</div>
         </div>
       </div>
     );
@@ -228,6 +221,8 @@ const styles = createStyle({
 
     gridTemplateRows: 'auto 1fr auto',
     gridTemplateAreas: '"status" "players" "buttons"',
+
+    userSelect: 'none',
     
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
@@ -250,8 +245,7 @@ const styles = createStyle({
     
     backgroundColor: colors.whiteBackground,
 
-    borderRadius: '0 15px 15px 0',
-
+    top: 0,
     width: '100%',
     height: '100%'
   },
@@ -276,21 +270,24 @@ const styles = createStyle({
   },
 
   error: {
-    backgroundColor: colors.error,
-    maxWidth: '60%',
+    extend: 'loading',
+    cursor: 'pointer',
 
-    padding: '6px',
-    borderRadius: '5px'
+    backgroundColor: colors.whiteBackground
   },
 
   errorMessage: {
+    backgroundColor: colors.error,
     color: colors.whiteText,
+
     textTransform: 'capitalize',
 
-    cursor: 'pointer',
-
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    padding: '6px',
+    borderRadius: '5px'
   },
 
   status: {
@@ -334,21 +331,33 @@ const styles = createStyle({
   },
 
   led: {
+    position: 'relative',
+
     width: '10px',
     height: '10px',
+
+    overflow: 'hidden',
     
     borderRadius: '10px',
-    
+
+    '[client="true"]': {
+      background: colors.client
+    },
+
     '[match="false"][master="true"]': {
-      backgroundColor: colors.master
+      background: colors.master
     },
 
-    '[match="true"][judge="true"]': {
-      backgroundColor: colors.judge
+    '[match="false"][client="true"][master="true"]': {
+      background: `linear-gradient(90deg, ${colors.client} 50%, rgba(0,0,0,0) 50%, ${colors.master} 50%)`
     },
 
-    '[match="true"][player="true"]': {
-      backgroundColor: colors.player
+    '[match="true"][turn="true"]': {
+      background: colors.turn
+    },
+
+    '[match="true"][client="true"][turn="true"]': {
+      background: `linear-gradient(90deg, ${colors.client} 50%, rgba(0,0,0,0) 50%, ${colors.turn} 50%)`
     }
   },
 
@@ -366,8 +375,9 @@ const styles = createStyle({
     cursor: 'pointer',
     justifyContent: 'center',
     
-    padding: '15px',
-    margin: '10px 0 0 0',
+    width: '50%',
+    padding: '10px',
+    margin: '10px auto 0 auto',
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,

@@ -21,9 +21,9 @@ export const lobbyScrollbar = '#000000';
 
 export const warningBackground = '#00aeff';
 
-export const master = '#00aeff';
-export const judge = '#000000';
-export const player = '#0aad3c';
+export const client = '#000000';
+export const master = '#f200f5';
+export const turn = '#00aeff';
 
 export const red = 'red';
 export const error = '#ad1818';

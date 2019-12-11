@@ -198,7 +198,7 @@ const ipCheck = new Promise((resolve) =>
 
 Promise.all([ webFontPromise, ipCheck ]).then(loaded);
 
-ReactDOM.render(<Loading/>, placeholder);
+ReactDOM.render(<Loading splash/>, placeholder);
 
 // TODO Ad-Block Detection
 

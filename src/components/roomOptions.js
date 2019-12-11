@@ -49,6 +49,8 @@ const styles = createStyle({
     position: 'relative',
     backgroundColor: colors.whiteBackground,
 
+    userSelect: 'none',
+
     top: '-200%',
     width: '100%',
     height: '100%',
