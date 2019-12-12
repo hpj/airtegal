@@ -78,7 +78,7 @@ class HandOverlay extends React.Component
   onRoomData(roomData)
   {
     // the hand overlay is only visible if this client is participate in the match
-    this.visibility((roomData.playerProperties[socket.id].state !== 'lobby') ? true : false);
+    this.visibility((roomData.playerProperties[socket.id].state === 'playing') ? true : false);
 
     // if the player has a secret properties object in the data
     // and it has the hand data for this client
