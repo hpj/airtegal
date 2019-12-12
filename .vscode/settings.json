@@ -1,11 +1,3 @@
 {
-  "cSpell.diagnosticLevel": "Hint",
-  "emeraldwalk.runonsave": {
-    "commands": [
-        {
-            "match": "src/sw.js",
-            "cmd": "cd '${workspaceRoot}' && npx workbox injectManifest workbox-config.js"
-        }
-    ]
-}
+  "cSpell.diagnosticLevel": "Hint"
 }

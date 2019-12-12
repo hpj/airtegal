@@ -27,7 +27,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "Icon-144.png",
-    "revision": "243b983172828753d8d28a7505776a24"
+    "revision": "f8c866c2e220cec14cb438fa29c28425"
   },
   {
     "url": "Icon-16.png",
@@ -35,27 +35,27 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "Icon-192.png",
-    "revision": "6c38eced5836ba92c8bde6951297d3cb"
+    "revision": "d830399c7f7a325aee83ec1298471ef2"
   },
   {
     "url": "Icon-36.png",
-    "revision": "d37bced6ac7557d11d991ad87af2d539"
+    "revision": "864d7db390d9e4b8827ff28851f87dad"
   },
   {
     "url": "Icon-48.png",
-    "revision": "02e877ddc3835fd5d3d9abccd26fe734"
+    "revision": "53aa240474e3cd7499f8d8da0e9dc620"
   },
   {
     "url": "Icon-512.png",
-    "revision": "5aa280ec3a5eb5f7aaf97f358beb456e"
+    "revision": "d59f9c3303a31880b79bacf8c69d2dcc"
   },
   {
     "url": "Icon-72.png",
-    "revision": "2b2153c2e2904be3d14c608a82810b64"
+    "revision": "e189aaf9953602d5a9c996ce314a7233"
   },
   {
     "url": "Icon-96.png",
-    "revision": "d91819e68fd49e2444b2bafe624f580a"
+    "revision": "3a42bf43ad5417cb0edd1ef37b3aff30"
   },
   {
     "url": "index.html",
@@ -63,7 +63,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "manifest.json",
-    "revision": "4f35bc5368751f05f7d97ef1a7b1ddc7"
+    "revision": "27ea67e281a4bfb1025c2c0dcd9a0422"
   },
   {
     "url": "Montserrat-Bold.ttf",
