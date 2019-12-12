@@ -208,6 +208,13 @@ class Game extends React.Component
   requestRooms()
   {
     this.loadingVisibility(true);
+
+    // this.sendMessage('rooms')
+    //   .then((rooms) =>
+    //   {
+    //     this.showErrorMessage(JSON.stringify(rooms));
+    //   })
+    //   .catch((err) => this.showErrorMessage(i18n(err) || err));
   }
 
   componentDidMount()
@@ -293,7 +300,7 @@ class Game extends React.Component
           <div className={ roomsStyles.container }>
 
             <p className={ roomsStyles.title }> { i18n('available-rooms') } </p>
-            <RefreshIcon className={ roomsStyles.refresh }/>
+            <RefreshIcon allowed={ this.state.loadingHidden.toString() } className={ roomsStyles.refresh }/>
 
             <div className={ roomsStyles.rooms }>
 
@@ -461,6 +468,11 @@ const roomsStyles = createStyle({
 
     transform: 'rotateZ(0deg) scale(1)',
     transition: 'transform 0.25s, background-color 0.25s, fill 0.25s',
+
+    '[allowed="false"]': {
+      pointerEvents: 'none',
+      fill: colors.greyText
+    },
 
     ':hover': {
       fill: colors.whiteText,

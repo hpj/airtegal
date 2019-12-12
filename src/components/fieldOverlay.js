@@ -90,12 +90,13 @@ class FieldOverlay extends React.Component
 
   /** send the card the judge choose to the server's match logic
   * @param { number } entryIndex
+  * @param { boolean } isAllowed if the card can be picked
   */
-  judgeCard(entryIndex)
+  judgeCard(entryIndex, isAllowed)
   {
     const { sendMessage } = this.props;
 
-    if (this.state.playerState === 'judging')
+    if (isAllowed)
       sendMessage('matchLogic', { entryIndex });
   }
 
@@ -130,12 +131,12 @@ class FieldOverlay extends React.Component
 
             top: '-100%',
             width: '100%',
-            height: '100%',
-
-            paddingRight: '20vw'
+            height: '100%'
           } }
 
           animatedValueX={ overlayAnimatedX }
+
+          frictionAreas={ [ { damping: 0.6 } ] }
 
           dragEnabled={ false }
 
@@ -154,9 +155,17 @@ class FieldOverlay extends React.Component
               {
                 this.state.field.map((entry, entryIndex) =>
                 {
+                  const isAllowed = this.state.playerState === 'judging' && entryIndex > 0;
+
                   return entry.map((card, cardIndex) =>
                   {
-                    return <Card key={ cardIndex } onClick={ () => this.judgeCard(entryIndex) } type={ card.type } content={ card.content } hidden={ card.hidden }></Card>;
+                    return <Card
+                      key={ cardIndex }
+                      onClick={ () => this.judgeCard(entryIndex, isAllowed) }
+                      allowed={ isAllowed.toString() }
+                      type={ card.type }
+                      content={ card.content }
+                      hidden={ card.hidden }/>;
                   });
                 })
               }
@@ -180,7 +189,12 @@ const styles = createStyle({
 
     height: '100%',
 
-    margin: '0 5px 0 15px',
+    margin: '0 30px',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      padding: '15px 0 0 0'
+    },
 
     '::-webkit-scrollbar':
     {
@@ -199,8 +213,6 @@ const styles = createStyle({
     
     gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
     justifyContent: 'space-around',
-
-    padding: '0 30px',
 
     '> *': {
       width: 'calc(115px + 2vw + 2vh)',

@@ -81,7 +81,7 @@ const styles = createStyle({
   },
 
   button: {
-    width: 'fit-content',
+    width: 'min-content',
 
     cursor: 'pointer',
     

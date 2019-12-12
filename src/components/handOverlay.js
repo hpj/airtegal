@@ -19,7 +19,18 @@ const wrapperRef = createRef();
 
 const overlayAnimatedY = new Value(0);
 
-const percent = (size, percent) => (size / 100) * percent;
+const percent = (height, percent) =>
+{
+  const n = (height / 100) * percent;
+  const delta = height - n;
+
+  // for the portrait overlay
+  // set a minimal height that the overlay can't go below
+  if (200 > delta)
+    return height - 200;
+
+  return n;
+};
 
 class HandOverlay extends React.Component
 {
@@ -30,7 +41,7 @@ class HandOverlay extends React.Component
     this.state = {
       visible: false,
       overlayHidden: true,
-
+      
       entry: [],
       hand: []
     };
@@ -38,6 +49,7 @@ class HandOverlay extends React.Component
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
+    this.onResize = this.onResize.bind(this);
   }
 
   componentDidMount()
@@ -59,12 +71,14 @@ class HandOverlay extends React.Component
     // it needs to be updated manually on every resize
     // or else it can go off-screen
     overlayRef.current.snapTo({ index: 0 });
+
+    this.refreshViewableArea();
   }
 
   onRoomData(roomData)
   {
     // the hand overlay is only visible if this client is participate in the match
-    this.visibility((roomData.playerProperties[socket.id].state === 'playing') ? true : false);
+    this.visibility((roomData.playerProperties[socket.id].state !== 'lobby') ? true : false);
 
     // if the player has a secret properties object in the data
     // and it has the hand data for this client
@@ -84,7 +98,8 @@ class HandOverlay extends React.Component
     }
   }
 
-  /** @param { boolean } visible
+  /**
+  * @param { boolean } visible
   */
   visibility(visible)
   {
@@ -108,49 +123,74 @@ class HandOverlay extends React.Component
       overlayRef.current.snapTo({ index: 0 });
   }
 
+  refreshViewableArea()
+  {
+    const { size } = this.props;
+
+    const rect = wrapperRef.current.getBoundingClientRect();
+
+    this.setState({ viewableArea: size.height - rect.y });
+  }
+
   /** send the card the player choose to the server's match logic
   * @param { number } cardIndex
+  * @param { boolean } isAllowed if the card can be picked
+  * @param { boolean } isSelected if the card is selected in the entry
   */
-  pickCard(cardIndex)
+  pickCard(cardIndex, isAllowed, isSelected)
   {
+    let entry = [ ...this.state.entry ];
+    
     const { sendMessage } = this.props;
-    const { entry } = this.state;
 
-    if (this.state.playerState !== 'playing')
+    if (!isAllowed)
       return;
 
     // if card exists in entry already
-    // then remove it
-    if (entry.indexOf(cardIndex) >= 0)
+    if (isSelected)
     {
+      // remove the card from entry
       entry.splice(entry.indexOf(cardIndex), 1);
+
+      // update state to force re-render
+      this.setState({
+        entry: entry
+      });
     }
     // if not then add it
     else
     {
+      // add the card to entry
       entry.push(cardIndex);
 
       // if entry equal the amount that should be pick
-      // then send it to match logic
       if (entry.length === this.state.pick)
       {
+        // send it to match logic
         sendMessage('matchLogic', {
           cardIndices: entry
         });
-  
-        this.setState({
-          entry: []
-        });
+
+        // clean the entry
+        entry = [];
       }
+      
+      // update state to force re-render
+      this.setState({
+        entry: entry
+      });
     }
   }
 
   render()
   {
     const { size } = this.props;
+    const { entry } = this.state;
 
     const visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
     const hiddenSnapPoints = [ { y: size.height } ];
+
+    const isAllowed = this.state.playerState === 'playing';
 
     // on overlay position changes
     overlayAnimatedY.removeAllListeners();
@@ -161,11 +201,7 @@ class HandOverlay extends React.Component
       // set set that amount as the wrapper hight
       // so that the user can view all cards without maximizing the the overlay
       if (wrapperRef.current)
-      {
-        const rect = wrapperRef.current.getBoundingClientRect();
-
-        this.setState({ viewableArea: size.height - rect.y });
-      }
+        this.refreshViewableArea();
 
       // hide the overlay and overlay holder when they are off-screen
       if (value >= size.height)
@@ -205,6 +241,8 @@ class HandOverlay extends React.Component
 
           onSnap={ this.onSnap.bind(this) }
 
+          frictionAreas={ [ { damping: 0.6 } ] }
+
           verticalOnly={ true }
           initialPosition={ { x: 0, y: size.height } }
 
@@ -221,9 +259,18 @@ class HandOverlay extends React.Component
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
               <div className={ styles.container }>
                 {
+                  
                   this.state.hand.map((card, i) =>
                   {
-                    return <Card key={ i } onClick={ () => this.pickCard(i) } type='white' content={ card.content }></Card>;
+                    const isSelected = entry.indexOf(i) > -1;
+
+                    return <Card
+                      key={ i }
+                      highlighted={ isSelected.toString() }
+                      allowed={ isAllowed.toString() }
+                      onClick={ () => this.pickCard(i, isAllowed, isSelected) }
+                      type='white'
+                      content={ card.content }/>;
                   })
                 }
               </div>

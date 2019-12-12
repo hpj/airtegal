@@ -205,7 +205,7 @@ class RoomOverlay extends React.Component
             backgroundColor: colors.whiteBackground,
           
             top: 0,
-            width: (this.state.overlayDrag) ? '100vw' : 'calc(100vw + 28px)',
+            width: (this.state.overlayDrag) ? '100vw' : 'calc(100vw + 18px)',
             height: '100%',
 
             paddingRight: '20vw'
@@ -219,10 +219,10 @@ class RoomOverlay extends React.Component
           initialPosition={ { x: size.width, y: 0 } }
           
           onSnap={ this.onSnap.bind(this) }
-          snapPoints={ [ { x: (this.state.overlayDrag) ? 0 : -28 }, { x: size.width } ] }
+          snapPoints={ [ { x: (this.state.overlayDrag) ? 0 : -18 }, { x: size.width } ] }
 
           boundaries={ {
-            left: (this.state.overlayDrag) ? 0 : -28,
+            left: (this.state.overlayDrag) ? 0 : -18,
             right: size.width
           } }
         >
@@ -263,14 +263,14 @@ const styles = createStyle({
     gridTemplateAreas: '"handler side content"',
 
     width: '100%',
-    height: '100%'
+    height: '100%',
     
-    // TODO fix the portrait overlay
-    // '@media screen and (max-width: 980px)': {
-    //   gridTemplateColumns: 'auto 1fr',
-    //   gridTemplateRows: 'auto 1fr',
-    //   gridTemplateAreas: '"handler side" "handler content"'
-    // }
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      gridTemplateColumns: '18px calc(100% - 18px)',
+      gridTemplateRows: 'auto 1fr',
+      gridTemplateAreas: '"handler side" "handler content"'
+    }
   },
 
   loading: {
@@ -349,7 +349,14 @@ const styles = createStyle({
   },
 
   content: {
-    gridArea: 'content'
+    gridArea: 'content',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      position: 'relative',
+      top: '-15px',
+      height: 'calc(100% + 15px)'
+    }
   }
 });
 

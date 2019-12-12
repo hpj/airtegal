@@ -200,19 +200,16 @@ const styles = createStyle({
 
     backgroundColor: colors.whiteBackground,
 
-    maxWidth: 180,
     width: '100%',
 
     borderRadius: '0 15px 15px 0',
-    padding: '10px 10px 20px 20px'
+    padding: '10px 10px 20px 20px',
 
-    // TODO fix the portrait overlay
-    // '@media screen and (max-width: 980px)': {
-    //   width: '100%',
-    //   height: 'calc(100% + 15px)',
-
-    //   borderRadius: '0 0 15px 15px'
-    // }
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      padding: '0',
+      borderRadius: '0 0 15px 15px'
+    }
   },
 
   container: {
@@ -228,15 +225,20 @@ const styles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     width: '100%',
-    height: '100%'
-    
-    // TODO fix the portrait overlay
-    // '@media screen and (max-width: 980px)': {
-    //   alignItems: 'center'
-    // }
+    height: '100%',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      padding: '15px',
+      width: 'calc(100% - 30px)',
+
+      maxHeight: '30vh'
+    }
   },
 
   loading: {
+    zIndex: 1,
+
     display: 'flex',
     position: 'absolute',
 
@@ -266,7 +268,13 @@ const styles = createStyle({
       duration: '2s',
       timingFunction: 'linear',
       iterationCount: 'infinite'
-    })
+    }),
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      paddingBottom: '5vw',
+      width: '5vw'
+    }
   },
 
   error: {

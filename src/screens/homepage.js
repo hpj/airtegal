@@ -161,6 +161,9 @@ const headerStyles = createStyle({
   },
 
   select: {
+
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
     ':focus': {
       outline: colors.whiteText
     },
@@ -245,7 +248,7 @@ const headerStyles = createStyle({
   },
 
   beta: {
-    margin: ' 0 0 0 auto',
+    margin: ' 15px 0 0 auto',
     fontSize: '12px',
 
     color: colors.whiteText,
