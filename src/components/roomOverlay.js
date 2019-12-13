@@ -13,6 +13,8 @@ import * as colors from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
 
+import Notifications from './notifications.js';
+
 import Trackbar from './roomTrackbar.js';
 import RoomOptions from './roomOptions.js';
 
@@ -32,6 +34,8 @@ class RoomOverlay extends React.Component
     this.state = {
       loadingHidden: true,
       errorMessage: '',
+
+      notifications: [],
 
       overlayHolderOpacity: 0,
       overlayHidden: true,
@@ -60,6 +64,27 @@ class RoomOverlay extends React.Component
   {
     // handler is only visible if user is on the match's lobby screen
     this.handlerVisibility((roomData.state === 'lobby') ? true : false);
+
+    if (roomData.roundStarted)
+    {
+      // this client is the judge for this round
+      if (roomData.roundStarted.judgeId === socket.id)
+        this.addNotification(i18n('you-are-the-judge'));
+    }
+    // show that the round ended
+    else if (roomData.roundEnded)
+    {
+      if (roomData.roundEnded.reason)
+        this.addNotification(i18n(roomData.matchEnded.reason) || roomData.matchEnded.reason);
+    }
+    // show that the match ended
+    else if (roomData.matchEnded)
+    {
+      if (roomData.matchEnded.reason)
+        this.addNotification(i18n(roomData.matchEnded.reason) || roomData.matchEnded.reason);
+      else
+        this.addNotification(`${i18n('match-winner-is')} ${roomData.playerProperties[roomData.matchEnded.id].username}.`);
+    }
   }
 
   createRoom()
@@ -139,6 +164,39 @@ class RoomOverlay extends React.Component
     requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
   }
 
+  /**
+  *  @param { string } content
+  */
+  addNotification(content)
+  {
+    const item = { content: content };
+    
+    const notifications = this.state.notifications;
+    
+    item.remove = () => this.removeNotification(item);
+    
+    notifications.push(item);
+    
+    this.setState({ notifications: notifications });
+
+    // automatically remove the notification after 2.5 seconds
+    setTimeout(() => this.removeNotification(item), 2500);
+  }
+
+  removeNotification(item)
+  {
+    const index = this.state.notifications.indexOf(item);
+
+    if (index >= 0)
+    {
+      const notifications = this.state.notifications;
+ 
+      notifications.splice(index, 1);
+
+      this.setState({ notifications: notifications });
+    }
+  }
+
   onSnap({ index })
   {
     // if the room overlay is hidden then aka sure the server knows that
@@ -174,6 +232,7 @@ class RoomOverlay extends React.Component
     
     return (
       <div>
+        <Notifications notifications={ this.state.notifications }/>
 
         <div style={ {
           display: (this.state.loadingHidden) ? 'none' : ''

@@ -58,24 +58,9 @@ class FieldOverlay extends React.Component
     }
 
     // TODO using this info show the owners of the cards (at the end of the round)
-    if (roomData.fieldSecrets)
-    {
-      //
-    }
-
-    // TODO using this info show the winner of the match
-    if (roomData.matchEnded)
-    {
-      // roomData.matchEnded.reason
-      // roomData.matchEnded.id
-    }
-
-    // TODO using this info show the card that won the round
-    // and who player what cards
-    // or if the round was canceled
+    // and the card that won the round
     if (roomData.roundEnded)
     {
-      // roomData.roundEnded.reason
       // roomData.roundEnded.winnerEntryIndex
       // roomData.roundEnded.fieldSecrets
     }

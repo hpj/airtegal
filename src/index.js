@@ -116,7 +116,7 @@ if (location.hostname.search('gitlab.io') > -1)
 
 // set the API endpoint
 if (process.env.NODE_ENV === 'production')
-  API_ENDPOINT = 'https://kbf.herokuapp.com';
+  API_ENDPOINT = 'https://api.bedan.me';
 else
   API_ENDPOINT = 'https://localhost:3000';
 
