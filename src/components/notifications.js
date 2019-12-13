@@ -12,22 +12,23 @@ import * as colors from '../colors.js';
 
 const Notifications = ({ notifications }) =>
 {
-  const transitions = useTransition(notifications, undefined, {
+  const transitions = useTransition(notifications, (item) => item.key, {
     from: { opacity: 0 },
-    enter: { opacity: 1 },
+    enter: { opacity: 1, delay: 250 },
     leave: { opacity: 0 },
-    config: { tension: 120, friction: 14 }
+    config: { duration: 250 }
   });
 
   return <div className={ styles.notifications }>
     {
       transitions.map(({ item, key, props }) =>
       {
+        const additionalStyles = { zIndex: key };
+        
         return <animated.div
           key={ key }
-          style={ props }
+          style={ { ...props, ...additionalStyles } }
           className={ styles.notification }
-          onMouseEnter={ item.remove }
           onClick={ item.remove }
         >
           { item.content }
@@ -49,27 +50,68 @@ const styles = createStyle({
     direction: locale.direction,
     userSelect: 'none',
 
+    pointerEvents: 'none',
+
     top: 0,
-    width: '100%',
-    height: 'auto'
+    maxWidth: '100%',
+    maxHeight: '100%',
+
+    margin: '0 0 0 calc(15vw + 18px)',
+
+    width: 'calc(100% - (15vw + 18px))',
+    height: 'auto',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      display: 'grid',
+
+      gridTemplateColumns: '100vw',
+      gridTemplateRows: '100vh',
+      gridTemplateAreas: '"notification"',
+
+      width: '100vw',
+      height: '100vh',
+      
+      margin: '0'
+    }
   },
 
   notification: {
+    gridArea: 'notification',
+
     backgroundColor: colors.whiteBackground,
     color: colors.blackText,
+
+    overflow: 'hidden',
+    pointerEvents: 'auto',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     maxWidth: '350px',
+    height: 'min-content',
 
     boxShadow: `4px 4px 0 0 ${colors.blackText}`,
     border: `1px solid ${colors.blackText}`,
     borderRadius: '5px',
 
     padding: '10px',
-    margin: '15px auto'
+    margin: '15px auto',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      display: 'flex',
+      
+      justifyContent: 'center',
+      alignItems: 'center',
+
+      maxWidth: '35vw',
+      width: '35vw',
+      height: '15vh',
+
+      margin: 'auto'
+    }
   }
 });
 

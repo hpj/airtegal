@@ -35,6 +35,7 @@ class RoomOverlay extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
+      incremental: 1,
       notifications: [],
 
       overlayHolderOpacity: 0,
@@ -75,7 +76,7 @@ class RoomOverlay extends React.Component
     else if (roomData.roundEnded)
     {
       if (roomData.roundEnded.reason)
-        this.addNotification(i18n(roomData.matchEnded.reason) || roomData.matchEnded.reason);
+        this.addNotification(i18n(roomData.roundEnded.reason) || roomData.roundEnded.reason);
     }
     // show that the match ended
     else if (roomData.matchEnded)
@@ -164,23 +165,38 @@ class RoomOverlay extends React.Component
     requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
   }
 
+  
   /**
   *  @param { string } content
+  *  @param { string } [timeout] time until the notification automatically dissolve (default is 2.5s)
   */
-  addNotification(content)
+  addNotification(content, timeout)
   {
-    const item = { content: content };
-    
+    timeout = timeout || 2500;
+
+    const key = this.state.incremental;
+
+    // increase
+    this.setState({
+      // set 99 as the limit
+      // if it is reached then set as 0
+      incremental: (key >= 99) ? 0 : key + 1
+    });
+   
+    const item = {
+      key: key,
+      content: content,
+      remove: () => this.removeNotification(item)
+    };
+   
     const notifications = this.state.notifications;
-    
-    item.remove = () => this.removeNotification(item);
-    
+   
     notifications.push(item);
-    
+   
     this.setState({ notifications: notifications });
 
     // automatically remove the notification after 2.5 seconds
-    setTimeout(() => this.removeNotification(item), 2500);
+    setTimeout(() => this.removeNotification(item), timeout);
   }
 
   removeNotification(item)
