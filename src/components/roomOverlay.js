@@ -11,7 +11,7 @@ import { socket } from '../screens/game.js';
 
 import * as colors from '../colors.js';
 
-import { createStyle, createAnimation } from '../flcss.js';
+import { createStyle } from '../flcss.js';
 
 import Notifications from './notifications.js';
 
@@ -164,7 +164,6 @@ class RoomOverlay extends React.Component
     // refresh overlay position to show the handler
     requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
   }
-
   
   /**
   *  @param { string } content
@@ -253,9 +252,7 @@ class RoomOverlay extends React.Component
         <div style={ {
           display: (this.state.loadingHidden) ? 'none' : ''
         } } className={ styles.loading }
-        >
-          <div className={ styles.loadingSpinner }></div>
-        </div>
+        />
 
         <div className={ styles.error } style={ {
           display: (this.state.errorMessage) ? '' : 'none'
@@ -343,47 +340,31 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {
       gridTemplateColumns: '18px calc(100% - 18px)',
-      gridTemplateRows: 'auto 1fr',
+      gridTemplateRows: '20vh 80vh',
       gridTemplateAreas: '"handler side" "handler content"'
     }
   },
 
   loading: {
-    display: 'flex',
     position: 'fixed',
+    backgroundColor: colors.blackBackground,
 
-    alignItems: 'center',
-    justifyContent: 'center',
-    
-    backgroundColor: colors.whiteBackground,
-
+    opacity: 0.5,
     top: 0,
+
     width: '100vw',
     height: '100vh'
   },
 
-  loadingSpinner: {
-    backgroundColor: 'transparent',
-
-    paddingBottom: '5%',
-    width: '5%',
-    border: `10px ${colors.blackText} solid`,
-    animation: createAnimation({
-      keyframes: `
-      from { transform:rotate(0deg); }
-      to { transform:rotate(360deg); }
-      `,
-      duration: '2s',
-      timingFunction: 'linear',
-      iterationCount: 'infinite'
-    })
-  },
-
   error: {
     extend: 'loading',
-    cursor: 'pointer',
+    display: 'flex',
 
-    backgroundColor: colors.whiteBackground
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    cursor: 'pointer',
+    opacity: 0.85
   },
 
   errorMessage: {

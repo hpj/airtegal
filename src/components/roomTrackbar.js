@@ -2,13 +2,13 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import i18n, { locale } from '../i18n.js';
+import { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
 import * as colors from '../colors.js';
 
-import { createStyle, createAnimation } from '../flcss.js';
+import { createStyle } from '../flcss.js';
 
 class Trackbar extends React.Component
 {
@@ -16,13 +16,7 @@ class Trackbar extends React.Component
   {
     super();
 
-    // to avoid a high number of render() calls
-    // only update state if the trackbar-related info is changed
-
-    this.state = {
-      loadingHidden: true,
-      errorMessage: ''
-    };
+    this.state = {};
 
     // bind functions that are use as callbacks
 
@@ -89,37 +83,6 @@ class Trackbar extends React.Component
     });
   }
 
-  showErrorMessage(err)
-  {
-    this.setState({ errorMessage: err });
-  }
-
-  loadingVisibility(visible)
-  {
-    this.setState({ loadingHidden: visible = !visible });
-  }
-
-  matchRequest()
-  {
-    // show a loading indictor
-    this.loadingVisibility(true);
-
-    this.props.sendMessage('matchRequest')
-      .then(() =>
-      {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-      })
-      .catch((err) =>
-      {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // show an error message
-        this.showErrorMessage(i18n(err) || err);
-      });
-  }
-
   formatMs(milliseconds)
   {
     const minutes = Math.floor(milliseconds / 60000);
@@ -134,28 +97,11 @@ class Trackbar extends React.Component
     if (!this.state.players)
       return (<div></div>);
 
-    const isMatch = (this.state.roomState === 'match');
-
-    const isThisMaster = this.state.masterId === socket.id;
-
-    const isAllowed = (this.state.players.length >= 3 || process.env.NODE_ENV === 'development');
+    const isMatch = this.state.roomState === 'match';
 
     return (
       <div className={ styles.wrapper }>
         <div className={ styles.container }>
-
-          <div style={ {
-            display: (this.state.loadingHidden) ? 'none' : ''
-          } } className={ styles.loading }
-          >
-            <div className={ styles.loadingSpinner }></div>
-          </div>
-
-          <div className={ styles.error } style={ {
-            display: (this.state.errorMessage) ? '' : 'none'
-          } } onClick={ () => this.showErrorMessage('') }>
-            <div className={ styles.errorMessage }>{ this.state.errorMessage }</div>
-          </div>
 
           <div className={ styles.status }>{ this.state.counter }</div>
 
@@ -179,10 +125,6 @@ class Trackbar extends React.Component
               })
             }
           </div>
-
-          <div className={ styles.button } allowed={ isAllowed.toString() } style={ {
-            display: (isThisMaster && !isMatch) ? '' : 'none'
-          } } onClick={ this.matchRequest.bind(this) }>{ i18n('start') }</div>
         </div>
       </div>
     );
@@ -216,8 +158,8 @@ const styles = createStyle({
     display: 'grid',
     position: 'relative',
 
-    gridTemplateRows: 'auto 1fr auto',
-    gridTemplateAreas: '"status" "players" "buttons"',
+    gridTemplateRows: 'auto 1fr',
+    gridTemplateAreas: '"status" "players"',
 
     userSelect: 'none',
     
@@ -229,80 +171,23 @@ const styles = createStyle({
 
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {
-      padding: '15px',
+      padding: '0 15px',
       width: 'calc(100% - 30px)',
 
       maxHeight: '30vh'
     }
   },
 
-  loading: {
-    zIndex: 1,
-
-    display: 'flex',
-    position: 'absolute',
-
-    alignItems: 'center',
-    justifyContent: 'center',
-    
-    backgroundColor: colors.whiteBackground,
-
-    top: 0,
-    width: '100%',
-    height: '100%'
-  },
-
-  loadingSpinner: {
-    backgroundColor: 'transparent',
-
-    paddingBottom: '15%',
-    width: '15%',
-
-    border: `8px ${colors.blackText} solid`,
-
-    animation: createAnimation({
-      keyframes: `
-      from { transform:rotate(0deg); }
-      to { transform:rotate(360deg); }
-      `,
-      duration: '2s',
-      timingFunction: 'linear',
-      iterationCount: 'infinite'
-    }),
-
-    // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
-      paddingBottom: '5vw',
-      width: '5vw'
-    }
-  },
-
-  error: {
-    extend: 'loading',
-    cursor: 'pointer',
-
-    backgroundColor: colors.whiteBackground
-  },
-
-  errorMessage: {
-    backgroundColor: colors.error,
-    color: colors.whiteText,
-
-    textTransform: 'capitalize',
-
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
-    padding: '6px',
-    borderRadius: '5px'
-  },
-
   status: {
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
     margin: '0 0 0 auto',
-    padding: '0 0 15px 0'
+    padding: '0 0 15px 0',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      padding: '10px 0 10px 0'
+    }
   },
 
   players: {
@@ -321,6 +206,12 @@ const styles = createStyle({
     {
       borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.lobbyScrollbar}`
+    },
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      display: 'flex',
+      flexWrap: 'wrap'
     }
   },
 
@@ -333,9 +224,12 @@ const styles = createStyle({
 
     gridTemplateColumns: 'auto 1fr auto',
     gridTemplateRows: 'auto',
-    gridTemplateAreas: '"status players buttons"',
     
-    padding: '0 10px'
+    padding: '0 10px',
+
+    '@media screen and (max-width: 980px)': {
+      flexBasis: '100%'
+    }
   },
 
   led: {
@@ -375,37 +269,6 @@ const styles = createStyle({
 
     wordBreak: 'break-all',
     fontSize: 'calc(6px + 0.35vw + 0.35vh)'
-  },
-
-  button: {
-    display: 'flex',
-    
-    cursor: 'pointer',
-    justifyContent: 'center',
-    
-    width: '50%',
-    padding: '10px',
-    margin: '10px auto 0 auto',
-
-    color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
-    
-    border: `1px ${colors.blackText} solid`,
-    borderRadius: '5px',
-
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
-    },
-
-    '[allowed="false"]': {
-      cursor: 'default',
-
-      color: colors.greyText,
-      backgroundColor: colors.whiteBackground,
-      
-      border: `1px ${colors.greyText} solid`
-    }
   }
 });
 

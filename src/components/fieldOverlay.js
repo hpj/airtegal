@@ -178,7 +178,8 @@ const styles = createStyle({
 
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {
-      padding: '15px 0 0 0'
+      margin: '15px 0 0 0',
+      height: 'calc(100% - 15px)'
     },
 
     '::-webkit-scrollbar':

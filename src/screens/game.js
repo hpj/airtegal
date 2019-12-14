@@ -511,9 +511,11 @@ const roomsStyles = createStyle({
   loadingSpinner: {
     backgroundColor: 'transparent',
 
-    paddingBottom: '5%',
-    width: '5%',
+    paddingBottom: '30px',
+    width: '30px',
+
     border: `10px ${colors.blackText} solid`,
+
     animation: createAnimation({
       keyframes: `
       from { transform:rotate(0deg); }
