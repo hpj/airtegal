@@ -5,7 +5,7 @@
 */
 export default function(forceMain)
 {
-  const dark = !forceMain && darkMode;
+  const dark = !forceMain && darkMode && false;
 
   const mainTheme = {
     whiteText: '#ffffff',
@@ -13,23 +13,22 @@ export default function(forceMain)
    
     blackText: '#000000',
     blackBackground: '#000000',
-    blackHolder: 'rgba(0, 0, 0, 0.65)',
    
     greyText: '#6e6767',
-    greyBackground: '#423f3f',
    
     handler: '#867878',
     accentColor: '#454545',
    
     selectBackground: '#3B5FFF',
+
+    trackBarBackground: '#ffffff',
+    trackBarScrollbar: '#000000',
    
     fieldBackground: '#545454',
     fieldScrollbar: '#262626',
    
     handBackground: '#C4C4C4',
     handScrollbar: '#949393',
-   
-    lobbyScrollbar: '#000000',
    
     warningBackground: '#00aeff',
    
@@ -42,6 +41,12 @@ export default function(forceMain)
     client: '#000000',
     master: '#f200f5',
     turn: '#00aeff',
+
+    blackCardBackground: '#000000',
+    blackCardForeground: '#ffffff',
+
+    whiteCardBackground: '#ffffff',
+    whiteCardForeground: '#000000',
    
     red: 'red',
     error: '#ad1818',
@@ -51,8 +56,25 @@ export default function(forceMain)
   const darkTheme = {
     ...mainTheme,
 
+    whiteText: '#ffffff',
     whiteBackground: '#000000',
-    blackText: '#c3c3c3'
+
+    blackBackground: '#313131',
+    blackText: '#c3c3c3',
+
+    trackBarBackground: '#191818',
+    trackBarScrollbar: '#c3c3c3',
+
+    fieldBackground: '#000000',
+    fieldScrollbar: '#ffffff',
+
+    handBackground: '#292929',
+    handScrollbar: '#867878',
+
+    blackCardBackground: '#272727',
+    blackCardForeground: '#ffffff',
+
+    client: '#ffffff'
 
     // accentColor: '#4d4949',
    

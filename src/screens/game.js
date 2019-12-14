@@ -116,6 +116,9 @@ class Game extends React.Component
 
     this.resize = this.resize.bind(this);
 
+    this.usernameBlurEvent = this.usernameBlurEvent.bind(this);
+    this.usernameChangeEvent = this.usernameChangeEvent.bind(this);
+
     // set the title of this screen
     document.title = 'Kuruit Bedan Fash5';
 
@@ -288,7 +291,17 @@ class Game extends React.Component
 
             <p className={ optionsStyles.welcome }> { i18n('welcome') } </p>
 
-            <input ref={ inputRef } className={ optionsStyles.username } required placeholder={ i18n('username-input') } value={ this.state.username } onBlur={ this.usernameBlurEvent } onChange={ this.usernameChangeEvent } type='text' maxLength='18'/>
+            <input
+              required
+              type='text'
+              maxLength='18'
+              ref={ inputRef }
+              className={ optionsStyles.username }
+              placeholder={ i18n('username-input') }
+              value={ this.state.username }
+              onBlur={ this.usernameBlurEvent }
+              onChange={ this.usernameChangeEvent }
+            />
 
           </div>
 
@@ -332,7 +345,9 @@ class Game extends React.Component
 const mainStyles = createStyle({
   wrapper: {
     width: '100vw',
-    height: '100vh'
+    height: '100vh',
+
+    backgroundColor: colors.whiteBackground
   },
 
   container: {
@@ -342,7 +357,6 @@ const mainStyles = createStyle({
     gridTemplateAreas: '"." "." "."',
 
     color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
 
     maxWidth: '850px',
     height: '100%',
@@ -372,6 +386,9 @@ const optionsStyles = createStyle({
   username: {
     margin: '0 5px -2px 0',
     direction: locale.direction,
+
+    color: colors.blackText,
+    backgroundColor: colors.whiteBackground,
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',

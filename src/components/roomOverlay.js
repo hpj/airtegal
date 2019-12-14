@@ -301,7 +301,7 @@ class RoomOverlay extends React.Component
           } }
         >
 
-          <div className={ styles.wrapper }>
+          <div className={ styles.container }>
             <div className={ styles.handler }/>
 
             <Trackbar sendMessage={ sendMessage }/>
@@ -329,8 +329,10 @@ RoomOverlay.propTypes = {
 };
 
 const styles = createStyle({
-  wrapper: {
+  container: {
     display: 'grid',
+
+    backgroundColor: colors.trackBarBackground,
 
     gridTemplateColumns: 'auto 15vw 1fr',
     gridTemplateRows: '100vh',
@@ -343,7 +345,9 @@ const styles = createStyle({
     '@media screen and (max-width: 980px)': {
       gridTemplateColumns: '18px calc(100% - 18px)',
       gridTemplateRows: '20vh 80vh',
-      gridTemplateAreas: '"handler side" "handler content"'
+      gridTemplateAreas: '"handler side" "handler content"',
+
+      backgroundColor: colors.whiteBackground
     }
   },
 
@@ -408,6 +412,7 @@ const styles = createStyle({
 
   content: {
     gridArea: 'content',
+    backgroundColor: colors.whiteBackground,
 
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {

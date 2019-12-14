@@ -142,7 +142,7 @@ const styles = createStyle({
     zIndex: 3,
     gridArea: 'side',
 
-    backgroundColor: colors.whiteBackground,
+    backgroundColor: colors.trackBarBackground,
 
     width: '100%',
 
@@ -164,6 +164,8 @@ const styles = createStyle({
     gridTemplateAreas: '"status" "players"',
 
     userSelect: 'none',
+
+    color: colors.blackText,
     
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
@@ -207,7 +209,7 @@ const styles = createStyle({
     '::-webkit-scrollbar-thumb':
     {
       borderRadius: '8px',
-      boxShadow: `inset 0 0 8px 8px ${colors.lobbyScrollbar}`
+      boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
     },
 
     // for the portrait overlay
