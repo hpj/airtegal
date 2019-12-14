@@ -48,9 +48,7 @@ const classRegex = /^[a-z]|^-/i;
 */
 export function createStyle(styles)
 {
-  let allCss = '';
   const newStyles = {};
-
   const directory = {};
   
   // loop the root object
@@ -61,20 +59,14 @@ export function createStyle(styles)
     if (typeof obj !== 'object')
       continue;
 
-    const {
-      className,
-      css
-    } = handleStyle(key, obj, newStyles, directory);
+    const { className, css }  = handleStyle(key, obj, newStyles, directory);
 
-    // overall css string (all classes)
-    allCss = allCss + css;
-
-    directory[key] = css;
     newStyles[key] = className;
+    directory[key] = css;
   }
 
   // append the stylesheet element to dom
-  appendToDOM(allCss);
+  appendToDOM(Object.values(directory).join(''));
   
   // return the new class names to the user
   return newStyles;
@@ -146,9 +138,6 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
   Object.keys(obj).forEach((rule, i) =>
   {
     // extent support
-    // it was designed to duplicate style instead of adding the extend-ee class name
-    // so that you can use extent inside of attributes and  pseudo-classes
-    // we removed the class name extending to simplify the code and not have both functions
     if (rule === 'extend' && rootStylesheet)
     {
       if (!Array.isArray(values[i]))
@@ -156,11 +145,9 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
       
       values[i].forEach((v) =>
       {
-        const replace = rootDirectory[v];
-        const extendCss = rootStylesheet[v].replace(new RegExp(replace, 'g'), className);
-
-        if (typeof v === 'string')
-          additionalCss = additionalCss + extendCss;
+        const originalClassnames = rootDirectory[v];
+        
+        rootStylesheet[v] = rootStylesheet[v].replace(originalClassnames, `${originalClassnames}, .${className}`);
       });
     }
     else if (
