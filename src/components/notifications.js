@@ -65,28 +65,24 @@ const styles = createStyle({
     '@media screen and (max-width: 980px)': {
       display: 'grid',
 
-      gridTemplateColumns: '100vw',
-      gridTemplateRows: '100vh',
       gridTemplateAreas: '"notification"',
 
       width: '100vw',
-      height: '100vh',
+      height: '20vh',
       
       margin: '0'
     }
   },
 
   notification: {
-    gridArea: 'notification',
-
     backgroundColor: colors.whiteBackground,
     color: colors.blackText,
 
     overflow: 'hidden',
     pointerEvents: 'auto',
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     maxWidth: '350px',
@@ -101,16 +97,21 @@ const styles = createStyle({
 
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {
+      gridArea: 'notification',
+
       display: 'flex',
       
       justifyContent: 'center',
       alignItems: 'center',
 
-      maxWidth: '35vw',
-      width: '35vw',
-      height: '15vh',
+      fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-      margin: 'auto'
+      maxWidth: '95%',
+      width: '95%',
+      height: '95%',
+
+      padding: 0,
+      margin: '10px auto 0 auto'
     }
   }
 });
