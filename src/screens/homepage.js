@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import Select from 'react-select';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -11,6 +11,8 @@ import Warning from '../components/warning.js';
 import CardShowcase from '../components/cardShowcase.js';
 
 import i18n, { locales, locale, setLocale } from '../i18n.js';
+
+const colors = getTheme(true);
 
 const Homepage = () =>
 {
@@ -141,7 +143,7 @@ const Homepage = () =>
 
 const headerStyles = createStyle({
   wrapper: {
-    background: 'linear-gradient( 135deg, #F05F57 10%, #360940 100%);',
+    background: `linear-gradient( 135deg, ${colors.headerGradient[0]} 10%, ${colors.headerGradient[1]} 100%);`,
 
     padding: '0 5vw'
   },
@@ -173,10 +175,10 @@ const headerStyles = createStyle({
     },
 
     ' .react-select__option--is-selected': {
-      backgroundColor: '#3B5FFF',
+      backgroundColor: colors.selectBackground,
 
       ':active': {
-        backgroundColor: '#3B5FFF'
+        backgroundColor: colors.selectBackground
       }
     },
     ' .react-select__input': {
@@ -226,7 +228,7 @@ const headerStyles = createStyle({
   hpj: {
     cursor: 'pointer',
     margin: 'auto',
-
+    
     fontSize: 'calc(12px + 0.5vw + 0.5vh)',
 
     color: colors.whiteText,
@@ -290,7 +292,7 @@ const qaStyles = createStyle({
 
 const playStyles = createStyle({
   wrapper: {
-    background: 'linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%)'
+    background: `linear-gradient(0deg, ${colors.playBackgroundGradient[0]} 0%, ${colors.playBackgroundGradient[1]} 100%)`
   },
 
   container: {
@@ -326,11 +328,11 @@ const playStyles = createStyle({
     },
 
     ':hover': {
-      background: 'linear-gradient(to right, #009fff, #ec2f4b)',
+      background: `linear-gradient(to right, ${colors.playButtonGradient[0]}, ${colors.playButtonGradient[1]})`,
       '-webkit-background-clip': 'text',
       '-webkit-text-fill-color': 'transparent',
 
-      borderImage: 'linear-gradient(to right, #009fff, #ec2f4b)',
+      borderImage: `linear-gradient(to right, ${colors.playButtonGradient[0]}, ${colors.playButtonGradient[1]})`,
       borderImageSlice: 1
     },
 
@@ -362,9 +364,10 @@ const footerStyles = createStyle({
 
   hpj: {
     gridArea: 'hpj',
-    
-    padding: '0 5px',
     cursor: 'pointer',
+    
+    width: 'fit-content',
+    padding: '0 5px',
 
     userSelect: 'none',
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',

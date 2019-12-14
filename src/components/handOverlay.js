@@ -10,9 +10,11 @@ import { socket } from '../screens/game.js';
 
 import Card from './card.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
+
+const colors = getTheme();
 
 const overlayRef = createRef();
 const wrapperRef = createRef();

@@ -9,7 +9,7 @@ import i18n from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -20,6 +20,8 @@ import RoomOptions from './roomOptions.js';
 
 import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
+
+const colors = getTheme();
 
 const overlayRef = createRef();
 

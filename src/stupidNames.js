@@ -15,5 +15,5 @@ function randomLastName()
 
 export default function stupidName()
 {
-  return randomFirstName() + ' ' + randomLastName();
+  return `${randomFirstName()} ${randomLastName()}`;
 }

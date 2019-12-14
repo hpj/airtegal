@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
 import { locale } from '../i18n.js';
+
+const colors = getTheme();
 
 /** @param { { error: string } } param0
 */

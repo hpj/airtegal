@@ -10,7 +10,7 @@ import io, { Socket } from 'socket.io-client';
 
 import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
 
@@ -25,6 +25,8 @@ import i18n, { locale } from '../i18n.js';
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
+
+const colors = getTheme();
 
 const inputRef = createRef();
 const overlayRef = createRef();

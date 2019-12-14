@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 
 import { createStyle } from '../flcss.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { locale } from '../i18n.js';
+
+const colors = getTheme();
 
 const Warning = ({ storageKey, style, text, button }) =>
 {

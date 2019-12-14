@@ -8,7 +8,9 @@ import { createStyle } from '../flcss.js';
 
 import { locale } from '../i18n.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
+
+const colors = getTheme();
 
 const Notifications = ({ notifications }) =>
 {

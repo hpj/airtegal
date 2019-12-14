@@ -8,11 +8,13 @@ import { Value } from 'animated';
 
 import { socket } from '../screens/game.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
+
+const colors = getTheme();
 
 const overlayRef = createRef();
 const overlayAnimatedX = new Value(0);

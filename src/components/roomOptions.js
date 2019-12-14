@@ -6,9 +6,11 @@ import i18n from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
+
+const colors = getTheme();
 
 class RoomOptions extends React.Component
 {
@@ -103,7 +105,7 @@ class RoomOptions extends React.Component
           <div className={ styles.errorMessage }>{ this.state.errorMessage }</div>
         </div>
 
-        <div style={ { overflow: 'hidden' } }>{ JSON.stringify(this.state.options) }</div>
+        {/* <div style={ { overflow: 'hidden', fontWeight: 100 } }>{ JSON.stringify(this.state.options) }</div> */}
 
         {/* <div>Win Method</div>
         <div>First to 10 Points</div>

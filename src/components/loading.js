@@ -2,11 +2,13 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
 import i18n, { locale } from '../i18n.js';
+
+const colors = getTheme();
 
 // TODO on an installed PWA, it has a splash screen that we
 // should match its style

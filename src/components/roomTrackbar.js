@@ -6,9 +6,11 @@ import { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
-import * as colors from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
+
+const colors = getTheme();
 
 class Trackbar extends React.Component
 {
