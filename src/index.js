@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import { HashRouter as Router, Route } from 'react-router-dom';
+
+import * as Sentry from '@sentry/browser';
 
 import i18n, { setLocale } from './i18n.js';
 
@@ -193,6 +196,11 @@ const ipCheck = new Promise((resolve) =>
       resolve();
     });
 });
+
+// init sentry for error monitoring
+
+if (process.env.NODE_ENV === 'production')
+  Sentry.init({ dsn: 'https://48c0df63377d4467823a29295dbc3c5f@sentry.io/1521991' });
 
 // show a loading screen until the promises resolve
 

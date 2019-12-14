@@ -20,6 +20,7 @@
   },
   "homepage": "https://bedan.me",
   "dependencies": {
+    "@sentry/browser": "^5.10.2",
     "animated": "^0.2.2",
     "autosize-input": "^1.0.2",
     "axios": "^0.19.0",
