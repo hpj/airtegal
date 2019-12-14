@@ -63,7 +63,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "manifest.json",
-    "revision": "27ea67e281a4bfb1025c2c0dcd9a0422"
+    "revision": "8e37cdb4ac35f30a26deadf2130a27bc"
   },
   {
     "url": "Montserrat-Bold.ttf",
