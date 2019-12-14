@@ -146,8 +146,13 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
       values[i].forEach((v) =>
       {
         const originalClassnames = rootDirectory[v];
-        
-        rootStylesheet[v] = rootStylesheet[v].replace(originalClassnames, `${originalClassnames}, .${className}`);
+
+        rootStylesheet[v] = rootStylesheet[v].replace(new RegExp(`${originalClassnames}.*?{`, 'g'), (s) =>
+        {
+          const add = s.replace(originalClassnames, '').replace('{', '');
+          
+          return `${originalClassnames}${add}, .${className}${add}{`;
+        });
       });
     }
     else if (
