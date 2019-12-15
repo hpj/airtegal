@@ -34,7 +34,7 @@ export default function(forceMain)
    
     headerGradient: [ '#F05F57', '#360940' ],
    
-    playBackgroundGradient: [ '#000000', '#af1111' ],
+    playBackgroundGradient: [ '#000000', '#b9444e' ],
    
     playButtonGradient: [ '#ff71e7', '#ff092d' ],
    
@@ -47,6 +47,7 @@ export default function(forceMain)
 
     whiteCardBackground: '#ffffff',
     whiteCardForeground: '#000000',
+    whiteCardHighlight: '#000000',
    
     red: 'red',
     error: '#ad1818',

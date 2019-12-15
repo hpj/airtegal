@@ -43,7 +43,7 @@ class HandOverlay extends React.Component
     this.state = {
       visible: false,
       overlayHidden: true,
-      
+
       entry: [],
       hand: []
     };
@@ -79,8 +79,20 @@ class HandOverlay extends React.Component
 
   onRoomData(roomData)
   {
-    // the hand overlay is only visible if this client is participate in the match
-    this.visibility((roomData.playerProperties[socket.id].state === 'playing') ? true : false);
+    if (roomData.roundStarted)
+    {
+      // client is waiting or picking cards
+      if (roomData.roundStarted.judgeId !== socket.id)
+        this.visibility(true);
+      // client is judge
+      else
+        this.visibility(false);
+    }
+    // client is in the lobby
+    else if (roomData.state !== 'match')
+    {
+      this.visibility(false);
+    }
 
     // if the player has a secret properties object in the data
     // and it has the hand data for this client
@@ -142,7 +154,7 @@ class HandOverlay extends React.Component
   pickCard(cardIndex, isAllowed, isSelected)
   {
     let entry = [ ...this.state.entry ];
-    
+
     const { sendMessage } = this.props;
 
     if (!isAllowed)
@@ -176,7 +188,7 @@ class HandOverlay extends React.Component
         // clean the entry
         entry = [];
       }
-      
+
       // update state to force re-render
       this.setState({
         entry: entry
@@ -261,7 +273,7 @@ class HandOverlay extends React.Component
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
               <div className={ styles.container }>
                 {
-                  
+
                   this.state.hand.map((card, i) =>
                   {
                     const isSelected = entry.indexOf(i) > -1;
