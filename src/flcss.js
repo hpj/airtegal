@@ -73,7 +73,7 @@ export function createStyle(styles)
 }
 
 /** Creates a CSS animation
-* @param { { keyframes: string, duration: string, timingFunction, delay: string, iterationCount, direction, fillMode } } animation
+* @param { { keyframes: string, options: { returnNameOnly: boolean }, duration: string, timingFunction, delay: string, iterationCount, direction, fillMode } } animation
 *
 * @example
 *
@@ -98,6 +98,9 @@ export function createAnimation(animation)
 {
   // make sure that no strings equal 'undefined'
   // set default values
+
+  animation.options = animation.options || {};
+
   animation.timingFunction = animation.timingFunction || 'ease';
   animation.delay = animation.delay || '0s';
   animation.iterationCount = animation.iterationCount || '1';
@@ -114,7 +117,10 @@ export function createAnimation(animation)
   appendToDOM(css);
 
   // return a string the developers can use with createStyle()
-  return `${animationName} ${animation.duration} ${animation.timingFunction} ${animation.delay} ${animation.iterationCount} ${animation.direction} ${animation.fillMode}`.replace(/\s+/g, ' ');
+  if (animation.options.returnNameOnly)
+    return animationName;
+  else
+    return `${animationName} ${animation.duration} ${animation.timingFunction} ${animation.delay} ${animation.iterationCount} ${animation.direction} ${animation.fillMode}`.replace(/\s+/g, ' ');
 }
 
 /** @param { string } key
