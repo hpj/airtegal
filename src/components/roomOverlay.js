@@ -50,6 +50,7 @@ class RoomOverlay extends React.Component
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
+    this.removeNotification = this.removeNotification.bind(this);
   }
 
   componentDidMount()
@@ -164,7 +165,14 @@ class RoomOverlay extends React.Component
   {
     const { sendMessage } = this.props;
 
-    sendMessage('leave').catch(console.error);
+    sendMessage('leave').then(() =>
+    {
+      // after leaving the room
+      // clean up some of the state values
+      this.setState({
+        master: undefined
+      });
+    }).catch(console.error);
   }
 
   showErrorMessage(err)
@@ -188,11 +196,24 @@ class RoomOverlay extends React.Component
   
   /**
   *  @param { string } content
-  *  @param { string } [timeout] time until the notification automatically dissolve (default is 2.5s)
   */
-  addNotification(content, timeout)
-  {    
-    timeout = timeout || 2500;
+  addNotification(content)
+  {
+    // add delay between notifications
+    if (this.state.notifications.length > 0)
+    {
+      // delta time of when the last notification appeared
+      const delta = Date.now() - this.state.notifications[this.state.notifications.length - 1].timestamp;
+
+      if (delta < 1500)
+      {
+        // add this notifications when 1.5s are passed
+        // from when the last notification was added
+        setTimeout(() => this.addNotification(content), 1500 - delta);
+
+        return;
+      }
+    }
 
     const key = this.state.incremental;
 
@@ -206,7 +227,8 @@ class RoomOverlay extends React.Component
     const item = {
       key: key,
       content: content,
-      remove: () => this.removeNotification(item)
+      timestamp: Date.now(),
+      remove: this.removeNotification
     };
    
     const notifications = this.state.notifications;
@@ -215,22 +237,20 @@ class RoomOverlay extends React.Component
    
     this.setState({ notifications: notifications });
 
+    // by doing this it makes sure that all the notifications are cleared at once
+    // which is more pleasant to the human eye
+    if (this.notificationsTimeout)
+      clearTimeout(this.notificationsTimeout);
+    
     // automatically remove the notification after 2.5 seconds
-    setTimeout(() => this.removeNotification(item), timeout);
+    this.notificationsTimeout = setTimeout(this.removeNotification, 2500);
   }
 
-  removeNotification(item)
+  removeNotification()
   {
-    const index = this.state.notifications.indexOf(item);
-
-    if (index >= 0)
-    {
-      const notifications = this.state.notifications;
- 
-      notifications.splice(index, 1);
-
-      this.setState({ notifications: notifications });
-    }
+    this.setState({ notifications: [] });
+    
+    this.notificationsTimeout = undefined;
   }
 
   onSnap({ index })
