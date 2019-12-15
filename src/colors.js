@@ -74,7 +74,9 @@ export default function(forceMain)
     blackCardBackground: '#272727',
     blackCardForeground: '#ffffff',
 
-    client: '#ffffff'
+    client: '#ffffff',
+
+    error: '#710c0c'
 
     // accentColor: '#4d4949',
    

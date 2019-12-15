@@ -37,6 +37,8 @@ class RoomOverlay extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
+      master: undefined,
+
       incremental: 1,
       notifications: [],
 
@@ -68,6 +70,19 @@ class RoomOverlay extends React.Component
     // handler is only visible if user is on the match's lobby screen
     this.handlerVisibility((roomData.state === 'lobby') ? true : false);
 
+    // if players are in the room's lobby
+    if (roomData.state === 'lobby')
+    {
+      // send notification if the room's master changes
+      if (this.state.master && this.state.master !== roomData.master)
+      {
+        if (roomData.master === socket.id)
+          this.addNotification(i18n('you-are-now-master'));
+        else
+          this.addNotification(`${roomData.playerProperties[roomData.master].username} ${i18n('new-master')}`);
+      }
+    }
+    
     if (roomData.roundStarted)
     {
       // this client is the judge for this round
@@ -88,6 +103,10 @@ class RoomOverlay extends React.Component
       else
         this.addNotification(`${i18n('match-winner-is')} ${roomData.playerProperties[roomData.matchEnded.id].username}.`);
     }
+
+    this.setState({
+      master: roomData.master
+    });
   }
 
   createRoom()
@@ -172,7 +191,7 @@ class RoomOverlay extends React.Component
   *  @param { string } [timeout] time until the notification automatically dissolve (default is 2.5s)
   */
   addNotification(content, timeout)
-  {
+  {    
     timeout = timeout || 2500;
 
     const key = this.state.incremental;
@@ -259,7 +278,7 @@ class RoomOverlay extends React.Component
         <div className={ styles.error } style={ {
           display: (this.state.errorMessage) ? '' : 'none'
         } } onClick={ () => this.showErrorMessage('') }>
-          <div className={ styles.errorMessage }>{ this.state.errorMessage }</div>
+          <div>{ this.state.errorMessage }</div>
         </div>
 
         <div style={ {
@@ -369,22 +388,22 @@ const styles = createStyle({
     justifyContent: 'center',
     alignItems: 'center',
 
-    cursor: 'pointer',
-    opacity: 0.85
-  },
-
-  errorMessage: {
-    backgroundColor: colors.error,
-    color: colors.whiteText,
-
     textTransform: 'capitalize',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    padding: '6px',
-    borderRadius: '5px'
+    cursor: 'pointer',
+    opacity: 0.85,
+
+    '> div': {
+      backgroundColor: colors.error,
+      color: colors.whiteText,
+  
+      padding: '6px',
+      borderRadius: '5px'
+    }
   },
 
   holder: {

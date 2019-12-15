@@ -102,7 +102,7 @@ class RoomOptions extends React.Component
         <div className={ styles.error } style={ {
           display: (this.state.errorMessage) ? '' : 'none'
         } } onClick={ () => this.showErrorMessage('') }>
-          <div className={ styles.errorMessage }>{ this.state.errorMessage }</div>
+          <div>{ this.state.errorMessage }</div>
         </div>
 
         {/* <div style={ { overflow: 'hidden', fontWeight: 100 } }>{ JSON.stringify(this.state.options) }</div> */}
@@ -204,21 +204,14 @@ const styles = createStyle({
     extend: 'loading',
     cursor: 'pointer',
 
-    backgroundColor: colors.whiteBackground
-  },
-
-  errorMessage: {
-    backgroundColor: colors.error,
-    color: colors.whiteText,
+    color: colors.blackText,
+    backgroundColor: colors.whiteBackground,
 
     textTransform: 'capitalize',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
-    padding: '6px',
-    borderRadius: '5px'
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   button: {

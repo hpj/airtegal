@@ -33,6 +33,7 @@ const styles = createStyle({
     justifyContent: 'center',
     alignItems: 'center',
     
+    color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
     direction: locale.direction,
@@ -40,6 +41,7 @@ const styles = createStyle({
     minWidth: '100vw',
     minHeight: '100vh'
   },
+
   error: {
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(8px + 0.35vw + 0.35vh)',

@@ -51,20 +51,20 @@ class FieldOverlay extends React.Component
     // the field overlay is only visible in matches
     this.visibility((roomData.state === 'match') ? true : false);
 
-    if (roomData.field)
-    {
-      this.setState({
-        playerState: roomData.playerProperties[socket.id].state,
-        field: roomData.field
-      });
-    }
-
     // TODO using this info show the owners of the cards (at the end of the round)
     // and the card that won the round
     if (roomData.roundEnded)
     {
       // roomData.roundEnded.winnerEntryIndex
       // roomData.roundEnded.fieldSecrets
+    }
+
+    if (roomData.field)
+    {
+      this.setState({
+        playerState: roomData.playerProperties[socket.id].state,
+        field: roomData.field
+      });
     }
   }
 
