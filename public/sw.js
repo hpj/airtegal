@@ -22,10 +22,6 @@ workbox.precaching.precacheAndRoute([
     "revision": "96c0f7881407d44eafc15b1e21153aad"
   },
   {
-    "url": "google92d94755931a0391.html",
-    "revision": "343596c7544c5333db385515c52c5053"
-  },
-  {
     "url": "Icon-144.png",
     "revision": "f8c866c2e220cec14cb438fa29c28425"
   },
