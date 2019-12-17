@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { HashRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import * as Sentry from '@sentry/browser';
 
@@ -17,6 +17,8 @@ import axios from 'axios';
 
 import Error from './components/error.js';
 import Loading from './components/loading.js';
+
+import NotFound from './screens/404.js';
 
 import Homepage from './screens/homepage.js';
 
@@ -47,7 +49,7 @@ function loaded()
     return;
 
   const pages =
-  <Router>
+  <BrowserRouter>
     <Route exact path="/" component={ Homepage }/>
   
     <Route path="/play" component={ Game }/>
@@ -55,7 +57,8 @@ function loaded()
     <Route path="/terms" component={ TermsAndConditions }/>
     <Route path="/privacy" component={ PrivacyPolicy }/>
 
-  </Router>;
+    <Route component={ NotFound }/>
+  </BrowserRouter>;
 
   ReactDOM.render(pages, app, () =>
   {
