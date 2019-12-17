@@ -53,7 +53,7 @@
      "purpose": "any"
     }
    ],
-  "start_url": "/#/play",
+  "start_url": "/play",
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#454545",
