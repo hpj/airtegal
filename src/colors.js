@@ -5,7 +5,7 @@
 */
 export default function(forceMain)
 {
-  const dark = !forceMain && darkMode;
+  const dark = !forceMain && darkMode && false;
 
   const mainTheme = {
     whiteText: '#ffffff',
