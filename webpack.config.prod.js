@@ -14,17 +14,6 @@ module.exports = {
   resolve: {
     extensions: [ '*', '.js', '.jsx' ]
   },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
-  },
   plugins: [
     new CompressionPlugin({
       filename: '[path].gz[query]',
