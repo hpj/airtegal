@@ -5,7 +5,7 @@
 */
 export default function(forceMain)
 {
-  const dark = !forceMain && darkMode && false;
+  const dark = !forceMain && darkMode;
 
   const mainTheme = {
     whiteText: '#ffffff',
@@ -47,7 +47,9 @@ export default function(forceMain)
 
     whiteCardBackground: '#ffffff',
     whiteCardForeground: '#000000',
-    whiteCardHighlight: '#000000',
+    whiteCardPicked: '#000000',
+    
+    entryLine: '#000000',
    
     red: 'red',
     error: '#ad1818',
@@ -77,7 +79,9 @@ export default function(forceMain)
 
     client: '#ffffff',
 
-    error: '#710c0c'
+    error: '#710c0c',
+
+    entryLine: '#696060'
 
     // accentColor: '#4d4949',
    

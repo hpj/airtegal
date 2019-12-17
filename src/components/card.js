@@ -14,21 +14,32 @@ class Card extends React.Component
 {
   render()
   {
-    const { content, type, allowed, highlighted, hidden, onClick } = this.props;
+    const { content, type, props, elementId,
+      allowed, picked, highlighted, hidden, onClick,
+      onMouseEnter, onMouseLeave } = this.props;
 
     return (
       <div className={ styles.wrapper }>
         {
           (hidden) ?
-            <div className={ styles.hidden } type={ type }>
+            <div style={ props } className={ styles.hidden } type={ type }>
               <div>{ i18n('kuruit-bedan-fash5') }</div>
             </div>
             :
-            <div onClick={ onClick } className={ styles.container } type={ type } allowed={ allowed } highlighted={ highlighted }>
-      
+            <div
+              onMouseEnter={ onMouseEnter }
+              onMouseLeave={ onMouseLeave }
+              onClick={ onClick }
+              style={ props }
+              className={ styles.container }
+              id={ elementId }
+              type={ type }
+              allowed={ allowed }
+              picked={ picked }
+              highlighted={ highlighted }
+            >
               <div className={ styles.content }>{content}</div>
               <p className={ styles.bottom }>{ i18n('kuruit-bedan-fash5') }</p>
-              
             </div>
         }
       </div>
@@ -62,15 +73,21 @@ const floatAnimation = createAnimation({
 
 Card.propTypes = {
   content: PropTypes.string,
+  props: PropTypes.object,
+  elementId: PropTypes.string,
   allowed: PropTypes.string,
+  picked: PropTypes.string,
   highlighted: PropTypes.string,
   hidden: PropTypes.bool,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func
 };
 
 const styles = createStyle({
   wrapper: {
+    zIndex: 2,
     position: 'relative',
 
     height: 'fit-content',
@@ -140,8 +157,8 @@ const styles = createStyle({
     userSelect: 'none',
     borderRadius: '10px',
 
-    '[highlighted="true"]': {
-      boxShadow: `5px 5px 0px 0px ${colors.whiteCardHighlight}`,
+    '[picked="true"]': {
+      boxShadow: `5px 5px 0px 0px ${colors.whiteCardPicked}`,
 
       animationName: `${floatAnimation}, ${hoverAnimation}`,
 
@@ -153,7 +170,7 @@ const styles = createStyle({
       animationDirection: 'normal, alternate'
     },
 
-    '[allowed="true"]:hover': {
+    '[allowed="true"][highlighted="true"]': {
       animationName: `${floatAnimation}, ${hoverAnimation}`,
 
       animationDuration: '.3s, 1.5s',

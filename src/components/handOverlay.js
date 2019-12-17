@@ -79,6 +79,20 @@ class HandOverlay extends React.Component
 
   onRoomData(roomData)
   {
+    // if a change happen in room's state
+    if (this.stateroomState !== roomData.state)
+    {
+      // if lobby clear hand and entry
+      if (roomData.state === 'lobby')
+      {
+        this.setState({
+          hoverIndex: undefined,
+          entry: [],
+          hand: []
+        });
+      }
+    }
+
     if (roomData.roundStarted)
     {
       // client is waiting or picking cards
@@ -87,6 +101,11 @@ class HandOverlay extends React.Component
       // client is judge
       else
         this.visibility(false);
+
+      this.setState({
+        hoverIndex: undefined,
+        entry: []
+      });
     }
     // client is in the lobby
     else if (roomData.state !== 'match')
@@ -104,12 +123,17 @@ class HandOverlay extends React.Component
       });
     }
 
-    if (roomData.field && roomData.field[0])
+    if (roomData.field && roomData.field.length > 0)
     {
       this.setState({
-        pick: roomData.field[0][0].pick
+        // the black card pick amount
+        pick: roomData.field[0].cards[0].pick
       });
     }
+    
+    this.setState({
+      roomState: roomData.state
+    });
   }
 
   /**
@@ -149,9 +173,9 @@ class HandOverlay extends React.Component
   /** send the card the player choose to the server's match logic
   * @param { number } cardIndex
   * @param { boolean } isAllowed if the card can be picked
-  * @param { boolean } isSelected if the card is selected in the entry
+  * @param { boolean } isPicked if the card is selected in the entry
   */
-  pickCard(cardIndex, isAllowed, isSelected)
+  pickCard(cardIndex, isAllowed, isPicked)
   {
     let entry = [ ...this.state.entry ];
 
@@ -161,7 +185,7 @@ class HandOverlay extends React.Component
       return;
 
     // if card exists in entry already
-    if (isSelected)
+    if (isPicked)
     {
       // remove the card from entry
       entry.splice(entry.indexOf(cardIndex), 1);
@@ -273,16 +297,32 @@ class HandOverlay extends React.Component
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
               <div className={ styles.container }>
                 {
-
                   this.state.hand.map((card, i) =>
                   {
-                    const isSelected = entry.indexOf(i) > -1;
+                    const isPicked = entry.indexOf(i) > -1;
+
+                    const onMouseEnter = () =>
+                    {
+                      this.setState({
+                        hoverIndex: i
+                      });
+                    };
+
+                    const onMouseLeave = () =>
+                    {
+                      this.setState({
+                        hoverIndex: undefined
+                      });
+                    };
 
                     return <Card
-                      key={ i }
-                      highlighted={ isSelected.toString() }
+                      key={ card.key }
+                      onMouseEnter={ onMouseEnter }
+                      onMouseLeave={ onMouseLeave }
+                      onClick={ () => this.pickCard(i, isAllowed, isPicked) }
+                      picked={ isPicked.toString() }
                       allowed={ isAllowed.toString() }
-                      onClick={ () => this.pickCard(i, isAllowed, isSelected) }
+                      highlighted={ (this.state.hoverIndex === i).toString() }
                       type='white'
                       content={ card.content }/>;
                   })

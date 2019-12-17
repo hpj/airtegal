@@ -2,9 +2,13 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+// import { Transition } from 'react-spring';
+
 import Interactable from 'react-interactable/noNative';
 
 import { Value } from 'animated';
+
+import LineTo from './lineTo.js';
 
 import { socket } from '../screens/game.js';
 
@@ -28,7 +32,8 @@ class FieldOverlay extends React.Component
     this.state = {
       overlayHidden: true,
 
-      field: []
+      field: [],
+      lines: []
     };
 
     // bind functions that are use as callbacks
@@ -48,15 +53,34 @@ class FieldOverlay extends React.Component
 
   onRoomData(roomData)
   {
-    // the field overlay is only visible in matches
-    this.visibility((roomData.state === 'match') ? true : false);
+    // if a change happen in room's state
+    if (this.stateroomState !== roomData.state)
+    {
+      // the field overlay is only visible in matches
+      this.visibility(roomData.state === 'match');
+
+      // if lobby clear field
+      if (roomData.state === 'lobby')
+      {
+        this.setState({
+          hoverIndex: undefined,
+          field: [],
+          lines: []
+        });
+      }
+    }
 
     // TODO using this info show the owners of the cards (at the end of the round)
     // and the card that won the round
     if (roomData.roundEnded)
     {
+      this.setState({
+        hoverIndex: undefined,
+        lines: []
+      });
+
       // roomData.roundEnded.winnerEntryIndex
-      // roomData.roundEnded.fieldSecrets
+      // roomData.roundEnded.field[i].entry.id
     }
 
     if (roomData.field)
@@ -66,6 +90,10 @@ class FieldOverlay extends React.Component
         field: roomData.field
       });
     }
+
+    this.setState({
+      roomState: roomData.state
+    });
   }
 
   /** @param { boolean } visible
@@ -144,20 +172,88 @@ class FieldOverlay extends React.Component
                 {
                   const isAllowed = this.state.playerState === 'judging' && entryIndex > 0;
 
-                  return entry.map((card, cardIndex) =>
+                  return entry.cards.map((card) =>
                   {
+                    const onMouseEnter = () =>
+                    {
+                      const lines = entry.cards.map((card, i) =>
+                      {
+                        if (entry.cards[i + 1])
+                          return { from: card.key, to: entry.cards[i + 1].key };
+                      });
+
+                      lines.pop();
+
+                      this.setState({
+                        hoverIndex: entryIndex,
+                        lines: lines
+                      });
+                    };
+
+                    const onMouseLeave = () =>
+                    {
+                      this.setState({
+                        hoverIndex: undefined,
+                        lines: []
+                      });
+                    };
+
                     return <Card
-                      key={ cardIndex }
+                      key={ card.key }
+                      elementId={ card.key }
+                      onMouseEnter={ (isAllowed) ? onMouseEnter : undefined }
+                      onMouseLeave={ (isAllowed) ? onMouseLeave : undefined }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       allowed={ isAllowed.toString() }
+                      highlighted={ (this.state.hoverIndex === entryIndex).toString() }
                       type={ card.type }
                       content={ card.content }
                       hidden={ card.hidden }/>;
                   });
                 })
               }
+
+              {/* <Transition
+                keys={ (entry) => entry.key }
+                items={ this.state.field }
+                from={ { opacity: 0 } }
+                enter={ { opacity: 1 } }
+                leave={ { opacity: 0 } }
+              >
+                {
+                  (entry, phase, entryIndex) => (props) =>
+                  {
+                    const isAllowed = this.state.playerState === 'judging' && entryIndex > 0;
+
+                    return entry.cards.map((card, i) =>
+                    {
+                      return <Card
+                        key={ i }
+                        props={ props }
+                        onClick={ () => this.judgeCard(entryIndex, isAllowed) }
+                        allowed={ isAllowed.toString() }
+                        type={ card.type }
+                        content={ card.content }
+                        hidden={ card.hidden }/>;
+                    });
+                  }
+                }
+              </Transition> */}
+
             </div>
           </div>
+
+          {
+            this.state.lines.map((o, i) => <LineTo
+              key={ i }
+              within={ styles.container }
+              borderColor={ colors.entryLine }
+              borderWidth={ 10 }
+              from={ o.from }
+              to={ o.to }
+            />)
+          }
+
         </Interactable.View>
       </div>
     );

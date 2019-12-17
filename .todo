@@ -1,32 +1,35 @@
 Performance Issues and Bugs:
+  ☐ switch from Hash Router to Normal Router @high 
+    ☐ set webpack-dev-server for redirects
+    ☐ set netlify for redirects
 
 Testing:
-  ✔ closing and re-open all 3 interactable (room, field and hand) after a match @done(19-12-04 04:23)
 
 Features:
-  ☐ setup crowdl for i18n
-  ☐ setup sentry for error tracking
-  ☐ setup discord-presence-for-web-apps (need to publish the extension first)
+  ☐ setup discord-presence-for-web-apps (need to publish the extension first) @low 
 
 API & Database:
   ☐ create a query and endpoint for card showcase
 
 UI/UX:
+  ☐ animations for cards appearing and disappearing from field 
+  ☐ animations for cards appearing and disappearing from hand 
+
+  ☐ animations for card owners and round winner 
+
+  ☐ animations for match end 
+
   Homepage:
     ☐ enable card showcase
 
   Lobby:
-    ☐ show rooms
-
-    ☐ show google ad
-    ☐ show a window about ad-block if detected
+    ☐ show rooms 
+      ☐ show google ad
+        ☐ show a window about ad-block if detected
 
   Match Logic:
-    ☐ if the room is full and the room's master doesn't start the match in 30 seconds they should be kicked out of the room
-
-    ☐ card as interactable (player able to drag his cards to field)
+    ☐ if the room is full and the room's master doesn't start the match in 30 seconds they should be kicked out of the room 
 
     ☐ support drawing and playing blank cards
-    ✔ support for pick (2) black cards @done(19-12-04 04:23)
 
 CI/CD:

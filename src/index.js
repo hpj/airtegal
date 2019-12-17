@@ -42,9 +42,6 @@ const placeholder = document.body.querySelector('#placeholder');
 */
 function loaded()
 {
-  console.log(`User's country is ${country}.`);
-  console.log(`Availability is ${availability}.`);
-  
   if (!availability)
     return;
 
