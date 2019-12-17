@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import * as Sentry from '@sentry/browser';
 
@@ -50,14 +50,16 @@ function loaded()
 
   const pages =
   <BrowserRouter>
-    <Route exact path="/" component={ Homepage }/>
-  
-    <Route path="/play" component={ Game }/>
+    <Switch>
+      <Route exact path="/" component={ Homepage }/>
     
-    <Route path="/terms" component={ TermsAndConditions }/>
-    <Route path="/privacy" component={ PrivacyPolicy }/>
+      <Route path="/play" component={ Game }/>
+      
+      <Route path="/terms" component={ TermsAndConditions }/>
+      <Route path="/privacy" component={ PrivacyPolicy }/>
 
-    <Route component={ NotFound }/>
+      <Route component={ NotFound }/>
+    </Switch>
   </BrowserRouter>;
 
   ReactDOM.render(pages, app, () =>

@@ -13,7 +13,7 @@ const TermsAndConditions = () =>
   }, [ window.location ]);
 
   return (
-    <div className={styles.container}>
+    <div className={ styles.container }>
       <h2><strong>Terms and Conditions</strong></h2>
 
       <p>Welcome to Kuruit Bedan Fash5.</p>
