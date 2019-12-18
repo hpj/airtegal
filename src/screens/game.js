@@ -279,7 +279,7 @@ class Game extends React.Component
       <div className={ mainStyles.wrapper }>
 
         <Warning
-          style={ { padding: '50vh 5vw' } }
+          fullScreen={ true }
           storageKey='kbf-adults-warning'
           text={ i18n('kbf-adults-warning') }
           button={ i18n('ok') }

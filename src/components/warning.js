@@ -10,10 +10,12 @@ import { locale } from '../i18n.js';
 
 const colors = getTheme();
 
-const Warning = ({ storageKey, style, text, button }) =>
+const Warning = ({ fullScreen, storageKey, text, button }) =>
 {
   // starts hidden, so it won't appear and disappear again if the user turned it off
   const [ visible, changeVisibility ] = useState(false);
+
+  fullScreen = fullScreen || false;
 
   const onClick = () =>
   {
@@ -37,7 +39,7 @@ const Warning = ({ storageKey, style, text, button }) =>
   // if the waring is visible
   if (visible)
     return (
-      <div style={ style } className={ styles.wrapper }>
+      <div fullscreen={ fullScreen.toString() } className={ styles.wrapper }>
         <div className={ styles.container }>
           {text}
           <div className={ styles.button } onClick={ onClick }>
@@ -51,6 +53,7 @@ const Warning = ({ storageKey, style, text, button }) =>
 };
 
 Warning.propTypes = {
+  fullScreen: PropTypes.bool,
   storageKey: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   button: PropTypes.string.isRequired
@@ -62,22 +65,43 @@ const styles = createStyle({
     position: 'fixed',
     backgroundColor: colors.warningBackground,
 
+    userSelect: 'none',
+
+    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    
     top: 0,
     width: '90vw',
+    padding: '12vh 5vw',
 
-    userSelect: 'none',
-    padding: '20px 5vw'
+    '[fullscreen="true"]': {
+      backgroundColor: colors.whiteBackground,
+
+      display: 'flex',
+      height: '76vh'
+    },
+
+    '[fullscreen="true"] > div': {
+      color: colors.blackText
+    },
+
+    '[fullscreen="true"] > div > div': {
+      borderColor: colors.blackText
+    },
+
+    '[fullscreen="true"] > div > div:hover': {
+      color: colors.whiteBackground,
+      backgroundColor: colors.blackText
+    }
   },
 
   container: {
     color: colors.whiteText,
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
     direction: locale.direction,
     maxWidth: '850px',
+    height: 'min-content',
 
     margin: 'auto'
   },
@@ -94,7 +118,8 @@ const styles = createStyle({
     padding: '2px 18px',
 
     ':hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.25)'
+      color: colors.warningBackground,
+      backgroundColor: colors.whiteBackground
     }
   }
 });
