@@ -10,19 +10,15 @@ import i18n, { locale } from '../i18n.js';
 
 const colors = getTheme();
 
-// TODO on an installed PWA, it has a splash screen that we
-// should match its style
-
-// FIX the splash loading screen don't have the fonts loaded
-// so the kbf logo is renderer incorrectly
-
 const Loading = ({ splash }) =>
 {
   return (
     <div className={ styles.container }>
-
-      <div className={ styles.loading }>{ i18n('kuruit-bedan-fash5') }</div>
-
+      {
+        (splash) ?
+          <div className={ styles.splash }><div/></div> :
+          <div className={ styles.loading }>{ i18n('kuruit-bedan-fash5') }</div>
+      }
     </div>
   );
 };
@@ -37,6 +33,8 @@ const styles = createStyle({
     position: 'absolute',
     display: 'flex',
 
+    userSelect: 'none',
+
     justifyContent: 'center',
     alignItems: 'center',
     
@@ -46,6 +44,25 @@ const styles = createStyle({
 
     minWidth: '100vw',
     minHeight: '100vh'
+  },
+
+  splash: {
+    display: 'flex',
+
+    width: '100vw',
+    height: '100vh',
+
+    '> :nth-child(1)': {
+      width: '128px',
+      height: '128px',
+      
+      background: `url(./icon-${colors.theme}.svg)`,
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+
+      margin: 'auto'
+    }
   },
 
   loading: {

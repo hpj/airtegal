@@ -1,7 +1,4 @@
 Performance Issues and Bugs:
-  ☐ switch from Hash Router to Normal Router @high 
-    ☐ set webpack-dev-server for redirects
-    ☐ set netlify for redirects
 
 Testing:
 

@@ -1,13 +1,15 @@
- export const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const browserMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 /**
 * @param { boolean } forceMain
 */
 export default function(forceMain)
 {
-  const dark = !forceMain && darkMode && false;
+  const dark = !forceMain && browserMode && false;
 
-  const mainTheme = {
+  const lightTheme = {
+    theme: 'light',
+
     whiteText: '#ffffff',
     whiteBackground: '#ffffff',
    
@@ -57,7 +59,9 @@ export default function(forceMain)
   };
 
   const darkTheme = {
-    ...mainTheme,
+    ...lightTheme,
+
+    theme: 'dark',
 
     whiteText: '#ffffff',
     whiteBackground: '#000000',
@@ -94,5 +98,5 @@ export default function(forceMain)
     // playButtonGradient: [ '#56106d', '#a022d2' ]
   };
 
-  return (dark) ? darkTheme : mainTheme;
+  return (dark) ? darkTheme : lightTheme;
 }

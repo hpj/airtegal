@@ -115,11 +115,11 @@ class HandOverlay extends React.Component
 
     // if the player has a secret properties object in the data
     // and it has the hand data for this client
-    if (roomData.secretProperties && roomData.secretProperties.hand)
+    if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
     {
       this.setState({
         playerState: roomData.playerProperties[socket.id].state,
-        hand: roomData.secretProperties.hand
+        hand: roomData.playerSecretProperties.hand
       });
     }
 
