@@ -1,8 +1,6 @@
 import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 
-import ReactGA from 'react-ga';
-
 import RefreshIcon from 'mdi-react/RefreshIcon';
 
 import autoSizeInput from 'autosize-input';
@@ -137,9 +135,6 @@ class Game extends React.Component
 
     // fix the scroll position
     window.scrollTo(0, 0);
-
-    // track a page view
-    ReactGA.pageview('/play');
 
     // connect to the socket.io server
     connect()

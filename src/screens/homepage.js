@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 
 import Select from 'react-select';
 
-import ReactGA from 'react-ga';
-
 import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
@@ -26,9 +24,6 @@ class Homepage extends React.Component
     document.title = 'Kuruit Bedan Fash5';
     
     window.scrollTo(0, 0);
-
-    // track a page view
-    ReactGA.pageview('/');
   }
 
   render()

@@ -30,7 +30,6 @@
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-ga": "^2.7.0",
     "react-interactable": "^0.6.4",
     "react-markdown": "^4.2.2",
     "react-panresponder-web": "^1.0.2",
