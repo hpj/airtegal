@@ -31,6 +31,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-interactable": "^0.6.4",
+    "react-markdown": "^4.2.2",
     "react-panresponder-web": "^1.0.2",
     "react-router-dom": "^5.1.2",
     "react-select": "^3.0.8",
