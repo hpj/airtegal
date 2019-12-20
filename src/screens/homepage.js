@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { Link } from 'react-router-dom';
 
 import Select from 'react-select';
+
+import ReactGA from 'react-ga';
 
 import getTheme from '../colors.js';
 
@@ -15,131 +17,137 @@ import i18n, { locales, locale, setLocale } from '../i18n.js';
 
 const colors = getTheme(true);
 
-const Homepage = () =>
+class Homepage extends React.Component
 {
-  // on url change
-  useEffect(() =>
+  constructor()
   {
+    super();
+
     document.title = 'Kuruit Bedan Fash5';
     
     window.scrollTo(0, 0);
 
-  }, [ window.location ]);
+    // track a page view
+    ReactGA.pageview('/');
+  }
 
-  return (
-    <div>
-      <Warning
-        storageKey='kbf-adults-warning'
-        text={ i18n('kbf-adults-warning') }
-        button={ i18n('ok') }
-      />
-
-      <div className={ headerStyles.wrapper }>
-
-        <div className={ headerStyles.regionalOptions }>
-          <Select
-            className={ headerStyles.select }
-            classNamePrefix='react-select'
-            defaultValue={ locale }
-            isRtl={ locale.direction === 'rtl' }
-            isSearchable={ true }
-            options={ locales }
-            onChange={ (country) => setLocale(country) }
-            theme={ theme => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary: colors.whiteText
-              }
-            }) }
-          />
-        </div>
-
-        <div className={ headerStyles.container }>
-          <CardShowcase/>
-
-          <div className={ headerStyles.title }>
-
-            <a className={ headerStyles.hpj } href='https://herpproject.com'>
-              { i18n('hpj') }
-            </a>
-
-            <div className={ headerStyles.kbf }>{ i18n('kuruit-bedan-fash5') }
-              <div className={ headerStyles.beta }>({ i18n('beta') })</div>
+  render()
+  {
+    return (
+      <div>
+        <Warning
+          storageKey='kbf-adults-warning'
+          text={ i18n('kbf-adults-warning') }
+          button={ i18n('ok') }
+        />
+  
+        <div className={ headerStyles.wrapper }>
+  
+          <div className={ headerStyles.regionalOptions }>
+            <Select
+              className={ headerStyles.select }
+              classNamePrefix='react-select'
+              defaultValue={ locale }
+              isRtl={ locale.direction === 'rtl' }
+              isSearchable={ true }
+              options={ locales }
+              onChange={ (country) => setLocale(country) }
+              theme={ theme => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: colors.whiteText
+                }
+              }) }
+            />
+          </div>
+  
+          <div className={ headerStyles.container }>
+            <CardShowcase/>
+  
+            <div className={ headerStyles.title }>
+  
+              <a className={ headerStyles.hpj } href='https://herpproject.com'>
+                { i18n('hpj') }
+              </a>
+  
+              <div className={ headerStyles.kbf }>{ i18n('kuruit-bedan-fash5') }
+                <div className={ headerStyles.beta }>({ i18n('beta') })</div>
+              </div>
+            
             </div>
-          
+          </div>
+        </div>
+  
+        <div className={ qaStyles.wrapper }>
+          <div className={ qaStyles.container }>
+            <p className={ qaStyles.question }>
+              { i18n('what-is-kbf') }
+            </p>
+  
+            <p className={ qaStyles.answer }>
+              { i18n('this-is-kbf') }
+            </p>
+  
+            <p className={ qaStyles.question }>
+              { i18n('who-is-hpj') }
+            </p>
+  
+            <p className={ qaStyles.answer }>
+              { i18n('this-is-hpj') }
+            </p>
+  
+            <p className={ qaStyles.question }>
+              { i18n('why-is-game-raciest') }
+            </p>
+  
+            <p className={ qaStyles.answer }>
+  
+              { i18n('freedom-of-speech-1') }
+              <br/>
+  
+              { i18n('freedom-of-speech-2') }
+              <br/>
+  
+              { i18n('freedom-of-speech-3') }
+            </p>
+  
+            <p className={ qaStyles.question }>
+              { i18n('how-to-suggest-cards') }
+            </p>
+  
+            <p className={ qaStyles.answer }>
+              { i18n('suggesting-cards') }
+            </p>
+  
+          </div>
+        </div>
+      
+        <div className={ playStyles.wrapper }>
+          <div className={ playStyles.container }>
+            <Link className={ playStyles.title } to='/play'> { i18n('play') } </Link>
+          </div>
+        </div>
+  
+        <div className={ footerStyles.wrapper }>
+          <div className={ footerStyles.container }>
+            <a className={ footerStyles.hpj } href='https://herpproject.com'>
+              { i18n('herp-project') }
+            </a>
+            <div className={ footerStyles.sitemap }>
+              <Link className={ footerStyles.privacy } to='/privacy'> { i18n('privacy-policy') } </Link>
+              _
+              <Link className={ footerStyles.use } to='/terms'> { i18n('terms-and-conditions') } </Link>
+            </div>
+            <p className={ footerStyles.copyright }>
+              { i18n('copyright-notice') }
+            </p>
           </div>
         </div>
       </div>
-
-      <div className={ qaStyles.wrapper }>
-        <div className={ qaStyles.container }>
-          <p className={ qaStyles.question }>
-            { i18n('what-is-kbf') }
-          </p>
-
-          <p className={ qaStyles.answer }>
-            { i18n('this-is-kbf') }
-          </p>
-
-          <p className={ qaStyles.question }>
-            { i18n('who-is-hpj') }
-          </p>
-
-          <p className={ qaStyles.answer }>
-            { i18n('this-is-hpj') }
-          </p>
-
-          <p className={ qaStyles.question }>
-            { i18n('why-is-game-raciest') }
-          </p>
-
-          <p className={ qaStyles.answer }>
-
-            { i18n('freedom-of-speech-1') }
-            <br/>
-
-            { i18n('freedom-of-speech-2') }
-            <br/>
-
-            { i18n('freedom-of-speech-3') }
-          </p>
-
-          <p className={ qaStyles.question }>
-            { i18n('how-to-suggest-cards') }
-          </p>
-
-          <p className={ qaStyles.answer }>
-            { i18n('suggesting-cards') }
-          </p>
-
-        </div>
-      </div>
-    
-      <div className={ playStyles.wrapper }>
-        <div className={ playStyles.container }>
-          <Link className={ playStyles.title } to='/play'> { i18n('play') } </Link>
-        </div>
-      </div>
-
-      <div className={ footerStyles.wrapper }>
-        <div className={ footerStyles.container }>
-          <a className={ footerStyles.hpj } href='https://herpproject.com'>
-            { i18n('herp-project') }
-          </a>
-          <div className={ footerStyles.sitemap }>
-            <Link className={ footerStyles.privacy } to='/privacy'> { i18n('privacy-policy') } </Link>
-            _
-            <Link className={ footerStyles.use } to='/terms'> { i18n('terms-and-conditions') } </Link>
-          </div>
-          <p className={ footerStyles.copyright }>
-            { i18n('copyright-notice') }
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 const headerStyles = createStyle({
   wrapper: {

@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
+import ReactGA from 'react-ga';
+
 import * as Sentry from '@sentry/browser';
 
 import i18n, { setLocale } from './i18n.js';
@@ -116,7 +118,7 @@ export function hideLoadingScreen()
 // CORS only works on this custom domain (origin)
 // meaning we need to move the client to that remote url
 // if they were viewing the app from the host url
-if (location.hostname.search('gitlab.io') > -1)
+if (location.hostname.search('.netlify.com') > -1)
   location.replace('https://bedan.me');
 
 // set the API endpoint
@@ -199,10 +201,15 @@ const ipCheck = new Promise((resolve) =>
     });
 });
 
-// init sentry for error monitoring
-
+// initialize third party service providers
 if (process.env.NODE_ENV === 'production')
+{
+  // sentry for error monitoring
   Sentry.init({ dsn: 'https://48c0df63377d4467823a29295dbc3c5f@sentry.io/1521991' });
+
+  // google analytics
+  ReactGA.initialize('UA-154903330-1');
+}
 
 // show a loading screen until the promises resolve
 

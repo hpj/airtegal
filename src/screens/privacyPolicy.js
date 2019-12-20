@@ -89,7 +89,7 @@ These third parties have access to your Usage Data only to perform these tasks o
 **Ads**
   We may use third-party Service Providers to show ads on our Service.
 
-  * **Google Ads** Google Ads is an online advertising platform where advertisers pay to display brief advertisements on services like our Service. https://policies.google.com/technologies/ads
+  * **Google AdSense** Through Google AdSense advertisers pay to display brief advertisements on Websites like our Service. https://policies.google.com/technologies/ads
 
 ### Children's Privacy
 
