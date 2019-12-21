@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Value } from 'animated';
 import Interactable from 'react-interactable/noNative';
 
-import i18n from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -117,7 +117,7 @@ class RoomOverlay extends React.Component
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('create', { username }).then(() =>
+    sendMessage('create', { username, region: locale.value }).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -144,7 +144,7 @@ class RoomOverlay extends React.Component
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('join', { id, username }).then(() =>
+    sendMessage('join', { id, username, region: locale.value }).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);

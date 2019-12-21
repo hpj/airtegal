@@ -7,6 +7,8 @@ import { createStyle } from '../flcss.js';
 const input = `
 # Privacy Policy
 
+Effective Date: 21 December 2019
+
 Welcome to Kuruit Bedan Fash5.
 
 [Herp Project](https://herpproject.com) ("us", "we", or "our") operates the https://bedan.me website (hereinafter referred to as the "Service").
@@ -80,16 +82,13 @@ We may employ third party companies and individuals to facilitate our Service ("
 
 These third parties have access to your Usage Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
 
-  **Analytics**
+**Error Tracking**
 
-  We may use third-party Service Providers to monitor and analyze the use of our Service.
-
-  * **Google Analytics** Google Analytics is a web analytics service. https://policies.google.com/technologies/partner-sites
+  * **Sentry** Sentry provides us with the ability to track and monitor errors that occur while users are using our Service, Using the information Sentry collects we're able to resolve those errors and improve the quality and the user experience of this Service. https://sentry.io/privacy/  
 
 **Ads**
-  We may use third-party Service Providers to show ads on our Service.
 
-  * **Google AdSense** Through Google AdSense advertisers pay to display brief advertisements on Websites like our Service. https://policies.google.com/technologies/ads
+  * **Google AdSense** Through Google AdSense advertisers pay to display brief advertisements on Websites like this Service, without AdSense we won't be able to continue offering this Service free-of-charge to all users. https://policies.google.com/technologies/ads
 
 ### Children's Privacy
 

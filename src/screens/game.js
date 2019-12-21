@@ -214,7 +214,7 @@ class Game extends React.Component
   {
     this.loadingVisibility(true);
 
-    // this.sendMessage('rooms')
+    // this.sendMessage('rooms', { region: locale.value })
     //   .then((rooms) =>
     //   {
     //     this.showErrorMessage(JSON.stringify(rooms));
