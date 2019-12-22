@@ -390,6 +390,8 @@ const installStyles = createStyle({
 
     flexWrap: 'wrap',
     justifyContent: 'center',
+
+    direction: locale.direction,
     
     userSelect: 'none',
     flexBasis: '100%',

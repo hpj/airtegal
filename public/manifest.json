@@ -1,6 +1,7 @@
 {
   "short_name": "KBF",
   "name": "Kuruit Bedan Fash5",
+  "prefer_related_applications": false,
   "icons": [
     {
      "src": "./Icon-36.png",
