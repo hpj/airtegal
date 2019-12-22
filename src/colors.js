@@ -26,6 +26,8 @@ export default function(forceMain)
     trackBarBackground: '#ffffff',
     trackBarScrollbar: '#000000',
    
+    optionsScrollbar: '#867878',
+
     fieldBackground: '#545454',
     fieldScrollbar: '#262626',
    
@@ -37,6 +39,7 @@ export default function(forceMain)
     headerGradient: [ '#F05F57', '#360940' ],
    
     playBackgroundGradient: [ '#000000', '#b9444e' ],
+    playBackgroundText: '#b9444e',
    
     playButtonGradient: [ '#ff71e7', '#ff092d' ],
    
@@ -71,6 +74,8 @@ export default function(forceMain)
 
     trackBarBackground: '#191818',
     trackBarScrollbar: '#c3c3c3',
+
+    optionsScrollbar: '#3d3a3a',
 
     fieldBackground: '#000000',
     fieldScrollbar: '#ffffff',

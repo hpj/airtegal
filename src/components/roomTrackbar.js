@@ -201,6 +201,12 @@ const styles = createStyle({
     overflowX: 'hidden',
     overflowY: 'scroll',
 
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
+
     '::-webkit-scrollbar':
     {
       width: '8px'
@@ -210,12 +216,6 @@ const styles = createStyle({
     {
       borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
-    },
-
-    // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
-      display: 'flex',
-      flexWrap: 'wrap'
     }
   },
 

@@ -270,9 +270,10 @@ const styles = createStyle({
     overflowX: 'hidden',
     overflowY: 'scroll',
 
+    width: 'calc(100% - 38px)',
     height: '100%',
 
-    margin: '0 30px',
+    margin: '0 8px 0 30px',
 
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {

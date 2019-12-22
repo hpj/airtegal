@@ -7,10 +7,14 @@
 
   "ok": "تمام",
   "play": "العب",
+
   "server-unavailable": "السيرفر خارج الخدمة",
   "timeout": "فشل الاتصال",
   "username-input": "حط اسمك هنا",
   "welcome": "اهلا",
+
+  "install": "دوس هنا",
+  "install-prompt": "يمكن لك اضافة تطبيق كروت بضان فشخ علي جهازك",
   
   "create-room": "اصنع غرفتك",
   "random-room": "غرفة عشؤئية",

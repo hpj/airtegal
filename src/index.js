@@ -38,38 +38,6 @@ let keepLoading = false;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
-/** when all required assets are loaded
-*/
-function loaded()
-{
-  if (!availability)
-    return;
-
-  const pages =
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/" component={ Homepage }/>
-    
-      <Route path="/play" component={ Game }/>
-      
-      <Route path="/terms" component={ TermsAndConditions }/>
-      <Route path="/privacy" component={ PrivacyPolicy }/>
-
-      <Route component={ NotFound }/>
-    </Switch>
-  </BrowserRouter>;
-
-  ReactDOM.render(pages, app, () =>
-  {
-    // if on production mode, register the service worker
-    if (process.env.NODE_ENV === 'production')
-      registerServiceWorker();
-
-    if (!keepLoading)
-      hideLoadingScreen();
-  });
-}
-
 function registerServiceWorker()
 {
   // if the browser supports service workers
@@ -82,6 +50,38 @@ function registerServiceWorker()
         console.error('Service worker registration failed:', err);
       });
   }
+}
+
+/** when all required assets are loaded
+*/
+function loaded()
+{
+  if (!availability)
+    return;
+
+  // register the service worker
+  if (process.env.NODE_ENV === 'production')
+    registerServiceWorker();
+
+  const pages =
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={ Homepage }/>
+      
+        <Route path="/play" component={ Game }/>
+        
+        <Route path="/terms" component={ TermsAndConditions }/>
+        <Route path="/privacy" component={ PrivacyPolicy }/>
+
+        <Route component={ NotFound }/>
+      </Switch>
+    </BrowserRouter>;
+
+  ReactDOM.render(pages, app, () =>
+  {
+    if (!keepLoading)
+      hideLoadingScreen();
+  });
 }
 
 export function holdLoadingScreen()

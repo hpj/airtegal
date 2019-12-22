@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import Select from 'react-select';
 
+import ArrowDownIcon from 'mdi-react/ArrowDownIcon';
+
 import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
@@ -22,8 +24,35 @@ class Homepage extends React.Component
     super();
 
     document.title = 'Kuruit Bedan Fash5';
+
+    this.state = {
+      installPrompt: false
+    };
     
     window.scrollTo(0, 0);
+  }
+
+  componentDidMount()
+  {
+    window.addEventListener('beforeinstallprompt', (e) =>
+    {
+      e.preventDefault();
+      
+      this.setState({
+        installPrompt: true,
+        // show browser's install prompt
+        installPromptCallback: () => e.prompt()
+      });
+    });
+
+    window.addEventListener('appinstalled', () =>
+    {
+      // hide the install prompt when
+      // the user installs the pwa
+      this.setState({
+        installPrompt: false
+      });
+    });
   }
 
   render()
@@ -120,6 +149,13 @@ class Homepage extends React.Component
       
         <div className={ playStyles.wrapper }>
           <div className={ playStyles.container }>
+
+            <div allowed={ this.state.installPrompt.toString() } className={ installStyles.container }>
+              <div className={ installStyles.title }>{ i18n('install-prompt') }</div>
+              <ArrowDownIcon className={ installStyles.arrow }/>
+              <div className={ installStyles.button } onClick={ this.state.installPromptCallback } >{ i18n('install') }</div>
+            </div>
+
             <Link className={ playStyles.title } to='/play'> { i18n('play') } </Link>
           </div>
         </div>
@@ -300,11 +336,16 @@ const playStyles = createStyle({
 
   container: {
     display: 'flex',
+    flexWrap: 'wrap',
+
     justifyContent: 'center',
     
     maxWidth: '850px',
+
+    fontWeight: 700,
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
   
-    padding: '5vh 5vw',
+    padding: '2vh 5vw 5vh 5vw',
     margin: 'auto'
   },
 
@@ -312,19 +353,17 @@ const playStyles = createStyle({
     color: colors.whiteText,
     cursor: 'pointer',
     
-    border: '3px solid',
-    borderColor: colors.whiteText,
+    border: `3px solid ${ colors.whiteText }`,
 
     pointerEvents: 'none',
     userSelect: 'none',
 
-    fontWeight: 700,
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(12px + 0.65vw + 0.65vh)',
 
     textDecoration: 'none',
 
     padding: '5% 12%',
+    margin: '2vh 0',
 
     '[href]': {
       pointerEvents: 'all'
@@ -341,6 +380,62 @@ const playStyles = createStyle({
 
     ':active': {
       transform: 'scale(0.9)'
+    }
+  }
+});
+
+const installStyles = createStyle({
+  container: {
+    display: 'flex',
+
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    
+    userSelect: 'none',
+    flexBasis: '100%',
+
+    color: colors.whiteText,
+
+    padding: '10px 0 5vh 0',
+
+    '[allowed="false"]': {
+      display: 'none'
+    }
+  },
+
+  title: {
+    display: 'flex',
+    justifyContent: 'center',
+
+    width: 'fit-content',
+    fontSize: 'calc(8px + 0.45vw + 0.45vh)',
+    
+    padding: '5px 35px',
+
+    borderRadius: '100vw',
+    border: `2px solid ${ colors.whiteText }`
+  },
+
+  arrow: {
+    flexBasis: '100%',
+    fill: colors.whiteText,
+
+    width: '24px',
+    height: '24px',
+
+    padding: '15px 0'
+  },
+
+  button: {
+    cursor: 'pointer',
+    padding: '5px 35px',
+
+    borderRadius: '100vw',
+    border: `2px solid ${ colors.whiteText }`,
+
+    ':hover': {
+      color: colors.playBackgroundText,
+      backgroundColor: colors.whiteBackground
     }
   }
 });
