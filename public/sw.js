@@ -15,7 +15,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "card.png",
-    "revision": "4a7b114dab98456b98fd1765b3bfd268"
+    "revision": "3ab5e7f65a2c1ce25d2e6f69ec17c37e"
   },
   {
     "url": "fonts.css",
@@ -55,7 +55,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "c1fced792213141c688ebd9726eefb50"
+    "revision": "50c35c1de9dc97d23956a4726e0e3a73"
   },
   {
     "url": "manifest.json",
