@@ -132,7 +132,7 @@ class RoomOptions extends React.Component
           <div className={ styles.field }>
 
             <div>{ 'First to' }</div>
-            <div className={ styles.inputMiddle }>{ this.state.options.match.pointsToCollect }</div>
+            <div allowed={ isThisMaster.toString() } className={ styles.inputMiddle }>{ this.state.options.match.pointsToCollect }</div>
             <div>{ 'Points' }</div>
 
           </div>
@@ -142,7 +142,7 @@ class RoomOptions extends React.Component
 
         <div className={ styles.field }>
 
-          <div className={ styles.inputBeginning }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
+          <div allowed={ isThisMaster.toString() } className={ styles.inputBeginning }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
           <div>{ 'Countdown' }</div>
 
         </div>
@@ -352,7 +352,11 @@ const styles = createStyle({
   },
 
   input: {
-    borderBottom: `2px ${colors.blackText} solid`
+    borderBottom: `2px ${colors.blackText} solid`,
+
+    '[allowed="false"]': {
+      borderBottom: 0
+    }
   },
 
   inputBeginning: {
