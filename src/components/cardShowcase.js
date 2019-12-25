@@ -40,7 +40,8 @@ const CardShowcase = () =>
   // on url change
   useEffect(() =>
   {
-    // TODO set a server query to return good hand-picked combinations of white and black cards
+    // TODO card showcase
+    
     // the graphql query should be something like this
     // setCards([
     //   [

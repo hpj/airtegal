@@ -23,6 +23,9 @@ export default function(forceMain)
    
     selectBackground: '#3B5FFF',
 
+    roomBackground: '#C4C4C4',
+    roomForeground: '#000000',
+
     trackBarBackground: '#ffffff',
     trackBarScrollbar: '#000000',
    
@@ -71,6 +74,9 @@ export default function(forceMain)
 
     blackBackground: '#313131',
     blackText: '#c3c3c3',
+
+    roomBackground: '#3e3e3e',
+    roomForeground: '#ffffff',
 
     trackBarBackground: '#191818',
     trackBarScrollbar: '#c3c3c3',

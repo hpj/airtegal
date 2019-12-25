@@ -181,6 +181,8 @@ RoomOptions.propTypes = {
 const styles = createStyle({
   container: {
     position: 'relative',
+    
+    color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
     userSelect: 'none',
@@ -420,7 +422,6 @@ const styles = createStyle({
     alignItems: 'center',
     textAlign: 'center',
 
-    top: 0,
     width: 'min-content',
     height: '100%'
   }

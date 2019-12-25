@@ -109,7 +109,9 @@ class Game extends React.Component
       errorMessage: '',
 
       username: stupidNames(),
-      size: {}
+      size: {},
+
+      rooms: []
     };
 
     // bind functions that are use as callbacks
@@ -119,13 +121,10 @@ class Game extends React.Component
     this.usernameBlurEvent = this.usernameBlurEvent.bind(this);
     this.usernameChangeEvent = this.usernameChangeEvent.bind(this);
 
+    this.requestRooms = this.requestRooms.bind(this);
+
     // set the title of this screen
     document.title = 'Kuruit Bedan Fash5';
-
-    // TODO how to get query parameters
-
-    // const query = new URLSearchParams(window.location.href.match(/(?=\?).+/)[0]);
-    // console.log(query.get('q'));
 
     // disable back button
 
@@ -212,14 +211,27 @@ class Game extends React.Component
 
   requestRooms()
   {
+    // show a loading indictor
     this.loadingVisibility(true);
 
-    // this.sendMessage('rooms', { region: locale.value })
-    //   .then((rooms) =>
-    //   {
-    //     this.showErrorMessage(JSON.stringify(rooms));
-    //   })
-    //   .catch((err) => this.showErrorMessage(i18n(err) || err));
+    this.sendMessage('rooms', { region: locale.value })
+      .then((rooms) =>
+      {
+        // hide the loading indictor
+        this.loadingVisibility(false);
+
+        // update the UI
+        this.setState({
+          rooms: rooms
+        });
+      }).catch((err) =>
+      {
+        // hide the loading indictor
+        this.loadingVisibility(false);
+
+        // show an error message
+        this.showErrorMessage(i18n(err) || err);
+      });
   }
 
   componentDidMount()
@@ -229,6 +241,18 @@ class Game extends React.Component
 
     // auto-size the username input-box on resize
     window.addEventListener('resize', this.resize);
+
+    // process url parameters
+
+    const params = new URL(document.URL).searchParams;
+    
+    // if there is any parameters in the url
+    if (params)
+    {
+      // join room
+      if (params.get('join'))
+        overlayRef.current.joinRoom(params.get('join'));
+    }
   }
 
   componentWillUnmount()
@@ -315,7 +339,7 @@ class Game extends React.Component
           <div className={ roomsStyles.container }>
 
             <p className={ roomsStyles.title }> { i18n('available-rooms') } </p>
-            <RefreshIcon allowed={ this.state.loadingHidden.toString() } className={ roomsStyles.refresh }/>
+            <RefreshIcon allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms } className={ roomsStyles.refresh }/>
 
             <div className={ roomsStyles.rooms }>
 
@@ -332,6 +356,36 @@ class Game extends React.Component
                 {this.state.errorMessage}
               </div>
 
+              {
+                (this.state.rooms.length <= 0) ?
+                  <div className={ roomsStyles.indicator }>
+                    { i18n('no-rooms-available') }
+                  </div> :
+                  this.state.rooms.map((room, i) =>
+                  {
+                    const pack = room.options.match.selectedPacks[0];
+
+                    return <div key={ i } className={ roomsStyles.room }>
+    
+                      <div className={ roomsStyles.packs }>
+                        <div style={ {
+                          color: pack.foreground_color,
+                          backgroundImage: `url(${pack.background_url})`,
+                          backgroundColor: pack.background_url
+                        } } className={ roomsStyles.pack }>
+                          <div className={ roomsStyles.packName }>{ pack.display_name }</div>
+                        </div>
+                      </div>
+    
+                      <div className={ roomsStyles.highlights }>
+
+                        <div className={ roomsStyles.counter }>{ `${room.players}/${room.options.match.maxPlayers}` }</div>
+                        <div>{ `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.` }</div>
+    
+                      </div>
+                    </div>;
+                  })
+              }
             </div>
           </div>
         </div>
@@ -507,10 +561,32 @@ const roomsStyles = createStyle({
 
   rooms: {
     gridArea: 'rooms',
+
+    direction: 'ltr',
+
+    display: 'grid',
     position: 'relative',
+
+    gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
+    gridTemplateRows: 'min-content',
+
+    justifyContent: 'space-around',
 
     width: '100%',
     height: '100%'
+  },
+
+  indicator: {
+    display: 'flex',
+    position: 'absolute',
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    width: '100%',
+    height: '100%',
+    
+    fontWeight: 700
   },
 
   loading: {
@@ -552,6 +628,70 @@ const roomsStyles = createStyle({
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
+  },
+
+  room: {
+    display: 'flex',
+
+    color: colors.roomForeground,
+    backgroundColor: colors.roomBackground,
+
+    width: 'auto',
+    height: 'min-content',
+
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    margin: '10px',
+    borderRadius: '10px'
+  },
+
+  highlights: {
+    direction: locale.direction,
+
+    width: 'calc(50% - 40px)',
+    height: 'calc(155px - 20px + 1vw + 1vh)',
+
+    margin: '10px 20px'
+  },
+
+  counter: {
+    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
+
+    width: 'min-content',
+    margin: '0 0 5px auto'
+  },
+
+  packs: {
+    width: '50%'
+  },
+
+  pack: {
+    color: colors.whiteText,
+    backgroundColor: colors.blackBackground,
+
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+
+    width: '80%',
+    height: '85%',
+    
+    borderRadius: '10px',
+    margin: '35% 0 0 20%'
+  },
+
+  packName: {
+    display: 'flex',
+    
+    alignItems: 'center',
+    textAlign: 'center',
+
+    width: 'min-content',
+    height: '100%',
+
+    margin: 'auto'
   }
 });
 
