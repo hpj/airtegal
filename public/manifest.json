@@ -56,7 +56,7 @@
    ],
   "start_url": "/play",
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "portrait",
   "theme_color": "#454545",
   "background_color": "#ffffff"
 }
