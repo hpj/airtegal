@@ -1,6 +1,11 @@
 {
   "short_name": "KBF",
   "name": "Kuruit Bedan Fash5",
+  "start_url": "/play",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#454545",
+  "background_color": "#ffffff",
   "prefer_related_applications": false,
   "icons": [
     {
@@ -53,10 +58,5 @@
      "density": "5.0",
      "purpose": "any"
     }
-   ],
-  "start_url": "/play",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#454545",
-  "background_color": "#ffffff"
+   ]
 }

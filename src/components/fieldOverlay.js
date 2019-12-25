@@ -179,7 +179,7 @@ class FieldOverlay extends React.Component
                       const lines = entry.cards.map((card, i) =>
                       {
                         if (entry.cards[i + 1])
-                          return { from: card.key, to: entry.cards[i + 1].key };
+                          return { from: card.uuid, to: entry.cards[i + 1].uuid };
                       });
 
                       lines.pop();
@@ -199,8 +199,8 @@ class FieldOverlay extends React.Component
                     };
 
                     return <Card
-                      key={ card.key }
-                      elementId={ card.key }
+                      key={ card.uuid }
+                      elementId={ card.uuid }
                       onMouseEnter={ (isAllowed) ? onMouseEnter : undefined }
                       onMouseLeave={ (isAllowed) ? onMouseLeave : undefined }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }

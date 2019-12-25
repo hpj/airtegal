@@ -3,24 +3,21 @@ Performance Issues and Bugs:
 Testing:
 
 Features:
-  ☐ setup discord-presence-for-web-apps (need to publish the extension first) @low 
-
-API & Database:
-  ☐ create a query and endpoint for card showcase
+  ☐ support rich-presence-for-web-apps @low 
 
 UI/UX:
   ☐ animations for cards appearing and disappearing from field 
-  ☐ animations for cards appearing and disappearing from hand 
+  ☐ animations for cards appearing and disappearing from hand @high 
 
-  ☐ animations for card owners and round winner 
+  ☐ animations for card owners and round winner @high 
 
-  ☐ animations for match end 
+  ☐ animations for match end @high 
 
   Homepage:
-    ☐ enable card showcase
+    ☐ enable card showcase ( using the stats's card combo rows ) @low 
 
   Lobby:
-    ☐ show rooms 
+    ☐ show rooms @high 
       ☐ show google ad
         ☐ show a window about ad-block if detected
 
