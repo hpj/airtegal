@@ -117,37 +117,37 @@ class RoomOptions extends React.Component
           <div>{ this.state.errorMessage }</div>
         </div>
 
-        <div className={ styles.title }>Game Mode:</div>
+        <div className={ styles.title }>{ i18n('game-mode') }</div>
 
         <div className={ styles.pick }>
           <div><div/></div>
-          <div>Judgement</div>
+          <div>{ i18n('judgement-mode') }</div>
         </div>
 
-        <div className={ styles.title }>Win Method:</div>
+        <div className={ styles.title }>{ i18n('win-method') }</div>
 
         <div className={ styles.pick }>
           <div><div/></div>
 
-          <div className={ styles.field }>
+          <div style={ { padding: 0 } } className={ styles.field }>
 
-            <div>{ 'First to' }</div>
-            <div allowed={ isThisMaster.toString() } className={ styles.inputMiddle }>{ this.state.options.match.pointsToCollect }</div>
-            <div>{ 'Points' }</div>
+            <div>{ i18n('first-to-points-1') }</div>
+            <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+            <div>{ i18n('first-to-points-2') }</div>
 
           </div>
         </div>
 
-        <div className={ styles.title }>Round Options:</div>
+        <div className={ styles.title }>{ i18n('round-options') }</div>
 
         <div className={ styles.field }>
 
-          <div allowed={ isThisMaster.toString() } className={ styles.inputBeginning }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
-          <div>{ 'Countdown' }</div>
+          <div allowed={ isThisMaster.toString() } className={ styles.input }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
+          <div>{ i18n('round-countdown') }</div>
 
         </div>
 
-        <div className={ styles.title }>Card Packs:</div>
+        <div className={ styles.title }>{ i18n('card-packs') }</div>
 
         <div className={ styles.packs }>
           {
@@ -316,12 +316,18 @@ const styles = createStyle({
   title: {
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    padding: '35px 0 20px 0'
+    direction: locale.direction,
+
+    padding: '35px 35px 20px 35px'
   },
 
   pick: {
     display: 'flex',
     alignItems: 'center',
+
+    direction: locale.direction,
+
+    padding: '0 25px',
 
     '>:nth-child(1)': {
       display: 'flex',
@@ -335,7 +341,7 @@ const styles = createStyle({
       borderRadius: '5px',
       border: `2px solid ${colors.blackText}`,
 
-      margin: '0 10px 0 0',
+      margin: '0 10px',
 
       '> *': {
         backgroundColor: colors.blackText,
@@ -348,41 +354,37 @@ const styles = createStyle({
   },
 
   field: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center',
+
+    direction: locale.direction,
+
+    padding: '0 30px'
   },
 
   input: {
     borderBottom: `2px ${colors.blackText} solid`,
+    margin: '0 5px',
 
     '[allowed="false"]': {
       borderBottom: 0
     }
   },
 
-  inputBeginning: {
-    extend: 'input',
-    margin: '0 5px 0 0'
-  },
-
-  inputMiddle: {
-    extend: 'input',
-    margin: '0 5px'
-  },
-
-  inputEnding: {
-    extend: 'input',
-    margin: '0 0 0 5px'
-  },
-
   packs: {
     display: 'grid',
     
-    gridTemplateColumns: 'repeat(auto-fill, calc(80px + 20px + 1vw + 1vh))',
+    gridTemplateColumns: 'repeat(auto-fill, calc(80px + 1vw + 1vh))',
     justifyContent: 'space-around',
+    
+    direction: locale.direction,
+
+    padding: '0 35px',
+    gridGap: '0 5px',
 
     '> *': {
       width: 'calc(80px + 1vw + 1vh)',
-      margin: '10px'
+      margin: '0 0 10px 0'
     }
   },
 

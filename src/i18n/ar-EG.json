@@ -37,6 +37,18 @@
   "you-are-now-master": "انت الان سيد هذة الغرفة.",
   "new-master": "اصبح هو سيد هذة الغرفة.",
 
+  "game-mode": "نمط اللعبة:",
+  "judgement-mode": "القاضي",
+
+  "win-method": "طريقة الفوز:",
+  "first-to-points-1": "أول من يصل الي",
+  "first-to-points-2": "نقاط",
+
+  "round-options": "اختيارات الجولة:",
+  "round-countdown": "دقيقه لكل جولة",
+
+  "card-packs": "مجموعات الكروت:",
+
   "not-enough-cards": "تم الغاء الجولة لعدم وجود عدد كافي من الكروت علي الساحة",
   "not-enough-players": "تم الغاء المبارة لعدم وجود عدد كافي من اللاعبين.",
 
