@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable camelcase */
+
 import React, { Component, PureComponent } from 'react';
 
 import PropTypes from 'prop-types';

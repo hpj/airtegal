@@ -1,3 +1,5 @@
+/* eslint-disable security/detect-object-injection */
+
 // MIT License
 
 // Copyright (c) 2019-2020 Herp Project
@@ -20,15 +22,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// A very simple and small CSS-IN-JS implementation
-// that supports selectors, pseudo-class, pseudo-element and attributes
-// and custom features like extending
+// A very simple CSS-IN-JS implementation
+// that supports all the things like selectors, pseudo-class, pseudo-element and attributes
+// and custom features like extending but properly is one of the slowest implementations of CSS-IN-JS
 
 const camelRegex = /[A-Z]/g;
 const selectorsRegex = /^\s|^>|^\+|^~/;
 const classRegex = /^[a-z]|^-/i;
-
-// const betweenRegex = /[^{}]+(?=})/;
 
 /** Creates a stylesheet,
 * the returned object can be used to style elements via class names property
@@ -153,6 +153,7 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
       {
         const originalClassnames = rootDirectory[v];
 
+        // eslint-disable-next-line security/detect-non-literal-regexp
         rootStylesheet[v] = rootStylesheet[v].replace(new RegExp(`${originalClassnames}.*?{`, 'g'), (s) =>
         {
           const add = s.replace(originalClassnames, '').replace('{', '');

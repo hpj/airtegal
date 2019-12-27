@@ -121,13 +121,13 @@ const CardShowcase = () =>
   }, [ cardsOnShow ]);
 
   return (
-    <div ref={cardsContainer} className={styles.cards}>
+    <div ref={ cardsContainer } className={ styles.cards }>
 
       {
         cardsOnShow.map((card) =>
         {
           if (card.type === 'white')
-            return <Card key={card.id.toString()} type='white' content={card.content}/>;
+            return <Card key={ card.id.toString() } type='white' content={ card.content }/>;
         })
       }
 
@@ -135,7 +135,7 @@ const CardShowcase = () =>
         cardsOnShow.map((card) =>
         {
           if (card.type === 'black')
-            return <Card key={card.id.toString()} type='black' content={card.content}/>;
+            return <Card key={ card.id.toString() } type='black' content={ card.content }/>;
         })
       }
 

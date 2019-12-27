@@ -32,7 +32,7 @@ const Warning = ({ fullScreen, storageKey, text, button }) =>
     // because the warning starts hidden
     // we need to check if the user didn't accept the warning already
     // if they didn't then we assume it's the first time they open the page and show them the warning
-    if (!localStorage[storageKey])
+    if (!localStorage.getItem(storageKey))
       changeVisibility(true);
   }, [ window.location ]);
 

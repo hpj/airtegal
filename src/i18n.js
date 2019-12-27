@@ -36,5 +36,6 @@ function getDefault()
 export default function i18n(key)
 {
   if (locale)
+    // eslint-disable-next-line security/detect-object-injection
     return locale.json[key];
 }

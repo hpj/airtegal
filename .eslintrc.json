@@ -11,10 +11,14 @@
       "jsx": true
     }
   },
-  "plugins": [ "react" ],
+  "plugins": [
+    "react",
+    "security"
+  ],
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:security/recommended"
   ],
   "parser": "babel-eslint",
   "rules": {

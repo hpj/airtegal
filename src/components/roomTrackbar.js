@@ -113,15 +113,19 @@ class Trackbar extends React.Component
               {
                 const isMaster = playerId === this.state.masterId;
                 const isClient = playerId === socket.id;
-                const isTurn = this.state.playerProperties[playerId].state === 'judging' || this.state.playerProperties[playerId].state === 'playing';
+
+                // eslint-disable-next-line security/detect-object-injection
+                const player = this.state.playerProperties[playerId];
+                
+                const isTurn = player.state === 'judging' || player.state === 'playing';
 
                 return <div className={ styles.player } key={ playerId }>
 
                   <div className={ styles.led } match={ isMatch.toString() } client={ isClient.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }></div>
 
-                  <div className={ styles.name }>{ this.state.playerProperties[playerId].username }</div>
+                  <div className={ styles.name }>{ player.username }</div>
 
-                  <div>{ this.state.playerProperties[playerId].score }</div>
+                  <div>{ player.score }</div>
 
                 </div>;
               })
