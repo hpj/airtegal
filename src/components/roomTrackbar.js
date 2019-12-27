@@ -132,11 +132,11 @@ class Trackbar extends React.Component
 
           {
             // share the room
-            (navigator.share) ? <ShareIcon icon='true' className={ styles.id } onClick={ this.shareRoomURL }/> :
+            (navigator.share) ? <ShareIcon icon='true' match={ isMatch.toString() } className={ styles.id } onClick={ this.shareRoomURL }/> :
               // copy the room's id
-              (navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } onClick={ this.copyRoomURL }/> :
+              (navigator.clipboard) ? <CopyIcon icon='true' match={ isMatch.toString() } className={ styles.id } onClick={ this.copyRoomURL }/> :
                 // just show the room's id
-                <div className={ styles.id }>{ this.state.roomId }</div>
+                <div className={ styles.id } match={ isMatch.toString() } >{ this.state.roomId }</div>
           }
 
           <div className={ styles.status }>{ this.state.counter }</div>
@@ -230,6 +230,10 @@ const styles = createStyle({
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
     padding: '0 0 15px 0',
+
+    '[match="true"]': {
+      display: 'none'
+    },
 
     '[icon="true"]': {
       fill: colors.blackText,
