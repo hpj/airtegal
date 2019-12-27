@@ -1,6 +1,7 @@
 Performance Issues and Bugs:
 
 Testing:
+  ☐ sharing room url on mobile (Web Share API only exists on Chrome 75 for Android)
 
 Features:
   ☐ support rich-presence-for-web-apps @low 

@@ -75,7 +75,7 @@ class Homepage extends React.Component
               isRtl={ locale.direction === 'rtl' }
               isSearchable={ true }
               options={ locales }
-              onChange={ (country) => setLocale(country) }
+              onChange={ (locale) => setLocale(locale.value) }
               theme={ theme => ({
                 ...theme,
                 colors: {

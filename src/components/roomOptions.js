@@ -41,6 +41,7 @@ class RoomOptions extends React.Component
   onRoomData(roomData)
   {
     this.setState({
+      players: roomData.players,
       options: roomData.options,
       masterId: roomData.master
     });
@@ -94,8 +95,7 @@ class RoomOptions extends React.Component
     const isThisMaster = this.state.masterId === socket.id;
     
     const isAllowed =
-      // TODO fix this error
-      // process.env.NODE_ENV === 'development' ||
+      process.env.NODE_ENV === 'development' ||
       (
         this.state.players &&
         this.state.players.length >= 3 &&

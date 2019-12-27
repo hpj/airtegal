@@ -50,6 +50,8 @@ class RoomOverlay extends React.Component
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
+
+    this.addNotification = this.addNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
   }
 
@@ -343,7 +345,7 @@ class RoomOverlay extends React.Component
           <div className={ styles.container }>
             <div className={ styles.handler }/>
 
-            <Trackbar sendMessage={ sendMessage }/>
+            <Trackbar sendMessage={ sendMessage } addNotification={ this.addNotification }/>
 
             <div className={ styles.content }>
               <HandOverlay sendMessage={ sendMessage } size={ size } />

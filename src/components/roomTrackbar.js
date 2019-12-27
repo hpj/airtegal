@@ -2,7 +2,10 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { locale } from '../i18n.js';
+import ShareIcon from 'mdi-react/ShareVariantIcon';
+import CopyIcon from 'mdi-react/ContentCopyIcon';
+
+import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -23,6 +26,9 @@ class Trackbar extends React.Component
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
+
+    this.shareRoomURL = this.shareRoomURL.bind(this);
+    this.copyRoomURL = this.copyRoomURL.bind(this);
   }
 
   componentDidMount()
@@ -77,12 +83,31 @@ class Trackbar extends React.Component
     }
 
     this.setState({
+      roomId: roomData.id,
       roomState: roomData.state,
       maxPlayers: roomData.options.match.maxPlayers,
       players: roomData.players,
       playerProperties: roomData.playerProperties,
       masterId: roomData.master
     });
+  }
+
+  shareRoomURL()
+  {
+    navigator.share({
+      title: 'Kuruit bedan Fash5',
+      text: i18n('join-me'),
+      url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomId}`
+    });
+  }
+
+  copyRoomURL()
+  {
+    const { addNotification } = this.props;
+
+    navigator.clipboard.writeText(`${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomId}`);
+
+    addNotification(i18n('room-copied-to-clipboard'));
   }
 
   formatMs(milliseconds)
@@ -104,6 +129,15 @@ class Trackbar extends React.Component
     return (
       <div className={ styles.wrapper }>
         <div className={ styles.container }>
+
+          {
+            // share the room
+            (navigator.share) ? <ShareIcon icon='true' className={ styles.id } onClick={ this.shareRoomURL }/> :
+              // copy the room's id
+              (navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } onClick={ this.copyRoomURL }/> :
+                // just show the room's id
+                <div className={ styles.id }>{ this.state.roomId }</div>
+          }
 
           <div className={ styles.status }>{ this.state.counter }</div>
 
@@ -138,7 +172,8 @@ class Trackbar extends React.Component
 }
 
 Trackbar.propTypes = {
-  sendMessage: PropTypes.func.isRequired
+  sendMessage: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired
 };
 
 const styles = createStyle({
@@ -165,7 +200,7 @@ const styles = createStyle({
     position: 'relative',
 
     gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"status" "players"',
+    gridTemplateAreas: '"id status" "players players"',
 
     userSelect: 'none',
 
@@ -186,10 +221,34 @@ const styles = createStyle({
     }
   },
 
-  status: {
+  id: {
+    gridArea: 'id',
+
+    userSelect: 'all',
+    textTransform: 'uppercase',
+
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    margin: '0 0 0 auto',
+    padding: '0 0 15px 0',
+
+    '[icon="true"]': {
+      fill: colors.blackText,
+
+      width: 'calc(16px + 0.4vw + 0.4vh)',
+      height: 'calc(16px + 0.4vw + 0.4vh)'
+    },
+
+    // for the portrait overlay
+    '@media screen and (max-width: 980px)': {
+      padding: '10px 0 10px 0'
+    }
+  },
+
+  status: {
+    gridArea: 'status',
+    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
+
+    margin: 'auto 0 auto auto',
     padding: '0 0 15px 0',
 
     // for the portrait overlay
@@ -199,6 +258,8 @@ const styles = createStyle({
   },
 
   players: {
+    gridArea: 'players',
+
     width: '100%',
     height: '100%',
 
