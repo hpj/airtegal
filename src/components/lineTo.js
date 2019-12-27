@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable camelcase */
 
 import React, { Component, PureComponent } from 'react';
 
@@ -20,6 +19,7 @@ const optionalStyleProps = {
 
 export default class LineTo extends Component
 {
+  // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount()
   {
     this.fromAnchor = this.parseAnchor(this.props.fromAnchor);
@@ -30,27 +30,24 @@ export default class LineTo extends Component
   componentDidMount()
   {
     this.delay = this.parseDelay(this.props.delay);
+
     if (typeof this.delay !== 'undefined')
-    {
       this.deferUpdate(this.delay);
-    }
   }
 
+  // eslint-disable-next-line camelcase
   UNSAFE_componentWillReceiveProps(nextProps)
   {
     if (nextProps.fromAnchor !== this.props.fromAnchor)
-    {
       this.fromAnchor = this.parseAnchor(this.props.fromAnchor);
-    }
+
     if (nextProps.toAnchor !== this.props.toAnchor)
-    {
       this.toAnchor = this.parseAnchor(this.props.toAnchor);
-    }
+
     this.delay = this.parseDelay(nextProps.delay);
+
     if (typeof this.delay !== 'undefined')
-    {
       this.deferUpdate(this.delay);
-    }
   }
 
   componentWillUnmount()
@@ -58,6 +55,7 @@ export default class LineTo extends Component
     if (this.t)
     {
       clearTimeout(this.t);
+
       this.t = null;
     }
   }
@@ -77,37 +75,33 @@ export default class LineTo extends Component
   deferUpdate(delay)
   {
     if (this.t)
-    {
       clearTimeout(this.t);
-    }
+    
     this.t = setTimeout(() => this.forceUpdate(), delay);
   }
 
   parseDelay(value)
   {
     if (typeof value === 'undefined')
-    {
       return value;
-    }
     else if (typeof value === 'boolean' && value)
-    {
       return 0;
-    }
+
     const delay = parseInt(value, 10);
+
     if (isNaN(delay) || !isFinite(delay))
-    {
       throw new Error(`LinkTo could not parse delay attribute "${value}"`);
-    }
+
     return delay;
   }
 
   parseAnchorPercent(value)
   {
     const percent = parseFloat(value) / 100;
+
     if (isNaN(percent) || !isFinite(percent))
-    {
       throw new Error(`LinkTo could not parse percent value "${value}"`);
-    }
+    
     return percent;
   }
 
@@ -129,21 +123,22 @@ export default class LineTo extends Component
     case 'right':
       return { x: 1 };
     }
+
     return null;
   }
 
   parseAnchor(value)
   {
     if (!value)
-    {
       return defaultAnchor;
-    }
+
     const parts = value.split(' ');
+
     if (parts.length > 2)
-    {
       throw new Error('LinkTo anchor format is "<x> <y>"');
-    }
+
     const [ x, y ] = parts;
+
     return Object.assign({}, defaultAnchor,
       x ? this.parseAnchorText(x) || { x: this.parseAnchorPercent(x) } : {},
       y ? this.parseAnchorText(y) || { y: this.parseAnchorPercent(y) } : {}
@@ -163,9 +158,7 @@ export default class LineTo extends Component
     const b = this.findElement(to);
 
     if (!a || !b)
-    {
       return false;
-    }
 
     const anchor0 = this.fromAnchor;
     const anchor1 = this.toAnchor;
@@ -196,6 +189,7 @@ export default class LineTo extends Component
   render()
   {
     const points = this.detect();
+
     return points ? (
       <Line { ...points } { ...this.props } />
     ) : null;
@@ -210,17 +204,6 @@ LineTo.propTypes = Object.assign({}, {
   toAnchor: PropTypes.string,
   delay: PropTypes.oneOfType([ PropTypes.number, PropTypes.bool ])
 }, optionalStyleProps);
-
-export class SteppedLineTo extends LineTo
-{
-  render()
-  {
-    const points = this.detect();
-    return points ? (
-      <SteppedLine { ...points } { ...this.props } />
-    ) : null;
-  }
-}
 
 export class Line extends PureComponent
 {
@@ -300,76 +283,3 @@ Line.propTypes = Object.assign({}, {
   x1: PropTypes.number.isRequired,
   y1: PropTypes.number.isRequired
 }, optionalStyleProps);
-
-export class SteppedLine extends PureComponent
-{
-  render()
-  {
-    if (this.props.orientation === 'h')
-    {
-      return this.renderHorizontal();
-    }
-    return this.renderVertical();
-  }
-
-  renderVertical()
-  {
-    const { x0, y0, x1, y1 } = this.props;
-
-    const dx = x1 - x0;
-    if (dx === 0)
-    {
-      return <Line { ...this.props } />;
-    }
-
-    const borderWidth = this.props.borderWidth || defaultBorderWidth;
-    const y2 = (y0 + y1) / 2;
-
-    const xOffset = dx > 0 ? borderWidth : 0;
-    const minX = Math.min(x0, x1) - xOffset;
-    const maxX = Math.max(x0, x1);
-
-    return (
-      <div className="react-steppedlineto">
-        <Line { ...this.props } x0={ x0 } y0={ y0 } x1={ x0 } y1={ y2 } />
-        <Line { ...this.props } x0={ x1 } y0={ y1 } x1={ x1 } y1={ y2 } />
-        <Line { ...this.props } x0={ minX } y0={ y2 } x1={ maxX } y1={ y2 } />
-      </div>
-    );
-  }
-
-  renderHorizontal()
-  {
-    const { x0, y0, x1, y1 } = this.props;
-
-    const dy = y1 - y0;
-    if (dy === 0)
-    {
-      return <Line { ...this.props } />;
-    }
-
-    const borderWidth = this.props.borderWidth || defaultBorderWidth;
-    const x2 = (x0 + x1) / 2;
-
-    const yOffset = dy < 0 ? borderWidth : 0;
-    const minY = Math.min(y0, y1) - yOffset;
-    const maxY = Math.max(y0, y1);
-
-    return (
-      <div className="react-steppedlineto">
-        <Line { ...this.props } x0={ x0 } y0={ y0 } x1={ x2 } y1={ y0 } />
-        <Line { ...this.props } x0={ x1 } y0={ y1 } x1={ x2 } y1={ y1 } />
-        <Line { ...this.props } x0={ x2 } y0={ minY } x1={ x2 } y1={ maxY } />
-      </div>
-    );
-  }
-}
-
-SteppedLine.propTypes = Object.assign({}, {
-  x0: PropTypes.number.isRequired,
-  y0: PropTypes.number.isRequired,
-  x1: PropTypes.number.isRequired,
-  y1: PropTypes.number.isRequired,
-  orientation: PropTypes.oneOf([ 'h', 'v' ])
-}, optionalStyleProps);
-

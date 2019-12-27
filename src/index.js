@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/browser';
 
 import i18n, { setLocale } from './i18n.js';
 
-// import { Client } from 'rich-presence-for-web-apps';
+// import RPC from './rpc.js';
 
 // import 'fuckadblock';
 
@@ -134,7 +134,7 @@ const webFontPromise = new Promise((resolve) =>
     inactive: resolve,
     custom: {
       families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ],
-      urls: [ '/fonts.css' ]
+      urls: [ '/assets/fonts.css' ]
     }
   });
 });
@@ -221,18 +221,25 @@ ReactDOM.render(<Loading splash/>, placeholder);
 
 // TODO Discord RPC
 
-// const client = new Client('622201604992401437');
+// const rpc = new RPC('622201604992401437');
 
-// client.on('connected', () =>
+// rpc.ready(() =>
 // {
-//   console.log('connected');
-  
-//   client.setActivity({
-//     details: 'playing',
-//     state: 'mad',
-//     startTimestamp: Date.now(),
-//     largeImageKey: '6486',
-//     largeImageText: 'Image'
+//   rpc.send({
+//     cmd: 'SET_ACTIVITY',
+//     args: {
+//       activity: {
+//         state: 'In a Group',
+//         details: 'Competitive | In a Match',
+//         timestamps: {
+//           start: new Date().getTime()
+//         },
+//         assets: {
+//           'large_image': '6486',
+//           'large_text': 'Image'
+//         }
+//       }
+//     }
 //   });
 // });
 

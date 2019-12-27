@@ -88,13 +88,14 @@ class RoomOptions extends React.Component
 
   render()
   {
-    if (!this.state.options)
+    if (!this.state.options || !this.state.players)
       return <div/>;
 
     const isThisMaster = this.state.masterId === socket.id;
     
     const isAllowed =
-      process.env.NODE_ENV === 'development' ||
+      // TODO fix this error
+      // process.env.NODE_ENV === 'development' ||
       (
         this.state.players &&
         this.state.players.length >= 3 &&

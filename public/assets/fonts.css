@@ -4,7 +4,7 @@
   font-style: normal;
   font-weight: normal;
 
-  src: url("./Montserrat-Regular.ttf") format("truetype");
+  src: url("../fonts/Montserrat-Regular.ttf") format("truetype");
 }
 
 @font-face
@@ -13,7 +13,7 @@
   font-style: normal;
   font-weight: bold;
 
-  src: url("./Montserrat-Bold.ttf") format("truetype");
+  src: url("../fonts/Montserrat-Bold.ttf") format("truetype");
 }
 
 @font-face
@@ -22,7 +22,7 @@
   font-style: normal;
   font-weight: normal;
 
-  src: url("./NotoSansArabic-Regular.ttf") format("truetype");
+  src: url("../fonts/NotoSansArabic-Regular.ttf") format("truetype");
 }
 
 @font-face
@@ -31,5 +31,5 @@
   font-style: normal;
   font-weight: bold;
 
-  src: url("./NotoSansArabic-Bold.ttf") format("truetype");
+  src: url("../fonts/NotoSansArabic-Bold.ttf") format("truetype");
 }

@@ -6,12 +6,14 @@ Features:
   ☐ support rich-presence-for-web-apps @low 
 
 UI/UX:
-  ☐ animations for cards appearing and disappearing from field 
+  ☐ showing card owners and the round winner @high 
+  ☐ an animation for match ending and the match winner @high 
+  
   ☐ animations for cards appearing and disappearing from hand @high 
 
-  ☐ animations for card owners and round winner @high 
+  ☐ animations for cards appearing and disappearing from field 
 
-  ☐ animations for match end @high 
+  ☐ design the 404 page @low
 
   Homepage:
     ☐ enable card showcase ( using the stats's card combo rows ) @low 

@@ -56,7 +56,7 @@ const styles = createStyle({
       width: '128px',
       height: '128px',
       
-      background: `url(./icon-${colors.theme}.svg)`,
+      background: `url(./assets/icon-${colors.theme}.svg)`,
       backgroundSize: 'contain',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
