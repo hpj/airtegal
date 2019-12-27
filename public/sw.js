@@ -15,7 +15,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "assets/card.png",
-    "revision": "3ab5e7f65a2c1ce25d2e6f69ec17c37e"
+    "revision": "f91d0019aa209d7a6b10cc7f19b9a0f3"
   },
   {
     "url": "assets/fonts.css",
