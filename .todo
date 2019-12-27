@@ -14,6 +14,8 @@ UI/UX:
   ☐ animations for cards appearing and disappearing from field 
 
   ☐ design the 404 page @low
+  ☐ design the Offline page @low
+    ☐ handle 'online' and 'offline' events
 
   Homepage:
     ☐ enable card showcase ( using the stats's card combo rows ) @low 

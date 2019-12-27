@@ -18,6 +18,7 @@ import axios from 'axios';
 import Error from './components/error.js';
 import Loading from './components/loading.js';
 
+import Offline from './screens/offline.js';
 import NotFound from './screens/404.js';
 
 import Homepage from './screens/homepage.js';
@@ -30,8 +31,6 @@ import PrivacyPolicy from './screens/privacyPolicy.js';
 export let country;
 export let API_ENDPOINT;
 
-let availability;
-
 let visibleLoading = true;
 let keepLoading = false;
 
@@ -41,7 +40,7 @@ const placeholder = document.body.querySelector('#placeholder');
 function registerServiceWorker()
 {
   // if the browser supports service workers
-  if ('serviceWorker' in navigator)
+  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator)
   {
     navigator.serviceWorker.register('sw.js')
       .catch((err) =>
@@ -56,13 +55,6 @@ function registerServiceWorker()
 */
 function loaded()
 {
-  if (!availability)
-    return;
-
-  // register the service worker
-  if (process.env.NODE_ENV === 'production')
-    registerServiceWorker();
-
   const pages =
     <BrowserRouter>
       <Switch>
@@ -125,7 +117,20 @@ if (process.env.NODE_ENV === 'production')
 else
   API_ENDPOINT = 'https://localhost:3000';
 
-// request few promises
+// register the service worker
+registerServiceWorker();
+
+// show a loading screen until the promises resolve
+ReactDOM.render(<Loading splash/>, placeholder);
+
+// initialize third party service providers
+if (process.env.NODE_ENV === 'production')
+{
+  // sentry for error monitoring
+  Sentry.init({ dsn: 'https://48c0df63377d4467823a29295dbc3c5f@sentry.io/1521991' });
+}
+
+// request the promises
 
 const webFontPromise = new Promise((resolve) =>
 {
@@ -139,15 +144,31 @@ const webFontPromise = new Promise((resolve) =>
   });
 });
 
-const ipCheck = new Promise((resolve) =>
+const connectivityPromise = new Promise((resolve, reject) =>
+{
+  if (navigator.onLine === false)
+  {
+    ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
+
+    // TODO you can handle the user being online again
+    // and suggest to them to go back to playing
+    // equally you can warn the user if they go offline while playing
+    // window.addEventListener('online', on);
+    
+    reject();
+  }
+  else
+  {
+    resolve();
+  }
+});
+
+const ipCheck = new Promise((resolve, reject) =>
 {
   // bypass check if on a development builds
   if (process.env.NODE_ENV === 'development')
   {
     country = 'Egypt';
-    availability = true;
-
-    setLocale(country);
 
     resolve();
 
@@ -162,55 +183,38 @@ const ipCheck = new Promise((resolve) =>
     {
       if (response.status !== 200)
       {
+        country = undefined;
+        
         ReactDOM.render(<Error error={ i18n(response.data) || response.data }/>, placeholder);
 
-        country = undefined;
-        availability = false;
-
-        // set the locale as 'undefined'
-        // which will get the browser's default locale
-        setLocale();
+        reject();
       }
       else
       {
         country = response.data.country;
-        availability = true;
 
         // try to set the locale as the country
         setLocale(country);
-      }
 
-      resolve();
+        resolve();
+      }
     })
     .catch((e) =>
     {
-      if (e.response)
-        ReactDOM.render(<Error error={ i18n(e.response.data.message) || e.response.data.message }/>, placeholder);
-        
       country = undefined;
 
-      // TODO offline mode and server unavailable should be handled better
-      if (!e.response && e.message === 'Network Error')
-        availability = true;
-      else
-        availability = false;
+      if (e.response)
+      {
+        ReactDOM.render(<Error error={ i18n(e.response.data.message) || e.response.data.message }/>, placeholder);
 
-      resolve();
+        reject();
+      }
+      else
+      {
+        resolve();
+      }
     });
 });
-
-// initialize third party service providers
-if (process.env.NODE_ENV === 'production')
-{
-  // sentry for error monitoring
-  Sentry.init({ dsn: 'https://48c0df63377d4467823a29295dbc3c5f@sentry.io/1521991' });
-}
-
-// show a loading screen until the promises resolve
-
-Promise.all([ webFontPromise, ipCheck ]).then(loaded);
-
-ReactDOM.render(<Loading splash/>, placeholder);
 
 // TODO Ad-Block Detection
 
@@ -218,6 +222,11 @@ ReactDOM.render(<Loading splash/>, placeholder);
 // {
 //   console.log('Blocking Ads: Yes');
 // });
+
+// remove the loading screen if all the promises resolve
+Promise.all([ webFontPromise, connectivityPromise, ipCheck ])
+  .then(loaded)
+  .catch(console.error);
 
 // TODO Discord RPC
 
