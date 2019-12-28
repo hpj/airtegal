@@ -364,9 +364,9 @@ class RoomOverlay extends React.Component
 }
 
 RoomOverlay.propTypes = {
+  sendMessage: PropTypes.func.isRequired,
   size: PropTypes.object,
-  username: PropTypes.string,
-  sendMessage: PropTypes.func.isRequired
+  username: PropTypes.string
 };
 
 const styles = createStyle({

@@ -4,22 +4,22 @@ Testing:
   ☐ sharing room url on mobile (Web Share API only exists on Chrome 75 for Android)
 
 Features:
-  ☐ support rich-presence-for-web-apps @low 
 
 UI/UX:
   ☐ showing card owners and the round winner @high 
+
   ☐ an animation for match ending and the match winner @high 
   
   ☐ animations for cards appearing and disappearing from hand @high 
 
   ☐ animations for cards appearing and disappearing from field 
 
-  ☐ design the 404 page @low
-  ☐ design the Offline page @low
+  ☐ design the 404 page
+  ☐ design the Offline page
     ☐ handle 'online' and 'offline' events
 
   Homepage:
-    ☐ enable card showcase ( using the stats's card combo rows ) @low 
+    ☐ enable card showcase ( using the stats' card combo rows )
 
   Lobby:
     ✔ show rooms @done(19-12-25 23:01)

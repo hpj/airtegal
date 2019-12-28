@@ -7,8 +7,6 @@ import * as Sentry from '@sentry/browser';
 
 import i18n, { setLocale } from './i18n.js';
 
-// import RPC from './rpc.js';
-
 // import 'fuckadblock';
 
 import WebFont from 'webfontloader';
@@ -227,34 +225,3 @@ const ipCheck = new Promise((resolve, reject) =>
 Promise.all([ webFontPromise, connectivityPromise, ipCheck ])
   .then(loaded)
   .catch(console.error);
-
-// TODO Discord RPC
-
-// const rpc = new RPC('622201604992401437');
-
-// rpc.ready(() =>
-// {
-//   rpc.send({
-//     cmd: 'SET_ACTIVITY',
-//     args: {
-//       activity: {
-//         state: 'In a Group',
-//         details: 'Competitive | In a Match',
-//         timestamps: {
-//           start: new Date().getTime()
-//         },
-//         assets: {
-//           'large_image': '6486',
-//           'large_text': 'Image'
-//         }
-//       }
-//     }
-//   });
-// });
-
-// client.on('error', (err) =>
-// {
-//   // if err === 'extension is not installed' then check for discord
-//   // if it's opened then suggest that the user installs this extension
-//   console.error(err);
-// });

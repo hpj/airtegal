@@ -103,12 +103,12 @@ class Game extends React.Component
     if (!holdLoadingScreen())
       remountLoadingScreen();
 
-    // TODO cache user preference
     this.state = {
       loadingHidden: true,
       errorMessage: '',
-
-      username: stupidNames(),
+        
+      // load user preference or use default
+      username: localStorage.getItem('username') || stupidNames(),
       size: {},
 
       rooms: []
@@ -275,9 +275,14 @@ class Game extends React.Component
 
   usernameChangeEvent()
   {
+    const username = event.target.value.replace(/\s+/g, ' ');
+
     this.setState({
-      username: event.target.value.replace(/\s+/g, ' ')
+      username: username
     });
+
+    // save the user preference
+    localStorage.setItem('username', username);
   }
 
   usernameBlurEvent()
