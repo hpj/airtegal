@@ -423,6 +423,8 @@ const styles = createStyle({
     alignItems: 'center',
     textAlign: 'center',
 
+    lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
+
     width: 'min-content',
     height: '100%'
   }

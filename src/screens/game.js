@@ -370,7 +370,7 @@ class Game extends React.Component
                   {
                     const pack = room.options.match.selectedPacks[0];
 
-                    return <div key={ i } className={ roomsStyles.room }>
+                    return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
     
                       <div className={ roomsStyles.packs }>
                         <div style={ {
@@ -638,6 +638,7 @@ const roomsStyles = createStyle({
   room: {
     display: 'flex',
 
+    cursor: 'pointer',
     color: colors.roomForeground,
     backgroundColor: colors.roomBackground,
 
@@ -649,7 +650,15 @@ const roomsStyles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     margin: '10px',
-    borderRadius: '10px'
+    borderRadius: '10px',
+
+    ':hover': {
+      opacity: 0.85
+    },
+
+    ':active': {
+      opacity: 0.7
+    }
   },
 
   highlights: {
@@ -692,6 +701,8 @@ const roomsStyles = createStyle({
     
     alignItems: 'center',
     textAlign: 'center',
+
+    lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
 
     width: 'min-content',
     height: '100%',

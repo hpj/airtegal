@@ -316,7 +316,7 @@ class HandOverlay extends React.Component
                     };
 
                     return <Card
-                      key={ card.uuid }
+                      key={ card.key }
                       onMouseEnter={ onMouseEnter }
                       onMouseLeave={ onMouseLeave }
                       onClick={ () => this.pickCard(i, isAllowed, isPicked) }

@@ -199,8 +199,8 @@ const styles = createStyle({
     display: 'grid',
     position: 'relative',
 
-    gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"id status" "players players"',
+    gridTemplateRows: 'auto auto 1fr',
+    gridTemplateAreas: '"id" "status" "players"',
 
     userSelect: 'none',
 
@@ -214,6 +214,8 @@ const styles = createStyle({
 
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {
+      gridTemplateAreas: '"id status" "players players"',
+
       padding: '0 15px',
       width: 'calc(100% - 30px)',
 
@@ -224,22 +226,25 @@ const styles = createStyle({
   id: {
     gridArea: 'id',
 
+    cursor: 'text',
     userSelect: 'all',
+
     textTransform: 'uppercase',
 
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    padding: '0 0 15px 0',
+    padding: '0 0 20px 0',
 
     '[match="true"]': {
       display: 'none'
     },
 
     '[icon="true"]': {
+      cursor: 'pointer',
       fill: colors.blackText,
 
-      width: 'calc(16px + 0.4vw + 0.4vh)',
-      height: 'calc(16px + 0.4vw + 0.4vh)'
+      width: 'calc(14px + 0.4vw + 0.4vh)',
+      height: 'calc(14px + 0.4vw + 0.4vh)'
     },
 
     // for the portrait overlay
