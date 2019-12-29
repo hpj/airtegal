@@ -29,6 +29,8 @@ import PrivacyPolicy from './screens/privacyPolicy.js';
 export let country;
 export let API_ENDPOINT;
 
+let installPromptEvent;
+
 let visibleLoading = true;
 let keepLoading = false;
 
@@ -103,6 +105,14 @@ export function hideLoadingScreen()
   visibleLoading = false;
 }
 
+export function onInstallPrompt(callback)
+{
+  if (installPromptEvent)
+    callback(installPromptEvent);
+  else
+    window.addEventListener('beforeinstallprompt', (e) => callback(e));
+}
+
 // CORS only works on this custom domain (origin)
 // meaning we need to move the client to that remote url
 // if they were viewing the app from the host url
@@ -117,6 +127,13 @@ else
 
 // register the service worker
 registerServiceWorker();
+
+window.addEventListener('beforeinstallprompt', (e) =>
+{
+  e.preventDefault();
+
+  installPromptEvent = e;
+});
 
 // show a loading screen until the promises resolve
 ReactDOM.render(<Loading splash/>, placeholder);

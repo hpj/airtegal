@@ -63,7 +63,7 @@ const styles = createStyle({
   wrapper: {
     zIndex: 5,
     position: 'fixed',
-    backgroundColor: colors.warningBackground,
+    backgroundColor: colors.pinnedBackground,
 
     userSelect: 'none',
 
@@ -118,8 +118,8 @@ const styles = createStyle({
     padding: '2px 18px',
 
     ':hover': {
-      color: colors.warningBackground,
-      backgroundColor: colors.whiteBackground
+      color: colors.pinnedBackground,
+      backgroundColor: colors.whiteText
     }
   }
 });

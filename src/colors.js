@@ -37,7 +37,7 @@ export default function(forceMain)
     handBackground: '#C4C4C4',
     handScrollbar: '#949393',
    
-    warningBackground: '#00aeff',
+    pinnedBackground: '#00aeff',
    
     headerGradient: [ '#F05F57', '#360940' ],
    

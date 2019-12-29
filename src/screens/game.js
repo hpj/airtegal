@@ -2,13 +2,14 @@ import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
+import CloseIcon from 'mdi-react/CloseIcon';
 
 import autoSizeInput from 'autosize-input';
 
 // eslint-disable-next-line no-unused-vars
 import io, { Socket } from 'socket.io-client';
 
-import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
+import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen, remountLoadingScreen, onInstallPrompt } from '../index.js';
 
 import getTheme from '../colors.js';
 
@@ -111,7 +112,14 @@ class Game extends React.Component
       username: localStorage.getItem('username') || stupidNames(),
       size: {},
 
-      rooms: []
+      rooms: [],
+
+      pin: {
+        closeCallback: undefined,
+        title: '',
+        content: '',
+        buttons: [ ]
+      }
     };
 
     // bind functions that are use as callbacks
@@ -253,8 +261,47 @@ class Game extends React.Component
       if (params.get('join'))
         overlayRef.current.joinRoom(params.get('join'));
     }
+
+    // show install pinned prompt
+    onInstallPrompt((e) =>
+    {
+      if (localStorage.getItem('install-prompt-ignore'))
+        return;
+      
+      this.setState({
+        pin: {
+          closeCallback: () =>
+          {
+            localStorage.setItem('install-prompt-ignore', true);
+  
+            this.hidePin();
+          },
+          title: '',
+          content: i18n('install-prompt'),
+          buttons: [ {
+            title: i18n('install'),
+            // shows browser's install prompt
+            callback: () => e.prompt()
+          } ]
+        }
+      });
+      
+      // hide the install prompt when the user installs the pwa
+      window.addEventListener('appinstalled', () => this.hidePin());
+    });
   }
 
+  hidePin()
+  {
+    this.setState({
+      pin: {
+        closeCallback: undefined,
+        title: '',
+        content: '',
+        buttons: [ ]
+      }
+    });
+  }
   componentWillUnmount()
   {
     window.removeEventListener('resize', this.resize);
@@ -341,6 +388,17 @@ class Game extends React.Component
 
           </div>
 
+          <div style={ { display: (this.state.pin.content) ? '' : 'none' } } className={ pinnedStyles.container }>
+            <div className={ pinnedStyles.title }>{ this.state.pin.title }</div>
+            <CloseIcon style={ { display: (this.state.pin.closeCallback) ? '' : 'none' } } onClick={ this.state.pin.closeCallback } className={ pinnedStyles.close }/>
+            <div className={ pinnedStyles.content }>{ this.state.pin.content }</div>
+            <div className={ pinnedStyles.buttons }>
+              {
+                this.state.pin.buttons.map((c, i) => <div key={ i } onClick={ c.callback } className={ pinnedStyles.button }>{ c.title }</div>)
+              }
+            </div>
+          </div>
+
           <div className={ roomsStyles.container }>
 
             <p className={ roomsStyles.title }> { i18n('available-rooms') } </p>
@@ -412,7 +470,7 @@ const mainStyles = createStyle({
   container: {
     display: 'grid',
 
-    gridTemplateRows: 'auto auto 1fr',
+    gridTemplateRows: 'auto auto auto 1fr',
     gridTemplateAreas: '"." "." "."',
 
     color: colors.blackText,
@@ -435,7 +493,7 @@ const optionsStyles = createStyle({
     fontWeight: '700',
 
     direction: locale.direction,
-    padding: '3vh 3vw 5px 3vw'
+    padding: '15px 3vw 5px 3vw'
   },
 
   welcome: {
@@ -515,6 +573,77 @@ const headerStyles = createStyle({
   }
 });
 
+const pinnedStyles = createStyle({
+  container: {
+    display: 'grid',
+
+    gridTemplateColumns: '1fr auto',
+    gridTemplateRows: 'auto auto 1fr',
+    gridTemplateAreas: '"title close" "content content" "buttons buttons"',
+
+    alignItems: 'center',
+    direction: locale.direction,
+
+    color: colors.whiteText,
+    backgroundColor: colors.pinnedBackground,
+
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    maxHeight: '20vh',
+
+    margin: '10px 3vw 0 3vw',
+
+    padding: '10px 2.5%',
+    borderRadius: '10px'
+  },
+
+  title:
+  {
+    gridArea: 'title'
+  },
+
+  close: {
+    gridArea: 'close',
+
+    cursor: 'pointer',
+    fill: colors.whiteText,
+
+    width: '24px',
+    height: '24px'
+  },
+
+  content: {
+    gridArea: 'content'
+  },
+
+  buttons:
+  {
+    gridArea: 'buttons',
+    display: 'flex'
+  },
+
+  button:
+  {
+    cursor: 'pointer',
+    flexGrow: 1,
+
+    display: 'flex',
+    justifyContent: 'center',
+
+    padding: '5px',
+    margin: '5px',
+
+    borderRadius: '5px',
+    border: `1px solid ${colors.whiteText}`,
+
+    ':hover': {
+      color: colors.pinnedBackground,
+      backgroundColor: colors.whiteText
+    }
+  }
+});
+
 const roomsStyles = createStyle({
   container: {
     display: 'grid',
@@ -526,7 +655,7 @@ const roomsStyles = createStyle({
     direction: locale.direction,
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    padding: '3vh 3vw 0 3vw'
+    padding: '10px 3vw 0 3vw'
   },
 
   title: {
