@@ -135,12 +135,19 @@ class RoomOptions extends React.Component
             </div>
           </div>
 
-          <div className={ styles.title }>{ i18n('round-options') }</div>
+          <div className={ styles.title }>{ i18n('match-options') }</div>
 
           <div className={ styles.field }>
 
             <div allowed={ isThisMaster.toString() } className={ styles.input }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
             <div>{ i18n('round-countdown') }</div>
+
+          </div>
+
+          <div className={ styles.field }>
+
+            <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.startingHandAmount }</div>
+            <div>{ i18n('hand-cap') }</div>
 
           </div>
 
@@ -200,7 +207,7 @@ const styles = createStyle({
     padding: '0 0 0 30px',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       margin: '15px auto 0 auto',
       padding: '0 15px 15px 15px',
 
@@ -236,7 +243,7 @@ const styles = createStyle({
     height: '100%',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       top: 'auto',
       width: 'calc(100% - 30px)',
       height: 'calc(100% - 60px)'
@@ -262,7 +269,7 @@ const styles = createStyle({
     }),
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
 
     }
   },

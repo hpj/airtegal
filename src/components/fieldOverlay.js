@@ -276,7 +276,7 @@ const styles = createStyle({
     margin: '0 8px 0 30px',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       margin: '15px 0 0 0',
       height: 'calc(100% - 15px)'
     },

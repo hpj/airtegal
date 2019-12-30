@@ -189,7 +189,7 @@ const styles = createStyle({
     padding: '10px 10px 20px 20px',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       padding: '0',
       borderRadius: '0 0 15px 15px'
     }
@@ -199,8 +199,8 @@ const styles = createStyle({
     display: 'grid',
     position: 'relative',
 
-    gridTemplateRows: 'auto auto 1fr',
-    gridTemplateAreas: '"id" "status" "players"',
+    gridTemplateRows: 'auto 1fr',
+    gridTemplateAreas: '"id status" "players players"',
 
     userSelect: 'none',
 
@@ -213,9 +213,7 @@ const styles = createStyle({
     height: '100%',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
-      gridTemplateAreas: '"id status" "players players"',
-
+    '@media screen and (max-width: 1080px)': {
       padding: '0 15px',
       width: 'calc(100% - 30px)',
 
@@ -233,8 +231,6 @@ const styles = createStyle({
 
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    padding: '0 0 20px 0',
-
     '[match="true"]': {
       display: 'none'
     },
@@ -248,7 +244,7 @@ const styles = createStyle({
     },
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       padding: '10px 0 10px 0'
     }
   },
@@ -257,11 +253,11 @@ const styles = createStyle({
     gridArea: 'status',
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    margin: 'auto 0 auto auto',
-    padding: '0 0 15px 0',
+    margin: '0 0 0 auto',
+    padding: '0 0 20px 0',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       padding: '10px 0 10px 0'
     }
   },
@@ -276,7 +272,7 @@ const styles = createStyle({
     overflowY: 'scroll',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       display: 'flex',
       flexWrap: 'wrap'
     },
@@ -305,7 +301,7 @@ const styles = createStyle({
     
     padding: '0 15px',
 
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       flexBasis: '100%'
     }
   },

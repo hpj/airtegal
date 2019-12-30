@@ -64,7 +64,7 @@ const styles = createStyle({
     height: 'auto',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       display: 'grid',
 
       gridTemplateAreas: '"notification"',
@@ -98,7 +98,7 @@ const styles = createStyle({
     margin: '15px auto',
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       gridArea: 'notification',
 
       display: 'flex',

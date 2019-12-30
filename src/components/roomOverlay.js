@@ -383,7 +383,7 @@ const styles = createStyle({
     height: '100%',
     
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       gridTemplateColumns: '18px calc(100% - 18px)',
       gridTemplateRows: '20vh 80vh',
       gridTemplateAreas: '"handler side" "handler content"',
@@ -457,7 +457,7 @@ const styles = createStyle({
     backgroundColor: colors.whiteBackground,
 
     // for the portrait overlay
-    '@media screen and (max-width: 980px)': {
+    '@media screen and (max-width: 1080px)': {
       position: 'relative',
       top: '-15px',
       height: 'calc(100% + 15px)'
