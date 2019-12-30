@@ -303,7 +303,7 @@ const styles = createStyle({
     gridTemplateColumns: 'auto 1fr auto',
     gridTemplateRows: 'auto',
     
-    padding: '0 10px',
+    padding: '0 15px',
 
     '@media screen and (max-width: 980px)': {
       flexBasis: '100%'

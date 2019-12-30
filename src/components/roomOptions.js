@@ -103,73 +103,70 @@ class RoomOptions extends React.Component
       );
 
     return (
-      <div className={ styles.container }>
+      <div className={ styles.wrapper }>
 
-        <div style={ {
-          display: (this.state.loadingHidden) ? 'none' : ''
-        } } className={ styles.loading }
-        >
+        <div style={ { display: (this.state.loadingHidden) ? 'none' : '' } } className={ styles.loading }>
           <div className={ styles.loadingSpinner }></div>
         </div>
 
-        <div className={ styles.error } style={ {
-          display: (this.state.errorMessage) ? '' : 'none'
-        } } onClick={ () => this.showErrorMessage('') }>
+        <div className={ styles.error } style={ { display: (this.state.errorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
           <div>{ this.state.errorMessage }</div>
         </div>
 
-        <div className={ styles.title }>{ i18n('game-mode') }</div>
+        <div className={ styles.container } style={ { display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none' } }>
+          <div className={ styles.title }>{ i18n('game-mode') }</div>
 
-        <div className={ styles.pick }>
-          <div><div/></div>
-          <div>{ i18n('judgement-mode') }</div>
-        </div>
+          <div className={ styles.pick }>
+            <div><div/></div>
+            <div>{ i18n('judgement-mode') }</div>
+          </div>
 
-        <div className={ styles.title }>{ i18n('win-method') }</div>
+          <div className={ styles.title }>{ i18n('win-method') }</div>
 
-        <div className={ styles.pick }>
-          <div><div/></div>
+          <div className={ styles.pick }>
+            <div><div/></div>
 
-          <div style={ { padding: 0 } } className={ styles.field }>
+            <div style={ { padding: 0 } } className={ styles.field }>
 
-            <div>{ i18n('first-to-points-1') }</div>
-            <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
-            <div>{ i18n('first-to-points-2') }</div>
+              <div>{ i18n('first-to-points-1') }</div>
+              <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+              <div>{ i18n('first-to-points-2') }</div>
+
+            </div>
+          </div>
+
+          <div className={ styles.title }>{ i18n('round-options') }</div>
+
+          <div className={ styles.field }>
+
+            <div allowed={ isThisMaster.toString() } className={ styles.input }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
+            <div>{ i18n('round-countdown') }</div>
 
           </div>
-        </div>
 
-        <div className={ styles.title }>{ i18n('round-options') }</div>
+          <div className={ styles.title }>{ i18n('card-packs') }</div>
 
-        <div className={ styles.field }>
-
-          <div allowed={ isThisMaster.toString() } className={ styles.input }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
-          <div>{ i18n('round-countdown') }</div>
-
-        </div>
-
-        <div className={ styles.title }>{ i18n('card-packs') }</div>
-
-        <div className={ styles.packs }>
-          {
-            this.state.options.match.availablePacks.map((pack) =>
+          <div className={ styles.packs }>
             {
-              return <div key={ pack.id } style={ {
-                color: pack.foreground_color,
-                backgroundImage: `url(${pack.background_url})`,
-                backgroundColor: pack.background_url
-              } } className={ styles.pack }>
-                <div className={ styles.packName }>
-                  { pack.display_name }
-                </div>
-              </div>;
-            })
-          }
-        </div>
+              this.state.options.match.availablePacks.map((pack) =>
+              {
+                return <div key={ pack.id } style={ {
+                  color: pack.foreground_color,
+                  backgroundImage: `url(${pack.background_url})`,
+                  backgroundColor: pack.background_url
+                } } className={ styles.pack }>
+                  <div className={ styles.packName }>
+                    { pack.display_name }
+                  </div>
+                </div>;
+              })
+            }
+          </div>
 
-        <div className={ styles.start } allowed={ isAllowed.toString() } style={ {
-          display: (isThisMaster) ? '' : 'none'
-        } } onClick={ this.matchRequest.bind(this) }>{ i18n('start') }</div>
+          <div className={ styles.start } allowed={ isAllowed.toString() } style={ {
+            display: (isThisMaster) ? '' : 'none'
+          } } onClick={ this.matchRequest.bind(this) }>{ i18n('start') }</div>
+        </div>
       </div>
     );
   }
@@ -180,7 +177,7 @@ RoomOptions.propTypes = {
 };
 
 const styles = createStyle({
-  container: {
+  wrapper: {
     position: 'relative',
     
     color: colors.blackText,
@@ -205,10 +202,10 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 980px)': {
       margin: '15px auto 0 auto',
-      padding: '30px 15px 15px 15px',
+      padding: '0 15px 15px 15px',
 
       width: 'calc(100% - 30px)',
-      height: 'calc(100% - 60px)'
+      height: 'calc(100% - 30px)'
     },
 
     '::-webkit-scrollbar':
@@ -321,7 +318,7 @@ const styles = createStyle({
 
     direction: locale.direction,
 
-    padding: '35px 35px 20px 35px'
+    padding: '30px 30px 20px 30px'
   },
 
   pick: {

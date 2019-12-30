@@ -363,16 +363,16 @@ class Game extends React.Component
 
         <div className={ mainStyles.container }>
 
-          <div className={ optionsStyles.container }>
+          <div className={ headerStyles.container }>
 
-            <p className={ optionsStyles.welcome }> { i18n('welcome') } </p>
+            <p className={ headerStyles.welcome }> { i18n('welcome') } </p>
 
             <input
               required
               type='text'
               maxLength='18'
               ref={ inputRef }
-              className={ optionsStyles.username }
+              className={ headerStyles.username }
               placeholder={ i18n('username-input') }
               value={ this.state.username }
               onBlur={ this.usernameBlurEvent }
@@ -381,10 +381,10 @@ class Game extends React.Component
 
           </div>
 
-          <div className={ headerStyles.container }>
+          <div className={ optionsStyles.container }>
 
-            <div className={ headerStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
-            <div className={ headerStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
+            <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
+            <div className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
 
           </div>
 
@@ -471,7 +471,7 @@ const mainStyles = createStyle({
     display: 'grid',
 
     gridTemplateRows: 'auto auto auto 1fr',
-    gridTemplateAreas: '"." "." "."',
+    gridTemplateAreas: '"header" "options" "pin" "rooms"',
 
     color: colors.blackText,
 
@@ -485,8 +485,9 @@ const mainStyles = createStyle({
   }
 });
 
-const optionsStyles = createStyle({
+const headerStyles = createStyle({
   container: {
+    gridArea: 'header',
     display: 'flex',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
@@ -530,8 +531,9 @@ const optionsStyles = createStyle({
   }
 });
 
-const headerStyles = createStyle({
+const optionsStyles = createStyle({
   container: {
+    gridArea: 'options',
     display: 'grid',
 
     gridTemplateAreas: '". ."',
@@ -575,6 +577,7 @@ const headerStyles = createStyle({
 
 const pinnedStyles = createStyle({
   container: {
+    gridArea: 'pin',
     display: 'grid',
 
     gridTemplateColumns: '1fr auto',
@@ -646,10 +649,12 @@ const pinnedStyles = createStyle({
 
 const roomsStyles = createStyle({
   container: {
+    gridArea: 'rooms',
+
     display: 'grid',
     gridTemplateColumns: '1fr auto',
     gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '". ." "rooms rooms"',
+    gridTemplateAreas: '"title refresh" "rooms rooms"',
 
     alignItems: 'center',
     direction: locale.direction,
@@ -659,10 +664,13 @@ const roomsStyles = createStyle({
   },
 
   title: {
+    gridArea: 'title',
     fontWeight: '700'
   },
 
   refresh: {
+    gridArea: 'refresh',
+
     width: 'calc(12px + 0.55vw + 0.55vh)',
     height: 'calc(12px + 0.55vw + 0.55vh)',
 
@@ -724,6 +732,7 @@ const roomsStyles = createStyle({
   },
 
   loading: {
+    zIndex: 1,
     display: 'flex',
     position: 'absolute',
 

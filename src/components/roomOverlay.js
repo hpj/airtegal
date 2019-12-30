@@ -393,6 +393,7 @@ const styles = createStyle({
   },
 
   loading: {
+    zIndex: 1,
     position: 'fixed',
     backgroundColor: colors.blackBackground,
 
