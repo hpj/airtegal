@@ -13,20 +13,15 @@ workbox.precaching.precacheAndRoute([]);
 // Cache the bundle.js file with a stale-while-revalidate strategy
 workbox.routing.registerRoute(
   new RegExp('bundle.js'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'kbf-cache'
-  })
+  new workbox.strategies.NetworkFirst()
 );
 
 // Cache the ip check with a cache-first strategy for 1 day
 workbox.routing.registerRoute(
-  new RegExp('https://kbf.herokuapp.com/check/'),
+  new RegExp('https://api.bedan.me/check'),
   new workbox.strategies.CacheFirst({
     cacheName: 'kbf-cache',
     plugins: [
-      new workbox.cacheableResponse.Plugin({
-        statuses: [ 0, 200 ]
-      }),
       new workbox.expiration.Plugin({
         maxAgeSeconds: 60 * 60 * 24 * 1
       })
