@@ -113,17 +113,11 @@ export function onInstallPrompt(callback)
     window.addEventListener('beforeinstallprompt', (e) => callback(e));
 }
 
-// CORS only works on this custom domain (origin)
-// meaning we need to move the client to that remote url
-// if they were viewing the app from the host url
-if (location.hostname.search('.netlify.com') > -1)
-  location.replace('https://bedan.me');
-
 // set the API endpoint
 if (process.env.NODE_ENV === 'production')
   API_ENDPOINT = 'https://api.bedan.me';
 else
-  API_ENDPOINT = 'https://localhost:3000';
+  API_ENDPOINT = 'http://localhost:3000';
 
 // register the service worker
 registerServiceWorker();
