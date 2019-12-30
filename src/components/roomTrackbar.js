@@ -155,11 +155,11 @@ class Trackbar extends React.Component
 
                 return <div className={ styles.player } key={ playerId }>
 
-                  <div className={ styles.led } match={ isMatch.toString() } client={ isClient.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }></div>
+                  <div className={ styles.score } match={ isMatch.toString() }>{ player.score }</div>
 
                   <div className={ styles.name }>{ player.username }</div>
 
-                  <div>{ player.score }</div>
+                  <div className={ styles.led } match={ isMatch.toString() } client={ isClient.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }></div>
 
                 </div>;
               })
@@ -297,16 +297,19 @@ const styles = createStyle({
     alignItems: 'center',
 
     gridTemplateColumns: 'auto 1fr auto',
-    gridTemplateRows: 'auto',
+    gridTemplateAreas: '"led username score"',
     
-    padding: '0 15px',
+    padding: '0 10px',
 
     '@media screen and (max-width: 1080px)': {
-      flexBasis: '100%'
+      flexBasis: '100%',
+
+      padding: '0 15px'
     }
   },
 
   led: {
+    gridArea: 'led',
     position: 'relative',
 
     width: '10px',
@@ -338,11 +341,21 @@ const styles = createStyle({
   },
 
   name: {
+    gridArea: 'username',
+
     padding: '5px',
     margin: '0 auto',
 
     wordBreak: 'break-all',
     fontSize: 'calc(6px + 0.35vw + 0.35vh)'
+  },
+
+  score: {
+    gridArea: 'score',
+
+    '[match="false"]': {
+      display: 'none'
+    }
   }
 });
 
