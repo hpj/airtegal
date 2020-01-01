@@ -7,6 +7,8 @@ import * as Sentry from '@sentry/browser';
 
 import i18n, { setLocale } from './i18n.js';
 
+import 'prevent-pull-refresh';
+
 // import 'fuckadblock';
 
 import WebFont from 'webfontloader';
@@ -117,7 +119,7 @@ export function onInstallPrompt(callback)
 if (process.env.NODE_ENV === 'production')
   API_ENDPOINT = 'https://api.bedan.me';
 else
-  API_ENDPOINT = 'http://localhost:3000';
+  API_ENDPOINT = `http://${process.env.HOST}:3030`;
 
 // register the service worker
 registerServiceWorker();
