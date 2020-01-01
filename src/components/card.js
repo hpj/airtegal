@@ -14,7 +14,7 @@ class Card extends React.Component
 {
   render()
   {
-    const { content, type, props, elementId,
+    const { content, type, elementId,
       allowed, picked, highlighted, hidden, onClick,
       onMouseEnter, onMouseLeave } = this.props;
 
@@ -22,7 +22,7 @@ class Card extends React.Component
       <div className={ styles.wrapper }>
         {
           (hidden) ?
-            <div style={ props } className={ styles.hidden } type={ type }>
+            <div className={ styles.hidden } type={ type }>
               <div>{ i18n('kuruit-bedan-fash5') }</div>
             </div>
             :
@@ -30,7 +30,6 @@ class Card extends React.Component
               onMouseEnter={ onMouseEnter }
               onMouseLeave={ onMouseLeave }
               onClick={ onClick }
-              style={ props }
               className={ styles.container }
               id={ elementId }
               type={ type }
@@ -73,7 +72,6 @@ const floatAnimation = createAnimation({
 
 Card.propTypes = {
   content: PropTypes.string,
-  props: PropTypes.object,
   elementId: PropTypes.string,
   allowed: PropTypes.string,
   picked: PropTypes.string,

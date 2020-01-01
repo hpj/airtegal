@@ -2,6 +2,8 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import { animated, Transition } from 'react-spring';
+
 import Interactable from 'react-interactable/noNative';
 
 import { Value } from 'animated';
@@ -296,37 +298,49 @@ class HandOverlay extends React.Component
 
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
               <div className={ styles.container }>
-                {
-                  this.state.hand.map((card, i) =>
+
+                <Transition
+                  keys={ (card) => card.key }
+                  items={ this.state.hand }
+                  from={ { opacity: 0 } }
+                  enter={ { opacity: 1 } }
+                  leave={ { opacity: 0 } }
+                >
                   {
-                    const isPicked = entry.indexOf(i) > -1;
-
-                    const onMouseEnter = () =>
+                    (card, phase, i) => (props) =>
                     {
-                      this.setState({
-                        hoverIndex: i
-                      });
-                    };
+                      const isPicked = entry.indexOf(i) > -1;
 
-                    const onMouseLeave = () =>
-                    {
-                      this.setState({
-                        hoverIndex: undefined
-                      });
-                    };
+                      const onMouseEnter = () =>
+                      {
+                        this.setState({
+                          hoverIndex: i
+                        });
+                      };
 
-                    return <Card
-                      key={ card.key }
-                      onMouseEnter={ onMouseEnter }
-                      onMouseLeave={ onMouseLeave }
-                      onClick={ () => this.pickCard(i, isAllowed, isPicked) }
-                      picked={ isPicked.toString() }
-                      allowed={ isAllowed.toString() }
-                      highlighted={ (this.state.hoverIndex === i).toString() }
-                      type='white'
-                      content={ card.content }/>;
-                  })
-                }
+                      const onMouseLeave = () =>
+                      {
+                        this.setState({
+                          hoverIndex: undefined
+                        });
+                      };
+
+                      return <animated.div style={ props }>
+                        <Card
+                          key={ card.key }
+                          onMouseEnter={ onMouseEnter }
+                          onMouseLeave={ onMouseLeave }
+                          onClick={ () => this.pickCard(i, isAllowed, isPicked) }
+                          picked={ isPicked.toString() }
+                          allowed={ isAllowed.toString() }
+                          highlighted={ (this.state.hoverIndex === i).toString() }
+                          type='white'
+                          content={ card.content }/>
+                      </animated.div>;
+                    }
+                  }
+                </Transition>
+
               </div>
             </div>
           </div>

@@ -185,13 +185,11 @@ const styles = createStyle({
 
     width: '100%',
 
-    borderRadius: '0 15px 15px 0',
-    padding: '10px 10px 20px 20px',
+    padding: '10px 0',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      padding: '0',
-      borderRadius: '0 0 15px 15px'
+      padding: '0'
     }
   },
 

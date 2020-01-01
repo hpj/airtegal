@@ -2,8 +2,6 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-// import { Transition } from 'react-spring';
-
 import Interactable from 'react-interactable/noNative';
 
 import { Value } from 'animated';
@@ -144,6 +142,10 @@ class FieldOverlay extends React.Component
 
             overflow: 'hidden',
 
+            // padding to make sure that when overlay is dragged
+            // a bit much the background-color still covers the screen
+            padding: '0 30px 0 0',
+
             top: '-100%',
             width: '100%',
             height: '100%'
@@ -158,10 +160,10 @@ class FieldOverlay extends React.Component
           horizontalOnly={ true }
           initialPosition={ { x: size.width, y: 0 } }
 
-          snapPoints={ [ { x: size.width }, { x: 0 } ] }
+          snapPoints={ [ { x: size.width }, { x: -5 } ] }
 
           boundaries={ {
-            left: 0,
+            left: -5,
             right: size.width
           } }
         >
@@ -212,34 +214,6 @@ class FieldOverlay extends React.Component
                   });
                 })
               }
-
-              {/* <Transition
-                keys={ (entry) => entry.key }
-                items={ this.state.field }
-                from={ { opacity: 0 } }
-                enter={ { opacity: 1 } }
-                leave={ { opacity: 0 } }
-              >
-                {
-                  (entry, phase, entryIndex) => (props) =>
-                  {
-                    const isAllowed = this.state.playerState === 'judging' && entryIndex > 0;
-
-                    return entry.cards.map((card, i) =>
-                    {
-                      return <Card
-                        key={ i }
-                        props={ props }
-                        onClick={ () => this.judgeCard(entryIndex, isAllowed) }
-                        allowed={ isAllowed.toString() }
-                        type={ card.type }
-                        content={ card.content }
-                        hidden={ card.hidden }/>;
-                    });
-                  }
-                }
-              </Transition> */}
-
             </div>
           </div>
 
@@ -277,8 +251,10 @@ const styles = createStyle({
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      margin: '15px 0 0 0',
-      height: 'calc(100% - 15px)'
+      width: '100%',
+      height: 'calc(100% - 15px)',
+      
+      margin: '15px 0 0 0'
     },
 
     '::-webkit-scrollbar':

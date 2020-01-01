@@ -278,7 +278,8 @@ class RoomOverlay extends React.Component
       this.setState({ overlayHolderOpacity: 0.5 - (value / (size.width * 2)) });
 
       // hide the overlay and overlay holder when they are off-screen
-      if (value >= size.width)
+      // (-5px is to make sure that the overlay is hidden even if tit ends up few pixels off from where it should of been)
+      if (value >= (size.width - 5))
         this.setState({ overlayHidden: true });
       else
         this.setState({ overlayHidden: false });
@@ -372,7 +373,7 @@ RoomOverlay.propTypes = {
 const styles = createStyle({
   container: {
     display: 'grid',
-
+    
     backgroundColor: colors.trackBarBackground,
 
     gridTemplateColumns: 'auto 15vw 1fr',

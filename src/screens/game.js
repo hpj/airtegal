@@ -47,7 +47,7 @@ function errorScreen(error)
 
 /** connect the socket.io client to the socket.io server
 */
-export function connect()
+function connect()
 {
   return new Promise((resolve, reject) =>
   {
