@@ -138,13 +138,7 @@ class FieldOverlay extends React.Component
             zIndex: 2,
             display: (this.state.overlayHidden) ? 'none' : '',
 
-            backgroundColor: colors.fieldBackground,
-
             overflow: 'hidden',
-
-            // padding to make sure that when overlay is dragged
-            // a bit much the background-color still covers the screen
-            padding: '0 30px 0 0',
 
             top: '-100%',
             width: '100%',
@@ -153,17 +147,17 @@ class FieldOverlay extends React.Component
 
           animatedValueX={ overlayAnimatedX }
 
-          frictionAreas={ [ { damping: 0.6 } ] }
+          frictionAreas={ [ { damping: 0.65 } ] }
 
           dragEnabled={ false }
 
           horizontalOnly={ true }
           initialPosition={ { x: size.width, y: 0 } }
 
-          snapPoints={ [ { x: size.width }, { x: -5 } ] }
+          snapPoints={ [ { x: size.width }, { x: 0 } ] }
 
           boundaries={ {
-            left: -5,
+            left: 0,
             right: size.width
           } }
         >
@@ -244,10 +238,11 @@ const styles = createStyle({
     overflowX: 'hidden',
     overflowY: 'scroll',
 
-    width: 'calc(100% - 38px)',
+    backgroundColor: colors.fieldBackground,
+    
     height: '100%',
 
-    margin: '0 8px 0 30px',
+    margin: '0 0 0 10px',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
