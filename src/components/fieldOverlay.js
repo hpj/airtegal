@@ -238,17 +238,21 @@ const styles = createStyle({
     overflowX: 'hidden',
     overflowY: 'scroll',
 
+    position: 'relative',
     backgroundColor: colors.fieldBackground,
-    
+
     height: '100%',
 
     margin: '0 0 0 10px',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
+      left: '-10px',
+      
       width: '100%',
       height: 'calc(100% - 15px)',
       
+      padding: '0 10px',
       margin: '15px 0 0 0'
     },
 

@@ -1,7 +1,11 @@
 Performance Issues and Bugs:
 
 Testing:
-  ☐ sharing room url on mobile (Web Share API only exists on Chrome 75 for Android)
+  ✔ a script to stream the app and the server to the local router and connect to them using a mobile device on the same router @done(19-12-31 17:26)
+    ✔ look for any visual abnormalities @done(20-01-01 22:43)
+    ✔ test all touch input (clicks, hovering and dragging) @done(20-01-02 19:20)
+
+  ☐ sharing room url on mobile (Web Share API)
 
 Features:
 
@@ -23,7 +27,7 @@ UI/UX:
 
   Lobby:
     ✔ show rooms @done(19-12-25 23:01)
-      ☐ show google ad
+      ☐ show google ad (needs to get approved by the google crawl bot)
         ☐ show a window about ad-block if detected
 
   Match Logic:

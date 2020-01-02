@@ -45,7 +45,9 @@ class HandOverlay extends React.Component
     this.state = {
       visible: false,
       overlayHidden: true,
-
+      
+      blockDragging: false,
+      
       entry: [],
       hand: []
     };
@@ -61,6 +63,20 @@ class HandOverlay extends React.Component
     socket.on('roomData', this.onRoomData);
 
     window.addEventListener('resize', this.onResize);
+
+    wrapperRef.current.addEventListener('touchstart', () =>
+    {
+      this.setState({
+        blockDragging: true
+      });
+    });
+
+    wrapperRef.current.addEventListener('touchend', () =>
+    {
+      this.setState({
+        blockDragging: false
+      });
+    });
   }
 
   componentWillUnmount()
@@ -281,6 +297,8 @@ class HandOverlay extends React.Component
 
           onSnap={ this.onSnap.bind(this) }
 
+          dragEnabled={ !this.state.blockDragging }
+
           frictionAreas={ [ { damping: 0.6 } ] }
 
           verticalOnly={ true }
@@ -371,7 +389,7 @@ const styles = createStyle({
     display: 'flex',
     justifyContent: 'center',
 
-    margin: '10px 10px 10px 0'
+    margin: '13px 0 13px 0'
   },
 
   handler: {

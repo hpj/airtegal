@@ -297,7 +297,7 @@ const styles = createStyle({
     gridTemplateColumns: 'auto 1fr auto',
     gridTemplateAreas: '"led username score"',
     
-    padding: '0 10px',
+    padding: '0 0 0 10px',
 
     '@media screen and (max-width: 1080px)': {
       flexBasis: '100%',
