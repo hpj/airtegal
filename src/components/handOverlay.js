@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { animated, Transition } from 'react-spring';
+import { wrapGrid } from 'animate-css-grid';
 
 import Interactable from 'react-interactable/noNative';
 
@@ -20,6 +20,7 @@ const colors = getTheme();
 
 const overlayRef = createRef();
 const wrapperRef = createRef();
+const gridRef = createRef();
 
 const overlayAnimatedY = new Value(0);
 
@@ -63,6 +64,8 @@ class HandOverlay extends React.Component
     socket.on('roomData', this.onRoomData);
 
     window.addEventListener('resize', this.onResize);
+
+    this.animatedGrid = wrapGrid(gridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
 
     wrapperRef.current.addEventListener('touchstart', () =>
     {
@@ -261,9 +264,9 @@ class HandOverlay extends React.Component
 
       // hide the overlay and overlay holder when they are off-screen
       if (value >= size.height)
-        this.setState({ overlayHidden: true });
+        this.setState({ overlayHidden: true }, () => this.animatedGrid.forceGridAnimation());
       else
-        this.setState({ overlayHidden: false });
+        this.setState({ overlayHidden: false }, () => this.animatedGrid.forceGridAnimation());
     });
 
     // if size is not calculated yet
@@ -315,50 +318,38 @@ class HandOverlay extends React.Component
             </div>
 
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
-              <div className={ styles.container }>
-
-                <Transition
-                  keys={ (card) => card.key }
-                  items={ this.state.hand }
-                  from={ { opacity: 0 } }
-                  enter={ { opacity: 1 } }
-                  leave={ { opacity: 0 } }
-                >
+              <div ref= { gridRef } className={ styles.container }>
+                {
+                  this.state.hand.map((card, i) =>
                   {
-                    (card, phase, i) => (props) =>
+                    const isPicked = entry.indexOf(i) > -1;
+
+                    const onMouseEnter = () =>
                     {
-                      const isPicked = entry.indexOf(i) > -1;
+                      this.setState({
+                        hoverIndex: i
+                      });
+                    };
 
-                      const onMouseEnter = () =>
-                      {
-                        this.setState({
-                          hoverIndex: i
-                        });
-                      };
+                    const onMouseLeave = () =>
+                    {
+                      this.setState({
+                        hoverIndex: undefined
+                      });
+                    };
 
-                      const onMouseLeave = () =>
-                      {
-                        this.setState({
-                          hoverIndex: undefined
-                        });
-                      };
-
-                      return <animated.div style={ props }>
-                        <Card
-                          key={ card.key }
-                          onMouseEnter={ onMouseEnter }
-                          onMouseLeave={ onMouseLeave }
-                          onClick={ () => this.pickCard(i, isAllowed, isPicked) }
-                          picked={ isPicked.toString() }
-                          allowed={ isAllowed.toString() }
-                          highlighted={ (this.state.hoverIndex === i).toString() }
-                          type='white'
-                          content={ card.content }/>
-                      </animated.div>;
-                    }
-                  }
-                </Transition>
-
+                    return <Card
+                      key={ card.key }
+                      onMouseEnter={ onMouseEnter }
+                      onMouseLeave={ onMouseLeave }
+                      onClick={ () => this.pickCard(i, isAllowed, isPicked) }
+                      picked={ isPicked.toString() }
+                      allowed={ isAllowed.toString() }
+                      highlighted={ (this.state.hoverIndex === i).toString() }
+                      type='white'
+                      content={ card.content }/>;
+                  })
+                }
               </div>
             </div>
           </div>

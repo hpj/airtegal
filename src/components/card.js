@@ -155,6 +155,10 @@ const styles = createStyle({
     userSelect: 'none',
     borderRadius: '10px',
 
+    '[allowed="true"]': {
+      cursor: 'pointer'
+    },
+
     '[picked="true"]': {
       boxShadow: `5px 5px 0px 0px ${colors.whiteCardPicked}`,
 
