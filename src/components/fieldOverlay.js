@@ -12,6 +12,8 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
+import { locale } from '../i18n.js';
+
 import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
@@ -62,8 +64,7 @@ class FieldOverlay extends React.Component
       {
         this.setState({
           hoverIndex: undefined,
-          field: [],
-          lines: []
+          field: []
         });
       }
     }
@@ -71,15 +72,31 @@ class FieldOverlay extends React.Component
     if (roomData.roundEnded)
     {
       this.setState({
-        hoverIndex: undefined,
-        lines: []
+        hoverIndex: undefined
       });
     }
 
     if (roomData.field)
     {
+      const lines = [];
+
+      roomData.field.forEach((entry, entryIndex) =>
+      {
+        entry.cards.forEach((card, i) =>
+        {
+          if (entry.cards[i + 1])
+            lines.push({
+              id: entry.id !== undefined,
+              from: card.key,
+              to: entry.cards[i + 1].key,
+              entryIndex: entryIndex
+            });
+        });
+      });
+
       this.setState({
-        field: roomData.field
+        field: roomData.field,
+        lines: lines
       });
     }
     
@@ -163,36 +180,26 @@ class FieldOverlay extends React.Component
               {
                 this.state.field.map((entry, entryIndex) =>
                 {
-                  let owner;
-
                   const isAllowed = this.state.playerState === 'judging' && entryIndex > 0;
 
-                  if (entry.id && entryIndex > 0)
-                    owner = this.state.playerProperties[entry.id].username;
-
-                  return entry.cards.map((card) =>
+                  return entry.cards.map((card, i) =>
                   {
+                    let owner;
+
+                    if (i === 0 && entry.id && entryIndex > 0)
+                      owner = this.state.playerProperties[entry.id].username;
+
                     const onMouseEnter = () =>
                     {
-                      const lines = entry.cards.map((card, i) =>
-                      {
-                        if (entry.cards[i + 1])
-                          return { from: card.key, to: entry.cards[i + 1].key };
-                      });
-
-                      lines.pop();
-
                       this.setState({
-                        hoverIndex: entryIndex,
-                        lines: lines
+                        hoverIndex: entryIndex
                       });
                     };
 
                     const onMouseLeave = () =>
                     {
                       this.setState({
-                        hoverIndex: undefined,
-                        lines: []
+                        hoverIndex: undefined
                       });
                     };
 
@@ -216,14 +223,17 @@ class FieldOverlay extends React.Component
           </div>
 
           {
-            this.state.lines.map((o, i) => <LineTo
-              key={ i }
-              within={ styles.container }
-              borderColor={ colors.entryLine }
-              borderWidth={ 10 }
-              from={ o.from }
-              to={ o.to }
-            />)
+            this.state.lines.map((o, i) =>
+            {
+              return (o.entryIndex === this.state.hoverIndex || o.id) ? <LineTo
+                key={ i }
+                within={ styles.container }
+                borderColor={ colors.entryLine }
+                borderWidth={ 10 }
+                from={ o.from }
+                to={ o.to }
+              /> : <div key={ i }/>;
+            })
           }
 
         </Interactable.View>
@@ -274,6 +284,8 @@ const styles = createStyle({
 
   container: {
     display: 'grid',
+
+    direction: locale.direction,
     
     gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
     justifyContent: 'space-around',

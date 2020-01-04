@@ -12,6 +12,8 @@ import { socket } from '../screens/game.js';
 
 import Card from './card.js';
 
+import { locale } from '../i18n.js';
+
 import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
@@ -417,6 +419,8 @@ const styles = createStyle({
 
   container: {
     display: 'grid',
+
+    direction: locale.direction,
 
     gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
     justifyContent: 'space-around',
