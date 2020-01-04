@@ -6,12 +6,8 @@ Testing:
 Features:
 
 UI/UX:
-  ☐ showing card owners and the round winner @high 
-
-  ☐ an animation for match ending and the match winner 
+  ☐ animation for match ending and the match winner 
   
-  ✔ animations for cards appearing and disappearing from hand @done(20-01-03 16:12)
-
   ☐ animations for cards appearing and disappearing from field 
 
   ☐ design the 404 page

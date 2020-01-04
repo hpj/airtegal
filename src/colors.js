@@ -58,6 +58,8 @@ export default function(forceMain)
     whiteCardPicked: '#000000',
     
     entryLine: '#000000',
+
+    winner: '#d4af37',
    
     red: 'red',
     error: '#ad1818',

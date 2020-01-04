@@ -14,12 +14,12 @@ class Card extends React.Component
 {
   render()
   {
-    const { content, type, elementId,
-      allowed, picked, highlighted, hidden, onClick,
-      onMouseEnter, onMouseLeave } = this.props;
+    const { owner, content, type, elementId,
+      allowed, picked, highlighted, winner, hidden,
+      onClick, onMouseEnter, onMouseLeave } = this.props;
 
     return (
-      <div className={ styles.wrapper }>
+      <div owner={ (owner !== undefined).toString() } className={ styles.wrapper }>
         {
           (hidden) ?
             <div className={ styles.hidden } type={ type }>
@@ -27,16 +27,19 @@ class Card extends React.Component
             </div>
             :
             <div
+              className={ styles.container }
+
               onMouseEnter={ onMouseEnter }
               onMouseLeave={ onMouseLeave }
               onClick={ onClick }
-              className={ styles.container }
               id={ elementId }
               type={ type }
               allowed={ allowed }
               picked={ picked }
               highlighted={ highlighted }
+              winner={ winner }
             >
+              <div className={ styles.owner }>{owner}</div>
               <div className={ styles.content }>{content}</div>
               <p className={ styles.bottom }>{ i18n('kuruit-bedan-fash5') }</p>
             </div>
@@ -71,11 +74,13 @@ const floatAnimation = createAnimation({
 });
 
 Card.propTypes = {
+  owner: PropTypes.string,
   content: PropTypes.string,
   elementId: PropTypes.string,
   allowed: PropTypes.string,
   picked: PropTypes.string,
   highlighted: PropTypes.string,
+  winner: PropTypes.string,
   hidden: PropTypes.bool,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
   onClick: PropTypes.func,
@@ -94,7 +99,14 @@ const styles = createStyle({
       content: '""',
       display: 'block',
     
-      paddingBottom: '135%'
+      paddingBottom: '135%',
+
+      transition: 'padding-bottom 0.25s',
+      transitionTimingFunction: 'ease-out'
+    },
+
+    '[owner="true"]:before': {
+      paddingBottom: '155%'
     }
   },
 
@@ -138,9 +150,9 @@ const styles = createStyle({
     position: 'absolute',
 
     display: 'grid',
-    gridTemplateRows: '1fr auto',
+    gridTemplateRows: 'auto 1fr auto',
     gridTemplateColumns: '100%',
-    gridTemplateAreas: '"content" "bottom"',
+    gridTemplateAreas: '"owner" "content" "bottom"',
 
     direction: locale.direction,
   
@@ -191,6 +203,10 @@ const styles = createStyle({
     '[type="white"]': {
       color: colors.whiteCardForeground,
       backgroundColor: colors.whiteCardBackground
+    },
+
+    '[winner="true"]': {
+      boxShadow: `5px 5px 0 0 ${colors.winner}, 5px 5px 10px 0 ${colors.winner}`
     }
   },
 
@@ -204,12 +220,22 @@ const styles = createStyle({
     margin: '10px'
   },
 
+  owner: {
+    gridArea: 'owner',
+
+    fontSize: 'calc(3px + 0.4vw + 0.4vh)',
+    margin: '5px 10px',
+
+    ':empty': {
+      margin: 0
+    }
+  },
+
   bottom: {
     gridArea: 'bottom',
 
-    padding: '10px',
     fontSize: 'calc(3px + 0.4vw + 0.4vh)',
-    margin: 0
+    margin: '10px'
   }
 });
 

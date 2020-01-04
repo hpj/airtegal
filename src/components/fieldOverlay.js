@@ -68,29 +68,26 @@ class FieldOverlay extends React.Component
       }
     }
 
-    // TODO using this info show the owners of the cards (at the end of the round)
-    // and the card that won the round
     if (roomData.roundEnded)
     {
       this.setState({
         hoverIndex: undefined,
         lines: []
       });
-
-      // roomData.roundEnded.winnerEntryIndex
-      // roomData.roundEnded.field[i].entry.id
     }
 
     if (roomData.field)
     {
       this.setState({
-        playerState: roomData.playerProperties[socket.id].state,
         field: roomData.field
       });
     }
-
+    
     this.setState({
-      roomState: roomData.state
+      roomState: roomData.state,
+      winnerEntryIndex: (roomData.roundEnded) ? roomData.roundEnded.winnerEntryIndex : undefined,
+      playerState: roomData.playerProperties[socket.id].state,
+      playerProperties: roomData.playerProperties
     });
   }
 
@@ -166,7 +163,12 @@ class FieldOverlay extends React.Component
               {
                 this.state.field.map((entry, entryIndex) =>
                 {
+                  let owner;
+
                   const isAllowed = this.state.playerState === 'judging' && entryIndex > 0;
+
+                  if (entry.id && entryIndex > 0)
+                    owner = this.state.playerProperties[entry.id].username;
 
                   return entry.cards.map((card) =>
                   {
@@ -202,8 +204,10 @@ class FieldOverlay extends React.Component
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       allowed={ isAllowed.toString() }
                       highlighted={ (this.state.hoverIndex === entryIndex).toString() }
+                      owner={ owner }
                       type={ card.type }
                       content={ card.content }
+                      winner= { (entryIndex === this.state.winnerEntryIndex).toString() }
                       hidden={ card.hidden }/>;
                   });
                 })

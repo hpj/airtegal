@@ -43,7 +43,7 @@ class Trackbar extends React.Component
 
   onRoomData(roomData)
   {
-    if (roomData.counter)
+    if (roomData.counter !== undefined)
     {
       // clear the pervious countdown
       if (this.countdownInterval)
@@ -250,6 +250,8 @@ const styles = createStyle({
   status: {
     gridArea: 'status',
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
+    
+    whiteSpace: 'pre',
 
     margin: '0 0 0 auto',
     padding: '0 0 20px 0',
