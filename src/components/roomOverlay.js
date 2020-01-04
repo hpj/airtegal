@@ -103,7 +103,9 @@ class RoomOverlay extends React.Component
     {
       if (roomData.matchEnded.reason)
         this.addNotification(i18n(roomData.matchEnded.reason) || roomData.matchEnded.reason);
-      else
+      else if (roomData.matchEnded.id === socket.id)
+        this.addNotification(i18n('you-won'));
+      else if (roomData.playerProperties[roomData.matchEnded.id])
         this.addNotification(`${i18n('match-winner-is')} ${roomData.playerProperties[roomData.matchEnded.id].username}.`);
     }
 
