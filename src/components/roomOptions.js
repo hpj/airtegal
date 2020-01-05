@@ -52,8 +52,11 @@ class RoomOptions extends React.Component
     this.setState({ errorMessage: err });
   }
 
-  matchRequest()
+  matchRequest(isAllowed)
   {
+    if (!isAllowed)
+      return;
+    
     // show a loading indictor
     this.loadingVisibility(true);
 
@@ -172,7 +175,7 @@ class RoomOptions extends React.Component
 
           <div className={ styles.start } allowed={ isAllowed.toString() } style={ {
             display: (isThisMaster) ? '' : 'none'
-          } } onClick={ this.matchRequest.bind(this) }>{ i18n('start') }</div>
+          } } onClick={ () => this.matchRequest(isAllowed) }>{ i18n('start') }</div>
         </div>
       </div>
     );
