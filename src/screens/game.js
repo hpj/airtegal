@@ -53,7 +53,7 @@ function connect()
   {
     try
     {
-      socket = io(API_ENDPOINT + '/io', { transports: [ 'polling' ] });
+      socket = io(API_ENDPOINT.replace('https', 'http') + '/io');
 
       socket.once('connect', resolve)
         .once('error', (e) =>

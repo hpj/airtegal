@@ -1,14 +1,14 @@
 Performance Issues and Bugs:
 
 Testing:
-  ☐ sharing room url on mobile (Web Share API)
+  ☐ sharing room url on mobile (Web Share API) @today
 
 Features:
 
 UI/UX:
-  ☐ animation for match ending and the match winner 
-  
-  ☐ animations for cards appearing and disappearing from field 
+☐ animations for cards appearing and disappearing from field 
+
+☐ animation for match ending and the match winner @low 
 
   ☐ design the 404 page
 
@@ -22,10 +22,5 @@ UI/UX:
     ✔ show rooms @done(19-12-25 23:01)
       ☐ show google ad (needs to get approved by the google crawl bot)
         ☐ show a window about ad-block if detected
-
-  Match Logic:
-    ☐ if the room is full and the room's master doesn't start the match in 30 seconds they should be kicked out of the room 
-
-    ☐ support drawing and playing blank cards
-
+            
 CI/CD:

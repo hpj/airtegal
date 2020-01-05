@@ -28,8 +28,8 @@ import Game from './screens/game.js';
 import TermsAndConditions from './screens/useTerms.js';
 import PrivacyPolicy from './screens/privacyPolicy.js';
 
-export let country;
-export let API_ENDPOINT;
+export let country = '';
+export let API_ENDPOINT = '';
 
 let installPromptEvent;
 
@@ -119,7 +119,7 @@ export function onInstallPrompt(callback)
 if (process.env.NODE_ENV === 'production')
   API_ENDPOINT = 'https://api.bedan.me';
 else
-  API_ENDPOINT = `http://${process.env.HOST}:3030`;
+  API_ENDPOINT = `http://${process.env.HOST}:${process.env.PORT}`;
 
 // register the service worker
 registerServiceWorker();

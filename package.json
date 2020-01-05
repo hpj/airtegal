@@ -7,7 +7,8 @@
   "scripts": {
     "workbox": "workbox injectManifest workbox-config.js",
     "svgo": "svgo ./public",
-    "start": "webpack-dev-server --define process.env.HOST=\"'$(ip route get 1.2.3.4 | awk '{print $7}')'\" --config webpack.config.dev.js --mode development",
+    "start": "webpack-dev-server --define process.env.HOST=\"'localhost'\" --define process.env.PORT=\"'3000'\" --config webpack.config.dev.js --mode development",
+    "start:sync": "webpack-dev-server --define process.env.HOST=\"'$(ip route get 1.2.3.4 | awk '{print $7}')'\" --define process.env.PORT=\"'3030'\" --config webpack.config.dev.js --mode development",
     "build": "webpack --config webpack.config.prod.js --mode production"
   },
   "repository": {
