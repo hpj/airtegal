@@ -53,7 +53,7 @@ function connect()
   {
     try
     {
-      socket = io.connect(API_ENDPOINT + '/io');
+      socket = io(API_ENDPOINT + '/io');
 
       socket.once('connect', resolve)
         .once('error', (e) =>
