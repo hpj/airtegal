@@ -212,9 +212,8 @@ const styles = createStyle({
 
   content: {
     gridArea: 'content',
-    display: 'flex',
-  
-    justifyContent: 'center',
+
+    textAlign: 'center',
 
     overflow: 'hidden',
     margin: '10px'
