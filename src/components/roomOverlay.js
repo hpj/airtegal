@@ -3,7 +3,7 @@ import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Value } from 'animated';
-import Interactable from 'react-interactable/noNative';
+import Interactable from '../interactable/noNative.js';
 
 import i18n, { locale } from '../i18n.js';
 

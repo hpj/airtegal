@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { wrapGrid } from 'animate-css-grid';
 
-import Interactable from 'react-interactable/noNative';
+import Interactable from '../interactable/noNative.js';
 
 import { Value } from 'animated';
 
@@ -21,6 +21,8 @@ import { createStyle } from '../flcss.js';
 const colors = getTheme();
 
 const overlayRef = createRef();
+const overlayContainerRef = createRef();
+
 const wrapperRef = createRef();
 const gridRef = createRef();
 
@@ -48,9 +50,7 @@ class HandOverlay extends React.Component
     this.state = {
       visible: false,
       overlayHidden: true,
-      
-      blockDragging: false,
-      
+
       entry: [],
       hand: []
     };
@@ -70,20 +70,6 @@ class HandOverlay extends React.Component
     wrapperRef.current.addEventListener('resize', this.onResize);
 
     this.animatedGrid = wrapGrid(gridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
-
-    wrapperRef.current.addEventListener('touchstart', () =>
-    {
-      this.setState({
-        blockDragging: true
-      });
-    });
-
-    wrapperRef.current.addEventListener('touchend', () =>
-    {
-      this.setState({
-        blockDragging: false
-      });
-    });
   }
 
   componentWillUnmount()
@@ -121,11 +107,11 @@ class HandOverlay extends React.Component
     if (roomData.roundStarted)
     {
       // client is waiting or picking cards
-      // if (roomData.roundStarted.judgeId !== socket.id)
-      this.visibility(true);
+      if (roomData.roundStarted.judgeId !== socket.id)
+        this.visibility(true);
       // client is judge
-      // else
-      //   this.visibility(false);
+      else
+        this.visibility(false);
 
       this.setState({
         hoverIndex: undefined,
@@ -188,23 +174,29 @@ class HandOverlay extends React.Component
 
   refreshViewableArea()
   {
-    // const touchScreen = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-
-    const rect = wrapperRef.current.getBoundingClientRect();
-
-    // if (!touchScreen)
+    const touchScreen = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    
+    // touch screen are not scrolled the same way as non-touch screens
+    if (!touchScreen)
     {
       const { size } = this.props;
+      
+      const rect = wrapperRef.current.getBoundingClientRect();
 
-      this.setState({ viewableArea: size.height - rect.y });
+      this.setState({
+        viewableArea: size.height - rect.y,
+        maxViewableArea: undefined
+      });
     }
-    // else
-    // {
-    //   this.setState({
-    //     viewableArea: undefined,
-    //     maxViewableArea: rect.height
-    //   });
-    // }
+    else
+    {
+      const rect = overlayContainerRef.current.getBoundingClientRect();
+
+      this.setState({
+        viewableArea: undefined,
+        maxViewableArea: rect.height
+      });
+    }
   }
 
   /** send the card the player choose to the server's match logic
@@ -262,14 +254,28 @@ class HandOverlay extends React.Component
     const { size } = this.props;
     const { entry } = this.state;
 
-    // const touchScreen = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-
-    // console.log(this.state.maxViewableArea);
-
-    const visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
-    // const visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: 0 } ];
-    // const visibleSnapPoints = [ { y: 0 } ];
+    let visibleSnapPoints;
+    
     const hiddenSnapPoints = [ { y: size.height } ];
+
+    const boundaries = {};
+
+    let freewillAfter;
+
+    if (this.state.maxViewableArea)
+    {
+      visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: size.height - this.state.maxViewableArea } ];
+      
+      boundaries.top = visibleSnapPoints[1].y;
+
+      freewillAfter = { y: percent(size.height, 80) };
+    }
+    else
+    {
+      visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
+      
+      boundaries.top = visibleSnapPoints[2].y;
+    }
 
     const isAllowed = this.state.playerState === 'playing';
 
@@ -311,59 +317,59 @@ class HandOverlay extends React.Component
 
           dragWithSpring={ { tension: 500 } }
 
-          // gravityPoints={ [ { y: size. } ] }
-
-          dragEnabled={ !this.state.blockDragging }
+          dragEnabled={ true }
 
           frictionAreas={ [ { damping: 0.6 } ] }
 
           verticalOnly={ true }
           initialPosition={ { x: 0, y: size.height } }
-          // initialPosition={ { x: 0, y: 0 } }
 
           snapPoints={ (this.state.visible) ? visibleSnapPoints : hiddenSnapPoints }
-          boundaries={ {
-            top: percent(size.height, 15)
-          } }
+
+          boundaries={ boundaries }
+
+          freewillAfter={ freewillAfter }
         >
-          <div className={ styles.overlay }>
-            <div className={ styles.handlerWrapper }>
-              <div className={ styles.handler } onClick={ this.maximizeMinimize }/>
-            </div>
+          <div className={ styles.overlayWrapper }>
+            <div ref={ overlayContainerRef } className={ styles.overlayContainer }>
+              <div className={ styles.handlerWrapper }>
+                <div className={ styles.handler } onClick={ this.maximizeMinimize }/>
+              </div>
 
-            <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
-              <div ref= { gridRef } className={ styles.container }>
-                {
-                  this.state.hand.map((card, i) =>
+              <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
+                <div ref= { gridRef } className={ styles.container }>
                   {
-                    const isPicked = entry.indexOf(i) > -1;
-
-                    const onMouseEnter = () =>
+                    this.state.hand.map((card, i) =>
                     {
-                      this.setState({
-                        hoverIndex: i
-                      });
-                    };
+                      const isPicked = entry.indexOf(i) > -1;
 
-                    const onMouseLeave = () =>
-                    {
-                      this.setState({
-                        hoverIndex: undefined
-                      });
-                    };
+                      const onMouseEnter = () =>
+                      {
+                        this.setState({
+                          hoverIndex: i
+                        });
+                      };
 
-                    return <Card
-                      key={ card.key }
-                      onMouseEnter={ onMouseEnter }
-                      onMouseLeave={ onMouseLeave }
-                      onClick={ () => this.pickCard(i, isAllowed, isPicked) }
-                      picked={ isPicked.toString() }
-                      allowed={ isAllowed.toString() }
-                      highlighted={ (this.state.hoverIndex === i).toString() }
-                      type='white'
-                      content={ card.content }/>;
-                  })
-                }
+                      const onMouseLeave = () =>
+                      {
+                        this.setState({
+                          hoverIndex: undefined
+                        });
+                      };
+
+                      return <Card
+                        key={ card.key }
+                        onMouseEnter={ onMouseEnter }
+                        onMouseLeave={ onMouseLeave }
+                        onClick={ () => this.pickCard(i, isAllowed, isPicked) }
+                        picked={ isPicked.toString() }
+                        allowed={ isAllowed.toString() }
+                        highlighted={ (this.state.hoverIndex === i).toString() }
+                        type='white'
+                        content={ card.content }/>;
+                    })
+                  }
+                </div>
               </div>
             </div>
           </div>
@@ -383,18 +389,20 @@ const styles = createStyle({
     position: 'absolute',
 
     width: '100vw',
-    height: '100vh',
+    height: '100vh'
+  },
+
+  overlayWrapper: {
+    // margin to avoid the trackbar
+    margin: '0 0 0 calc(15vw + 10px)',
 
     // for the (smaller screens) portrait overlay
     '@media screen and (max-width: 1080px)': {
-      // position: 'relative',
-      // to make the top is the same as trackbar's top instead of under it
-      // top: '-20vh',
-      // height: '100vh'
+      margin: 0
     }
   },
 
-  overlay: {
+  overlayContainer: {
     display: 'grid',
 
     gridTemplateColumns: '100%',

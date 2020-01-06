@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Interactable from 'react-interactable/noNative';
+import Interactable from '../interactable/noNative.js';
 
 import { Value } from 'animated';
 
