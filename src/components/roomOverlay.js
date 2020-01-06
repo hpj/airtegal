@@ -24,6 +24,7 @@ import HandOverlay from './handOverlay.js';
 const colors = getTheme();
 
 const overlayRef = createRef();
+const containerRef = createRef();
 
 const overlayAnimatedX = new Value(0);
 
@@ -37,6 +38,8 @@ class RoomOverlay extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
+      blockDragging: false,
+
       master: undefined,
 
       incremental: 1,
@@ -44,7 +47,8 @@ class RoomOverlay extends React.Component
 
       overlayHolderOpacity: 0,
       overlayHidden: true,
-      overlayDrag: true
+
+      handlerVisible: true
     };
 
     // bind functions that are use as callbacks
@@ -192,7 +196,7 @@ class RoomOverlay extends React.Component
   handlerVisibility(visible)
   {
     // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
-    this.setState({ overlayDrag: visible });
+    this.setState({ handlerVisible: visible });
 
     // refresh overlay position to show the handler
     requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
@@ -290,7 +294,24 @@ class RoomOverlay extends React.Component
     // if size is not calculated yet
     if (!size.width)
       return <div/>;
-    
+
+    if (containerRef.current)
+    {
+      containerRef.current.ontouchstart = () =>
+      {
+        this.setState({
+          blockDragging: true
+        });
+      };
+  
+      containerRef.current.ontouchend = () =>
+      {
+        this.setState({
+          blockDragging: false
+        });
+      };
+    }
+
     return (
       <div>
         <Notifications notifications={ this.state.notifications }/>
@@ -323,7 +344,7 @@ class RoomOverlay extends React.Component
             backgroundColor: colors.whiteBackground,
           
             top: 0,
-            width: (this.state.overlayDrag) ? '100vw' : 'calc(100vw + 18px)',
+            width: (this.state.handlerVisible) ? '100vw' : 'calc(100vw + 18px)',
             height: '100%',
 
             paddingRight: '20vw'
@@ -331,30 +352,35 @@ class RoomOverlay extends React.Component
 
           animatedValueX={ overlayAnimatedX }
 
-          dragEnabled={ this.state.overlayDrag }
+          dragEnabled={ this.state.handlerVisible && !this.state.blockDragging }
           
           horizontalOnly={ true }
           initialPosition={ { x: size.width, y: 0 } }
           
           onSnap={ this.onSnap.bind(this) }
-          snapPoints={ [ { x: (this.state.overlayDrag) ? 0 : -18 }, { x: size.width } ] }
+          snapPoints={ [ { x: (this.state.handlerVisible) ? 0 : -18 }, { x: size.width } ] }
 
           boundaries={ {
-            left: (this.state.overlayDrag) ? 0 : -18,
+            left: (this.state.handlerVisible) ? 0 : -18,
             right: size.width
           } }
         >
 
-          <div className={ styles.container }>
-            <div className={ styles.handler }/>
+          <div className={ styles.wrapper }>
+            <div className={ styles.handlerWrapper }>
+              <div className={ styles.handler }/>
+            </div>
 
-            <Trackbar sendMessage={ sendMessage } addNotification={ this.addNotification }/>
+            <div ref={ containerRef } className={ styles.container }>
 
-            <div className={ styles.content }>
-              <HandOverlay sendMessage={ sendMessage } size={ size } />
-              <FieldOverlay sendMessage={ sendMessage } size={ size }/>
+              <Trackbar sendMessage={ sendMessage } addNotification={ this.addNotification }/>
 
-              <RoomOptions sendMessage={ sendMessage }/>
+              <div className={ styles.content }>
+                <HandOverlay sendMessage={ sendMessage } size={ size } />
+                <FieldOverlay sendMessage={ sendMessage } size={ size }/>
+
+                <RoomOptions sendMessage={ sendMessage }/>
+              </div>
             </div>
 
           </div>
@@ -373,14 +399,14 @@ RoomOverlay.propTypes = {
 };
 
 const styles = createStyle({
-  container: {
+  wrapper: {
     display: 'grid',
     
     backgroundColor: colors.trackBarBackground,
 
-    gridTemplateColumns: 'auto 15vw 1fr',
+    gridTemplateColumns: '18px 1fr',
     gridTemplateRows: '100vh',
-    gridTemplateAreas: '"handler side content"',
+    gridTemplateAreas: '"handler ."',
 
     width: '100%',
     height: '100%',
@@ -388,10 +414,24 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       gridTemplateColumns: '18px calc(100% - 18px)',
-      gridTemplateRows: '20vh 80vh',
-      gridTemplateAreas: '"handler side" "handler content"',
+      gridTemplateAreas: '"handler ."',
 
       backgroundColor: colors.whiteBackground
+    }
+  },
+
+  container: {
+    display: 'grid',
+
+    gridTemplateColumns: '15vw 1fr',
+    gridTemplateRows: '100vh',
+    gridTemplateAreas: '"side content"',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 1080px)': {
+      gridTemplateColumns: '100%',
+      gridTemplateRows: '20vh 80vh',
+      gridTemplateAreas: '"side" "content"'
     }
   },
 
@@ -442,16 +482,24 @@ const styles = createStyle({
     height: '100vh'
   },
 
+  handlerWrapper: {
+    zIndex: 4,
+    gridArea: 'handler',
+
+    padding: '0 8vw 0 10px',
+    height: '100vh'
+  },
+
   handler: {
     cursor: 'pointer',
 
-    gridArea: 'handler',
+    position: 'relative',
     backgroundColor: colors.handler,
 
+    top: 'calc(50vh - (5px + 5vh) / 2)',
     width: '8px',
-    height: 'calc(5px + 5%)',
+    height: 'calc(5px + 5vh)',
 
-    margin: 'auto 0px auto 10px',
     borderRadius: '8px'
   },
 
