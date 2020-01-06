@@ -424,7 +424,6 @@ const styles = createStyle({
     borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0',
 
     '@media (pointer: coarse)': {
-      backgroundColor: colors.red,
       height: 'fit-content'
     },
 
