@@ -174,8 +174,11 @@ class HandOverlay extends React.Component
 
   refreshViewableArea()
   {
-    const touchScreen = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    let touchScreen = false;
     
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
+      touchScreen = true;
+   
     // touch screen are not scrolled the same way as non-touch screens
     if (!touchScreen)
     {
@@ -420,7 +423,8 @@ const styles = createStyle({
     margin: '0 auto',
     borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0',
 
-    '@media (hover: none) and (pointer: coarse)': {
+    '@media (pointer: coarse)': {
+      backgroundColor: colors.red,
       height: 'fit-content'
     },
 
@@ -458,7 +462,7 @@ const styles = createStyle({
 
     margin: '0 10px 0 0',
 
-    '@media (hover: none) and (pointer: coarse)': {
+    '@media (pointer: coarse)': {
       overflowX: 'none',
       overflowY: 'none',
 

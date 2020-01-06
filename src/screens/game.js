@@ -781,13 +781,13 @@ const roomsStyles = createStyle({
     backgroundColor: colors.roomBackground,
 
     width: 'auto',
-    height: 'min-content',
+    height: 'fit-content',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    margin: '10px',
+    margin: '10px 10px 30px 10px',
     borderRadius: '10px',
 
     ':hover': {
