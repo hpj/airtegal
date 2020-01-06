@@ -144,7 +144,7 @@ class FieldOverlay extends React.Component
     });
 
     return (
-      <div style={ { width: '100%', height: '100%' } }>
+      <div className={ styles.view }>
         <Interactable.View
           ref={ overlayRef }
 
@@ -154,7 +154,6 @@ class FieldOverlay extends React.Component
 
             overflow: 'hidden',
 
-            top: '-100%',
             width: '100%',
             height: '100%'
           } }
@@ -248,6 +247,11 @@ FieldOverlay.propTypes = {
 };
 
 const styles = createStyle({
+  view: {
+    position: 'relative',
+    height: '100vh'
+  },
+
   wrapper: {
     overflowX: 'hidden',
     overflowY: 'scroll',
@@ -264,10 +268,8 @@ const styles = createStyle({
       left: '-10px',
       
       width: '100%',
-      height: 'calc(100% - 15px)',
       
-      padding: '0 10px',
-      margin: '15px 0 0 0'
+      padding: '0 10px'
     },
 
     '::-webkit-scrollbar':

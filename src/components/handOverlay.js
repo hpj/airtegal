@@ -59,6 +59,7 @@ class HandOverlay extends React.Component
 
     this.onRoomData = this.onRoomData.bind(this);
     this.onResize = this.onResize.bind(this);
+    this.maximizeMinimize = this.maximizeMinimize.bind(this);
   }
 
   componentDidMount()
@@ -66,6 +67,7 @@ class HandOverlay extends React.Component
     socket.on('roomData', this.onRoomData);
 
     window.addEventListener('resize', this.onResize);
+    wrapperRef.current.addEventListener('resize', this.onResize);
 
     this.animatedGrid = wrapGrid(gridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
 
@@ -119,11 +121,11 @@ class HandOverlay extends React.Component
     if (roomData.roundStarted)
     {
       // client is waiting or picking cards
-      if (roomData.roundStarted.judgeId !== socket.id)
-        this.visibility(true);
+      // if (roomData.roundStarted.judgeId !== socket.id)
+      this.visibility(true);
       // client is judge
-      else
-        this.visibility(false);
+      // else
+      //   this.visibility(false);
 
       this.setState({
         hoverIndex: undefined,
@@ -178,7 +180,7 @@ class HandOverlay extends React.Component
 
   maximizeMinimize()
   {
-    if (this.state.snapIndex < 2)
+    if (this.state.snapIndex <= 0)
       overlayRef.current.snapTo({ index: 2 });
     else
       overlayRef.current.snapTo({ index: 0 });
@@ -186,11 +188,23 @@ class HandOverlay extends React.Component
 
   refreshViewableArea()
   {
-    const { size } = this.props;
+    // const touchScreen = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
     const rect = wrapperRef.current.getBoundingClientRect();
 
-    this.setState({ viewableArea: size.height - rect.y });
+    // if (!touchScreen)
+    {
+      const { size } = this.props;
+
+      this.setState({ viewableArea: size.height - rect.y });
+    }
+    // else
+    // {
+    //   this.setState({
+    //     viewableArea: undefined,
+    //     maxViewableArea: rect.height
+    //   });
+    // }
   }
 
   /** send the card the player choose to the server's match logic
@@ -248,7 +262,13 @@ class HandOverlay extends React.Component
     const { size } = this.props;
     const { entry } = this.state;
 
+    // const touchScreen = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+    // console.log(this.state.maxViewableArea);
+
     const visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
+    // const visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: 0 } ];
+    // const visibleSnapPoints = [ { y: 0 } ];
     const hiddenSnapPoints = [ { y: size.height } ];
 
     const isAllowed = this.state.playerState === 'playing';
@@ -276,31 +296,22 @@ class HandOverlay extends React.Component
       return <div/>;
 
     return (
-      <div style={ { width: '100%', height: '100%' } }>
+      <div className={ styles.view }>
         <Interactable.View
           ref={ overlayRef }
 
           style={ {
             zIndex: 3,
-            display: (this.state.overlayHidden) ? 'none' : '',
-
-            backgroundColor: colors.handBackground,
-
-            overflow: 'hidden',
-
-            bottom: '0',
-
-            width: '85%',
-            height: '85vh',
-            maxWidth: '700px',
-
-            margin: '0 auto',
-            borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0'
+            display: (this.state.overlayHidden) ? 'none' : ''
           } }
 
           animatedValueY={ overlayAnimatedY }
 
           onSnap={ this.onSnap.bind(this) }
+
+          dragWithSpring={ { tension: 500 } }
+
+          // gravityPoints={ [ { y: size. } ] }
 
           dragEnabled={ !this.state.blockDragging }
 
@@ -308,6 +319,7 @@ class HandOverlay extends React.Component
 
           verticalOnly={ true }
           initialPosition={ { x: 0, y: size.height } }
+          // initialPosition={ { x: 0, y: 0 } }
 
           snapPoints={ (this.state.visible) ? visibleSnapPoints : hiddenSnapPoints }
           boundaries={ {
@@ -316,7 +328,7 @@ class HandOverlay extends React.Component
         >
           <div className={ styles.overlay }>
             <div className={ styles.handlerWrapper }>
-              <div className={ styles.handler } onClick={ this.maximizeMinimize.bind(this) }/>
+              <div className={ styles.handler } onClick={ this.maximizeMinimize }/>
             </div>
 
             <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
@@ -367,6 +379,21 @@ HandOverlay.propTypes = {
 };
 
 const styles = createStyle({
+  view: {
+    position: 'absolute',
+
+    width: '100vw',
+    height: '100vh',
+
+    // for the (smaller screens) portrait overlay
+    '@media screen and (max-width: 1080px)': {
+      // position: 'relative',
+      // to make the top is the same as trackbar's top instead of under it
+      // top: '-20vh',
+      // height: '100vh'
+    }
+  },
+
   overlay: {
     display: 'grid',
 
@@ -374,15 +401,33 @@ const styles = createStyle({
     gridTemplateRows: 'auto 1fr',
     gridTemplateAreas: '"handler" "cards"',
 
-    width: '100%',
-    height: '100%'
+    backgroundColor: colors.handBackground,
+
+    overflow: 'hidden',
+
+    width: '85%',
+    height: '85vh',
+    maxWidth: '700px',
+
+    margin: '0 auto',
+    borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0',
+
+    '@media (hover: none) and (pointer: coarse)': {
+      height: 'fit-content'
+    },
+
+    // for the (smaller screens) portrait overlay
+    '@media screen and (max-width: 700px)': {
+      width: '100%',
+      margin: '0'
+    }
   },
 
   handlerWrapper: {
     display: 'flex',
     justifyContent: 'center',
 
-    margin: '13px 0 13px 0'
+    margin: '10px 0 5px 0'
   },
 
   handler: {
@@ -392,7 +437,7 @@ const styles = createStyle({
     backgroundColor: colors.handler,
 
     width: 'calc(40px + 2.5%)',
-    height: '10px',
+    height: '8px',
 
     borderRadius: '8px'
   },
@@ -404,6 +449,13 @@ const styles = createStyle({
     overflowY: 'scroll',
 
     margin: '0 10px 0 0',
+
+    '@media (hover: none) and (pointer: coarse)': {
+      overflowX: 'none',
+      overflowY: 'none',
+
+      height: 'fit-content'
+    },
 
     '::-webkit-scrollbar':
     {

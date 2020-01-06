@@ -213,9 +213,7 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       padding: '0 15px',
-      width: 'calc(100% - 30px)',
-
-      maxHeight: '30vh'
+      width: 'calc(100% - 30px)'
     }
   },
 

@@ -375,10 +375,10 @@ class RoomOverlay extends React.Component
 
               <Trackbar sendMessage={ sendMessage } addNotification={ this.addNotification }/>
 
-              <div className={ styles.content }>
-                <HandOverlay sendMessage={ sendMessage } size={ size } />
-                <FieldOverlay sendMessage={ sendMessage } size={ size }/>
+              <HandOverlay sendMessage={ sendMessage } size={ size } />
 
+              <div className={ styles.content }>
+                <FieldOverlay sendMessage={ sendMessage } size={ size }/>
                 <RoomOptions sendMessage={ sendMessage }/>
               </div>
             </div>
@@ -505,14 +505,7 @@ const styles = createStyle({
 
   content: {
     gridArea: 'content',
-    backgroundColor: colors.whiteBackground,
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      position: 'relative',
-      top: '-15px',
-      height: 'calc(100% + 15px)'
-    }
+    backgroundColor: colors.whiteBackground
   }
 });
 

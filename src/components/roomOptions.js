@@ -201,7 +201,7 @@ const styles = createStyle({
     fontSize: 'calc(6px + 0.5vw + 0.5vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    top: '-200%',
+    top: '-100vh',
     maxWidth: '80%',
     width: 'calc(100% - 38px)',
     height: '100%',
