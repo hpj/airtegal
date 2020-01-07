@@ -159,7 +159,11 @@ class Trackbar extends React.Component
 
                   <div className={ styles.name }>{ player.username }</div>
 
-                  <div className={ styles.led } match={ isMatch.toString() } client={ isClient.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }></div>
+                  {
+                    (isClient) ? <div className={ styles.clientLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/> : <div/>
+                  }
+
+                  <div className={ styles.stateLed } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
 
                 </div>;
               })
@@ -251,7 +255,7 @@ const styles = createStyle({
     
     whiteSpace: 'pre',
 
-    margin: '0 0 0 auto',
+    margin: '0 10px 0 auto',
     padding: '0 0 20px 0',
 
     // for the portrait overlay
@@ -267,7 +271,7 @@ const styles = createStyle({
     height: '100%',
 
     overflowX: 'hidden',
-    overflowY: 'scroll',
+    overflowY: 'auto',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
@@ -294,10 +298,10 @@ const styles = createStyle({
 
     alignItems: 'center',
 
-    gridTemplateColumns: 'auto 1fr auto',
-    gridTemplateAreas: '"led username score"',
+    gridTemplateColumns: 'auto auto 1fr auto',
+    gridTemplateAreas: '"clientLed stateLed username score"',
     
-    padding: '0 0 0 10px',
+    padding: '0 10px 0 10px',
 
     '@media screen and (max-width: 1080px)': {
       flexBasis: '100%',
@@ -307,44 +311,67 @@ const styles = createStyle({
   },
 
   led: {
-    gridArea: 'led',
     position: 'relative',
 
-    width: '10px',
-    height: '10px',
+    width: 0,
+    height: 0,
 
     overflow: 'hidden',
     
-    borderRadius: '10px',
+    borderRadius: '10px'
+  },
 
-    '[client="true"]': {
-      background: colors.client
-    },
+  stateLed: {
+    extend: 'led',
+    gridArea: 'stateLed',
 
     '[match="false"][master="true"]': {
-      background: colors.master
-    },
+      background: colors.master,
 
-    '[match="false"][client="true"][master="true"]': {
-      background: `linear-gradient(90deg, ${colors.client} 50%, rgba(0,0,0,0) 50%, ${colors.master} 50%)`
+      width: '10px',
+      height: '10px'
     },
 
     '[match="true"][turn="true"]': {
-      background: colors.turn
+      background: colors.turn,
+
+      width: '10px',
+      height: '10px'
+    }
+  },
+
+  clientLed: {
+    extend: 'led',
+    gridArea: 'clientLed',
+    
+    
+    '[client="true"]': {
+      background: colors.client,
+
+      width: '10px',
+      height: '10px'
     },
 
-    '[match="true"][client="true"][turn="true"]': {
-      background: `linear-gradient(90deg, ${colors.client} 50%, rgba(0,0,0,0) 50%, ${colors.turn} 50%)`
+    '[match="false"][master="true"]': {
+      margin: (locale.direction === 'rtl') ? '0 0 0 5px' : '0 5px 0 0'
+    },
+
+    '[match="true"][turn="true"]': {
+      margin: (locale.direction === 'rtl') ? '0 0 0 5px' : '0 5px 0 0'
     }
   },
 
   name: {
     gridArea: 'username',
+    textAlign: 'center',
+
+    width: 'calc(100% - 10px)',
+    
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
 
     padding: '5px',
-    margin: '0 auto',
-
-    wordBreak: 'break-all',
+    
     fontSize: 'calc(6px + 0.35vw + 0.35vh)'
   },
 
