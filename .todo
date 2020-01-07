@@ -2,18 +2,17 @@ Performance Issues and Bugs:
 
 Testing:
 
-
 Features:
 
 UI/UX:
-☐ animations for cards appearing and disappearing from field 
-
-☐ animation for match ending and the match winner @low 
+  ☐ animations for cards appearing and disappearing from field @low
+  ☐ animation for match ending and the match winner @low 
 
   ☐ design the 404 page
 
   ☐ design the Offline page
-    ☐ handle 'online' and 'offline' events
+    ✔ handle 'offline' event @done(20-01-07 12:31)
+    ☐ handle 'online' event
 
   Homepage:
     ☐ enable card showcase ( using the stats' card combo rows )

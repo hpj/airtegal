@@ -106,20 +106,23 @@ class HandOverlay extends React.Component
 
     if (roomData.roundStarted)
     {
-      // client is waiting or picking cards
-      if (roomData.roundStarted.judgeId !== socket.id)
-        this.visibility(true);
-      // client is judge
-      else
-        this.visibility(false);
-
       this.setState({
         hoverIndex: undefined,
         entry: []
       });
     }
+
+    // if in match and and has to choose a card from hand aka "playing"
+    if (
+      roomData.state === 'match' &&
+      roomData.playerProperties[socket.id].state === 'playing'
+    )
+    {
+      this.visibility(true);
+    }
     // client is in the lobby
-    else if (roomData.state !== 'match')
+    // or not playing
+    else
     {
       this.visibility(false);
     }
