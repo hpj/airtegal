@@ -326,17 +326,19 @@ class Game extends React.Component
 
     this.setState({
       username: username
-    });
-
-    // save the user preference
-    localStorage.setItem('username', username);
+    }, () => autoSizeInput(inputRef.current));
   }
 
   usernameBlurEvent()
   {
+    const username = event.target.value.replace(/\s+/g, ' ').trim();
+
     this.setState({
-      username: event.target.value.trim()
-    });
+      username: username
+    }, () => autoSizeInput(inputRef.current));
+
+    // save the user preference
+    localStorage.setItem('username', username);
   }
 
   showErrorMessage(err)
