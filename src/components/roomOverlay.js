@@ -62,15 +62,49 @@ class RoomOverlay extends React.Component
   componentDidMount()
   {
     socket.on('roomData', this.onRoomData);
+    // socket.on('kicked', this.onKicked);
+  }
+
+  componentDidUpdate()
+  {
+    if (containerRef.current)
+    {
+      containerRef.current.ontouchstart = () =>
+      {
+        this.setState({
+          blockDragging: true
+        });
+      };
+  
+      containerRef.current.ontouchend = () =>
+      {
+        this.setState({
+          blockDragging: false
+        });
+      };
+    }
   }
 
   componentWillUnmount()
   {
     socket.off('roomData', this.onRoomData);
+    // socket.off('kicked', this.onKicked);
 
     // make sure socket is closed before component unmount
     socket.close();
   }
+
+  // TODO finish kick logic
+  // onKicked()
+  // {
+  //   // after leaving the room
+  //   // clean up some of the state values
+  //   this.setState({
+  //     master: undefined
+  //   });
+
+  //   overlayRef.current.snapTo({ index: 1 });
+  // }
 
   onRoomData(roomData)
   {
@@ -125,7 +159,8 @@ class RoomOverlay extends React.Component
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('create', { username, region: locale.value }).then(() =>
+    // timeout is 1 minute
+    sendMessage('create', { username, region: locale.value }, 60000).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -180,7 +215,7 @@ class RoomOverlay extends React.Component
       this.setState({
         master: undefined
       });
-    }).catch(console.error);
+    }).catch(console.warn);
   }
 
   showErrorMessage(err)
@@ -294,23 +329,6 @@ class RoomOverlay extends React.Component
     // if size is not calculated yet
     if (!size.width)
       return <div/>;
-
-    if (containerRef.current)
-    {
-      containerRef.current.ontouchstart = () =>
-      {
-        this.setState({
-          blockDragging: true
-        });
-      };
-  
-      containerRef.current.ontouchend = () =>
-      {
-        this.setState({
-          blockDragging: false
-        });
-      };
-    }
 
     return (
       <div>
@@ -486,7 +504,7 @@ const styles = createStyle({
     zIndex: 4,
     gridArea: 'handler',
 
-    padding: '0 8vw 0 10px',
+    padding: '0 25vw 0 10px',
     height: '100vh'
   },
 
