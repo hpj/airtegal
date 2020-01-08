@@ -88,7 +88,7 @@ These third parties have access to your Usage Data only to perform these tasks o
 
 **Ads**
 
-  * **Google AdSense** Through Google AdSense advertisers pay to display brief advertisements on Websites like this Service, without AdSense we won't be able to continue offering this Service free-of-charge to all users. https://policies.google.com/technologies/ads
+  * **Adsterra** Through Adsterra advertisers pay to display brief advertisements on Websites like this Service, without Adsterra we won't be able to keep the Service running due to the costs of hosting. https://policies.google.com/technologies/ads
 
 ### Children's Privacy
 
