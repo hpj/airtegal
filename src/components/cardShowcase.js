@@ -1,4 +1,6 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { createRef } from 'react';
+
+import axios from 'axios';
 
 import { API_ENDPOINT } from '../index.js';
 
@@ -6,154 +8,131 @@ import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
 
-let lastSetIndex;
+import { locale } from '../i18n.js';
 
 const cardsContainer = createRef();
 
-const CardShowcase = () =>
+class CardShowcase extends React.Component
 {
-  const [ cards, setCards ] = useState([]);
-  const [ cardsOnShow, setCardsOnShow ] = useState([]);
-
-  function randomSet()
+  constructor()
   {
-    if (cards.length <= 0)
-      return;
+    super();
 
-    setCardsOnShow(cards[randomIndex()]);
+    this.state = {
+      /**
+      * @type { { card: { content: string, type: 'black' }, combos: { content: string, type: 'white' } }[] }
+      */
+      data: [],
+
+      hide: true,
+      shownIndex: -1
+    };
   }
 
-  function randomIndex()
+  componentDidMount()
   {
-    let i = lastSetIndex;
-
-    while (i === lastSetIndex)
+    // request the data from server
+    axios({
+      url: `${API_ENDPOINT}/combos?region=${locale.value}`,
+      timeout: 20000
+    }).then((response) =>
     {
-      i = Math.round(Math.random() * (cards.length - 1));
+      if (response && response.data)
+      {
+        this.setState({
+          data: response.data
+        }, this.startShowcase);
+      }
+    });
+  }
+
+  componentWillUnmount()
+  {
+    if (this.clear)
+      this.clear();
+  }
+
+  startShowcase()
+  {
+    const { data } = this.state;
+
+    let lastSetIndex = -1;
+
+    if (data.length <= 0)
+      return;
+     
+    function nextSet()
+    {
+      lastSetIndex = lastSetIndex + 1;
+
+      if (lastSetIndex >= data.length)
+        lastSetIndex = 0;
+
+      this.setState({
+        shownIndex: lastSetIndex
+      }, () =>
+      {
+        setTimeout(() =>
+        {
+          this.setState({
+            hide: false
+          });
+        }, 250);
+      });
     }
 
-    lastSetIndex = i;
-    
-    return i;
-  }
-
-  // on url change
-  useEffect(() =>
-  {
-    // TODO card showcase
-    
-    // the graphql query should be something like this
-    // setCards([
-    //   [
-    //     {
-    //       id: '1',
-    //       type: 'black',
-    //       content: 'كرت 1'
-    //     },
-    //     {
-    //       id: '2',
-    //       type: 'white',
-    //       content: 'كرت 2'
-    //     }
-    //   ],
-    //   [
-    //     {
-    //       id: '1',
-    //       type: 'black',
-    //       content: 'كرت 3'
-    //     },
-    //     {
-    //       id: '2',
-    //       type: 'white',
-    //       content: 'كرت 4'
-    //     }
-    //   ]
-    // ]);
-
-    // axios(API_ENDPOINT + '/v1/cards').then((response) =>
-    // {
-    //   response.json().then((data) =>
-    //   {
-    //     setCards(data);
-    //   });
-
-    // }).catch(console.error);
-  }, [ window.location ]);
-
-  // happens once after cards are fetched from server
-  useEffect(() =>
-  {
-    if (cards.length <= 0)
-      return;
-    
     // animation trigger: moves title rom center to the right
     cardsContainer.current.style.width = '100%';
 
-    // cards start hidden to wait for the title movment
-    cardsContainer.current.classList.add('hide');
+    setTimeout(nextSet.bind(this), 1000);
 
-    // waiting the animation duration (title clearing space for the showcase element)
-    setTimeout(() =>
-    {
-      // then show the cards
-      randomSet();
-    }, 1000);
-    
     // cycle between different sets of cards every 5 seconds
     const interval = setInterval(() =>
     {
-      cardsContainer.current.classList.add('hide');
-      
-      setTimeout(() => randomSet(), 1000);
+      this.setState({
+        hide: true
+      }, () => setTimeout(nextSet.bind(this), 1000));
     }, 5000);
 
     // clear the interval on unmount
-    return () => clearInterval(interval);
-  }, [ cards ]);
+    this.clear = () => clearInterval(interval);
+  }
 
-  // happens every 5 seconds, cards on display changes
-  useEffect(() =>
+  render()
   {
-    if (cardsOnShow.length <= 0)
-      return;
+    const set = this.state.data[this.state.shownIndex];
 
-    cardsContainer.current.classList.remove('hide');
-  }, [ cardsOnShow ]);
-
-  return (
-    <div ref={ cardsContainer } className={ styles.cards }>
-
+    return <div ref={ cardsContainer } hide={ this.state.hide.toString() } className={ styles.cards }>
       {
-        cardsOnShow.map((card) =>
-        {
-          if (card.type === 'white')
-            return <Card key={ card.id.toString() } type='white' content={ card.content }/>;
-        })
+        (set) ?
+          (locale.direction === 'ltr') ?
+            <Card type={ set.card.type } content={ set.card.content }/>
+            : <Card type={ set.combos.type } content={ set.combos.content }/>
+          : <div/>
       }
 
       {
-        cardsOnShow.map((card) =>
-        {
-          if (card.type === 'black')
-            return <Card key={ card.id.toString() } type='black' content={ card.content }/>;
-        })
+        (set) ?
+          (locale.direction === 'ltr') ?
+            <Card type={ set.combos.type } content={ set.combos.content }/>
+            : <Card type={ set.card.type } content={ set.card.content }/>
+          : <div/>
       }
-
-    </div>
-  );
-};
+    </div>;
+  }
+}
 
 const styles = createStyle({
   cards: {
     display: 'flex',
 
     overflow: 'hidden',
-  
+
     alignItems: 'center',
     justifyContent: 'flex-start',
 
     maxWidth: '850px',
-    width: '0',
+    width: 0,
 
     transition: 'width 1s',
     transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -163,32 +142,36 @@ const styles = createStyle({
     },
 
     '> div': {
-      transform: 'scale(1.35) translate(35%, 15%)',
-      margin: '0 4.5%'
+      transform: 'scale(1.35) translate(35%, 10%)',
+      margin: '0 4.5%',
+
+      width: 'calc(120px + 2vw + 1vh)'
     },
 
     '> div:nth-child(2) > div': {
       transform: 'translate(0, 0) rotateZ(5deg)',
-      transition: 'transform 0.85s',
+
+      transition: 'transform 0.65s',
       transitionTimingFunction: 'cubic-bezier(0.22, 0.61, 0.36, 1)'
     },
 
     '> div:nth-child(1) > div': {
       transform: 'translate(0, 0) rotateZ(-10deg)',
-      transition: 'transform 0.85s',
+
+      transition: 'transform 0.65s',
       transitionTimingFunction: 'cubic-bezier(0.22, 0.61, 0.36, 1)'
     },
 
-    '.hide':
+    '[hide="true"]':
     {
       '> :nth-child(2) > div':
       {
-        transform: 'translate(15%, 100%) rotateZ(60deg)'
+        transform: 'translate(15%, 150%) rotateZ(60deg)'
       },
 
       '> :nth-child(1) > div':
       {
-        transform: 'translate(-10%, 100%) rotateZ(-60deg)'
+        transform: 'translate(-10%, 150%) rotateZ(-60deg)'
       }
     }
   }
