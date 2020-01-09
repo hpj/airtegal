@@ -257,8 +257,6 @@ class Game extends React.Component
     // TODO show install pinned prompt
     // onInstallPrompt((e) =>
     // {
-    //   e.preventDefault();
-
     //   if (localStorage.getItem('install-prompt-ignore'))
     //     return;
       

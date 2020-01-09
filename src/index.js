@@ -9,7 +9,7 @@ import i18n, { setLocale } from './i18n.js';
 
 import 'prevent-pull-refresh';
 
-// import 'fuckadblock';
+import './fuckadblock.js';
 
 import WebFont from 'webfontloader';
 
@@ -182,6 +182,14 @@ const connectivityPromise = new Promise((resolve, reject) =>
   }
 });
 
+const fuckAdBlockPromise = new Promise((resolve, reject) =>
+{
+  if (window.fuckAdBlock && process.env.NODE_ENV === 'production')
+    window.fuckAdBlock.on(true, () => reject(i18n('ad-block-detected'))).on(false, resolve);
+  else
+    resolve();
+});
+
 const ipCheck = new Promise((resolve, reject) =>
 {
   // bypass check if on a development builds
@@ -204,9 +212,7 @@ const ipCheck = new Promise((resolve, reject) =>
       {
         country = undefined;
         
-        ReactDOM.render(<Error error={ i18n(response.data) || response.data }/>, placeholder);
-
-        reject();
+        reject(i18n(response.data) || response.data);
       }
       else
       {
@@ -223,26 +229,16 @@ const ipCheck = new Promise((resolve, reject) =>
       country = undefined;
 
       if (e.response)
-      {
-        ReactDOM.render(<Error error={ i18n(e.response.data.message) || e.response.data.message }/>, placeholder);
-
-        reject();
-      }
+        reject(i18n(e.response.data.message) || e.response.data.message);
       else
-      {
         resolve();
-      }
     });
 });
 
-// TODO Ad-Block Detection
-
-// window.fuckAdBlock.on(true, () =>
-// {
-//   console.log('Blocking Ads: Yes');
-// });
-
 // remove the loading screen if all the promises resolve
-Promise.all([ webFontPromise, connectivityPromise, ipCheck ])
+Promise.all([ webFontPromise, connectivityPromise, fuckAdBlockPromise, ipCheck ])
   .then(loaded)
-  .catch(console.error);
+  .catch((e) =>
+  {
+    ReactDOM.render(<Error error={ e }/>, placeholder);
+  });

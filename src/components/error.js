@@ -43,6 +43,8 @@ const styles = createStyle({
   },
 
   error: {
+    maxWidth: '450px',
+    
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(8px + 0.35vw + 0.35vh)',
     fontWeight: 700
