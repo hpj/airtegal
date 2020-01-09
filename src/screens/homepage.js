@@ -118,7 +118,7 @@ class Homepage extends React.Component
           </div>
         </div>
 
-        <div id="container-c300c75982d5c49547283fc6449b9704"/>
+        {/* <div id="container-c300c75982d5c49547283fc6449b9704"/> */}
 
         <div className={ playStyles.wrapper }>
           <div className={ playStyles.container }>
