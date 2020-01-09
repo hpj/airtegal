@@ -1,10 +1,15 @@
 Performance Issues and Bugs:
+  ☐ the handler padding and z-index might case problems when interacting withe field and hand
 
 Testing:
 
 Features:
 
 UI/UX:
+  ☐ show a window about ad-block if detected
+
+  ☐ design the mockups for the proposal and vote screen
+
   ☐ animations for cards appearing and disappearing from field @low
   ☐ animation for match ending and the match winner @low 
 
@@ -15,11 +20,8 @@ UI/UX:
     ☐ handle 'online' event
 
   Homepage:
-    ☐ enable card showcase ( using the stats' card combo rows )
 
   Lobby:
-    ✔ show rooms @done(19-12-25 23:01)
-      ☐ show google ad (needs to get approved by the google crawl bot)
-        ☐ show a window about ad-block if detected
+    ☐ find a better way to show the install prompt @low
             
 CI/CD:

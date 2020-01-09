@@ -43,7 +43,7 @@ class CardShowcase extends React.Component
           data: response.data
         }, this.startShowcase);
       }
-    });
+    }).catch(console.error);
   }
 
   componentWillUnmount()
