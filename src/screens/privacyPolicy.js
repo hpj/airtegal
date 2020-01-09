@@ -88,7 +88,7 @@ These third parties have access to your Usage Data only to perform these tasks o
 
 **Ads**
 
-  * **Adsterra** Through Adsterra advertisers pay to display brief advertisements on Websites like this Service, without Adsterra we won't be able to keep the Service running due to the costs of hosting. https://policies.google.com/technologies/ads
+  * **ExoClick** Through ExoClick advertisers pay to display brief advertisements on Websites like this Service, without ExoClick we won't be able to keep the Service running due to the costs of hosting.
 
 ### Children's Privacy
 
