@@ -402,7 +402,7 @@ const styles = createStyle({
     // margin to avoid the trackbar
     margin: '0 0 0 calc(15vw + 10px)',
 
-    // for the (smaller screens) portrait overlay
+    // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       margin: 0
     }
@@ -465,8 +465,8 @@ const styles = createStyle({
     margin: '0 10px 0 0',
 
     '@media (pointer: coarse)': {
-      overflowX: 'none',
-      overflowY: 'none',
+      overflowX: 'hidden',
+      overflowY: 'hidden',
 
       height: 'fit-content'
     },

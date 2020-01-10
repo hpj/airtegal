@@ -61,7 +61,7 @@ Warning.propTypes = {
 
 const styles = createStyle({
   wrapper: {
-    zIndex: 5,
+    zIndex: 4,
     position: 'fixed',
     backgroundColor: colors.pinnedBackground,
 

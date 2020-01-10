@@ -24,7 +24,6 @@ import HandOverlay from './handOverlay.js';
 const colors = getTheme();
 
 const overlayRef = createRef();
-const containerRef = createRef();
 
 const overlayAnimatedX = new Value(0);
 
@@ -55,6 +54,9 @@ class RoomOverlay extends React.Component
 
     this.onRoomData = this.onRoomData.bind(this);
 
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
+
     this.addNotification = this.addNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
   }
@@ -63,32 +65,18 @@ class RoomOverlay extends React.Component
   {
     socket.on('roomData', this.onRoomData);
     // socket.on('kicked', this.onKicked);
-  }
 
-  componentDidUpdate()
-  {
-    if (containerRef.current)
-    {
-      containerRef.current.ontouchstart = () =>
-      {
-        this.setState({
-          blockDragging: true
-        });
-      };
-  
-      containerRef.current.ontouchend = () =>
-      {
-        this.setState({
-          blockDragging: false
-        });
-      };
-    }
+    window.addEventListener('touchstart', this.handleTouchStart);
+    window.addEventListener('touchend', this.handleTouchEnd);
   }
 
   componentWillUnmount()
   {
     socket.off('roomData', this.onRoomData);
     // socket.off('kicked', this.onKicked);
+    
+    window.removeEventListener('touchstart', this.handleTouchStart);
+    window.removeEventListener('touchend', this.handleTouchEnd);
 
     // make sure socket is closed before component unmount
     socket.close();
@@ -149,6 +137,21 @@ class RoomOverlay extends React.Component
 
     this.setState({
       master: roomData.master
+    });
+  }
+
+  handleTouchStart(e)
+  {
+    // block dragging if it started 25vw far from the left edge of the screen
+    this.setState({
+      blockDragging: (e.touches[0].pageX > (this.props.size.width / 100) * 25) ? true: false
+    });
+  }
+
+  handleTouchEnd()
+  {
+    this.setState({
+      blockDragging: false
     });
   }
 
@@ -389,7 +392,7 @@ class RoomOverlay extends React.Component
               <div className={ styles.handler }/>
             </div>
 
-            <div ref={ containerRef } className={ styles.container }>
+            <div className={ styles.container }>
 
               <Trackbar sendMessage={ sendMessage } addNotification={ this.addNotification }/>
 
@@ -501,10 +504,9 @@ const styles = createStyle({
   },
 
   handlerWrapper: {
-    zIndex: 4,
     gridArea: 'handler',
 
-    padding: '0 25vw 0 10px',
+    padding: '0 0 0 10px',
     height: '100vh'
   },
 
