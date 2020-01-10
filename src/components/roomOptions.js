@@ -230,6 +230,10 @@ const styles = createStyle({
     }
   },
 
+  container: {
+    direction: locale.direction
+  },
+
   loading: {
     zIndex: 1,
 
@@ -326,16 +330,12 @@ const styles = createStyle({
   title: {
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    direction: locale.direction,
-
     padding: '30px 30px 20px 30px'
   },
 
   pick: {
     display: 'flex',
     alignItems: 'center',
-
-    direction: locale.direction,
 
     padding: '0 25px',
 
@@ -367,8 +367,6 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    direction: locale.direction,
-
     padding: '0 30px'
   },
 
@@ -387,8 +385,6 @@ const styles = createStyle({
     gridTemplateColumns: 'repeat(auto-fill, calc(80px + 1vw + 1vh))',
     justifyContent: 'space-around',
     
-    direction: locale.direction,
-
     padding: '0 35px',
     gridGap: '0 5px',
 

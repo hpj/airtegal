@@ -346,11 +346,15 @@ class Game extends React.Component
 
         <div style={ {
           zIndex: 1,
+
           position: 'absolute',
           display: (this.state.loadingHidden && !this.state.errorMessage) ? 'flex' : 'none',
           justifyContent: 'center',
-          maxWidth: 'inherit',
+          
+          overflow: 'hidden',
+
           bottom: 0,
+          maxWidth: 'inherit',
           width: '100%'
         } }>
           <iframe src="//a.exdynsrv.com/iframe.php?idzone=3663401&size=468x60" width="468" height="60" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
@@ -378,8 +382,8 @@ class Game extends React.Component
 
           <div className={ optionsStyles.container }>
 
-            <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
             <div className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
+            <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
 
           </div>
 
@@ -524,6 +528,8 @@ const optionsStyles = createStyle({
   container: {
     gridArea: 'options',
     display: 'grid',
+
+    direction: locale.direction,
 
     gridTemplateAreas: '". ."',
     gridColumnGap: '5%',
