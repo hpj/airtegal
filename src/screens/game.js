@@ -344,6 +344,18 @@ class Game extends React.Component
           button={ i18n('ok') }
         />
 
+        <div style={ {
+          zIndex: 1,
+          position: 'absolute',
+          display: 'flex',
+          justifyContent: 'center',
+          maxWidth: 'inherit',
+          bottom: 0,
+          width: '100%'
+        } }>
+          <iframe src="//a.exdynsrv.com/iframe.php?idzone=3663401&size=468x60" width="468" height="60" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
+        </div>
+
         <div className={ mainStyles.container }>
 
           <div className={ headerStyles.container }>
@@ -371,18 +383,15 @@ class Game extends React.Component
 
           </div>
 
-
           <div style={ { display: 'flex', justifyContent: 'center', maxWidth: 'inherit' } }>
             <iframe src="//a.exdynsrv.com/iframe.php?idzone=3663401&size=468x60" width="468" height="60" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
           </div>
-
           <div className={ roomsStyles.container }>
 
             <p className={ roomsStyles.title }> { i18n('available-rooms') } </p>
             <RefreshIcon allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms } className={ roomsStyles.refresh }/>
 
-            <div className={ roomsStyles.rooms }>
-
+            <div className={ roomsStyles.roomsWrapper }>
               <div style={ {
                 display: (this.state.loadingHidden) ? 'none' : ''
               } } className={ roomsStyles.loading }
@@ -396,36 +405,38 @@ class Game extends React.Component
                 {this.state.errorMessage}
               </div>
 
-              {
-                (this.state.rooms.length <= 0) ?
-                  <div className={ roomsStyles.indicator }>
-                    { i18n('no-rooms-available') }
-                  </div> :
-                  this.state.rooms.map((room, i) =>
-                  {
-                    const pack = room.options.match.selectedPacks[0];
+              <div className={ roomsStyles.roomsContainer } style={ { display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none' } }>
+                {
+                  (this.state.rooms.length <= 0) ?
+                    <div className={ roomsStyles.indicator }>
+                      { i18n('no-rooms-available') }
+                    </div> :
+                    this.state.rooms.map((room, i) =>
+                    {
+                      const pack = room.options.match.selectedPacks[0];
 
-                    return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
-    
-                      <div className={ roomsStyles.packs }>
-                        <div style={ {
-                          color: pack.foreground_color,
-                          backgroundImage: `url(${pack.background_url})`,
-                          backgroundColor: pack.background_url
-                        } } className={ roomsStyles.pack }>
-                          <div className={ roomsStyles.packName }>{ pack.display_name }</div>
+                      return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
+
+                        <div className={ roomsStyles.packs }>
+                          <div style={ {
+                            color: pack.foreground_color,
+                            backgroundImage: `url(${pack.background_url})`,
+                            backgroundColor: pack.background_url
+                          } } className={ roomsStyles.pack }>
+                            <div className={ roomsStyles.packName }>{ pack.display_name }</div>
+                          </div>
                         </div>
-                      </div>
-    
-                      <div className={ roomsStyles.highlights }>
 
-                        <div className={ roomsStyles.counter }>{ `${room.players}/${room.options.match.maxPlayers}` }</div>
-                        <div>{ `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.` }</div>
-    
-                      </div>
-                    </div>;
-                  })
-              }
+                        <div className={ roomsStyles.highlights }>
+
+                          <div className={ roomsStyles.counter }>{ `${room.players}/${room.options.match.maxPlayers}` }</div>
+                          <div>{ `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.` }</div>
+
+                        </div>
+                      </div>;
+                    })
+                }
+              </div>
             </div>
           </div>
         </div>
@@ -562,8 +573,10 @@ const roomsStyles = createStyle({
     gridTemplateRows: 'auto 1fr',
     gridTemplateAreas: '"title refresh" "rooms rooms"',
 
-    alignItems: 'center',
     direction: locale.direction,
+    
+    alignItems: 'center',
+    overflow: 'hidden',
 
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     padding: '10px 3vw 0 3vw'
@@ -571,7 +584,9 @@ const roomsStyles = createStyle({
 
   title: {
     gridArea: 'title',
-    fontWeight: '700'
+    fontWeight: '700',
+
+    margin: 'auto 0'
   },
 
   refresh: {
@@ -607,21 +622,36 @@ const roomsStyles = createStyle({
     }
   },
 
-  rooms: {
-    gridArea: 'rooms',
-
+  roomsWrapper: {
     direction: 'ltr',
 
-    display: 'grid',
+    gridArea: 'rooms',
     position: 'relative',
+    
+    overflowX: 'hidden',
+    overflowY: 'auto',
+
+    height: '100%',
+
+    '::-webkit-scrollbar':
+    {
+      width: '8px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '8px',
+      boxShadow: `inset 0 0 8px 8px ${colors.optionsScrollbar}`
+    }
+  },
+
+  roomsContainer: {
+    display: 'grid',
 
     gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
     gridTemplateRows: 'min-content',
 
-    justifyContent: 'space-around',
-
-    width: '100%',
-    height: '100%'
+    justifyContent: 'space-around'
   },
 
   indicator: {
