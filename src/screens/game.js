@@ -347,7 +347,7 @@ class Game extends React.Component
         <div style={ {
           zIndex: 1,
           position: 'absolute',
-          display: 'flex',
+          display: (this.state.loadingHidden && !this.state.errorMessage) ? 'flex' : 'none',
           justifyContent: 'center',
           maxWidth: 'inherit',
           bottom: 0,
