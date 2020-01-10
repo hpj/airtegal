@@ -416,6 +416,12 @@ class Game extends React.Component
                       const pack = room.options.match.selectedPacks[0];
 
                       return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
+                        <div className={ roomsStyles.highlights }>
+
+                          <div className={ roomsStyles.counter }>{ `${room.players}/${room.options.match.maxPlayers}` }</div>
+                          <div>{ `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.` }</div>
+
+                        </div>
 
                         <div className={ roomsStyles.packs }>
                           <div style={ {
@@ -427,12 +433,6 @@ class Game extends React.Component
                           </div>
                         </div>
 
-                        <div className={ roomsStyles.highlights }>
-
-                          <div className={ roomsStyles.counter }>{ `${room.players}/${room.options.match.maxPlayers}` }</div>
-                          <div>{ `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.` }</div>
-
-                        </div>
                       </div>;
                     })
                 }
@@ -491,7 +491,7 @@ const headerStyles = createStyle({
   },
 
   username: {
-    margin: '0 5px -2px 0',
+    margin: '0 5px -2px 5px',
     direction: locale.direction,
 
     color: colors.blackText,
@@ -623,7 +623,7 @@ const roomsStyles = createStyle({
   },
 
   roomsWrapper: {
-    direction: 'ltr',
+    direction: locale.direction,
 
     gridArea: 'rooms',
     position: 'relative',
@@ -748,7 +748,7 @@ const roomsStyles = createStyle({
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
     width: 'min-content',
-    margin: '0 0 5px auto'
+    margin: '0 0 5px 0'
   },
 
   packs: {
@@ -767,7 +767,7 @@ const roomsStyles = createStyle({
     height: '85%',
     
     borderRadius: '10px',
-    margin: '35% 0 0 20%'
+    margin: (locale.direction === 'ltr') ? '35% 20% 0 0' : '35% 0 0 20%'
   },
 
   packName: {
