@@ -344,7 +344,7 @@ class Game extends React.Component
           button={ i18n('ok') }
         />
 
-        <div style={ {
+        {/* <div style={ {
           zIndex: 1,
 
           position: 'absolute',
@@ -358,7 +358,7 @@ class Game extends React.Component
           width: '100%'
         } }>
           <iframe src="//a.exdynsrv.com/iframe.php?idzone=3663401&size=468x60" width="468" height="60" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
-        </div>
+        </div> */}
 
         <div className={ mainStyles.container }>
 
@@ -387,9 +387,12 @@ class Game extends React.Component
 
           </div>
 
-          <div style={ { display: 'flex', justifyContent: 'center', maxWidth: 'inherit' } }>
-            <iframe src="//a.exdynsrv.com/iframe.php?idzone=3663401&size=468x60" width="468" height="60" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
+          <div className={ optionsStyles.ads }>
+            <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+            <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+            <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
           </div>
+
           <div className={ roomsStyles.container }>
 
             <p className={ roomsStyles.title }> { i18n('available-rooms') } </p>
@@ -566,6 +569,26 @@ const optionsStyles = createStyle({
 
     ':active': {
       transform: 'scale(0.95)'
+    }
+  },
+
+  ads: {
+    display: 'flex',
+    justifyContent: 'center',
+    maxWidth: 'inherit',
+
+    '@media screen and (max-width: 1080px)': {
+      '> iframe:nth-child(1)':
+      {
+        display: 'none'
+      }
+    },
+
+    '@media screen and (max-width: 620px)': {
+      '> iframe:nth-child(2)':
+      {
+        display: 'none'
+      }
     }
   }
 });
