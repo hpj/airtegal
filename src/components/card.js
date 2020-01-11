@@ -10,44 +10,39 @@ import i18n, { locale } from '../i18n.js';
 
 const colors = getTheme();
 
-class Card extends React.Component
+const Card = ({ owner, content, type, elementId,
+  allowed, picked, highlighted, winner, hidden,
+  onClick, onMouseEnter, onMouseLeave }) =>
 {
-  render()
-  {
-    const { owner, content, type, elementId,
-      allowed, picked, highlighted, winner, hidden,
-      onClick, onMouseEnter, onMouseLeave } = this.props;
+  return (
+    <div owner={ (owner !== undefined).toString() } className={ styles.wrapper }>
+      {
+        (hidden) ?
+          <div className={ styles.hidden } type={ type }>
+            <div>{ i18n('kuruit-bedan-fash5') }</div>
+          </div>
+          :
+          <div
+            className={ styles.container }
 
-    return (
-      <div owner={ (owner !== undefined).toString() } className={ styles.wrapper }>
-        {
-          (hidden) ?
-            <div className={ styles.hidden } type={ type }>
-              <div>{ i18n('kuruit-bedan-fash5') }</div>
-            </div>
-            :
-            <div
-              className={ styles.container }
-
-              onMouseEnter={ onMouseEnter }
-              onMouseLeave={ onMouseLeave }
-              onClick={ onClick }
-              id={ elementId }
-              type={ type }
-              allowed={ allowed }
-              picked={ picked }
-              highlighted={ highlighted }
-              winner={ winner }
-            >
-              <div className={ styles.owner }>{owner}</div>
-              <div className={ styles.content }>{content}</div>
-              <p className={ styles.bottom }>{ i18n('kuruit-bedan-fash5') }</p>
-            </div>
-        }
-      </div>
-    );
-  }
-}
+            onMouseEnter={ onMouseEnter }
+            onMouseLeave={ onMouseLeave }
+            onClick={ onClick }
+            id={ elementId }
+            type={ type }
+            allowed={ allowed }
+            picked={ picked }
+            highlighted={ highlighted }
+            winner={ winner }
+          >
+            <div className={ styles.owner }>{owner}</div>
+            <div className={ styles.content }>{content}</div>
+            <p className={ styles.bottom }>{ i18n('kuruit-bedan-fash5') }</p>
+          </div>
+      }
+    </div>
+  );
+};
 
 const hoverAnimation = createAnimation({
   options: {

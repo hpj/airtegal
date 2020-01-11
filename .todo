@@ -1,20 +1,23 @@
 Performance Issues and Bugs:
-  ☐ the handler padding and z-index might case problems when interacting withe field and hand
 
 Testing:
 
 Features:
 
 UI/UX:
+  ☐ sharing the winning card of the round on social media @feature-update
+
+  ☐ match end screen @feature-update 
+
+  ☐ turn room options into real functional elements @feature-update
+
   ☐ design the mockups for the proposal and vote screen
 
   ☐ animations for cards appearing and disappearing from field @low
-  ☐ animation for match ending and the match winner @low 
 
   ☐ design the 404 page
 
   ☐ design the Offline page
-    ✔ handle 'offline' event @done(20-01-07 12:31)
     ☐ handle 'online' event
 
   Homepage:

@@ -21,6 +21,8 @@ import Loading from './components/loading.js';
 import Offline from './screens/offline.js';
 import NotFound from './screens/404.js';
 
+import Picture from './screens/picture.js';
+
 import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
@@ -63,6 +65,8 @@ function loaded()
         <Route exact path="/" component={ Homepage }/>
       
         <Route path="/play" component={ Game }/>
+
+        <Route path="/picture" component={ Picture }/>
         
         <Route path="/terms" component={ TermsAndConditions }/>
         <Route path="/privacy" component={ PrivacyPolicy }/>
