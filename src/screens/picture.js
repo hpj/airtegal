@@ -4,29 +4,37 @@ import { createStyle } from '../flcss.js';
 
 import Card from '../components/card.js';
 
-const picture = () =>
+const Picture = () =>
 {
-  const rtlRegex = /[\u0591-\u07FF]/;
-
+  
   const params = new URL(document.URL).searchParams;
-
+  
   if (params && params.get('data'))
   {
-    const data = JSON.parse(params.get('data'));
+    try
+    {
+      const data = JSON.parse(params.get('data'));
 
-    const direction = rtlRegex.test(data.black) ? 'rtl' : 'ltr';
+      // Right-to-left regex
+      // because we can't use i18n.locale to decide an input from outside the server and the app
+      const direction = /[\u0591-\u07FF]/.test(data.black) ? 'rtl' : 'ltr';
 
-    return (
-      <div id='picture' className={ styles.wrapper }>
-        <div direction={ direction } className={ styles.container }>
-          <Card type='black' content={ data.black }/>
+      return (
+        <div id='picture' className={ styles.wrapper }>
+          <div direction={ direction } className={ styles.container }>
+            <Card type='black' content={ data.black }/>
 
-          {
-            data.white.map((content, i) => <Card key={ i } type='white' content={ content }/>)
-          }
+            {
+              data.white.map((content, i) => <Card key={ i } type='white' content={ content }/>)
+            }
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    catch
+    {
+      return <div/>;
+    }
   }
   else
   {
@@ -87,4 +95,4 @@ const styles = createStyle({
   }
 });
 
-export default picture;
+export default Picture;

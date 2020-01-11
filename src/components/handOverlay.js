@@ -262,7 +262,7 @@ class HandOverlay extends React.Component
 
     let visibleSnapPoints;
     
-    const hiddenSnapPoints = [ { y: size.height } ];
+    const hiddenSnapPoints = [ { x: 0, y: size.height } ];
 
     const boundaries = {};
 
@@ -270,7 +270,7 @@ class HandOverlay extends React.Component
 
     if (this.state.maxViewableArea)
     {
-      visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: size.height - this.state.maxViewableArea } ];
+      visibleSnapPoints = [ { x: 0, y: percent(size.height, 80) }, { x: 0, y: size.height - this.state.maxViewableArea } ];
       
       boundaries.top = visibleSnapPoints[1].y;
 
@@ -278,7 +278,7 @@ class HandOverlay extends React.Component
     }
     else
     {
-      visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
+      visibleSnapPoints = [ { x: 0, y: percent(size.height, 80) }, { x: 0, y: percent(size.height, 50) }, { x: 0, y: percent(size.height, 15) } ];
       
       boundaries.top = visibleSnapPoints[2].y;
     }

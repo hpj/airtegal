@@ -379,7 +379,7 @@ class RoomOverlay extends React.Component
           initialPosition={ { x: size.width, y: 0 } }
           
           onSnap={ this.onSnap.bind(this) }
-          snapPoints={ [ { x: (this.state.handlerVisible) ? 0 : -18 }, { x: size.width } ] }
+          snapPoints={ [ { x: (this.state.handlerVisible) ? 0 : -18, y: 0 }, { x: size.width, y: 0 } ] }
 
           boundaries={ {
             left: (this.state.handlerVisible) ? 0 : -18,

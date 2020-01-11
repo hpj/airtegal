@@ -167,7 +167,7 @@ class FieldOverlay extends React.Component
           horizontalOnly={ true }
           initialPosition={ { x: size.width, y: 0 } }
 
-          snapPoints={ [ { x: size.width }, { x: 0 } ] }
+          snapPoints={ [ { x: size.width, y: 0 }, { x: 0, y: 0 } ] }
 
           boundaries={ {
             left: 0,
