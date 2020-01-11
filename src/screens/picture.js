@@ -17,7 +17,7 @@ const picture = () =>
     const direction = rtlRegex.test(data.black) ? 'rtl' : 'ltr';
 
     return (
-      <div className={ styles.wrapper }>
+      <div id='picture' className={ styles.wrapper }>
         <div direction={ direction } className={ styles.container }>
           <Card type='black' content={ data.black }/>
 
