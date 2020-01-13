@@ -3,7 +3,7 @@ import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Value } from 'animated';
-import Interactable from '../interactable/noNative.js';
+import Interactable from 'react-interactable/noNative';
 
 import i18n, { locale } from '../i18n.js';
 
@@ -376,10 +376,10 @@ class RoomOverlay extends React.Component
           dragEnabled={ this.state.handlerVisible && !this.state.blockDragging }
           
           horizontalOnly={ true }
-          initialPosition={ { x: size.width, y: 0 } }
+          initialPosition={ { x: size.width } }
           
           onSnap={ this.onSnap.bind(this) }
-          snapPoints={ [ { x: (this.state.handlerVisible) ? 0 : -18, y: 0 }, { x: size.width, y: 0 } ] }
+          snapPoints={ [ { x: (this.state.handlerVisible) ? 0 : -18 }, { x: size.width } ] }
 
           boundaries={ {
             left: (this.state.handlerVisible) ? 0 : -18,

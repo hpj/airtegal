@@ -8,7 +8,7 @@ UI/UX:
   ☐ sharing the winning card of the round on social media @feature-update
 
   ☐ match end screen @feature-update 
-    above room options there should be a stack-able (on top of each other) match reports
+    ☐ above room options there should be a stack-able (on top of each other) match reports
 
   ☐ turn room options into real functional elements @feature-update
 
@@ -22,6 +22,7 @@ UI/UX:
     ☐ handle 'online' event
 
   Homepage:
+    ☐ showcase handle black cards with pick > 1
 
   Lobby:
     ☐ find a better way to show the install prompt @low

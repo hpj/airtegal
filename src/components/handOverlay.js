@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { wrapGrid } from 'animate-css-grid';
 
-import Interactable from '../interactable/noNative.js';
+import Interactable from 'react-interactable/noNative';
 
 import { Value } from 'animated';
 
@@ -31,12 +31,12 @@ const overlayAnimatedY = new Value(0);
 const percent = (height, percent) =>
 {
   const n = (height / 100) * percent;
-  const delta = height - n;
+  // const delta = height - n;
 
   // for the portrait overlay
   // set a minimal height that the overlay can't go below
-  if (200 > delta)
-    return height - 200;
+  // if (100 > delta)
+  //   return height - 100;
 
   return n;
 };
@@ -51,6 +51,8 @@ class HandOverlay extends React.Component
       visible: false,
       overlayHidden: true,
 
+      blockDragging: false,
+
       entry: [],
       hand: []
     };
@@ -59,6 +61,8 @@ class HandOverlay extends React.Component
 
     this.onRoomData = this.onRoomData.bind(this);
     this.onResize = this.onResize.bind(this);
+    this.onScroll = this.onScroll.bind(this);
+
     this.maximizeMinimize = this.maximizeMinimize.bind(this);
   }
 
@@ -69,6 +73,12 @@ class HandOverlay extends React.Component
     window.addEventListener('resize', this.onResize);
     wrapperRef.current.addEventListener('resize', this.onResize);
 
+    // detect touch screen
+    if (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))
+      this.touchScreen = true;
+    else
+      this.touchScreen = false;
+   
     this.animatedGrid = wrapGrid(gridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
   }
 
@@ -86,6 +96,18 @@ class HandOverlay extends React.Component
     overlayRef.current.snapTo({ index: 0 });
 
     this.refreshViewableArea();
+  }
+
+  onScroll()
+  {
+    if (!this.touchScreen)
+      return;
+    
+    const y = wrapperRef.current.scrollTop;
+
+    this.setState({
+      blockDragging: (y > 0) ? true : false
+    });
   }
 
   onRoomData(roomData)
@@ -164,43 +186,36 @@ class HandOverlay extends React.Component
   {
     this.setState({
       snapIndex: e.index
+    }, () =>
+    {
+      if (this.touchScreen)
+      {
+        requestAnimationFrame(() => wrapperRef.current.scrollTo({ top: 0 }));
+      }
     });
   }
 
   maximizeMinimize()
   {
-    if (this.state.snapIndex <= 0)
+    if (this.state.snapIndex <= 0 && !this.touchScreen)
       overlayRef.current.snapTo({ index: 2 });
+    if (this.state.snapIndex <= 0 && this.touchScreen)
+      overlayRef.current.snapTo({ index: 1 });
     else
       overlayRef.current.snapTo({ index: 0 });
   }
 
   refreshViewableArea()
   {
-    let touchScreen = false;
-    
-    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
-      touchScreen = true;
-   
     // touch screen are not scrolled the same way as non-touch screens
-    if (!touchScreen)
+    if (!this.touchScreen)
     {
       const { size } = this.props;
       
       const rect = wrapperRef.current.getBoundingClientRect();
 
       this.setState({
-        viewableArea: size.height - rect.y,
-        maxViewableArea: undefined
-      });
-    }
-    else
-    {
-      const rect = overlayContainerRef.current.getBoundingClientRect();
-
-      this.setState({
-        viewableArea: undefined,
-        maxViewableArea: rect.height
+        viewableArea: size.height - rect.y
       });
     }
   }
@@ -262,23 +277,19 @@ class HandOverlay extends React.Component
 
     let visibleSnapPoints;
     
-    const hiddenSnapPoints = [ { x: 0, y: size.height } ];
+    const hiddenSnapPoints = [ { y: size.height } ];
 
     const boundaries = {};
 
-    let freewillAfter;
-
-    if (this.state.maxViewableArea)
+    if (this.touchScreen)
     {
-      visibleSnapPoints = [ { x: 0, y: percent(size.height, 80) }, { x: 0, y: size.height - this.state.maxViewableArea } ];
+      visibleSnapPoints = [ { y: size.height - 38 }, { y: 0 } ];
       
       boundaries.top = visibleSnapPoints[1].y;
-
-      freewillAfter = { y: percent(size.height, 80) };
     }
     else
     {
-      visibleSnapPoints = [ { x: 0, y: percent(size.height, 80) }, { x: 0, y: percent(size.height, 50) }, { x: 0, y: percent(size.height, 15) } ];
+      visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
       
       boundaries.top = visibleSnapPoints[2].y;
     }
@@ -321,11 +332,9 @@ class HandOverlay extends React.Component
 
           onSnap={ this.onSnap.bind(this) }
 
-          dragWithSpring={ { tension: 500 } }
+          dragEnabled={ !this.state.blockDragging }
 
-          dragEnabled={ true }
-
-          frictionAreas={ [ { damping: 0.6 } ] }
+          frictionAreas={ [ { damping: (this.touchScreen) ? 0.65 : 0.5 } ] }
 
           verticalOnly={ true }
           initialPosition={ { x: 0, y: size.height } }
@@ -333,16 +342,14 @@ class HandOverlay extends React.Component
           snapPoints={ (this.state.visible) ? visibleSnapPoints : hiddenSnapPoints }
 
           boundaries={ boundaries }
-
-          freewillAfter={ freewillAfter }
         >
           <div className={ styles.overlayWrapper }>
-            <div ref={ overlayContainerRef } className={ styles.overlayContainer }>
-              <div className={ styles.handlerWrapper }>
+            <div style={ { height: (this.touchScreen) ? '100vh' : '85vh' } } ref={ overlayContainerRef } className={ styles.overlayContainer }>
+              <div style={ { margin: (this.touchScreen) ? '15px 0 15px 0' : '10px 0 5px 0' } } className={ styles.handlerWrapper }>
                 <div className={ styles.handler } onClick={ this.maximizeMinimize }/>
               </div>
 
-              <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper }>
+              <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper } onScroll={ this.onScroll }>
                 <div ref= { gridRef } className={ styles.container }>
                   {
                     this.state.hand.map((card, i) =>
@@ -420,15 +427,10 @@ const styles = createStyle({
     overflow: 'hidden',
 
     width: '85%',
-    height: '85vh',
     maxWidth: '700px',
 
     margin: '0 auto',
     borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0',
-
-    '@media (pointer: coarse)': {
-      height: 'fit-content'
-    },
 
     // for the (smaller screens) portrait overlay
     '@media screen and (max-width: 700px)': {
@@ -439,9 +441,7 @@ const styles = createStyle({
 
   handlerWrapper: {
     display: 'flex',
-    justifyContent: 'center',
-
-    margin: '10px 0 5px 0'
+    justifyContent: 'center'
   },
 
   handler: {
@@ -463,13 +463,6 @@ const styles = createStyle({
     overflowY: 'scroll',
 
     margin: '0 10px 0 0',
-
-    '@media (pointer: coarse)': {
-      overflowX: 'hidden',
-      overflowY: 'hidden',
-
-      height: 'fit-content'
-    },
 
     '::-webkit-scrollbar':
     {

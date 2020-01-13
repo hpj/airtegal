@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Interactable from '../interactable/noNative.js';
+import Interactable from 'react-interactable/noNative';
 
 import { Value } from 'animated';
 
@@ -165,9 +165,9 @@ class FieldOverlay extends React.Component
           dragEnabled={ false }
 
           horizontalOnly={ true }
-          initialPosition={ { x: size.width, y: 0 } }
+          initialPosition={ { x: size.width } }
 
-          snapPoints={ [ { x: size.width, y: 0 }, { x: 0, y: 0 } ] }
+          snapPoints={ [ { x: size.width }, { x: 0 } ] }
 
           boundaries={ {
             left: 0,
