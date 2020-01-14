@@ -344,22 +344,6 @@ class Game extends React.Component
           button={ i18n('ok') }
         />
 
-        {/* <div style={ {
-          zIndex: 1,
-
-          position: 'absolute',
-          display: (this.state.loadingHidden && !this.state.errorMessage) ? 'flex' : 'none',
-          justifyContent: 'center',
-          
-          overflow: 'hidden',
-
-          bottom: 0,
-          maxWidth: 'inherit',
-          width: '100%'
-        } }>
-          <iframe src="//a.exdynsrv.com/iframe.php?idzone=3663401&size=468x60" width="468" height="60" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
-        </div> */}
-
         <div className={ mainStyles.container }>
 
           <div className={ headerStyles.container }>

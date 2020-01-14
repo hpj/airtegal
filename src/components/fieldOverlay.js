@@ -92,20 +92,16 @@ class FieldOverlay extends React.Component
 
   onRoomData(roomData)
   {
-    // if a change happen in room's state
-    if (this.stateroomState !== roomData.state)
-    {
-      // the field overlay is only visible in matches
-      this.visibility(roomData.state === 'match');
+    // the field overlay is only visible in matches
+    this.visibility(roomData.state === 'match');
 
-      // if lobby clear field
-      if (roomData.state === 'lobby')
-      {
-        this.setState({
-          hoverIndex: undefined,
-          field: []
-        });
-      }
+    // if lobby clear field
+    if (roomData.state === 'lobby')
+    {
+      this.setState({
+        hoverIndex: undefined,
+        field: []
+      });
     }
 
     if (roomData.roundEnded)
@@ -140,7 +136,6 @@ class FieldOverlay extends React.Component
     }
     
     this.setState({
-      roomState: roomData.state,
       winnerEntryIndex: (roomData.roundEnded) ? roomData.roundEnded.winnerEntryIndex : undefined,
       playerState: roomData.playerProperties[socket.id].state,
       playerProperties: roomData.playerProperties
@@ -176,7 +171,7 @@ class FieldOverlay extends React.Component
     overlayAnimatedX.addListener(({ value }) =>
     {
       // hide the overlay and overlay holder when they are off-screen
-      if (value >= size.width)
+      if (value >= (size.width - 5))
         this.setState({ overlayHidden: true });
       else
         this.setState({ overlayHidden: false });

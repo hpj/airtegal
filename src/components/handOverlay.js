@@ -311,7 +311,7 @@ class HandOverlay extends React.Component
         this.refreshViewableArea();
 
       // hide the overlay when it goes off-screen
-      if (value >= size.height)
+      if (value >= (size.height - 5))
         this.setState({ overlayHidden: true }, () => this.animatedGrid.forceGridAnimation());
       // only make the overlay visible if there's a reason
       else if (!this.state.overlayHidden || this.state.visible)
