@@ -18,6 +18,8 @@ import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
+import { gestures } from './fieldOverlay.js';
+
 const colors = getTheme();
 
 const overlayRef = createRef();
@@ -31,12 +33,6 @@ const overlayAnimatedY = new Value(0);
 const percent = (height, percent) =>
 {
   const n = (height / 100) * percent;
-  // const delta = height - n;
-
-  // for the portrait overlay
-  // set a minimal height that the overlay can't go below
-  // if (100 > delta)
-  //   return height - 100;
 
   return n;
 };
@@ -63,6 +59,7 @@ class HandOverlay extends React.Component
     this.onResize = this.onResize.bind(this);
     this.onScroll = this.onScroll.bind(this);
 
+    this.maximize = this.maximize.bind(this);
     this.maximizeMinimize = this.maximizeMinimize.bind(this);
   }
 
@@ -75,9 +72,15 @@ class HandOverlay extends React.Component
 
     // detect touch screen
     if (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))
+    {
       this.touchScreen = true;
+
+      gestures.on('up', this.maximize);
+    }
     else
+    {
       this.touchScreen = false;
+    }
    
     this.animatedGrid = wrapGrid(gridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
   }
@@ -85,6 +88,8 @@ class HandOverlay extends React.Component
   componentWillUnmount()
   {
     socket.off('roomData', this.onRoomData);
+
+    gestures.off('up', this.maximize);
 
     window.removeEventListener('resize', this.onResize);
   }
@@ -177,11 +182,10 @@ class HandOverlay extends React.Component
   */
   visibility(visible)
   {
-    this.setState({ visible: visible });
-
-    overlayRef.current.snapTo({ index: 0 });
+    this.setState({ visible: visible },
+      () => overlayRef.current.snapTo({ index: 0 }));
   }
-
+  
   onSnap(e)
   {
     this.setState({
@@ -193,6 +197,12 @@ class HandOverlay extends React.Component
         requestAnimationFrame(() => wrapperRef.current.scrollTo({ top: 0 }));
       }
     });
+  }
+
+  maximize()
+  {
+    if (this.state.snapIndex === 0 && this.state.visible)
+      overlayRef.current.snapTo({ index: 1 });
   }
 
   maximizeMinimize()
@@ -307,10 +317,11 @@ class HandOverlay extends React.Component
       if (wrapperRef.current)
         this.refreshViewableArea();
 
-      // hide the overlay and overlay holder when they are off-screen
+      // hide the overlay when it goes off-screen
       if (value >= size.height)
         this.setState({ overlayHidden: true }, () => this.animatedGrid.forceGridAnimation());
-      else
+      // only make the overlay visible if there's a reason
+      else if (!this.state.overlayHidden || this.state.visible)
         this.setState({ overlayHidden: false }, () => this.animatedGrid.forceGridAnimation());
     });
 

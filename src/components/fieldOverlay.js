@@ -2,9 +2,13 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Interactable from 'react-interactable/noNative';
+import { EventEmitter } from 'events';
 
 import { Value } from 'animated';
+
+import PanResponder from 'react-panresponder-web';
+
+import Interactable from 'react-interactable/noNative';
 
 import LineTo from './lineTo.js';
 
@@ -23,6 +27,8 @@ const colors = getTheme();
 const overlayRef = createRef();
 const overlayAnimatedX = new Value(0);
 
+export const gestures = new EventEmitter();
+
 class FieldOverlay extends React.Component
 {
   constructor()
@@ -35,6 +41,39 @@ class FieldOverlay extends React.Component
       field: [],
       lines: []
     };
+
+    this.panResponder = PanResponder.create({
+      onMoveShouldSetPanResponderCapture: () => true,
+      
+      onPanResponderMove: (evt, gesture) =>
+      {
+        this.panResponderMove = {
+          x0: gesture.x0,
+          y0: gesture.y0,
+          moveX: gesture.moveX,
+          moveY: gesture.moveY
+        };
+      },
+    
+      onPanResponderRelease: () =>
+      {
+        const { x0, y0, moveX, moveY } = this.panResponderMove;
+
+        const [ deltaX, deltaY ] = [ x0 - moveX, y0 - moveY ];
+
+        if (deltaX > 150)
+          gestures.emit('left');
+
+        if (deltaX < -150)
+          gestures.emit('right');
+
+        if (deltaY > 100)
+          gestures.emit('up');
+
+        if (deltaY < -100)
+          gestures.emit('down');
+      }
+    });
 
     // bind functions that are use as callbacks
 
@@ -174,7 +213,7 @@ class FieldOverlay extends React.Component
             right: size.width
           } }
         >
-          <div className={ styles.wrapper }>
+          <div className={ styles.wrapper } { ...this.panResponder.panHandlers }>
             <div className={ styles.container }>
               {
                 this.state.field.map((entry, entryIndex) =>

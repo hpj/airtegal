@@ -529,5 +529,4 @@ const styles = createStyle({
   }
 });
 
-// export default withSize(RoomOverlay);
 export default RoomOverlay;
