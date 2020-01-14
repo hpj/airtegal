@@ -188,7 +188,7 @@ RoomOptions.propTypes = {
 
 const styles = createStyle({
   wrapper: {
-    position: 'relative',
+    position: 'absolute',
     
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
@@ -201,22 +201,8 @@ const styles = createStyle({
     fontSize: 'calc(6px + 0.5vw + 0.5vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    top: '-100vh',
-    maxWidth: '80%',
-    width: 'calc(100% - 38px)',
+    width: '100%',
     height: '100%',
-
-    margin: '0 auto',
-    padding: '0 0 0 30px',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      margin: '15px auto 0 auto',
-      padding: '0 15px 15px 15px',
-
-      width: 'calc(100% - 30px)',
-      height: 'calc(100% - 30px)'
-    },
 
     '::-webkit-scrollbar':
     {
@@ -231,7 +217,10 @@ const styles = createStyle({
   },
 
   container: {
-    direction: locale.direction
+    direction: locale.direction,
+    
+    maxWidth: '80%',
+    margin: '0 auto'
   },
 
   loading: {

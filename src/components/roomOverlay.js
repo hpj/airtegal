@@ -15,11 +15,15 @@ import { createStyle } from '../flcss.js';
 
 import Notifications from './notifications.js';
 
-import Trackbar from './roomTrackbar.js';
+import TrackBar from './roomTrackBar.js';
+import Counter from './roomCounter.js';
+
 import RoomOptions from './roomOptions.js';
 
 import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
+
+// import { isTouchScreen } from '../index.js';
 
 const colors = getTheme();
 
@@ -394,7 +398,13 @@ class RoomOverlay extends React.Component
 
             <div className={ styles.container }>
 
-              <Trackbar sendMessage={ sendMessage } addNotification={ this.addNotification }/>
+              <Counter addNotification={ this.addNotification }/>
+
+              <TrackBar/>
+
+              {/* {
+                (!isTouchScreen) ? <TrackBar/> : <div/>
+              } */}
 
               <HandOverlay sendMessage={ sendMessage } size={ size } />
 
@@ -445,14 +455,14 @@ const styles = createStyle({
     display: 'grid',
 
     gridTemplateColumns: '15vw 1fr',
-    gridTemplateRows: '100vh',
-    gridTemplateAreas: '"side content"',
+    gridTemplateRows: 'auto 1fr',
+    gridTemplateAreas: '"counter content" "trackBar content"',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       gridTemplateColumns: '100%',
-      gridTemplateRows: '20vh 80vh',
-      gridTemplateAreas: '"side" "content"'
+      gridTemplateRows: 'auto auto 1fr',
+      gridTemplateAreas: '"counter" "trackBar" "content"'
     }
   },
 
@@ -524,7 +534,9 @@ const styles = createStyle({
   },
 
   content: {
+    position: 'relative',
     gridArea: 'content',
+
     backgroundColor: colors.whiteBackground
   }
 });

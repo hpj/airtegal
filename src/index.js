@@ -41,6 +41,9 @@ let keepLoading = false;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
+// detect touch screen
+export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+
 function registerServiceWorker()
 {
   // if the browser supports service workers

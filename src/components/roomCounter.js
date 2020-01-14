@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 import CopyIcon from 'mdi-react/ContentCopyIcon';
 
-import i18n, { locale } from '../i18n.js';
+import i18n from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -84,18 +84,14 @@ class Trackbar extends React.Component
 
     this.setState({
       roomId: roomData.id,
-      roomState: roomData.state,
-      maxPlayers: roomData.options.match.maxPlayers,
-      players: roomData.players,
-      playerProperties: roomData.playerProperties,
-      masterId: roomData.master
+      roomState: roomData.state
     });
   }
 
   shareRoomURL()
   {
     navigator.share({
-      title: 'Kuruit bedan Fash5',
+      title: 'Kuruit Bedan Fash5',
       text: i18n('join-me'),
       url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomId}`
     });
@@ -121,8 +117,8 @@ class Trackbar extends React.Component
 
   render()
   {
-    if (!this.state.players)
-      return (<div></div>);
+    if (!this.state.roomId)
+      return <div/>;
 
     const isMatch = this.state.roomState === 'match';
 
@@ -132,43 +128,14 @@ class Trackbar extends React.Component
 
           {
             // share the room
-            (navigator.share) ? <ShareIcon icon='true' match={ isMatch.toString() } className={ styles.id } onClick={ this.shareRoomURL }/> :
+            (navigator.share) ? <ShareIcon icon='true' className={ styles.id } match={ isMatch.toString() } onClick={ this.shareRoomURL }/> :
               // copy the room's id
-              (navigator.clipboard) ? <CopyIcon icon='true' match={ isMatch.toString() } className={ styles.id } onClick={ this.copyRoomURL }/> :
+              (navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } match={ isMatch.toString() } onClick={ this.copyRoomURL }/> :
                 // just show the room's id
                 <div className={ styles.id } match={ isMatch.toString() } >{ this.state.roomId }</div>
           }
 
           <div className={ styles.status }>{ this.state.counter }</div>
-
-          <div className={ styles.players }>
-            {
-              this.state.players.map((playerId) =>
-              {
-                const isMaster = playerId === this.state.masterId;
-                const isClient = playerId === socket.id;
-
-                // eslint-disable-next-line security/detect-object-injection
-                const player = this.state.playerProperties[playerId];
-                
-                const isTurn = player.state === 'judging' || player.state === 'playing';
-
-                return <div className={ styles.player } key={ playerId }>
-
-                  <div className={ styles.score } match={ isMatch.toString() }>{ player.score }</div>
-
-                  <div className={ styles.name }>{ player.username }</div>
-
-                  {
-                    (isClient) ? <div className={ styles.clientLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/> : <div/>
-                  }
-
-                  <div className={ styles.stateLed } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
-
-                </div>;
-              })
-            }
-          </div>
         </div>
       </div>
     );
@@ -176,14 +143,13 @@ class Trackbar extends React.Component
 }
 
 Trackbar.propTypes = {
-  sendMessage: PropTypes.func.isRequired,
   addNotification: PropTypes.func.isRequired
 };
 
 const styles = createStyle({
   wrapper: {
     zIndex: 3,
-    gridArea: 'side',
+    gridArea: 'counter',
 
     backgroundColor: colors.trackBarBackground,
 
@@ -201,8 +167,8 @@ const styles = createStyle({
     display: 'grid',
     position: 'relative',
 
-    gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"id status" "players players"',
+    gridAutoColumns: 'auto 1fr',
+    gridTemplateAreas: '"id status"',
 
     userSelect: 'none',
 
@@ -212,11 +178,10 @@ const styles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     width: '100%',
-    height: '100%',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      padding: '0 15px',
+      padding: '10px 15px',
       width: 'calc(100% - 30px)'
     }
   },
@@ -241,11 +206,6 @@ const styles = createStyle({
 
       width: 'calc(14px + 0.4vw + 0.4vh)',
       height: 'calc(14px + 0.4vw + 0.4vh)'
-    },
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      padding: '10px 0 10px 0'
     }
   },
 
@@ -255,132 +215,7 @@ const styles = createStyle({
     
     whiteSpace: 'pre',
 
-    margin: '0 10px 0 auto',
-    padding: '0 0 20px 0',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      padding: '10px 0 10px 0'
-    }
-  },
-
-  players: {
-    gridArea: 'players',
-
-    width: '100%',
-    height: '100%',
-
-    overflowX: 'hidden',
-    overflowY: 'auto',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      display: 'flex',
-      flexWrap: 'wrap'
-    },
-
-    '::-webkit-scrollbar':
-    {
-      width: '8px'
-    },
-
-    '::-webkit-scrollbar-thumb':
-    {
-      borderRadius: '8px',
-      boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
-    }
-  },
-
-  player: {
-    display: 'grid',
-
-    direction: locale.direction,
-
-    alignItems: 'center',
-
-    gridTemplateColumns: 'auto auto 1fr auto',
-    gridTemplateAreas: '"clientLed stateLed username score"',
-    
-    padding: '0 10px 0 10px',
-
-    '@media screen and (max-width: 1080px)': {
-      flexBasis: '100%',
-
-      padding: '0 15px'
-    }
-  },
-
-  led: {
-    position: 'relative',
-
-    width: 0,
-    height: 0,
-
-    overflow: 'hidden',
-    
-    borderRadius: '10px'
-  },
-
-  stateLed: {
-    extend: 'led',
-    gridArea: 'stateLed',
-
-    '[match="false"][master="true"]': {
-      background: colors.master,
-
-      width: '10px',
-      height: '10px'
-    },
-
-    '[match="true"][turn="true"]': {
-      background: colors.turn,
-
-      width: '10px',
-      height: '10px'
-    }
-  },
-
-  clientLed: {
-    extend: 'led',
-    gridArea: 'clientLed',
-    
-    
-    '[client="true"]': {
-      background: colors.client,
-
-      width: '10px',
-      height: '10px'
-    },
-
-    '[match="false"][master="true"]': {
-      margin: (locale.direction === 'rtl') ? '0 0 0 5px' : '0 5px 0 0'
-    },
-
-    '[match="true"][turn="true"]': {
-      margin: (locale.direction === 'rtl') ? '0 0 0 5px' : '0 5px 0 0'
-    }
-  },
-
-  name: {
-    gridArea: 'username',
-    textAlign: 'center',
-
-    width: 'calc(100% - 10px)',
-    
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-
-    padding: '5px',
-    
-    fontSize: 'calc(6px + 0.35vw + 0.35vh)'
-  },
-
-  score: {
-    gridArea: 'score',
-
-    '[match="false"]': {
-      display: 'none'
-    }
+    margin: '0 10px 0 auto'
   }
 });
 

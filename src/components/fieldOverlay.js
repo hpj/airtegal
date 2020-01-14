@@ -199,7 +199,7 @@ class FieldOverlay extends React.Component
 
           animatedValueX={ overlayAnimatedX }
 
-          frictionAreas={ [ { damping: 0.65 } ] }
+          frictionAreas={ [ { damping: 0.6 } ] }
 
           dragEnabled={ false }
 
@@ -287,8 +287,10 @@ FieldOverlay.propTypes = {
 
 const styles = createStyle({
   view: {
-    position: 'relative',
-    height: '100vh'
+    position: 'absolute',
+
+    height: '100%',
+    width: '100%'
   },
 
   wrapper: {

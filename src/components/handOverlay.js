@@ -12,6 +12,8 @@ import { socket } from '../screens/game.js';
 
 import Card from './card.js';
 
+import { isTouchScreen } from '../index.js';
+
 import { locale } from '../i18n.js';
 
 import getTheme from '../colors.js';
@@ -70,17 +72,8 @@ class HandOverlay extends React.Component
     window.addEventListener('resize', this.onResize);
     wrapperRef.current.addEventListener('resize', this.onResize);
 
-    // detect touch screen
-    if (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))
-    {
-      this.touchScreen = true;
-
+    if (isTouchScreen)
       gestures.on('up', this.maximize);
-    }
-    else
-    {
-      this.touchScreen = false;
-    }
    
     this.animatedGrid = wrapGrid(gridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
   }
@@ -105,7 +98,7 @@ class HandOverlay extends React.Component
 
   onScroll()
   {
-    if (!this.touchScreen)
+    if (!isTouchScreen)
       return;
     
     const y = wrapperRef.current.scrollTop;
@@ -192,7 +185,7 @@ class HandOverlay extends React.Component
       snapIndex: e.index
     }, () =>
     {
-      if (this.touchScreen)
+      if (isTouchScreen)
       {
         requestAnimationFrame(() => wrapperRef.current.scrollTo({ top: 0 }));
       }
@@ -207,9 +200,9 @@ class HandOverlay extends React.Component
 
   maximizeMinimize()
   {
-    if (this.state.snapIndex <= 0 && !this.touchScreen)
+    if (this.state.snapIndex <= 0 && !isTouchScreen)
       overlayRef.current.snapTo({ index: 2 });
-    if (this.state.snapIndex <= 0 && this.touchScreen)
+    if (this.state.snapIndex <= 0 && isTouchScreen)
       overlayRef.current.snapTo({ index: 1 });
     else
       overlayRef.current.snapTo({ index: 0 });
@@ -218,7 +211,7 @@ class HandOverlay extends React.Component
   refreshViewableArea()
   {
     // touch screen are not scrolled the same way as non-touch screens
-    if (!this.touchScreen)
+    if (!isTouchScreen)
     {
       const { size } = this.props;
       
@@ -291,7 +284,7 @@ class HandOverlay extends React.Component
 
     const boundaries = {};
 
-    if (this.touchScreen)
+    if (isTouchScreen)
     {
       visibleSnapPoints = [ { y: size.height - 38 }, { y: 0 } ];
       
@@ -345,7 +338,7 @@ class HandOverlay extends React.Component
 
           dragEnabled={ !this.state.blockDragging }
 
-          frictionAreas={ [ { damping: (this.touchScreen) ? 0.65 : 0.5 } ] }
+          frictionAreas={ [ { damping: 0.6 } ] }
 
           verticalOnly={ true }
           initialPosition={ { x: 0, y: size.height } }
@@ -355,8 +348,8 @@ class HandOverlay extends React.Component
           boundaries={ boundaries }
         >
           <div className={ styles.overlayWrapper }>
-            <div style={ { height: (this.touchScreen) ? '100vh' : '85vh' } } ref={ overlayContainerRef } className={ styles.overlayContainer }>
-              <div style={ { margin: (this.touchScreen) ? '15px 0 15px 0' : '10px 0 5px 0' } } className={ styles.handlerWrapper }>
+            <div style={ { height: (isTouchScreen) ? '100vh' : '85vh' } } ref={ overlayContainerRef } className={ styles.overlayContainer }>
+              <div style={ { margin: (isTouchScreen) ? '15px 0 15px 0' : '10px 0 5px 0' } } className={ styles.handlerWrapper }>
                 <div className={ styles.handler } onClick={ this.maximizeMinimize }/>
               </div>
 
