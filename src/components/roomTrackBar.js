@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
@@ -10,7 +12,7 @@ import { createStyle } from '../flcss.js';
 
 const colors = getTheme();
 
-class Trackbar extends React.Component
+class TrackBar extends React.Component
 {
   constructor()
   {
@@ -48,12 +50,15 @@ class Trackbar extends React.Component
     if (!this.state.players)
       return <div/>;
     
+    const isContained = (this.props.contained !== undefined);
+    const isEnabled = this.props.enabled;
+
     const isMatch = this.state.roomState === 'match';
 
     return (
-      <div className={ styles.wrapper }>
+      <div className={ styles.wrapper } contained={ isContained.toString() } enabled={ isEnabled }>
         <div className={ styles.container }>
-          <div className={ styles.players }>
+          <div className={ styles.players } contained={ isContained.toString() }>
             {
               this.state.players.map((playerId) =>
               {
@@ -86,6 +91,12 @@ class Trackbar extends React.Component
     );
   }
 }
+
+TrackBar.propTypes = {
+  contained: PropTypes.bool,
+  enabled: PropTypes.string
+};
+
 const styles = createStyle({
   wrapper: {
     zIndex: 3,
@@ -100,16 +111,15 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       padding: '0'
+    },
+
+    '[enabled="false"]': {
+      display: 'none'
     }
   },
 
   container: {
-    // display: 'grid',
     position: 'relative',
-
-    // gridTemplateRows: 'auto 1fr',
-    // gridTemplateAreas: '"id status" "players players"',
-
     userSelect: 'none',
 
     color: colors.blackText,
@@ -141,7 +151,9 @@ const styles = createStyle({
       display: 'flex',
       flexWrap: 'wrap',
 
-      maxHeight: '15vh'
+      '[contained="false"]': {
+        maxHeight: '15vh'
+      }
     },
 
     '::-webkit-scrollbar':
@@ -249,4 +261,4 @@ const styles = createStyle({
   }
 });
 
-export default Trackbar;
+export default TrackBar;

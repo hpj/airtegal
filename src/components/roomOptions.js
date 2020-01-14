@@ -92,9 +92,6 @@ class RoomOptions extends React.Component
 
   render()
   {
-    if (!this.state.options || !this.state.players)
-      return <div/>;
-
     const isThisMaster = this.state.masterId === socket.id;
     
     const isAllowed =
@@ -117,65 +114,75 @@ class RoomOptions extends React.Component
         </div>
 
         <div className={ styles.container } style={ { display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none' } }>
-          <div className={ styles.title }>{ i18n('game-mode') }</div>
 
-          <div className={ styles.pick }>
-            <div><div/></div>
-            <div>{ i18n('judgement-mode') }</div>
-          </div>
+          {
+            this.props.children
+          }
 
-          <div className={ styles.title }>{ i18n('win-method') }</div>
+          {
+            (this.state.options) ?
+              <div>
+                <div className={ styles.title }>{ i18n('game-mode') }</div>
 
-          <div className={ styles.pick }>
-            <div><div/></div>
+                <div className={ styles.pick }>
+                  <div><div/></div>
+                  <div>{ i18n('judgement-mode') }</div>
+                </div>
 
-            <div style={ { padding: 0 } } className={ styles.field }>
+                <div className={ styles.title }>{ i18n('win-method') }</div>
 
-              <div>{ i18n('first-to-points-1') }</div>
-              <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
-              <div>{ i18n('first-to-points-2') }</div>
+                <div className={ styles.pick }>
+                  <div><div/></div>
 
-            </div>
-          </div>
+                  <div style={ { padding: 0 } } className={ styles.field }>
 
-          <div className={ styles.title }>{ i18n('match-options') }</div>
+                    <div>{ i18n('first-to-points-1') }</div>
+                    <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+                    <div>{ i18n('first-to-points-2') }</div>
 
-          <div className={ styles.field }>
-
-            <div allowed={ isThisMaster.toString() } className={ styles.input }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
-            <div>{ i18n('round-countdown') }</div>
-
-          </div>
-
-          <div className={ styles.field }>
-
-            <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.startingHandAmount }</div>
-            <div>{ i18n('hand-cap') }</div>
-
-          </div>
-
-          <div className={ styles.title }>{ i18n('card-packs') }</div>
-
-          <div className={ styles.packs }>
-            {
-              this.state.options.match.availablePacks.map((pack) =>
-              {
-                return <div key={ pack.id } style={ {
-                  color: pack.foreground_color,
-                  backgroundImage: `url(${pack.background_url})`,
-                  backgroundColor: pack.background_url
-                } } className={ styles.pack }>
-                  <div className={ styles.packName }>
-                    { pack.display_name }
                   </div>
-                </div>;
-              })
-            }
-          </div>
+                </div>
 
-          <div className={ styles.start } allowed={ isAllowed.toString() } style={ {
-            display: (isThisMaster) ? '' : 'none'
-          } } onClick={ () => this.matchRequest(isAllowed) }>{ i18n('start') }</div>
+                <div className={ styles.title }>{ i18n('match-options') }</div>
+
+                <div className={ styles.field }>
+
+                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
+                  <div>{ i18n('round-countdown') }</div>
+
+                </div>
+
+                <div className={ styles.field }>
+
+                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.startingHandAmount }</div>
+                  <div>{ i18n('hand-cap') }</div>
+
+                </div>
+
+                <div className={ styles.title }>{ i18n('card-packs') }</div>
+
+                <div className={ styles.packs }>
+                  {
+                    this.state.options.match.availablePacks.map((pack) =>
+                    {
+                      return <div key={ pack.id } style={ {
+                        color: pack.foreground_color,
+                        backgroundImage: `url(${pack.background_url})`,
+                        backgroundColor: pack.background_url
+                      } } className={ styles.pack }>
+                        <div className={ styles.packName }>
+                          { pack.display_name }
+                        </div>
+                      </div>;
+                    })
+                  }
+                </div>
+
+                <div className={ styles.start } allowed={ isAllowed.toString() } style={ {
+                  display: (isThisMaster) ? '' : 'none'
+                } } onClick={ () => this.matchRequest(isAllowed) }>{ i18n('start') }</div>
+              </div> : <div/>
+          }
         </div>
       </div>
     );
@@ -183,6 +190,9 @@ class RoomOptions extends React.Component
 }
 
 RoomOptions.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node ]),
   sendMessage: PropTypes.func.isRequired
 };
 
@@ -218,9 +228,12 @@ const styles = createStyle({
 
   container: {
     direction: locale.direction,
-    
     maxWidth: '80%',
-    margin: '0 auto'
+    margin: '0 auto',
+
+    '@media screen and (max-width: 470px)': {
+      maxWidth: 'unset'
+    }
   },
 
   loading: {
@@ -262,12 +275,7 @@ const styles = createStyle({
       duration: '2s',
       timingFunction: 'linear',
       iterationCount: 'infinite'
-    }),
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-
-    }
+    })
   },
 
   error: {

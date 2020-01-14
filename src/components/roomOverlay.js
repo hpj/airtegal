@@ -23,7 +23,7 @@ import RoomOptions from './roomOptions.js';
 import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
 
-// import { isTouchScreen } from '../index.js';
+import { isTouchScreen } from '../index.js';
 
 const colors = getTheme();
 
@@ -400,17 +400,24 @@ class RoomOverlay extends React.Component
 
               <Counter addNotification={ this.addNotification }/>
 
-              <TrackBar/>
-
-              {/* {
-                (!isTouchScreen) ? <TrackBar/> : <div/>
-              } */}
+              {/* this instance of trackBar is always enabled on
+              non-touch screens or on touch screens in landscape mode */}
+              <TrackBar contained
+                enabled={ (!isTouchScreen || size.width >= 1080).toString() }
+              />
 
               <HandOverlay sendMessage={ sendMessage } size={ size } />
 
               <div className={ styles.content }>
                 <FieldOverlay sendMessage={ sendMessage } size={ size }/>
-                <RoomOptions sendMessage={ sendMessage }/>
+
+                {/* this instance of trackBar is only enabled on
+                touch screens in portrait mode  */}
+                <RoomOptions sendMessage={ sendMessage }>
+                  <TrackBar contained
+                    enabled={ (isTouchScreen && size.width < 1080).toString() }
+                  />
+                </RoomOptions>
               </div>
             </div>
 
