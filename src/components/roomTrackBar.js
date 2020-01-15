@@ -76,11 +76,8 @@ class TrackBar extends React.Component
 
                   <div className={ styles.name }>{ player.username }</div>
 
-                  {
-                    (isClient) ? <div className={ styles.clientLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/> : <div/>
-                  }
-
-                  <div className={ styles.stateLed } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
+                  <div className={ styles.clientLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
+                  <div className={ styles.stateLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
 
                 </div>;
               })
@@ -175,13 +172,14 @@ const styles = createStyle({
 
   player: {
     display: 'grid',
-
-    direction: locale.direction,
+    gridGap: '5px',
 
     alignItems: 'center',
-
+    
     gridTemplateColumns: 'auto auto 1fr auto',
     gridTemplateAreas: '"clientLed stateLed username score"',
+
+    direction: locale.direction,
     
     padding: '0 10px 0 10px',
 
@@ -192,54 +190,39 @@ const styles = createStyle({
     }
   },
 
-  led: {
-    position: 'relative',
-
-    width: 0,
-    height: 0,
-
-    overflow: 'hidden',
-    
-    borderRadius: '10px'
-  },
-
   stateLed: {
-    extend: 'led',
     gridArea: 'stateLed',
 
-    '[match="false"][master="true"]': {
-      background: colors.master,
+    width: '10px',
+    height: '10px',
+    borderRadius: '10px',
 
-      width: '10px',
-      height: '10px'
+    '[match="false"][master="true"][client="true"]': {
+      backgroundColor: colors.master
     },
 
-    '[match="true"][turn="true"]': {
-      background: colors.turn,
-
-      width: '10px',
-      height: '10px'
+    '[match="true"][turn="true"][client="true"]': {
+      background: colors.turn
     }
   },
 
   clientLed: {
-    extend: 'led',
     gridArea: 'clientLed',
     
-    
+    width: '10px',
+    height: '10px',
+    borderRadius: '10px',
+
     '[client="true"]': {
-      background: colors.client,
-
-      width: '10px',
-      height: '10px'
+      backgroundColor: colors.client
     },
 
-    '[match="false"][master="true"]': {
-      margin: (locale.direction === 'rtl') ? '0 0 0 5px' : '0 5px 0 0'
+    '[match="false"][master="true"][client="false"]': {
+      backgroundColor: colors.master
     },
 
-    '[match="true"][turn="true"]': {
-      margin: (locale.direction === 'rtl') ? '0 0 0 5px' : '0 5px 0 0'
+    '[match="true"][turn="true"][client="false"]': {
+      background: colors.turn
     }
   },
 
@@ -252,7 +235,7 @@ const styles = createStyle({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
 
-    padding: '5px',
+    padding: '5px 0',
     
     fontSize: 'calc(6px + 0.35vw + 0.35vh)'
   },
