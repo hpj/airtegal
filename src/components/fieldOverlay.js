@@ -47,6 +47,9 @@ class FieldOverlay extends React.Component
       
       onPanResponderMove: (evt, gesture) =>
       {
+        if (typeof gesture !== 'object')
+          return;
+      
         this.panResponderMove = {
           x0: gesture.x0,
           y0: gesture.y0,
@@ -57,6 +60,9 @@ class FieldOverlay extends React.Component
     
       onPanResponderRelease: () =>
       {
+        if (typeof this.panResponderMove !== 'object')
+          return;
+        
         const { x0, y0, moveX, moveY } = this.panResponderMove;
 
         const [ deltaX, deltaY ] = [ x0 - moveX, y0 - moveY ];

@@ -196,10 +196,8 @@ class HandOverlay extends React.Component
 
   maximizeMinimize()
   {
-    if (this.state.snapIndex <= 0 && !isTouchScreen)
-      overlayRef.current.snapTo({ index: 2 });
-    if (this.state.snapIndex <= 0 && isTouchScreen)
-      overlayRef.current.snapTo({ index: 1 });
+    if (this.state.snapIndex <= 0)
+      overlayRef.current.snapTo({ index: (isTouchScreen) ? 1 : 2 });
     else
       overlayRef.current.snapTo({ index: 0 });
   }
