@@ -24,14 +24,12 @@ const overlayAnimatedX = new Value(0);
 
 class PocketOverlay extends React.Component
 {
-  // TODO add track bar and make sure its always updated
-
   constructor()
   {
     super();
 
     this.state = {
-      zIndex: 2,
+      zIndex: 3,
       visible: false,
       overlayHidden: true
     };
@@ -103,7 +101,7 @@ class PocketOverlay extends React.Component
     {
       // layer control
       this.setState({
-        zIndex: (value <= -size.width + 5) ? 2 : 3
+        zIndex: (value <= -size.width + 5) ? 3 : 5
       });
 
       // hide the overlay when it's off-screen

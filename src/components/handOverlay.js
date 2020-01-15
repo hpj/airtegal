@@ -324,7 +324,7 @@ class HandOverlay extends React.Component
           ref={ overlayRef }
 
           style={ {
-            zIndex: 3,
+            zIndex: 4,
             display: (this.state.overlayHidden) ? 'none' : ''
           } }
 

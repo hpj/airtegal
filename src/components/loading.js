@@ -29,7 +29,7 @@ Loading.propTypes = {
 
 const styles = createStyle({
   container: {
-    zIndex: 999,
+    zIndex: 30,
     position: 'absolute',
     display: 'flex',
 

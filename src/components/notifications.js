@@ -46,7 +46,7 @@ Notifications.propTypes = {
 
 const styles = createStyle({
   notifications: {
-    zIndex: 99,
+    zIndex: 10,
     position: 'absolute',
 
     direction: locale.direction,
