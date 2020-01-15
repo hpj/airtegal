@@ -115,6 +115,10 @@ const styles = createStyle({
 
     '[enabled="false"]': {
       display: 'none'
+    },
+
+    '[contained="true"]': {
+      height: '100%'
     }
   },
 
@@ -140,8 +144,9 @@ const styles = createStyle({
   players: {
     gridArea: 'players',
 
+    maxHeight: '100%',
     width: '100%',
-    height: '100%',
+    height: 'min-content',
 
     overflowX: 'hidden',
     overflowY: 'auto',

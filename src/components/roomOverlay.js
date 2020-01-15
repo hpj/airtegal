@@ -23,6 +23,8 @@ import RoomOptions from './roomOptions.js';
 import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
 
+import PocketOverlay from './pocketOverlay.js';
+
 import { isTouchScreen } from '../index.js';
 
 const colors = getTheme();
@@ -327,7 +329,7 @@ class RoomOverlay extends React.Component
 
       // hide the overlay and overlay holder when they are off-screen
       // (-5px is to make sure that the overlay is hidden even if tit ends up few pixels off from where it should of been)
-      if (value >= (size.width - 5))
+      if (Math.round(value) >= size.width)
         this.setState({ overlayHidden: true });
       else
         this.setState({ overlayHidden: false });
@@ -402,7 +404,7 @@ class RoomOverlay extends React.Component
 
               {/* this instance of trackBar is always enabled on
               non-touch screens or on touch screens in landscape mode */}
-              <TrackBar contained
+              <TrackBar
                 enabled={ (!isTouchScreen || size.width >= 1080).toString() }
               />
 
@@ -410,6 +412,10 @@ class RoomOverlay extends React.Component
 
               <div className={ styles.content }>
                 <FieldOverlay sendMessage={ sendMessage } size={ size }/>
+                
+                {
+                  (isTouchScreen) ? <PocketOverlay size={ size }/> : <div/>
+                }
 
                 {/* this instance of trackBar is only enabled on
                 touch screens in portrait mode  */}

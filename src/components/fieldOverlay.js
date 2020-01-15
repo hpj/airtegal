@@ -171,7 +171,7 @@ class FieldOverlay extends React.Component
     overlayAnimatedX.addListener(({ value }) =>
     {
       // hide the overlay and overlay holder when they are off-screen
-      if (value >= (size.width - 5))
+      if (Math.round(value) >= size.width)
         this.setState({ overlayHidden: true });
       else
         this.setState({ overlayHidden: false });

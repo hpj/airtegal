@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import { wrapGrid } from 'animate-css-grid';
 
-import Interactable from 'react-interactable/noNative';
-
 import { Value } from 'animated';
+
+import Interactable from 'react-interactable/noNative';
 
 import { socket } from '../screens/game.js';
 
@@ -82,9 +82,9 @@ class HandOverlay extends React.Component
   {
     socket.off('roomData', this.onRoomData);
 
-    gestures.off('up', this.maximize);
-
     window.removeEventListener('resize', this.onResize);
+    
+    gestures.off('up', this.maximize);
   }
 
   onResize()
@@ -110,18 +110,14 @@ class HandOverlay extends React.Component
 
   onRoomData(roomData)
   {
-    // if a change happen in room's state
-    if (this.stateroomState !== roomData.state)
+    // if lobby clear hand and entry
+    if (roomData.state === 'lobby')
     {
-      // if lobby clear hand and entry
-      if (roomData.state === 'lobby')
-      {
-        this.setState({
-          hoverIndex: undefined,
-          entry: [],
-          hand: []
-        });
-      }
+      this.setState({
+        hoverIndex: undefined,
+        entry: [],
+        hand: []
+      });
     }
 
     if (roomData.roundStarted)
@@ -311,7 +307,7 @@ class HandOverlay extends React.Component
         this.refreshViewableArea();
 
       // hide the overlay when it goes off-screen
-      if (value >= (size.height - 5))
+      if (Math.round(value) >= size.height)
         this.setState({ overlayHidden: true }, () => this.animatedGrid.forceGridAnimation());
       // only make the overlay visible if there's a reason
       else if (!this.state.overlayHidden || this.state.visible)
