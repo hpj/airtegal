@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -11,6 +11,8 @@ import getTheme from '../colors.js';
 import { createStyle, createAnimation } from '../flcss.js';
 
 const colors = getTheme();
+
+const wrapperRef = createRef();
 
 class RoomOptions extends React.Component
 {
@@ -90,6 +92,12 @@ class RoomOptions extends React.Component
     return `${minutes}:${(seconds < 10) ? '0' : ''}${seconds}`;
   }
 
+  scrollTo(options)
+  {
+    if (wrapperRef.current)
+      wrapperRef.current.scrollTo(options);
+  }
+
   render()
   {
     const isThisMaster = this.state.masterId === socket.id;
@@ -103,7 +111,7 @@ class RoomOptions extends React.Component
       );
 
     return (
-      <div className={ styles.wrapper }>
+      <div ref={ wrapperRef } className={ styles.wrapper }>
 
         <div style={ { display: (this.state.loadingHidden) ? 'none' : '' } } className={ styles.loading }>
           <div className={ styles.loadingSpinner }></div>
