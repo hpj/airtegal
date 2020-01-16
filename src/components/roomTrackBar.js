@@ -72,7 +72,7 @@ class TrackBar extends React.Component
 
                 return <div className={ styles.player } key={ playerId }>
 
-                  <div className={ styles.score } match={ isMatch.toString() }>{ player.score }</div>
+                  <div className={ styles.score } enabled={ (isMatch && typeof player.score === 'number').toString() }>{ player.score }</div>
 
                   <div className={ styles.name }>{ player.username }</div>
 
@@ -243,7 +243,7 @@ const styles = createStyle({
   score: {
     gridArea: 'score',
 
-    '[match="false"]': {
+    '[enabled="false"]': {
       display: 'none'
     }
   }
