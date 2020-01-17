@@ -119,6 +119,18 @@ class RoomOverlay extends React.Component
           this.addNotification(`${roomData.playerProperties[roomData.master].username} ${i18n('new-master')}`);
       }
     }
+
+    // if client was in a match
+    // and is about to return to room lobby
+    if (this.state.roomState !== roomData.state && this.state.roomState === 'match')
+    {
+      // reload ads
+      this.reloadAds();
+
+      // reset room options scroll
+      if (optionsRef.current)
+        optionsRef.current.scrollTo({ top: 0 });
+    }
     
     if (roomData.roundStarted)
     {
@@ -144,6 +156,7 @@ class RoomOverlay extends React.Component
     }
 
     this.setState({
+      roomState: roomData.state,
       master: roomData.master
     });
   }
@@ -309,8 +322,6 @@ class RoomOverlay extends React.Component
 
   onSnap({ index })
   {
-    // if the room overlay is hidden then aka sure the server knows that
-    // the user isn't in any room
     if (index === 1)
     {
       this.leaveRoom();
@@ -319,6 +330,15 @@ class RoomOverlay extends React.Component
       if (optionsRef.current)
         optionsRef.current.scrollTo({ top: 0 });
     }
+  }
+
+  reloadAds()
+  {
+    if (!adsRef.current)
+      return;
+
+    adsRef.current.replaceChild(adsRef.current.children[0].cloneNode(), adsRef.current.children[0]);
+    adsRef.current.replaceChild(adsRef.current.children[1].cloneNode(), adsRef.current.children[1]);
   }
 
   render()
@@ -342,11 +362,7 @@ class RoomOverlay extends React.Component
         this.setState({ overlayHidden: true });
 
         // reload ads when overlay is off-screen
-        if (adsRef.current)
-        {
-          adsRef.current.replaceChild(adsRef.current.children[0].cloneNode(), adsRef.current.children[0]);
-          adsRef.current.replaceChild(adsRef.current.children[1].cloneNode(), adsRef.current.children[1]);
-        }
+        this.reloadAds();
       }
       else
       {
