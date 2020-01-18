@@ -1,5 +1,5 @@
 export const locales = [
-  { value: 'egypt', label: 'مصري', locale: 'ar-EG', direction: 'rtl', json: require('./i18n/ar-EG.json') }
+  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', json: require('./i18n/ar-EG.json') }
 ];
 
 /**

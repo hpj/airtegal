@@ -140,7 +140,10 @@ class PocketOverlay extends React.Component
             right: 0
           } }
         >
-          <div style={ { display: (this.state.visible) ? '' : 'none' } } className={ styles.handler }/>
+          <div className={ styles.handlerWrapper } style={ { display: (this.state.visible) ? '' : 'none' } }>
+            <div className={ styles.handler }/>
+          </div>
+
           <div style={ { display: (this.state.overlayHidden) ? 'none' : '' } } className={ styles.container }>
             <TrackBar contained enabled='true'/>
           </div>
@@ -158,16 +161,23 @@ const styles = createStyle({
     width: '100%'
   },
 
-  handler: {
+  handlerWrapper: {
     position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+
+    left: '100%',
+    height: '100%'
+  },
+
+  handler: {
     backgroundColor: colors.whiteBackground,
 
-    top: '10%',
-    left: '100%',
-    height: '75%',
     width: '5px',
+    height: '65%',
 
-    borderRadius: '0px 5px 5px 0px'
+    margin: '0 0 0 8px',
+    borderRadius: '5px'
   },
 
   container: {
