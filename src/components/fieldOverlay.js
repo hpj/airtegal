@@ -225,7 +225,11 @@ class FieldOverlay extends React.Component
                   {
                     let owner;
 
-                    if (i === 0 && entry.id && entryIndex > 0)
+                    // TODO make server cache a username even of the player left
+                    // a better way would be to keep the playerProperties even if player leaves
+                    // and jus splice them from the players array
+                    // keep in mind that this change must not break the joining/creating rooms
+                    if (i === 0 && entry.id && entryIndex > 0 && this.state.playerProperties[entry.id])
                       owner = this.state.playerProperties[entry.id].username;
 
                     const onMouseEnter = () =>
