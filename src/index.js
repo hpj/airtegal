@@ -58,10 +58,19 @@ function registerServiceWorker()
   }
 }
 
+function getAllowAPIRoutes()
+{
+  const params = new URL(document.URL).searchParams;
+
+  return (params && params.get('secret') === process.env.KBF_API_KEY);
+}
+
 /** when all required assets are loaded
 */
 function loaded()
 {
+  const allowAPIRoutes = getAllowAPIRoutes();
+
   const pages =
     <BrowserRouter>
       <Switch>
@@ -69,7 +78,7 @@ function loaded()
       
         <Route path="/play" component={ Game }/>
 
-        <Route path="/picture" component={ Picture }/>
+        <Route path="/picture" component={ (allowAPIRoutes) ? Picture : NotFound }/>
         
         <Route path="/terms" component={ TermsAndConditions }/>
         <Route path="/privacy" component={ PrivacyPolicy }/>

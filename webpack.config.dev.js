@@ -1,6 +1,8 @@
+const { DefinePlugin } = require('webpack');
+
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
-module.exports = {
+module.exports = (env) => ({
   devtool: 'source-map',
   entry: './src/index.js',
   module: {
@@ -16,7 +18,13 @@ module.exports = {
     extensions: [ '*', '.js', '.jsx' ]
   },
   plugins: [
+    new DefinePlugin({
+      'process.env.KBF_API_KEY': env.KBF_API_KEY,
+      'process.env.HOST': env.HOST,
+      'process.env.PORT': env.PORT
+    }),
     new BrowserSyncPlugin({
+      notify: false,
       open: false,
       port: 8081,
       ghostMode: false,
@@ -33,4 +41,4 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   }
-};
+});

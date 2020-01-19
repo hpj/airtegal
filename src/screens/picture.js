@@ -6,7 +6,6 @@ import Card from '../components/card.js';
 
 const Picture = () =>
 {
-  
   const params = new URL(document.URL).searchParams;
   
   if (params && params.get('data'))

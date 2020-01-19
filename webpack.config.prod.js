@@ -1,3 +1,5 @@
+const { DefinePlugin } = require('webpack');
+
 const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
@@ -15,6 +17,9 @@ module.exports = {
     extensions: [ '*', '.js', '.jsx' ]
   },
   plugins: [
+    new DefinePlugin({
+      'process.env.KBF_API_KEY': process.env.KBF_API_KEY
+    }),
     new CompressionPlugin({
       filename: '[path].gz[query]',
       algorithm: 'gzip',
