@@ -61,10 +61,7 @@ function registerServiceWorker()
 function getAllowAPIRoutes()
 {
   const params = new URL(document.URL).searchParams;
-
-  if (params)
-    console.log(params.get('secret'));
-
+  
   return (params && params.get('secret') === process.env.KBF_API_KEY);
 }
 
