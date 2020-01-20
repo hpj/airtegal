@@ -16,7 +16,7 @@ import { createStyle } from '../flcss.js';
 import Notifications from './notifications.js';
 
 import TrackBar from './roomTrackBar.js';
-import Counter from './roomCounter.js';
+import Status from './roomStatus.js';
 
 import RoomOptions from './roomOptions.js';
 
@@ -298,11 +298,9 @@ class RoomOverlay extends React.Component
       remove: this.removeNotification
     };
    
-    const notifications = this.state.notifications;
+    this.state.notifications.push(item);
    
-    notifications.push(item);
-   
-    this.setState({ notifications: notifications });
+    this.setState({ notifications: this.state.notifications });
 
     // by doing this it makes sure that all the notifications are cleared at once
     // which is more pleasant to the human eye
@@ -427,7 +425,6 @@ class RoomOverlay extends React.Component
             right: size.width
           } }
         >
-
           <div className={ styles.wrapper }>
             <div className={ styles.handlerWrapper }>
               <div className={ styles.handler }/>
@@ -435,7 +432,7 @@ class RoomOverlay extends React.Component
 
             <div className={ styles.container }>
 
-              <Counter addNotification={ this.addNotification }/>
+              <Status addNotification={ this.addNotification }/>
 
               {/* this instance of trackBar is always enabled on
               non-touch screens or on touch screens in landscape mode */}
@@ -470,7 +467,6 @@ class RoomOverlay extends React.Component
             </div>
 
           </div>
-        
         </Interactable.View>
 
       </div>

@@ -5,8 +5,7 @@ import RefreshIcon from 'mdi-react/RefreshIcon';
 
 import autoSizeInput from 'autosize-input';
 
-// eslint-disable-next-line no-unused-vars
-import io, { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 
 import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
@@ -31,7 +30,7 @@ const colors = getTheme();
 const inputRef = createRef();
 const overlayRef = createRef();
 
-/** @type { Socket }
+/** @type { import('socket.io').Socket }
 */
 export let socket;
 

@@ -14,7 +14,7 @@ UI/UX:
 
   ☐ design the mockups for the proposal and vote screen
 
-  ☐ animations for cards appearing and disappearing from field @low
+  ☐ animations for cards appearing and disappearing from field
 
   ☐ design the 404 page
 
@@ -23,9 +23,9 @@ UI/UX:
   ☐ handle 'online' event
 
   Homepage:
-    ☐ showcase handle black cards with pick > 1 @low
+    ☐ showcase handle black cards with (pick > 1)
 
   Lobby:
-    ☐ find a better way to show the install prompt @low
+    ☐ find a better way to show the install prompt
             
 CI/CD:

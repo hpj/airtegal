@@ -15,7 +15,7 @@ import { createStyle } from '../flcss.js';
 
 const colors = getTheme();
 
-class Trackbar extends React.Component
+class Status extends React.Component
 {
   constructor()
   {
@@ -142,7 +142,7 @@ class Trackbar extends React.Component
   }
 }
 
-Trackbar.propTypes = {
+Status.propTypes = {
   addNotification: PropTypes.func.isRequired
 };
 
@@ -219,4 +219,4 @@ const styles = createStyle({
   }
 });
 
-export default Trackbar;
+export default Status;

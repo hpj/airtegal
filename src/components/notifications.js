@@ -25,11 +25,9 @@ const Notifications = ({ notifications }) =>
     {
       transitions.map(({ item, key, props }) =>
       {
-        const additionalStyles = { zIndex: key };
-        
         return <animated.div
           key={ key }
-          style={ { ...props, ...additionalStyles } }
+          style={ props }
           className={ styles.notification }
           onClick={ item.remove }
         >
@@ -58,21 +56,15 @@ const styles = createStyle({
     maxWidth: '100%',
     maxHeight: '100%',
 
-    margin: '0 0 0 calc(15vw + 18px)',
-
-    width: 'calc(100% - (15vw + 18px))',
+    width: 'calc(100% - 15vw)',
     height: 'auto',
-
+    
+    margin: '0 0 0 15vw',
+    
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      display: 'grid',
-
-      gridTemplateAreas: '"notification"',
-
-      width: '100vw',
-      height: '20vh',
-      
-      margin: '0'
+      width: '100%',
+      margin: 0
     }
   },
 
@@ -95,26 +87,7 @@ const styles = createStyle({
     borderRadius: '5px',
 
     padding: '10px',
-    margin: '15px auto',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      gridArea: 'notification',
-
-      display: 'flex',
-      
-      justifyContent: 'center',
-      alignItems: 'center',
-
-      fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-
-      maxWidth: '95%',
-      width: '95%',
-      height: '95%',
-
-      padding: 0,
-      margin: '10px auto 0 auto'
-    }
+    margin: '15px auto'
   }
 });
 
