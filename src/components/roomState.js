@@ -156,13 +156,11 @@ const styles = createStyle({
 
     backgroundColor: colors.trackBarBackground,
 
-    width: '100%',
-
-    padding: '10px 0',
+    padding: '10px',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      padding: '0'
+      padding: '10px 15px'
     }
   },
 
@@ -180,15 +178,7 @@ const styles = createStyle({
     color: colors.blackText,
     
     fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
-    width: '100%',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      padding: '10px 15px',
-      width: 'calc(100% - 30px)'
-    }
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   id: {
