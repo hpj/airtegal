@@ -85,9 +85,44 @@ class RoomState extends React.Component
       }
     }
 
+    // if lobby clear match state
+    if (roomData.state === 'lobby')
+    {
+      this.setState({
+        matchState: undefined
+      });
+    }
+    
+    let matchState = this.state.matchState;
+
+    if (roomData.reason.message === 'choosing-phase')
+    {
+      if (roomData.judge)
+        matchState = i18n('you-are-the-judge');
+      else
+        matchState = i18n('choosing-phase');
+    }
+    else if (roomData.reason.message === 'judging-phase')
+    {
+      if (roomData.judge)
+        matchState = i18n('judging-phase');
+      else
+        matchState = i18n('wait-for-the-judge');
+    }
+    else if (roomData.reason.message === 'round-ended' && typeof roomData.reason.details === 'number')
+    {
+      const winnerEntry = roomData.field[roomData.reason.details];
+
+      if (winnerEntry.id === socket.id)
+        matchState = i18n('you-won-the-round');
+      else
+        matchState = i18n('won-this-round', roomData.playerProperties[winnerEntry.id].username);
+    }
+
     this.setState({
       roomId: roomData.id,
-      roomState: roomData.state
+      roomState: roomData.state,
+      matchState
     });
   }
 
@@ -130,7 +165,7 @@ class RoomState extends React.Component
         {
           (isMatch) ?
             <div match='true' className={ styles.container }>
-              <div match='true' className={ styles.state }>{ '' }</div>
+              <div match='true' className={ styles.state }>{ this.state.matchState }</div>
 
               <div className={ styles.counter }>{ this.state.counter }</div>
             </div>
@@ -222,7 +257,6 @@ const styles = createStyle({
     gridArea: 'counter',
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
 
-    whiteSpace: 'pre',
     margin: 'auto 0'
   },
 

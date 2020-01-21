@@ -355,7 +355,7 @@ class Game extends React.Component
               maxLength='18'
               ref={ inputRef }
               className={ headerStyles.username }
-              placeholder={ i18n('username-input') }
+              placeholder={ i18n('username-placeholder') }
               value={ this.state.username }
               onBlur={ this.usernameBlurEvent }
               onChange={ this.usernameChangeEvent }

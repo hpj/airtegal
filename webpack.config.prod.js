@@ -10,6 +10,11 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: [ 'babel-loader' ]
+      },
+      {
+        test: /\.json$/,
+        use: 'json5-loader',
+        type: 'javascript/auto'
       }
     ]
   },

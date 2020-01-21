@@ -33,9 +33,25 @@ function getDefault()
     return locales[0];
 }
 
-export default function i18n(key)
+/**
+* @param { string } key
+* @param { string[] } args
+* @returns { string }
+*/
+export default function i18n(key, ...args)
 {
+  args = args || [];
+
   if (locale)
+  {
+    /**
+    * @type { string }
+    */
     // eslint-disable-next-line security/detect-object-injection
-    return locale.json[key];
+    let value = locale.json[key];
+
+    args.forEach((s, i) => value = value.replace(`%${i}`, s));
+
+    return value;
+  }
 }
