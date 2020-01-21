@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 import CopyIcon from 'mdi-react/ContentCopyIcon';
 
-import i18n from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -15,7 +15,7 @@ import { createStyle } from '../flcss.js';
 
 const colors = getTheme();
 
-class Status extends React.Component
+class RoomState extends React.Component
 {
   constructor()
   {
@@ -38,6 +38,9 @@ class Status extends React.Component
 
   componentWillUnmount()
   {
+    if (this.countdownInterval)
+      clearInterval(this.countdownInterval);
+
     socket.off('roomData', this.onRoomData);
   }
 
@@ -125,31 +128,31 @@ class Status extends React.Component
     return (
       <div className={ styles.wrapper }>
         <div className={ styles.container }>
-
           {
             // share the room
-            (navigator.share) ? <ShareIcon icon='true' className={ styles.id } match={ isMatch.toString() } onClick={ this.shareRoomURL }/> :
+            (!isMatch && navigator.share) ? <ShareIcon icon='true' className={ styles.id } onClick={ this.shareRoomURL }/> :
               // copy the room's id
-              (navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } match={ isMatch.toString() } onClick={ this.copyRoomURL }/> :
+              (!isMatch && navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } onClick={ this.copyRoomURL }/> :
                 // just show the room's id
-                <div className={ styles.id } match={ isMatch.toString() } >{ this.state.roomId }</div>
+                (!isMatch) ? <div className={ styles.id }>{ this.state.roomId }</div> :
+                  // TODO show status of round
+                  <div className={ styles.status }>{ '' }</div>
           }
 
-          <div className={ styles.status }>{ this.state.counter }</div>
+          <div match={ isMatch.toString() } className={ (isMatch) ? styles.counter : styles.status }>{ this.state.counter }</div>
         </div>
       </div>
     );
   }
 }
 
-Status.propTypes = {
+RoomState.propTypes = {
   addNotification: PropTypes.func.isRequired
 };
 
 const styles = createStyle({
   wrapper: {
     zIndex: 3,
-    gridArea: 'counter',
 
     backgroundColor: colors.trackBarBackground,
 
@@ -167,10 +170,12 @@ const styles = createStyle({
     display: 'grid',
     position: 'relative',
 
-    gridAutoColumns: 'auto 1fr',
-    gridTemplateAreas: '"id status"',
+    gridAutoColumns: '1fr auto',
+    gridTemplateAreas: '"status counter"',
 
     userSelect: 'none',
+
+    direction: locale.direction,
 
     color: colors.blackText,
     
@@ -187,7 +192,7 @@ const styles = createStyle({
   },
 
   id: {
-    gridArea: 'id',
+    gridArea: 'counter',
 
     cursor: 'text',
     userSelect: 'all',
@@ -195,10 +200,6 @@ const styles = createStyle({
     textTransform: 'uppercase',
 
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-
-    '[match="true"]': {
-      display: 'none'
-    },
 
     '[icon="true"]': {
       cursor: 'pointer',
@@ -209,14 +210,21 @@ const styles = createStyle({
     }
   },
 
+  counter: {
+    gridArea: 'counter',
+
+    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
+    whiteSpace: 'pre'
+  },
+
   status: {
     gridArea: 'status',
-    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-    
     whiteSpace: 'pre',
 
-    margin: '0 10px 0 auto'
+    '[match="false"]': {
+      fontSize: 'calc(8px + 0.5vw + 0.5vh)'
+    }
   }
 });
 
-export default Status;
+export default RoomState;

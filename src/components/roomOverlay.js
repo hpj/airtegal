@@ -15,8 +15,8 @@ import { createStyle } from '../flcss.js';
 
 import Notifications from './notifications.js';
 
-import TrackBar from './roomTrackBar.js';
-import Status from './roomStatus.js';
+import RoomTrackBar from './roomTrackBar.js';
+import RoomState from './roomState.js';
 
 import RoomOptions from './roomOptions.js';
 
@@ -132,14 +132,8 @@ class RoomOverlay extends React.Component
         optionsRef.current.scrollTo({ top: 0 });
     }
     
-    if (roomData.roundStarted)
-    {
-      // this client is the judge for this round
-      if (roomData.roundStarted.judgeId === socket.id)
-        this.addNotification(i18n('you-are-the-judge'));
-    }
     // show that the round ended
-    else if (roomData.roundEnded)
+    if (roomData.roundEnded)
     {
       if (roomData.roundEnded.reason)
         this.addNotification(i18n(roomData.roundEnded.reason) || roomData.roundEnded.reason);
@@ -432,11 +426,11 @@ class RoomOverlay extends React.Component
 
             <div className={ styles.container }>
 
-              <Status addNotification={ this.addNotification }/>
+              <RoomState addNotification={ this.addNotification }/>
 
               {/* this instance of trackBar is always enabled on
               non-touch screens or on touch screens in landscape mode */}
-              <TrackBar
+              <RoomTrackBar
                 enabled={ (!isTouchScreen || size.width >= 1080).toString() }
               />
 
@@ -458,7 +452,7 @@ class RoomOverlay extends React.Component
                     <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
                   </div>
 
-                  <TrackBar contained
+                  <RoomTrackBar contained
                     enabled={ (isTouchScreen && size.width < 1080).toString() }
                   />
 

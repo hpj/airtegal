@@ -12,7 +12,7 @@ import { createStyle } from '../flcss.js';
 
 const colors = getTheme();
 
-class TrackBar extends React.Component
+class RoomTrackBar extends React.Component
 {
   constructor()
   {
@@ -89,7 +89,7 @@ class TrackBar extends React.Component
   }
 }
 
-TrackBar.propTypes = {
+RoomTrackBar.propTypes = {
   contained: PropTypes.bool,
   enabled: PropTypes.string
 };
@@ -249,4 +249,4 @@ const styles = createStyle({
   }
 });
 
-export default TrackBar;
+export default RoomTrackBar;

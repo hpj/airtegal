@@ -15,7 +15,7 @@ import { createStyle } from '../flcss.js';
 
 import { gestures } from './fieldOverlay.js';
 
-import TrackBar from './roomTrackBar.js';
+import RoomTrackBar from './roomTrackBar.js';
 
 const colors = getTheme();
 
@@ -145,7 +145,7 @@ class PocketOverlay extends React.Component
           </div>
 
           <div style={ { display: (this.state.overlayHidden) ? 'none' : '' } } className={ styles.container }>
-            <TrackBar contained enabled='true'/>
+            <RoomTrackBar contained enabled='true'/>
           </div>
         </Interactable.View>
       </div>
