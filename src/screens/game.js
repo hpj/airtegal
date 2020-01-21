@@ -65,7 +65,7 @@ function connect()
       {
         socket.close();
 
-        errorScreen(i18n('server-unavailable'));
+        errorScreen(i18n('you-were-disconnected'));
 
         reject();
       });
