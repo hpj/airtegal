@@ -133,20 +133,20 @@ class RoomOverlay extends React.Component
     }
     
     // show that the round ended
-    if (roomData.roundEnded)
+    if (roomData.reason.message === 'round-ended')
     {
-      if (roomData.roundEnded.reason)
-        this.addNotification(i18n(roomData.roundEnded.reason) || roomData.roundEnded.reason);
+      if (typeof roomData.reason.details === 'string')
+        this.addNotification(i18n(roomData.reason.details) || roomData.reason.details);
     }
     // show that the match ended
-    else if (roomData.matchEnded)
+    else if (roomData.reason.message === 'match-ended')
     {
-      if (roomData.matchEnded.reason)
-        this.addNotification(i18n(roomData.matchEnded.reason) || roomData.matchEnded.reason);
-      else if (roomData.matchEnded.id === socket.id)
+      if (roomData.reason.details === socket.id)
         this.addNotification(i18n('you-won'));
-      else if (roomData.playerProperties[roomData.matchEnded.id])
-        this.addNotification(`${i18n('match-winner-is')} ${roomData.playerProperties[roomData.matchEnded.id].username}.`);
+      else if (roomData.playerProperties[roomData.reason.details])
+        this.addNotification(`${i18n('match-winner-is')} ${roomData.playerProperties[roomData.reason.details].username}.`);
+      else
+        this.addNotification(i18n(roomData.reason.details) || roomData.reason.details);
     }
 
     this.setState({

@@ -120,7 +120,7 @@ class HandOverlay extends React.Component
       });
     }
 
-    if (roomData.roundStarted)
+    if (roomData.reason.message === 'round-started')
     {
       this.setState({
         hoverIndex: undefined,
@@ -143,12 +143,12 @@ class HandOverlay extends React.Component
       this.visibility(false);
     }
 
+    // FIX compare it to how field updates
     // if the player has a secret properties object in the data
     // and it has the hand data for this client
     if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
     {
       this.setState({
-        playerState: roomData.playerProperties[socket.id].state,
         hand: roomData.playerSecretProperties.hand
       });
     }
@@ -162,7 +162,8 @@ class HandOverlay extends React.Component
     }
     
     this.setState({
-      roomState: roomData.state
+      roomState: roomData.state,
+      playerState: roomData.playerProperties[socket.id].state
     });
   }
 

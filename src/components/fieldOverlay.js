@@ -110,10 +110,17 @@ class FieldOverlay extends React.Component
       });
     }
 
-    if (roomData.roundEnded)
+    if (roomData.reason.message === 'round-ended')
     {
       this.setState({
-        hoverIndex: undefined
+        hoverIndex: undefined,
+        winnerEntryIndex: (typeof roomData.reason.details === 'number') ? roomData.reason.details : undefined
+      });
+    }
+    else
+    {
+      this.setState({
+        winnerEntryIndex: undefined
       });
     }
 
@@ -142,7 +149,6 @@ class FieldOverlay extends React.Component
     }
     
     this.setState({
-      winnerEntryIndex: (roomData.roundEnded) ? roomData.roundEnded.winnerEntryIndex : undefined,
       playerState: roomData.playerProperties[socket.id].state,
       playerProperties: roomData.playerProperties
     });
