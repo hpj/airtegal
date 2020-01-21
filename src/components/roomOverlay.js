@@ -501,13 +501,15 @@ const styles = createStyle({
 
     gridTemplateColumns: '15vw 1fr',
     gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"counter content" "trackBar content"',
+    gridTemplateAreas: '"state content" "trackBar content"',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       gridTemplateColumns: '100%',
+      gridRowGap: '5px',
+
       gridTemplateRows: 'auto auto 1fr',
-      gridTemplateAreas: '"counter" "trackBar" "content"'
+      gridTemplateAreas: '"state" "trackBar" "content"'
     }
   },
 

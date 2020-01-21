@@ -127,20 +127,27 @@ class RoomState extends React.Component
 
     return (
       <div className={ styles.wrapper }>
-        <div className={ styles.container }>
-          {
-            // share the room
-            (!isMatch && navigator.share) ? <ShareIcon icon='true' className={ styles.id } onClick={ this.shareRoomURL }/> :
-              // copy the room's id
-              (!isMatch && navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } onClick={ this.copyRoomURL }/> :
-                // just show the room's id
-                (!isMatch) ? <div className={ styles.id }>{ this.state.roomId }</div> :
-                  // TODO show status of round
-                  <div className={ styles.status }>{ '' }</div>
-          }
+        {
+          (isMatch) ?
+            <div match='true' className={ styles.container }>
+              <div match='true' className={ styles.state }>{ '' }</div>
 
-          <div match={ isMatch.toString() } className={ (isMatch) ? styles.counter : styles.status }>{ this.state.counter }</div>
-        </div>
+              <div className={ styles.counter }>{ this.state.counter }</div>
+            </div>
+            :
+            <div match='false' className={ styles.container }>
+              <div match='false' className={ styles.state }>{ this.state.counter }</div>
+
+              {
+              // share the room
+                (navigator.share) ? <ShareIcon icon='true' className={ styles.id } onClick={ this.shareRoomURL }/> :
+                // copy the room's id
+                  (navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } onClick={ this.copyRoomURL }/> :
+                  // just show the room's id
+                    <div className={ styles.id }>{ this.state.roomId }</div>
+              }
+            </div>
+        }
       </div>
     );
   }
@@ -153,6 +160,7 @@ RoomState.propTypes = {
 const styles = createStyle({
   wrapper: {
     zIndex: 3,
+    gridArea: 'state',
 
     backgroundColor: colors.trackBarBackground,
 
@@ -166,10 +174,8 @@ const styles = createStyle({
 
   container: {
     display: 'grid',
-    position: 'relative',
-
-    gridAutoColumns: '1fr auto',
-    gridTemplateAreas: '"status counter"',
+    gridTemplateAreas: '"counter" "state"',
+    gridRowGap: '10px',
 
     userSelect: 'none',
 
@@ -178,18 +184,30 @@ const styles = createStyle({
     color: colors.blackText,
     
     fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    '[match="false"]': {
+      gridAutoColumns: '1fr auto',
+      gridTemplateAreas: '"state counter"',
+      gridColumnGap: '10px'
+    },
+
+    // for the portrait overlay
+    '@media screen and (max-width: 1080px)': {
+      gridAutoColumns: '1fr auto',
+      gridTemplateAreas: '"state counter"',
+      gridColumnGap: '10px'
+    }
   },
 
   id: {
-    gridArea: 'counter',
-
     cursor: 'text',
     userSelect: 'all',
 
     textTransform: 'uppercase',
-
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
+
+    margin: 'auto 0',
 
     '[icon="true"]': {
       cursor: 'pointer',
@@ -202,17 +220,48 @@ const styles = createStyle({
 
   counter: {
     gridArea: 'counter',
-
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-    whiteSpace: 'pre'
+
+    whiteSpace: 'pre',
+    margin: 'auto 0'
   },
 
-  status: {
-    gridArea: 'status',
-    whiteSpace: 'pre',
+  state: {
+    gridArea: 'state',
 
+    maxHeight: '150px',
+
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    
     '[match="false"]': {
       fontSize: 'calc(8px + 0.5vw + 0.5vh)'
+    },
+    
+    '[match="true"]': {
+      textAlign: 'center'
+    },
+
+    '@media screen and (max-width: 1080px)': {
+      whiteSpace: 'nowrap',
+
+      overflowY: 'hidden',
+      textOverflow: 'ellipsis',
+
+      '[match="true"]': {
+        textAlign: 'unset'
+      }
+    },
+
+    '::-webkit-scrollbar':
+    {
+      width: '8px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '8px',
+      boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
     }
   }
 });

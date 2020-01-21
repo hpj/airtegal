@@ -100,15 +100,8 @@ const styles = createStyle({
     gridArea: 'trackBar',
 
     backgroundColor: colors.trackBarBackground,
-
-    width: '100%',
-
-    padding: '10px 0',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      padding: '0'
-    },
+    
+    overflow: 'hidden',
 
     '[enabled="false"]': {
       display: 'none'
