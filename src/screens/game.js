@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
 
+import Brightness2Icon from 'mdi-react/Brightness2Icon';
+import Brightness5Icon from 'mdi-react/Brightness5Icon';
+
 import autoSizeInput from 'autosize-input';
 
 import io from 'socket.io-client';
 
 import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
-import getTheme from '../colors.js';
+import getTheme, { detectDeviceIsDark } from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
 
@@ -105,7 +108,7 @@ class Game extends React.Component
     this.state = {
       loadingHidden: true,
       errorMessage: '',
-        
+
       // load user preference or use default
       username: localStorage.getItem('username') || stupidNames(),
       size: {},
@@ -119,7 +122,8 @@ class Game extends React.Component
 
     this.usernameBlurEvent = this.usernameBlurEvent.bind(this);
     this.usernameChangeEvent = this.usernameChangeEvent.bind(this);
-
+    
+    this.switchTheme = this.switchTheme.bind(this);
     this.requestRooms = this.requestRooms.bind(this);
 
     // set the title of this screen
@@ -331,6 +335,18 @@ class Game extends React.Component
     this.setState({ loadingHidden: visible = !visible });
   }
 
+  switchTheme()
+  {
+    // reverse current setting
+    if (detectDeviceIsDark())
+      localStorage.setItem('forceDark', 'false');
+    else
+      localStorage.setItem('forceDark', 'true');
+
+    // refresh page
+    location.reload();
+  }
+
   render()
   {
     return (
@@ -378,8 +394,17 @@ class Game extends React.Component
 
           <div className={ roomsStyles.container }>
 
-            <p className={ roomsStyles.title }> { i18n('available-rooms') } </p>
+            <div className={ roomsStyles.title }> { i18n('available-rooms') }</div>
+
             <RefreshIcon allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms } className={ roomsStyles.refresh }/>
+
+            {
+              (process.env.PREVIEW) ?
+                (detectDeviceIsDark()) ?
+                  <Brightness2Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/> :
+                  <Brightness5Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/> :
+                <div/>
+            }
 
             <div className={ roomsStyles.roomsWrapper }>
               <div style={ {
@@ -579,11 +604,13 @@ const optionsStyles = createStyle({
 const roomsStyles = createStyle({
   container: {
     gridArea: 'rooms',
-
     display: 'grid',
-    gridTemplateColumns: '1fr auto',
+
+    gridTemplateColumns: '1fr auto auto',
     gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"title refresh" "rooms rooms"',
+    gridTemplateAreas: '"title theme refresh" "rooms rooms rooms"',
+
+    gridColumnGap: '15px',
 
     direction: locale.direction,
     
@@ -621,6 +648,34 @@ const roomsStyles = createStyle({
       pointerEvents: 'none',
       fill: colors.greyText
     },
+
+    ':hover': {
+      fill: colors.whiteText,
+      backgroundColor: colors.blackBackground,
+
+      transform: 'rotateZ(22deg)'
+    },
+
+    ':active': {
+      transform: 'scale(0.95) rotateZ(22deg)'
+    }
+  },
+
+  theme: {
+    gridArea: 'theme',
+
+    width: 'calc(12px + 0.55vw + 0.55vh)',
+    height: 'calc(12px + 0.55vw + 0.55vh)',
+
+    fill: colors.blackText,
+    backgroundColor: colors.whiteBackground,
+
+    cursor: 'pointer',
+    padding: '5px',
+    borderRadius: '50%',
+
+    transform: 'rotateZ(0deg) scale(1)',
+    transition: 'transform 0.25s, background-color 0.25s, fill 0.25s',
 
     ':hover': {
       fill: colors.whiteText,

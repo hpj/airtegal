@@ -1,6 +1,16 @@
+February Update Checklist:
+  ☐ unit test every single new backend feature
+  
+  ☐ schedule a discord party event
+
+  ☐ remove update flag from website (process.env.PREVIEW)
+  
+  ☐ activate new card packs in database
+
 Performance Issues and Bugs:
 
 Testing:
+  ☐ dark mode @feature-update
 
 Features:
 

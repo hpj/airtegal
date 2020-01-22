@@ -1,11 +1,9 @@
-const browserMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
 /**
-* @param { boolean } forceMain
+* @param { boolean } forceLight
 */
-export default function(forceMain)
+export default function(forceLight)
 {
-  const dark = !forceMain && browserMode && false;
+  const dark = !forceLight && detectDeviceIsDark();
 
   const lightTheme = {
     theme: 'light',
@@ -112,4 +110,15 @@ export default function(forceMain)
   };
 
   return (dark) ? darkTheme : lightTheme;
+}
+
+export function detectDeviceIsDark()
+{
+  if (!process.env.PREVIEW)
+    return false;
+
+  if (localStorage.getItem('forceDark') === 'true')
+    return true;
+  else
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 }

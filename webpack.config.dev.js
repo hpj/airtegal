@@ -25,6 +25,7 @@ module.exports = (env) => ({
   plugins: [
     new DefinePlugin({
       'process.env.KBF_API_KEY': env.KBF_API_KEY,
+      'process.env.PREVIEW': true,
       'process.env.HOST': env.HOST,
       'process.env.PORT': env.PORT
     }),
