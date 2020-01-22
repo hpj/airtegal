@@ -10,11 +10,12 @@ February Update Checklist:
 Performance Issues and Bugs:
 
 Testing:
-  ☐ dark mode @feature-update
-
-Features:
-
+  
+  Features:
+    
 UI/UX:
+  ✔ dark mode @feature-update @done(20-01-22 12:52)
+
   ☐ sharing the winning card of the round on social media @feature-update
 
   ☐ match end screen @feature-update 

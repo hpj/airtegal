@@ -132,6 +132,9 @@ class RoomState extends React.Component
       title: 'Kuruit Bedan Fash5',
       text: i18n('join-me'),
       url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomId}`
+    }).catch(() =>
+    {
+      //
     });
   }
 
