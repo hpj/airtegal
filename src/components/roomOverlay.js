@@ -342,10 +342,7 @@ class RoomOverlay extends React.Component
 
     overlayAnimatedX.addListener(({ value }) =>
     {
-      // (size.width * 2) doubles the width to make the max number 0.5
-      // instead of 1 because 1 is a complete black background
-      // (0.5 - $) reverses the number to make far left 0 and far right 0.5
-      this.setState({ overlayHolderOpacity: 0.5 - (value / (size.width * 2)) });
+      this.setState({ overlayHolderOpacity: 0.5 - (Math.round(value) / (size.width * 2)) });
 
       // hide the overlay and overlay holder when they are off-screen
       // (-5px is to make sure that the overlay is hidden even if tit ends up few pixels off from where it should of been)
@@ -552,7 +549,7 @@ const styles = createStyle({
   holder: {
     position: 'fixed',
     
-    backgroundColor: colors.blackBackground,
+    backgroundColor: colors.holder,
 
     top: 0,
     width: '100vw',

@@ -794,11 +794,11 @@ const roomsStyles = createStyle({
     borderRadius: '10px',
 
     ':hover': {
-      opacity: 0.85
+      opacity: '0.75'
     },
 
     ':active': {
-      opacity: 0.7
+      transform: 'scale(0.95)'
     }
   },
 

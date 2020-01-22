@@ -7,6 +7,8 @@ export default function(forceLight)
 
   const lightTheme = {
     theme: 'light',
+    
+    holder: '#000000',
 
     whiteText: '#ffffff',
     whiteBackground: '#ffffff',
@@ -69,34 +71,39 @@ export default function(forceLight)
 
     theme: 'dark',
 
+    holder: '#696060',
+
     whiteText: '#ffffff',
-    whiteBackground: '#000000',
+    whiteBackground: '#211f1f',
 
     blackBackground: '#313131',
     blackText: '#c3c3c3',
 
-    roomBackground: '#3e3e3e',
+    roomBackground: '#151414',
     roomForeground: '#ffffff',
 
-    trackBarBackground: '#191818',
+    trackBarBackground: '#211f1f',
     trackBarScrollbar: '#c3c3c3',
 
     optionsScrollbar: '#3d3a3a',
 
-    fieldBackground: '#000000',
-    fieldScrollbar: '#ffffff',
+    fieldBackground: '#191818',
+    fieldScrollbar: '#c3c3c3',
 
     handBackground: '#292929',
     handScrollbar: '#867878',
 
-    blackCardBackground: '#272727',
-    blackCardForeground: '#ffffff',
+    whiteCardBackground: '#484646',
+    whiteCardForeground: '#e2e1e1',
+    whiteCardPicked: '#101010',
 
     client: '#ffffff',
 
     error: '#710c0c',
 
-    entryLine: '#696060'
+    entryLine: '#696060',
+
+    red: '#9c0202'
 
     // accentColor: '#4d4949',
    
@@ -119,6 +126,8 @@ export function detectDeviceIsDark()
 
   if (localStorage.getItem('forceDark') === 'true')
     return true;
+  else if (localStorage.getItem('forceDark') === 'false')
+    return false;
   else
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
