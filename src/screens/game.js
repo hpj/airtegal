@@ -213,7 +213,7 @@ class Game extends React.Component
     // show a loading indictor
     this.loadingVisibility(true);
 
-    this.sendMessage('rooms', { region: locale.value })
+    this.sendMessage('list', { region: locale.value })
       .then((rooms) =>
       {
         // hide the loading indictor
