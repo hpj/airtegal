@@ -186,14 +186,6 @@ const connectivityPromise = new Promise((resolve, reject) =>
   }
   else
   {
-    // show offline page if user goes offline anytime later
-    window.addEventListener('offline', () =>
-    {
-      ReactDOM.unmountComponentAtNode(app);
-      
-      ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
-    });
-
     resolve();
   }
 });

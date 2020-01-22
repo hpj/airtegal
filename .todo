@@ -1,5 +1,7 @@
 February Update Checklist:
   ☐ unit test every single new backend feature
+
+  ☐ release app on google play store
   
   ☐ schedule a discord party event
 
@@ -31,7 +33,7 @@ UI/UX:
 
   ☐ design the Offline mini-game
 
-  ☐ handle 'online' event
+  ☐ handle 'online' / 'offline event
 
   Homepage:
     ☐ showcase handle black cards with (pick > 1)
