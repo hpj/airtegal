@@ -506,7 +506,6 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       gridTemplateColumns: '100%',
-      gridRowGap: '5px',
 
       gridTemplateRows: 'auto auto 1fr',
       gridTemplateAreas: '"state" "trackBar" "content"'
