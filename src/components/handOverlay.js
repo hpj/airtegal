@@ -180,12 +180,6 @@ class HandOverlay extends React.Component
   {
     this.setState({
       snapIndex: e.index
-    }, () =>
-    {
-      if (isTouchScreen)
-      {
-        requestAnimationFrame(() => wrapperRef.current.scrollTo({ top: 0 }));
-      }
     });
   }
 
