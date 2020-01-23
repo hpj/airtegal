@@ -23,6 +23,7 @@ module.exports = {
   },
   plugins: [
     new DefinePlugin({
+      'process.env.API_ENDPOINT': process.env.API_ENDPOINT,
       'process.env.KBF_API_KEY': process.env.KBF_API_KEY
     }),
     new CompressionPlugin({

@@ -10,7 +10,7 @@ import autoSizeInput from 'autosize-input';
 
 import io from 'socket.io-client';
 
-import { API_ENDPOINT, holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
+import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
 import getTheme, { detectDeviceIsDark } from '../colors.js';
 
@@ -54,7 +54,7 @@ function connect()
   {
     try
     {
-      socket = io(API_ENDPOINT, { path: '/io' });
+      socket = io(process.env.API_ENDPOINT, { path: '/io' });
 
       socket.once('connect', resolve)
         .once('error', (e) =>

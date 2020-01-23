@@ -2,8 +2,6 @@ import React, { createRef } from 'react';
 
 import axios from 'axios';
 
-import { API_ENDPOINT } from '../index.js';
-
 import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
@@ -33,7 +31,7 @@ class CardShowcase extends React.Component
   {
     // request the data from server
     axios({
-      url: `${API_ENDPOINT}/combos?region=${locale.value}`,
+      url: `${process.env.API_ENDPOINT}/combos?region=${locale.value}`,
       timeout: 20000
     }).then((response) =>
     {

@@ -31,7 +31,6 @@ import TermsAndConditions from './screens/useTerms.js';
 import PrivacyPolicy from './screens/privacyPolicy.js';
 
 export let country = '';
-export let API_ENDPOINT = '';
 
 let installPromptEvent;
 
@@ -131,12 +130,6 @@ export function onInstallPrompt(callback)
     window.addEventListener('beforeinstallprompt', (e) => callback(e));
 }
 
-// set the API endpoint
-if (process.env.NODE_ENV === 'production')
-  API_ENDPOINT = 'https://api.bedan.me';
-else
-  API_ENDPOINT = `http://${process.env.HOST}:${process.env.PORT}`;
-
 // register the service worker
 registerServiceWorker();
 
@@ -211,7 +204,7 @@ const ipCheck = new Promise((resolve, reject) =>
   }
 
   axios({
-    url: API_ENDPOINT + '/check',
+    url: `${process.env.API_ENDPOINT}/check`,
     timeout: 20000
   })
     .then((response) =>
