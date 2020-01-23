@@ -18,6 +18,8 @@ import axios from 'axios';
 import Error from './components/error.js';
 import Loading from './components/loading.js';
 
+import TimedBlock from './components/timedBlock.js';
+
 import Offline from './screens/offline.js';
 import NotFound from './screens/404.js';
 
@@ -152,93 +154,119 @@ if (process.env.NODE_ENV === 'production')
 
 // request the promises
 
-const webFontPromise = new Promise((resolve) =>
+const webFontPromise = () =>
 {
-  WebFont.load({
-    active: resolve,
-    inactive: resolve,
-    custom: {
-      families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ],
-      urls: [ '/assets/fonts.css' ]
+  return new Promise((resolve) =>
+  {
+    WebFont.load({
+      active: resolve,
+      inactive: resolve,
+      custom: {
+        families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ],
+        urls: [ '/assets/fonts.css' ]
+      }
+    });
+  });
+};
+
+const connectivityPromise = () =>
+{
+  return new Promise((resolve, reject) =>
+  {
+    if (navigator.onLine === false)
+    {
+      ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
+  
+      // TODO you can handle the user being online again
+      // and suggest to them to go back to playing
+      // equally you can warn the user if they go offline while playing
+      // window.addEventListener('online', on);
+      
+      reject();
+    }
+    else
+    {
+      resolve();
     }
   });
-});
+};
 
-const connectivityPromise = new Promise((resolve, reject) =>
+const ipCheckPromise = () =>
 {
-  if (navigator.onLine === false)
+  return new Promise((resolve, reject) =>
   {
-    ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
-
-    // TODO you can handle the user being online again
-    // and suggest to them to go back to playing
-    // equally you can warn the user if they go offline while playing
-    // window.addEventListener('online', on);
-    
-    reject();
-  }
-  else
-  {
-    resolve();
-  }
-});
-
-const fuckAdBlockPromise = new Promise((resolve, reject) =>
-{
-  if (window.fuckAdBlock && process.env.NODE_ENV === 'production')
-    window.fuckAdBlock.on(true, () => reject(i18n('ad-block-detected'))).on(false, resolve);
-  else
-    resolve();
-});
-
-const ipCheck = new Promise((resolve, reject) =>
-{
-  // bypass check if on a development builds
-  if (process.env.NODE_ENV === 'development')
-  {
-    country = 'Egypt';
-
-    resolve();
-
-    return;
-  }
-
-  axios({
-    url: `${process.env.API_ENDPOINT}/check`,
-    timeout: 20000
-  })
-    .then((response) =>
+    // bypass check if on a development builds
+    if (process.env.NODE_ENV === 'development')
     {
-      if (response.status !== 200)
+      country = 'Egypt';
+  
+      resolve();
+  
+      return;
+    }
+  
+    axios({
+      url: `${process.env.API_ENDPOINT}/check`,
+      timeout: 20000
+    })
+      .then((response) =>
+      {
+        if (response.status !== 200)
+        {
+          country = undefined;
+          
+          reject(i18n(response.data) || response.data);
+        }
+        else
+        {
+          country = response.data.country;
+  
+          // try to set the locale as the country
+          setLocale(country);
+  
+          resolve();
+        }
+      })
+      .catch((e) =>
       {
         country = undefined;
-        
-        reject(i18n(response.data) || response.data);
-      }
-      else
-      {
-        country = response.data.country;
+  
+        if (e.response)
+          reject(i18n(e.response.data.message) || e.response.data.message);
+        else
+          resolve();
+      });
+  });
+};
 
-        // try to set the locale as the country
-        setLocale(country);
-
-        resolve();
-      }
-    })
-    .catch((e) =>
+const fuckAdBlockPromise = () =>
+{
+  return new Promise((resolve) =>
+  {
+    if (process.env.NODE_ENV !== 'production')
     {
-      country = undefined;
+      resolve();
 
-      if (e.response)
-        reject(i18n(e.response.data.message) || e.response.data.message);
-      else
-        resolve();
-    });
-});
+      return;
+    }
+  
+    if (window.fuckAdBlock)
+    {
+      window.fuckAdBlock.on(true, () =>
+      {
+        ReactDOM.render(<TimedBlock resolvePromise={ resolve }/>, placeholder);
+      }).on(false, resolve);
+    }
+    else
+    {
+      ReactDOM.render(<TimedBlock resolvePromise={ resolve }/>, placeholder);
+    }
+  });
+};
 
 // remove the loading screen if all the promises resolve
-Promise.all([ webFontPromise, connectivityPromise, fuckAdBlockPromise, ipCheck ])
-  .then(loaded)
+Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
+  .then(() => fuckAdBlockPromise().then(loaded))
   .catch((e) =>
   {
     ReactDOM.render(<Error error={ e }/>, placeholder);

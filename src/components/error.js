@@ -26,7 +26,7 @@ Error.propTypes = {
 
 const styles = createStyle({
   container: {
-    zIndex: 40,
+    zIndex: 50,
     position: 'absolute',
     display: 'flex',
 
@@ -38,8 +38,10 @@ const styles = createStyle({
 
     direction: locale.direction,
 
-    minWidth: '100vw',
-    minHeight: '100vh'
+    width: 'calc(100vw - 30px)',
+    height: 'calc(100vh - 30px)',
+
+    padding: '15px'
   },
 
   error: {
