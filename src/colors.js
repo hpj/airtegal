@@ -26,6 +26,8 @@ export default function(forceLight)
     roomBackground: '#C4C4C4',
     roomForeground: '#000000',
 
+    pocketHandler: '#ffffff',
+
     trackBarBackground: '#ffffff',
     trackBarScrollbar: '#000000',
    
@@ -76,11 +78,13 @@ export default function(forceLight)
     whiteText: '#ffffff',
     whiteBackground: '#211f1f',
 
-    blackBackground: '#313131',
+    blackBackground: '#101010',
     blackText: '#c3c3c3',
 
-    roomBackground: '#151414',
+    roomBackground: '#3e3d3d',
     roomForeground: '#ffffff',
+
+    pocketHandler: '#867878',
 
     trackBarBackground: '#211f1f',
     trackBarScrollbar: '#c3c3c3',
@@ -103,9 +107,9 @@ export default function(forceLight)
 
     entryLine: '#696060',
 
-    red: '#9c0202'
+    red: '#9c0202',
 
-    // accentColor: '#4d4949',
+    accentColor: '#c3c3c3'
    
     // selectBackground: '#1c1d24',
 

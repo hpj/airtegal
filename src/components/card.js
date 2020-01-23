@@ -130,14 +130,14 @@ const styles = createStyle({
       lineHeight: '135%'
     },
 
-    '[type="white"]': {
-      color: colors.blackText,
-      backgroundColor: colors.whiteBackground
+    '[type="black"]': {
+      color: colors.blackCardForeground,
+      backgroundColor: colors.blackCardBackground
     },
 
-    '[type="black"]': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+    '[type="white"]': {
+      color: colors.whiteCardForeground,
+      backgroundColor: colors.whiteCardBackground
     }
   },
 

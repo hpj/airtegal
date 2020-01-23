@@ -171,7 +171,7 @@ const styles = createStyle({
   },
 
   handler: {
-    backgroundColor: colors.whiteBackground,
+    backgroundColor: colors.pocketHandler,
 
     width: '5px',
     height: '65%',
@@ -181,8 +181,6 @@ const styles = createStyle({
   },
 
   container: {
-    backgroundColor: colors.whiteBackground,
-
     height: '100%',
     width: '100%'
   }
