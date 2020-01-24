@@ -6,8 +6,6 @@ import RefreshIcon from 'mdi-react/RefreshIcon';
 import Brightness2Icon from 'mdi-react/Brightness2Icon';
 import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
-import autoSizeInput from 'autosize-input';
-
 import io from 'socket.io-client';
 
 import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
@@ -17,6 +15,8 @@ import getTheme, { detectDeviceIsDark } from '../colors.js';
 import { createStyle, createAnimation } from '../flcss.js';
 
 import stupidNames from '../stupidNames.js';
+
+import AutoSizeInput from '../components/autoSizeInput.js';
 
 import Error from '../components/error.js';
 import Warning from '../components/warning.js';
@@ -30,7 +30,6 @@ const placeholder = document.body.querySelector('#placeholder');
 
 const colors = getTheme();
 
-const inputRef = createRef();
 const overlayRef = createRef();
 
 /** @type { import('socket.io').Socket }
@@ -120,9 +119,6 @@ class Game extends React.Component
 
     this.resize = this.resize.bind(this);
 
-    this.usernameBlurEvent = this.usernameBlurEvent.bind(this);
-    this.usernameChangeEvent = this.usernameChangeEvent.bind(this);
-    
     this.switchTheme = this.switchTheme.bind(this);
     this.requestRooms = this.requestRooms.bind(this);
 
@@ -293,36 +289,12 @@ class Game extends React.Component
 
   resize()
   {
-    // auto-size the username input-box
-    autoSizeInput(inputRef.current);
-
     this.setState({
       size: {
         width: window.innerWidth,
         height: window.innerHeight
       }
     });
-  }
-
-  usernameChangeEvent()
-  {
-    const username = event.target.value.replace(/\s+/g, ' ');
-
-    this.setState({
-      username: username
-    }, () => autoSizeInput(inputRef.current));
-  }
-
-  usernameBlurEvent()
-  {
-    const username = event.target.value.replace(/\s+/g, ' ').trim();
-
-    this.setState({
-      username: username
-    }, () => autoSizeInput(inputRef.current));
-
-    // save the user preference
-    localStorage.setItem('username', username);
   }
 
   showErrorMessage(err)
@@ -365,16 +337,15 @@ class Game extends React.Component
 
             <p className={ headerStyles.welcome }> { i18n('welcome') } </p>
 
-            <input
+            <AutoSizeInput
+              className={ headerStyles.username }
               required
               type='text'
               maxLength='18'
-              ref={ inputRef }
-              className={ headerStyles.username }
+              preference='username'
               placeholder={ i18n('username-placeholder') }
               value={ this.state.username }
-              onBlur={ this.usernameBlurEvent }
-              onChange={ this.usernameChangeEvent }
+              onUpdate={ (value, resize) => this.setState({ username: value }, resize) }
             />
 
           </div>

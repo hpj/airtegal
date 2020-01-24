@@ -12,22 +12,20 @@ February Update Checklist:
 Performance Issues and Bugs:
 
 Testing:
-
-Features:
     
 UI/UX:
   ✔ dark mode @done(20-01-22 12:52) @feature-update
 
-  ☐ blank card UI (make it a grid to allow multiple cards)
-
   ☐ turn room options into real functional elements @feature-update
+  
+  ☐ blank card UI (make it a grid to allow multiple cards)
 
   ☐ sharing the winning card of the round on social media @feature-update
 
   ☐ match end screen @feature-update 
     - above room options there should be a stack-able (on top of each other) match reports
 
-  ☐ design the mockups for the proposal and vote screen
+  ☐ design the mockups for the proposal and vote screens
 
   ☐ animations for cards appearing and disappearing from field
 
@@ -35,7 +33,7 @@ UI/UX:
 
   ☐ design the Offline mini-game
 
-  ☐ handle 'online' / 'offline event
+  ☐ handle 'online' / 'offline' event
 
   Homepage:
     ☐ showcase handle black cards with (pick > 1)
@@ -43,5 +41,3 @@ UI/UX:
   Lobby:
     ☐ find a better way to show the install prompt
       - prefer the google play install when that is published
-            
-CI/CD:
