@@ -29,9 +29,6 @@ import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
 
-import TermsAndConditions from './screens/useTerms.js';
-import PrivacyPolicy from './screens/privacyPolicy.js';
-
 export let country = '';
 
 let installPromptEvent;
@@ -75,15 +72,12 @@ function loaded()
   const pages =
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={ Homepage }/>
+        <Route exact path='/' component={ Homepage }/>
       
-        <Route path="/play" component={ Game }/>
+        <Route path='/play' component={ Game }/>
 
-        <Route path="/picture" component={ (allowAPIRoutes) ? Picture : NotFound }/>
+        <Route path='/picture' component={ (allowAPIRoutes) ? Picture : NotFound }/>
         
-        <Route path="/terms" component={ TermsAndConditions }/>
-        <Route path="/privacy" component={ PrivacyPolicy }/>
-
         <Route component={ NotFound }/>
       </Switch>
     </BrowserRouter>;

@@ -142,9 +142,9 @@ class Homepage extends React.Component
               { i18n('herp-project') }
             </a>
             <div className={ footerStyles.sitemap }>
-              <Link className={ footerStyles.privacy } to='/privacy'> { i18n('privacy-policy') } </Link>
+              <a className={ footerStyles.privacy } href='https://herpproject.com/kuruit/privacy'>{ i18n('privacy-policy') }</a>
               _
-              <Link className={ footerStyles.use } to='/terms'> { i18n('terms-and-conditions') } </Link>
+              <a className={ footerStyles.terms } href='https://herpproject.com/kuruit/terms'>{ i18n('terms-and-conditions') }</a>
             </div>
             <p className={ footerStyles.copyright }>
               { i18n('copyright-notice') }
@@ -414,7 +414,7 @@ const footerStyles = createStyle({
     ':hover': { color: colors.accentColor }
   },
 
-  use: { extend: 'privacy' },
+  terms: { extend: 'privacy' },
 
   copyright: {
     gridArea: 'copyright',

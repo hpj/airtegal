@@ -16,14 +16,16 @@ Testing:
 Features:
     
 UI/UX:
-  ✔ dark mode @feature-update @done(20-01-22 12:52)
+  ✔ dark mode @done(20-01-22 12:52) @feature-update
+
+  ☐ blank card UI (make it a grid to allow multiple cards)
+
+  ☐ turn room options into real functional elements @feature-update
 
   ☐ sharing the winning card of the round on social media @feature-update
 
   ☐ match end screen @feature-update 
     - above room options there should be a stack-able (on top of each other) match reports
-
-  ☐ turn room options into real functional elements @feature-update
 
   ☐ design the mockups for the proposal and vote screen
 
