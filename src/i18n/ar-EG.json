@@ -97,6 +97,8 @@
   "king-mode": "ملك العشوئيات",
 
   "win-method": "طريقة الفوز:",
+  
+  "options-placeholder": "حط رقم هنا",
 
   "first-to-points-1": "أول من يصل الي",
   "first-to-points-2": "نقاط",
@@ -136,8 +138,20 @@
 
   // match reports
 
-  "you-won-the-match": "لقد فزت بالمبارة!",
-  "won-the-match": "لقد فاز %0 بالمبارة.",
+  "no-one-wins": "لم ينجح احد.",
+
+  "points:match-ended": "%0",
+  "limited:match-ended": "انتهت الجولات! %0",
+  "timer:match-ended": "انتهي الوقت! %0",
+
+  "judge:you": "لقد فزت بالمبارة.",
+  "judge:other": "لقد فاز %0 بالمبارة.",
+
+  "democracy:you": "لقد انتصر العدل وفزت بالمبارة.",
+  "democracy:other": "الفساد يتكاثر فلقد فاز %0 بالمبارة.",
+
+  "king:you": "مبروك، انت ملك العشوئيات.",
+  "king:other": "%0 هو ملك العشوئيات.",
 
   // homepage
 
