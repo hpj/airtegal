@@ -200,6 +200,10 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
     {
       if (typeof values[i] === 'string' || typeof values[i] === 'number')
       {
+        // if first char is capitalized
+        if (rule.substring(0, 1) === rule.substring(0, 1).toUpperCase())
+          rule = `-${rule.substring(0, 1).toLowerCase()}${rule.substring(1)}`;
+
         // transform rule name from camelCase to no-caps
         const noCaps = rule.replace(camelRegex, (c) => `-${c.toLowerCase()}`);
     
