@@ -83,7 +83,7 @@ class AutoSizeInput extends React.Component
 
 AutoSizeInput.propTypes = {
   required: PropTypes.bool,
-  type: PropTypes.oneOf([ 'text', 'range', 'number' ]),
+  type: PropTypes.oneOf([ 'text' ]),
   maxLength: PropTypes.string,
   className: PropTypes.string,
   placeholder: PropTypes.string,

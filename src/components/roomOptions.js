@@ -65,12 +65,12 @@ class RoomOptions extends React.Component
     this.props.sendMessage('matchRequest')
       .then(() =>
       {
-        // hide the loading indictor
+        // hide the loading indictor (after 2.5s to allow animations to end)
         setTimeout(() => this.loadingVisibility(false), 2500);
       })
       .catch((err) =>
       {
-        // hide the loading indictor (after 2.5s to allow animations to end)
+        // hide the loading indictor
         this.loadingVisibility(false);
 
         // show an error message
@@ -97,6 +97,24 @@ class RoomOptions extends React.Component
     if (wrapperRef.current)
       wrapperRef.current.scrollTo(options);
   }
+
+  onGameModeChange(value)
+  {
+    this.setState({
+      gameMode: value
+    });
+  }
+
+  onWinMethodChange(value)
+  {
+    this.setState({
+      winMethod: value
+    });
+  }
+
+  // TODO add the new 2nd and 3rd win methods and allow master to switch between them
+
+  // TODO add input boxes to the options
 
   render()
   {
@@ -130,26 +148,82 @@ class RoomOptions extends React.Component
           {
             (this.state.options) ?
               <div>
+
+                {/* Game Mode */}
+
                 <div className={ styles.title }>{ i18n('game-mode') }</div>
 
                 <div className={ styles.pick }>
-                  <div><div/></div>
-                  <div>{ i18n('judgement-mode') }</div>
+                  <div
+                    className={ styles.checkbox }
+                    ticked={ (this.state.gameMode === 'judge').toString() }
+                    onClick={ () => this.onGameModeChange('judge') }
+                  />
+
+                  { i18n('judge-mode')  }
                 </div>
+                
+                <div className={ styles.pick }>
+                  <div
+                    className={ styles.checkbox }
+                    ticked={ (this.state.gameMode === 'democracy').toString() }
+                    onClick={ () => this.onGameModeChange('democracy') }
+                  />
+
+                  { i18n('democracy-mode')  }
+                </div>
+
+                <div className={ styles.pick }>
+                  <div
+                    className={ styles.checkbox }
+                    ticked={ (this.state.gameMode === 'king').toString() }
+                    onClick={ () => this.onGameModeChange('king') }
+                  />
+
+                  { i18n('king-mode')  }
+                </div>
+
+                {/* Win Method */}
 
                 <div className={ styles.title }>{ i18n('win-method') }</div>
 
                 <div className={ styles.pick }>
-                  <div><div/></div>
+                  <div
+                    className={ styles.checkbox }
+                    ticked={ (this.state.winMethod === 'points').toString() }
+                    onClick={ () => this.onWinMethodChange('points') }
+                  />
 
-                  <div style={ { padding: 0 } } className={ styles.field }>
-
-                    <div>{ i18n('first-to-points-1') }</div>
-                    <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
-                    <div>{ i18n('first-to-points-2') }</div>
-
-                  </div>
+                  <div>{ i18n('first-to-points-1') }</div>
+                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+                  <div>{ i18n('first-to-points-2') }</div>
                 </div>
+
+                <div className={ styles.pick }>
+                  <div
+                    className={ styles.checkbox }
+                    ticked={ (this.state.winMethod === 'limited').toString() }
+                    onClick={ () => this.onWinMethodChange('limited') }
+                  />
+
+                  <div>{ i18n('max-rounds-1') }</div>
+                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+                  <div>{ i18n('max-rounds-2') }</div>
+                </div>
+
+                <div className={ styles.pick }>
+                  <div
+                    className={ styles.checkbox }
+                    ticked={ (this.state.winMethod === 'timer').toString() }
+                    onClick={ () => this.onWinMethodChange('timer') }
+                  />
+
+                  <div>{ i18n('max-time-1') }</div>
+                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+                  <div>{ i18n('max-time-2') }</div>
+                </div>
+
+                {/* Match Options */}
 
                 <div className={ styles.title }>{ i18n('match-options') }</div>
 
@@ -166,6 +240,8 @@ class RoomOptions extends React.Component
                   <div>{ i18n('hand-cap') }</div>
 
                 </div>
+
+                {/* Card Packs */}
 
                 <div className={ styles.title }>{ i18n('card-packs') }</div>
 
@@ -342,29 +418,38 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px',
+    padding: '0 25px'
+  },
 
-    '>:nth-child(1)': {
-      display: 'flex',
+  checkbox: {
+    display: 'flex',
 
-      justifyContent: 'center',
-      alignItems: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
 
-      width: '20px',
-      height: '20px',
+    width: '20px',
+    height: '20px',
 
-      borderRadius: '5px',
-      border: `2px solid ${colors.blackText}`,
+    borderRadius: '5px',
+    border: '2px solid #000000',
 
-      margin: '0 10px',
+    margin: '0 10px',
 
-      '> *': {
-        backgroundColor: colors.blackText,
+    ':after':
+    {
+      display: 'block',
+      content: '""',
 
-        borderRadius: '10px',
-        width: '10px',
-        height: '10px'
-      }
+      width: '10px',
+      height: '10px',
+
+      backgroundColor: colors.blackText,
+      borderRadius: '10px'
+    },
+
+    '[ticked="false"]:after':
+    {
+      display: 'none'
     }
   },
 

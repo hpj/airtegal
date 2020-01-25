@@ -91,11 +91,21 @@
   // room options
 
   "game-mode": "نمط اللعبة:",
-  "judgement-mode": "القاضي",
+
+  "judge-mode": "القاضي",
+  "democracy-mode": "الديمقراطية فكرة غبية",
+  "king-mode": "ملك العشوئيات",
 
   "win-method": "طريقة الفوز:",
+
   "first-to-points-1": "أول من يصل الي",
   "first-to-points-2": "نقاط",
+  
+  "max-rounds-1": "بعد",
+  "max-rounds-2": "جولات",
+
+  "max-time-1": "بعد",
+  "max-time-2": "دقيقة",
 
   "match-options": "اختيارات المباراة:",
   "round-countdown": "دقيقه لكل جولة",
