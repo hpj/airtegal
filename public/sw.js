@@ -46,8 +46,24 @@ workbox.precaching.precacheAndRoute([
     "revision": "9f563abf8532ead724f2d6231983b5d4"
   },
   {
+    "url": "icons/120.png",
+    "revision": "6feff42b73ec938b43163b4bdfdf4ded"
+  },
+  {
+    "url": "icons/1240x600.png",
+    "revision": "2fd5d6e53899dd685c8be65b8893b497"
+  },
+  {
     "url": "icons/144.png",
     "revision": "f8c866c2e220cec14cb438fa29c28425"
+  },
+  {
+    "url": "icons/150.png",
+    "revision": "f2bd3d5b074f29b5e779d4b37d507e24"
+  },
+  {
+    "url": "icons/152.png",
+    "revision": "8d7b05824dbbf22b96e67af9a7cfa60b"
   },
   {
     "url": "icons/16.png",
@@ -62,6 +78,14 @@ workbox.precaching.precacheAndRoute([
     "revision": "d830399c7f7a325aee83ec1298471ef2"
   },
   {
+    "url": "icons/24.png",
+    "revision": "8a40937a76388678a82bce30de4d348a"
+  },
+  {
+    "url": "icons/300.png",
+    "revision": "0d9d331ca7aadd031983c51d0afeff31"
+  },
+  {
     "url": "icons/32.png",
     "revision": "957858fb75d25b14d71d49f8276ff1ac"
   },
@@ -70,16 +94,36 @@ workbox.precaching.precacheAndRoute([
     "revision": "864d7db390d9e4b8827ff28851f87dad"
   },
   {
+    "url": "icons/44.png",
+    "revision": "e5bd26fd32394c39ffb59243dce2f074"
+  },
+  {
     "url": "icons/48.png",
     "revision": "53aa240474e3cd7499f8d8da0e9dc620"
+  },
+  {
+    "url": "icons/50.png",
+    "revision": "ef62d559139709aa91747b05b4bb29ee"
   },
   {
     "url": "icons/512.png",
     "revision": "d59f9c3303a31880b79bacf8c69d2dcc"
   },
   {
+    "url": "icons/620x300.png",
+    "revision": "1e27d518bf60559a5fbfb3f2600ed9f9"
+  },
+  {
     "url": "icons/72.png",
     "revision": "e189aaf9953602d5a9c996ce314a7233"
+  },
+  {
+    "url": "icons/76.png",
+    "revision": "525111df089e41a6176127973e992d6b"
+  },
+  {
+    "url": "icons/88.png",
+    "revision": "e70524e35d8157e2bba4ca790c349822"
   },
   {
     "url": "icons/96.png",
@@ -91,7 +135,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "manifest.json",
-    "revision": "2c9f3b31d1e95f2a409412a904048908"
+    "revision": "d2f5beb9a960ae70c24e579999cebd01"
   },
   {
     "url": "splash/1125x2436.png",
