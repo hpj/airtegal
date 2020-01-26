@@ -69,7 +69,9 @@
   "no-rooms-available": "لا يوجد غرف متاحة",
   "room-is-full": "هذة الغرف كاملة العدد",
   "room-is-busy": "هذة الغرفة مشغولة",
-
+  
+  "request-has-wrong-parameters": "حطيت اسمك هناك؟",
+  
   "user-does-not-have-permission": "لا تمتلك الصلاحية لتكمل هذة العملية",
   "minimal-number-of-players-required": "لا يوجد عدد كافي من اللاعبين",
 
@@ -98,15 +100,15 @@
 
   "win-method": "طريقة الفوز:",
   
-  "options-placeholder": "حط رقم هنا",
+  "options-placeholder": "0",
 
   "first-to-points-1": "أول من يصل الي",
   "first-to-points-2": "نقاط",
   
-  "max-rounds-1": "بعد",
+  "max-rounds-1": "بعد مرور",
   "max-rounds-2": "جولات",
 
-  "max-time-1": "بعد",
+  "max-time-1": "بعد مرور",
   "max-time-2": "دقيقة",
 
   "match-options": "اختيارات المباراة:",

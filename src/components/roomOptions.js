@@ -6,6 +6,8 @@ import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
+import AutoSizeInput from '../components/autoSizeInput.js';
+
 import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
@@ -22,7 +24,9 @@ class RoomOptions extends React.Component
 
     this.state = {
       loadingHidden: true,
-      errorMessage: ''
+      errorMessage: '',
+
+      dirtyOptions: undefined
     };
 
     // bind functions that are use as callbacks
@@ -45,7 +49,9 @@ class RoomOptions extends React.Component
     this.setState({
       players: roomData.players,
       options: roomData.options,
-      masterId: roomData.master
+      masterId: roomData.master,
+
+      dirtyOptions: (!this.state.dirtyOptions) ? roomData.options : this.state.dirtyOptions
     });
   }
 
@@ -83,15 +89,6 @@ class RoomOptions extends React.Component
     this.setState({ loadingHidden: visible = !visible });
   }
 
-  formatMs(milliseconds)
-  {
-    const minutes = Math.floor(milliseconds / 60000);
-
-    const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
-
-    return `${minutes}:${(seconds < 10) ? '0' : ''}${seconds}`;
-  }
-
   scrollTo(options)
   {
     if (wrapperRef.current)
@@ -101,20 +98,26 @@ class RoomOptions extends React.Component
   onGameModeChange(value)
   {
     this.setState({
-      gameMode: value
+      dirtyOptions: {
+        ...this.state.dirtyOptions,
+        gameMode: value
+      }
     });
   }
 
   onWinMethodChange(value)
   {
     this.setState({
-      winMethod: value
+      dirtyOptions: {
+        ...this.state.dirtyOptions,
+        winMethod: value
+      }
     });
   }
 
-  // TODO add the new 2nd and 3rd win methods and allow master to switch between them
+  // TODO disable checkboxes and input boxes on nox-master clients
 
-  // TODO add input boxes to the options
+  // TODO handle and apply dirty options
 
   render()
   {
@@ -156,7 +159,7 @@ class RoomOptions extends React.Component
                 <div className={ styles.pick }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.gameMode === 'judge').toString() }
+                    ticked={ (this.state.dirtyOptions.gameMode === 'judge').toString() }
                     onClick={ () => this.onGameModeChange('judge') }
                   />
 
@@ -166,7 +169,7 @@ class RoomOptions extends React.Component
                 <div className={ styles.pick }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.gameMode === 'democracy').toString() }
+                    ticked={ (this.state.dirtyOptions.gameMode === 'democracy').toString() }
                     onClick={ () => this.onGameModeChange('democracy') }
                   />
 
@@ -176,7 +179,7 @@ class RoomOptions extends React.Component
                 <div className={ styles.pick }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.gameMode === 'king').toString() }
+                    ticked={ (this.state.dirtyOptions.gameMode === 'king').toString() }
                     onClick={ () => this.onGameModeChange('king') }
                   />
 
@@ -190,36 +193,100 @@ class RoomOptions extends React.Component
                 <div className={ styles.pick }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.winMethod === 'points').toString() }
+                    ticked={ (this.state.dirtyOptions.winMethod === 'points').toString() }
                     onClick={ () => this.onWinMethodChange('points') }
                   />
 
                   <div>{ i18n('first-to-points-1') }</div>
-                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+                  
+                  <AutoSizeInput
+                    required
+                    type='number'
+                    min='3'
+                    max='16'
+                    maxLength={ 2 }
+                    id='options-input'
+                    className={ styles.input }
+                    placeholder={ i18n('options-placeholder') }
+                    value={ this.state.dirtyOptions.match.pointsToCollect }
+                    onUpdate={ (value, resize) => this.setState({
+                      dirtyOptions: {
+                        ...this.state.dirtyOptions,
+                        match: {
+                          ...this.state.dirtyOptions.match,
+                          pointsToCollect: value
+                        }
+                      }
+                    }, resize) }
+                  />
+
                   <div>{ i18n('first-to-points-2') }</div>
                 </div>
 
                 <div className={ styles.pick }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.winMethod === 'limited').toString() }
+                    ticked={ (this.state.dirtyOptions.winMethod === 'limited').toString() }
                     onClick={ () => this.onWinMethodChange('limited') }
                   />
 
                   <div>{ i18n('max-rounds-1') }</div>
-                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+
+                  <AutoSizeInput
+                    required
+                    type='number'
+                    min='3'
+                    max='30'
+                    maxLength={ 2 }
+                    id='options-input'
+                    className={ styles.input }
+                    placeholder={ i18n('options-placeholder') }
+                    value={ this.state.dirtyOptions.match.maxRounds }
+                    onUpdate={ (value, resize) => this.setState({
+                      dirtyOptions: {
+                        ...this.state.dirtyOptions,
+                        match: {
+                          ...this.state.dirtyOptions.match,
+                          maxRounds: value
+                        }
+                      }
+                    }, resize) }
+                  />
+
                   <div>{ i18n('max-rounds-2') }</div>
                 </div>
 
                 <div className={ styles.pick }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.winMethod === 'timer').toString() }
+                    ticked={ (this.state.dirtyOptions.winMethod === 'timer').toString() }
                     onClick={ () => this.onWinMethodChange('timer') }
                   />
 
                   <div>{ i18n('max-time-1') }</div>
-                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.pointsToCollect }</div>
+
+                  <AutoSizeInput
+                    required
+                    type='number'
+                    minutes={ true }
+                    min='5'
+                    max='30'
+                    maxLength={ 2 }
+                    id='options-input'
+                    className={ styles.input }
+                    placeholder={ i18n('options-placeholder') }
+                    value={ this.state.dirtyOptions.match.maxTime }
+                    onUpdate={ (value, resize) => this.setState({
+                      dirtyOptions: {
+                        ...this.state.dirtyOptions,
+                        match: {
+                          ...this.state.dirtyOptions.match,
+                          maxTime: value
+                        }
+                      }
+                    }, resize) }
+                  />
+
                   <div>{ i18n('max-time-2') }</div>
                 </div>
 
@@ -229,14 +296,55 @@ class RoomOptions extends React.Component
 
                 <div className={ styles.field }>
 
-                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ `${this.formatMs(this.state.options.round.maxTime)}` }</div>
+                  <AutoSizeInput
+                    required
+                    type='number'
+                    minutes={ true }
+                    min='1'
+                    max='5'
+                    maxLength={ 1 }
+                    id='options-input'
+                    className={ styles.input }
+                    placeholder={ i18n('options-placeholder') }
+                    value={ this.state.dirtyOptions.round.maxTime }
+                    onUpdate={ (value, resize) => this.setState({
+                      dirtyOptions: {
+                        ...this.state.dirtyOptions,
+                        round: {
+                          ...this.state.dirtyOptions.round,
+                          maxTime: value
+                        }
+                      }
+                    }, resize) }
+                  />
+
                   <div>{ i18n('round-countdown') }</div>
 
                 </div>
 
                 <div className={ styles.field }>
 
-                  <div allowed={ isThisMaster.toString() } className={ styles.input }>{ this.state.options.match.startingHandAmount }</div>
+                  <AutoSizeInput
+                    required
+                    type='number'
+                    min='3'
+                    max='12'
+                    maxLength={ 2 }
+                    id='options-input'
+                    className={ styles.input }
+                    placeholder={ i18n('options-placeholder') }
+                    value={ this.state.dirtyOptions.match.startingHandAmount }
+                    onUpdate={ (value, resize) => this.setState({
+                      dirtyOptions: {
+                        ...this.state.dirtyOptions,
+                        match: {
+                          ...this.state.dirtyOptions.match,
+                          startingHandAmount: value
+                        }
+                      }
+                    }, resize) }
+                  />
+
                   <div>{ i18n('hand-cap') }</div>
 
                 </div>
@@ -461,11 +569,46 @@ const styles = createStyle({
   },
 
   input: {
-    borderBottom: `2px ${colors.blackText} solid`,
-    margin: '0 5px',
+    MozAppearance: 'textfield',
+    appearance: 'textfield',
 
-    '[allowed="false"]': {
-      borderBottom: 0
+    margin: '0 5px -2px 5px',
+
+    direction: 'ltr',
+
+    color: colors.blackText,
+    backgroundColor: colors.whiteBackground,
+
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    padding: 0,
+    border: 0,
+    borderBottom: `2px ${colors.blackText} solid`,
+
+    '::placeholder': {
+      color: colors.red
+    },
+
+    ':focus': {
+      'outline': 'none'
+    },
+
+    ':not(:valid)':
+    {
+      color: colors.red,
+      borderColor: colors.red
+    },
+    
+    '::-webkit-inner-spin-button': {
+      WebkitAppearance: 'none',
+      margin: 0
+    },
+
+    '::-webkit-outer-spin-button': {
+      WebkitAppearance: 'none',
+      margin: 0
     }
   },
 

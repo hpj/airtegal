@@ -341,7 +341,7 @@ class Game extends React.Component
               className={ headerStyles.username }
               required
               type='text'
-              maxLength='18'
+              maxLength={ 18 }
               preference='username'
               placeholder={ i18n('username-placeholder') }
               value={ this.state.username }

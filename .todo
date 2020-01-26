@@ -18,7 +18,8 @@ Testing:
 UI/UX:
   ✔ dark mode @done(20-01-22 12:52) @feature-update
 
-  ☐ turn room options into real functional elements @feature-update
+  ☐ editable room options @feature-update
+    ☐ notify non-master clients when the room is edited
   
   ☐ blank card UI (make it a grid to allow multiple cards)
 
