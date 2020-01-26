@@ -12,20 +12,8 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "https://bedan.me/icons/16.png",
-      "sizes": "16x16",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
       "src": "https://bedan.me/icons/24.png",
       "sizes": "24x24",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://bedan.me/icons/32.png",
-      "sizes": "32x32",
       "type": "image/png",
       "purpose": "any"
     },
