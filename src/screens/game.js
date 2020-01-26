@@ -407,11 +407,24 @@ class Game extends React.Component
                     {
                       const pack = room.options.match.selectedPacks[0];
 
+                      const gameMode = `${i18n(room.options.gameMode)}.`;
+
+                      let winMethod;
+
+                      if (room.options.winMethod === 'points')
+                        winMethod = `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.`;
+                      else if (room.options.winMethod === 'limited')
+                        winMethod = `${i18n('max-rounds-1')} ${room.options.match.pointsToCollect} ${i18n('max-rounds-2')}.`;
+                      else if (room.options.winMethod === 'timer')
+                        winMethod = `${i18n('max-time-1')} ${room.options.match.pointsToCollect} ${i18n('max-time-2')}.`;
+
                       return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
                         <div className={ roomsStyles.highlights }>
 
                           <div className={ roomsStyles.counter }>{ `${room.players}/${room.options.match.maxPlayers}` }</div>
-                          <div>{ `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.` }</div>
+
+                          <div>{ gameMode }</div>
+                          <div>{ winMethod }</div>
 
                         </div>
 

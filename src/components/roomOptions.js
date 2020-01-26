@@ -169,8 +169,6 @@ class RoomOptions extends React.Component
     });
   }
 
-  // TODO show more/correct options on room tiles (test changes after a room is edited)
-
   // TODO disable all the new stuff under process.env.PREVIEW
 
   // TODO bigger options on phones
@@ -223,7 +221,7 @@ class RoomOptions extends React.Component
                     onClick={ () => this.onGameModeChange('judge') }
                   />
 
-                  { i18n('judge-mode')  }
+                  { i18n('judge')  }
                 </div>
                 
                 <div className={ styles.pick } master={ isMaster.toString() }>
@@ -233,7 +231,7 @@ class RoomOptions extends React.Component
                     onClick={ () => this.onGameModeChange('democracy') }
                   />
 
-                  { i18n('democracy-mode')  }
+                  { i18n('democracy')  }
                 </div>
 
                 <div className={ styles.pick } master={ isMaster.toString() }>
@@ -243,7 +241,7 @@ class RoomOptions extends React.Component
                     onClick={ () => this.onGameModeChange('king') }
                   />
 
-                  { i18n('king-mode')  }
+                  { i18n('king')  }
                 </div>
 
                 {/* Win Method */}
