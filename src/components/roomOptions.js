@@ -53,10 +53,7 @@ class RoomOptions extends React.Component
   {
     // if dirty options is undefined
     // or if the real room options were edited
-    if (
-      !this.state.dirtyOptions ||
-      JSON.stringify(this.state.options) !== JSON.stringify(roomData.options)
-    )
+    if (!this.state.dirtyOptions || roomData.reason.message === 'options-edit')
     {
       this.setState({
         dirtyOptions: roomData.options
