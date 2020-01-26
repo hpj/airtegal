@@ -115,13 +115,13 @@ class RoomOptions extends React.Component
     });
   }
 
-  // TODO disable checkboxes and input boxes on nox-master clients
-
   // TODO handle and apply dirty options
+
+  // TODO disable all the new stuff under process.env.PREVIEW
 
   render()
   {
-    const isThisMaster = this.state.masterId === socket.id;
+    const isMaster = this.state.masterId === socket.id;
     
     const isAllowed =
       process.env.NODE_ENV === 'development' ||
@@ -156,7 +156,7 @@ class RoomOptions extends React.Component
 
                 <div className={ styles.title }>{ i18n('game-mode') }</div>
 
-                <div className={ styles.pick }>
+                <div className={ styles.pick } master={ isMaster.toString() }>
                   <div
                     className={ styles.checkbox }
                     ticked={ (this.state.dirtyOptions.gameMode === 'judge').toString() }
@@ -166,7 +166,7 @@ class RoomOptions extends React.Component
                   { i18n('judge-mode')  }
                 </div>
                 
-                <div className={ styles.pick }>
+                <div className={ styles.pick } master={ isMaster.toString() }>
                   <div
                     className={ styles.checkbox }
                     ticked={ (this.state.dirtyOptions.gameMode === 'democracy').toString() }
@@ -176,7 +176,7 @@ class RoomOptions extends React.Component
                   { i18n('democracy-mode')  }
                 </div>
 
-                <div className={ styles.pick }>
+                <div className={ styles.pick } master={ isMaster.toString() }>
                   <div
                     className={ styles.checkbox }
                     ticked={ (this.state.dirtyOptions.gameMode === 'king').toString() }
@@ -190,7 +190,7 @@ class RoomOptions extends React.Component
 
                 <div className={ styles.title }>{ i18n('win-method') }</div>
 
-                <div className={ styles.pick }>
+                <div className={ styles.pick } master={ isMaster.toString() }>
                   <div
                     className={ styles.checkbox }
                     ticked={ (this.state.dirtyOptions.winMethod === 'points').toString() }
@@ -206,6 +206,7 @@ class RoomOptions extends React.Component
                     max='16'
                     maxLength={ 2 }
                     id='options-input'
+                    master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
                     value={ this.state.dirtyOptions.match.pointsToCollect }
@@ -223,7 +224,7 @@ class RoomOptions extends React.Component
                   <div>{ i18n('first-to-points-2') }</div>
                 </div>
 
-                <div className={ styles.pick }>
+                <div className={ styles.pick } master={ isMaster.toString() }>
                   <div
                     className={ styles.checkbox }
                     ticked={ (this.state.dirtyOptions.winMethod === 'limited').toString() }
@@ -239,6 +240,7 @@ class RoomOptions extends React.Component
                     max='30'
                     maxLength={ 2 }
                     id='options-input'
+                    master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
                     value={ this.state.dirtyOptions.match.maxRounds }
@@ -256,7 +258,7 @@ class RoomOptions extends React.Component
                   <div>{ i18n('max-rounds-2') }</div>
                 </div>
 
-                <div className={ styles.pick }>
+                <div className={ styles.pick } master={ isMaster.toString() }>
                   <div
                     className={ styles.checkbox }
                     ticked={ (this.state.dirtyOptions.winMethod === 'timer').toString() }
@@ -273,6 +275,7 @@ class RoomOptions extends React.Component
                     max='30'
                     maxLength={ 2 }
                     id='options-input'
+                    master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
                     value={ this.state.dirtyOptions.match.maxTime }
@@ -299,11 +302,40 @@ class RoomOptions extends React.Component
                   <AutoSizeInput
                     required
                     type='number'
+                    min='3'
+                    max='16'
+                    maxLength={ 2 }
+                    id='options-input'
+                    master={ isMaster.toString() }
+                    className={ styles.input }
+                    placeholder={ i18n('options-placeholder') }
+                    value={ this.state.dirtyOptions.match.maxPlayers }
+                    onUpdate={ (value, resize) => this.setState({
+                      dirtyOptions: {
+                        ...this.state.dirtyOptions,
+                        match: {
+                          ...this.state.dirtyOptions.match,
+                          maxPlayers: value
+                        }
+                      }
+                    }, resize) }
+                  />
+
+                  <div>{ i18n('max-players') }</div>
+
+                </div>
+
+                <div className={ styles.field }>
+
+                  <AutoSizeInput
+                    required
+                    type='number'
                     minutes={ true }
                     min='1'
                     max='5'
                     maxLength={ 1 }
                     id='options-input'
+                    master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
                     value={ this.state.dirtyOptions.round.maxTime }
@@ -331,6 +363,7 @@ class RoomOptions extends React.Component
                     max='12'
                     maxLength={ 2 }
                     id='options-input'
+                    master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
                     value={ this.state.dirtyOptions.match.startingHandAmount }
@@ -370,9 +403,7 @@ class RoomOptions extends React.Component
                   }
                 </div>
 
-                <div className={ styles.start } allowed={ isAllowed.toString() } style={ {
-                  display: (isThisMaster) ? '' : 'none'
-                } } onClick={ () => this.matchRequest(isAllowed) }>{ i18n('start') }</div>
+                <div className={ styles.start } master={ isMaster.toString() } allowed={ isAllowed.toString() } onClick={ () => this.matchRequest(isAllowed) }>{ i18n('start') }</div>
               </div> : <div/>
           }
         </div>
@@ -506,6 +537,10 @@ const styles = createStyle({
       backgroundColor: colors.blackBackground
     },
 
+    '[master="false"]': {
+      display: 'none'
+    },
+
     '[allowed="false"]': {
       cursor: 'default',
 
@@ -526,7 +561,18 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px'
+    padding: '0 25px',
+
+    '[master="false"] > div': {
+      pointerEvents: 'none'
+    },
+
+    '[master="false"] > div:after': {
+      width: '20px',
+      height: '20px',
+
+      borderRadius: 0
+    }
   },
 
   checkbox: {
@@ -539,7 +585,7 @@ const styles = createStyle({
     height: '20px',
 
     borderRadius: '5px',
-    border: '2px solid #000000',
+    border: `2px solid ${colors.blackText}`,
 
     margin: '0 10px',
 
@@ -585,7 +631,6 @@ const styles = createStyle({
 
     padding: 0,
     border: 0,
-    borderBottom: `2px ${colors.blackText} solid`,
 
     '::placeholder': {
       color: colors.red
@@ -600,7 +645,17 @@ const styles = createStyle({
       color: colors.red,
       borderColor: colors.red
     },
-    
+
+    '[master="true"]':
+    {
+      borderBottom: `2px ${colors.blackText} solid`
+    },
+
+    '[master="false"]':
+    {
+      pointerEvents: 'none'
+    },
+
     '::-webkit-inner-spin-button': {
       WebkitAppearance: 'none',
       margin: 0
