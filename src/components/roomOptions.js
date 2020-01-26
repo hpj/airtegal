@@ -2,6 +2,8 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import autoSize from 'autosize-input';
+
 import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
@@ -32,6 +34,9 @@ class RoomOptions extends React.Component
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
+
+    this.editRequest = this.editRequest.bind(this);
+    this.matchRequest = this.matchRequest.bind(this);
   }
 
   componentDidMount()
@@ -46,12 +51,28 @@ class RoomOptions extends React.Component
 
   onRoomData(roomData)
   {
+    // if dirty options is undefined
+    // or if the real room options were edited
+    if (
+      !this.state.dirtyOptions ||
+      JSON.stringify(this.state.options) !== JSON.stringify(roomData.options)
+    )
+    {
+      this.setState({
+        dirtyOptions: roomData.options
+      }, () =>
+      {
+        // force all inputs to auto resize
+        const inputs = document.querySelectorAll('#options-input');
+
+        inputs.forEach((elem) => autoSize(elem));
+      });
+    }
+
     this.setState({
       players: roomData.players,
       options: roomData.options,
-      masterId: roomData.master,
-
-      dirtyOptions: (!this.state.dirtyOptions) ? roomData.options : this.state.dirtyOptions
+      masterId: roomData.master
     });
   }
 
@@ -60,15 +81,51 @@ class RoomOptions extends React.Component
     this.setState({ errorMessage: err });
   }
 
-  matchRequest(isAllowed)
+  checkValidity()
   {
-    if (!isAllowed)
-      return;
-    
+    const inputs = document.querySelectorAll('#options-input');
+
+    for (let i = 0; i < inputs.length; i++)
+    {
+      // eslint-disable-next-line security/detect-object-injection
+      if (!inputs[i].validity.valid)
+        return false;
+    }
+
+    return true;
+  }
+
+  editRequest()
+  {
+    const { sendMessage } = this.props;
+
     // show a loading indictor
     this.loadingVisibility(true);
 
-    this.props.sendMessage('matchRequest')
+    sendMessage('edit', { options: this.state.dirtyOptions })
+      .then(() =>
+      {
+        // hide the loading indictor
+        this.loadingVisibility(false);
+      })
+      .catch((err) =>
+      {
+        // hide the loading indictor
+        this.loadingVisibility(false);
+
+        // show an error message
+        this.showErrorMessage(i18n(err) || err);
+      });
+  }
+
+  matchRequest()
+  {
+    const { sendMessage } = this.props;
+
+    // show a loading indictor
+    this.loadingVisibility(true);
+
+    sendMessage('matchRequest')
       .then(() =>
       {
         // hide the loading indictor (after 2.5s to allow animations to end)
@@ -115,13 +172,19 @@ class RoomOptions extends React.Component
     });
   }
 
-  // TODO handle and apply dirty options
+  // TODO show more/correct options on room tiles (test changes after a room is edited)
 
   // TODO disable all the new stuff under process.env.PREVIEW
+
+  // TODO bigger options on phones
 
   render()
   {
     const isMaster = this.state.masterId === socket.id;
+
+    const isValid = this.checkValidity();
+
+    const isDirty = JSON.stringify(this.state.dirtyOptions) !== JSON.stringify(this.state.options);
     
     const isAllowed =
       process.env.NODE_ENV === 'development' ||
@@ -403,7 +466,22 @@ class RoomOptions extends React.Component
                   }
                 </div>
 
-                <div className={ styles.start } master={ isMaster.toString() } allowed={ isAllowed.toString() } onClick={ () => this.matchRequest(isAllowed) }>{ i18n('start') }</div>
+                <div
+                  className={ styles.button }
+                  master={ isMaster.toString() }
+                  valid={ isValid.toString() }
+                  dirty={ isDirty.toString() }
+                  onClick={ this.editRequest }>
+                  { i18n('apply') }
+                </div>
+
+                <div
+                  className={ styles.button }
+                  master={ isMaster.toString() }
+                  allowed={ isAllowed.toString() }
+                  onClick={ this.matchRequest }>
+                  { i18n('start') }
+                </div>
               </div> : <div/>
           }
         </div>
@@ -515,7 +593,7 @@ const styles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
-  start: {
+  button: {
     display: 'flex',
     
     cursor: 'pointer',
@@ -524,7 +602,7 @@ const styles = createStyle({
     width: '50%',
 
     padding: '10px',
-    margin: '35px auto 15px auto',
+    margin: '15px auto 15px auto',
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
@@ -541,13 +619,22 @@ const styles = createStyle({
       display: 'none'
     },
 
-    '[allowed="false"]': {
-      cursor: 'default',
+    '[allowed="false"], [dirty="false"]': {
+      pointerEvents: 'none',
 
       color: colors.greyText,
       backgroundColor: colors.whiteBackground,
       
       border: `1px ${colors.greyText} solid`
+    },
+
+    '[dirty="true"][valid="false"]': {
+      pointerEvents: 'none',
+
+      color: colors.whiteText,
+      backgroundColor: colors.red,
+      
+      border: `1px ${colors.red} solid`
     }
   },
 
@@ -630,7 +717,9 @@ const styles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     padding: 0,
+
     border: 0,
+    borderColor: colors.blackText,
 
     '::placeholder': {
       color: colors.red
@@ -648,7 +737,7 @@ const styles = createStyle({
 
     '[master="true"]':
     {
-      borderBottom: `2px ${colors.blackText} solid`
+      borderBottom: '2px solid'
     },
 
     '[master="false"]':

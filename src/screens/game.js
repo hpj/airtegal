@@ -172,6 +172,9 @@ class Game extends React.Component
         if (n !== nonce)
           return;
 
+        socket.off('done', doneListen);
+        socket.off('err', errListen);
+
         reject(err);
       }
 
@@ -179,6 +182,9 @@ class Game extends React.Component
       {
         if (n !== nonce)
           return;
+
+        socket.off('done', doneListen);
+        socket.off('err', errListen);
 
         resolve(data);
       }
