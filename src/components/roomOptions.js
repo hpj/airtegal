@@ -169,10 +169,6 @@ class RoomOptions extends React.Component
     });
   }
 
-  // TODO disable all the new stuff under process.env.PREVIEW
-
-  // TODO bigger options on phones
-
   render()
   {
     const isMaster = this.state.masterId === socket.id;
@@ -224,25 +220,31 @@ class RoomOptions extends React.Component
                   { i18n('judge')  }
                 </div>
                 
-                <div className={ styles.pick } master={ isMaster.toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.gameMode === 'democracy').toString() }
-                    onClick={ () => this.onGameModeChange('democracy') }
-                  />
+                {
+                  (process.env.PREVIEW) ?
+                    <div className={ styles.pick } master={ isMaster.toString() }>
+                      <div
+                        className={ styles.checkbox }
+                        ticked={ (this.state.dirtyOptions.gameMode === 'democracy').toString() }
+                        onClick={ () => this.onGameModeChange('democracy') }
+                      />
 
-                  { i18n('democracy')  }
-                </div>
+                      { i18n('democracy')  }
+                    </div> : <div/>
+                }
 
-                <div className={ styles.pick } master={ isMaster.toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.gameMode === 'king').toString() }
-                    onClick={ () => this.onGameModeChange('king') }
-                  />
+                {
+                  (process.env.PREVIEW) ?
+                    <div className={ styles.pick } master={ isMaster.toString() }>
+                      <div
+                        className={ styles.checkbox }
+                        ticked={ (this.state.dirtyOptions.gameMode === 'king').toString() }
+                        onClick={ () => this.onGameModeChange('king') }
+                      />
 
-                  { i18n('king')  }
-                </div>
+                      { i18n('king')  }
+                    </div> : <div/>
+                }
 
                 {/* Win Method */}
 
@@ -282,75 +284,80 @@ class RoomOptions extends React.Component
                   <div>{ i18n('first-to-points-2') }</div>
                 </div>
 
-                <div className={ styles.pick } master={ isMaster.toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.winMethod === 'limited').toString() }
-                    onClick={ () => this.onWinMethodChange('limited') }
-                  />
+                {
+                  (process.env.PREVIEW) ?
+                    <div className={ styles.pick } master={ isMaster.toString() }>
+                      <div
+                        className={ styles.checkbox }
+                        ticked={ (this.state.dirtyOptions.winMethod === 'limited').toString() }
+                        onClick={ () => this.onWinMethodChange('limited') }
+                      />
 
-                  <div>{ i18n('max-rounds-1') }</div>
+                      <div>{ i18n('max-rounds-1') }</div>
 
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    min='3'
-                    max='30'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.maxRounds }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...this.state.dirtyOptions,
-                        match: {
-                          ...this.state.dirtyOptions.match,
-                          maxRounds: value
-                        }
-                      }
-                    }, resize) }
-                  />
+                      <AutoSizeInput
+                        required
+                        type='number'
+                        min='3'
+                        max='30'
+                        maxLength={ 2 }
+                        id='options-input'
+                        master={ isMaster.toString() }
+                        className={ styles.input }
+                        placeholder={ i18n('options-placeholder') }
+                        value={ this.state.dirtyOptions.match.maxRounds }
+                        onUpdate={ (value, resize) => this.setState({
+                          dirtyOptions: {
+                            ...this.state.dirtyOptions,
+                            match: {
+                              ...this.state.dirtyOptions.match,
+                              maxRounds: value
+                            }
+                          }
+                        }, resize) }
+                      />
 
-                  <div>{ i18n('max-rounds-2') }</div>
-                </div>
+                      <div>{ i18n('max-rounds-2') }</div>
+                    </div> : <div/>
+                }
 
-                <div className={ styles.pick } master={ isMaster.toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.winMethod === 'timer').toString() }
-                    onClick={ () => this.onWinMethodChange('timer') }
-                  />
+                {
+                  (process.env.PREVIEW) ?
+                    <div className={ styles.pick } master={ isMaster.toString() }>
+                      <div
+                        className={ styles.checkbox }
+                        ticked={ (this.state.dirtyOptions.winMethod === 'timer').toString() }
+                        onClick={ () => this.onWinMethodChange('timer') }
+                      />
 
-                  <div>{ i18n('max-time-1') }</div>
+                      <div>{ i18n('max-time-1') }</div>
 
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    minutes={ true }
-                    min='5'
-                    max='30'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.maxTime }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...this.state.dirtyOptions,
-                        match: {
-                          ...this.state.dirtyOptions.match,
-                          maxTime: value
-                        }
-                      }
-                    }, resize) }
-                  />
+                      <AutoSizeInput
+                        required
+                        type='number'
+                        minutes={ true }
+                        min='5'
+                        max='30'
+                        maxLength={ 2 }
+                        id='options-input'
+                        master={ isMaster.toString() }
+                        className={ styles.input }
+                        placeholder={ i18n('options-placeholder') }
+                        value={ this.state.dirtyOptions.match.maxTime }
+                        onUpdate={ (value, resize) => this.setState({
+                          dirtyOptions: {
+                            ...this.state.dirtyOptions,
+                            match: {
+                              ...this.state.dirtyOptions.match,
+                              maxTime: value
+                            }
+                          }
+                        }, resize) }
+                      />
 
-                  <div>{ i18n('max-time-2') }</div>
-                </div>
-
+                      <div>{ i18n('max-time-2') }</div>
+                    </div> : <div/>
+                }
                 {/* Match Options */}
 
                 <div className={ styles.title }>{ i18n('match-options') }</div>
@@ -461,14 +468,17 @@ class RoomOptions extends React.Component
                   }
                 </div>
 
-                <div
-                  className={ styles.button }
-                  master={ isMaster.toString() }
-                  valid={ isValid.toString() }
-                  dirty={ isDirty.toString() }
-                  onClick={ this.editRequest }>
-                  { i18n('apply') }
-                </div>
+                {
+                  (process.env.PREVIEW) ?
+                    <div
+                      className={ styles.button }
+                      master={ isMaster.toString() }
+                      valid={ isValid.toString() }
+                      dirty={ isDirty.toString() }
+                      onClick={ this.editRequest }>
+                      { i18n('apply') }
+                    </div> : <div/>
+                }
 
                 <div
                   className={ styles.button }
@@ -714,7 +724,11 @@ const styles = createStyle({
     padding: 0,
 
     border: 0,
+
     borderColor: colors.blackText,
+    borderBottom: (process.env.PREVIEW) ? '2px solid' : 0,
+    // delete the entire line when the update is public
+    pointerEvents: (process.env.PREVIEW) ? 'all' : 'none',
 
     '::placeholder': {
       color: colors.red
@@ -730,13 +744,9 @@ const styles = createStyle({
       borderColor: colors.red
     },
 
-    '[master="true"]':
-    {
-      borderBottom: '2px solid'
-    },
-
     '[master="false"]':
     {
+      borderBottom: 0,
       pointerEvents: 'none'
     },
 

@@ -168,6 +168,12 @@ class RoomOverlay extends React.Component
         this.addNotification(i18n(roomData.reason.details) || roomData.reason.details);
       }
     }
+    // room's options were changed
+    else if (roomData.reason.message === 'options-edit')
+    {
+      if (roomData.master !== socket.id)
+        this.addNotification(i18n('room-edited'));
+    }
 
     this.setState({
       roomState: roomData.state,
