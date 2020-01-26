@@ -2,8 +2,8 @@
   "short_name": "KBF",
   "name": "Kuruit Bedan Fash5",
   "description": "A game for horrible people",
-  "scope": "/",
-  "start_url": "/play",
+  "scope": "https://bedan.me",
+  "start_url": "https://bedan.me/play",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#000000",
@@ -12,127 +12,127 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/16.png",
+      "src": "https://bedan.me/icons/16.png",
       "sizes": "16x16",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/24.png",
+      "src": "https://bedan.me/icons/24.png",
       "sizes": "24x24",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/32.png",
+      "src": "https://bedan.me/icons/32.png",
       "sizes": "32x32",
       "type": "image/png",
       "purpose": "any"
     },
     {
-     "src": "/icons/36.png",
+     "src": "https://bedan.me/icons/36.png",
      "sizes": "36x36",
      "type": "image/png",
      "purpose": "any"
     },
     {
-      "src": "/icons/44.png",
+      "src": "https://bedan.me/icons/44.png",
       "sizes": "44x44",
       "type": "image/png",
       "purpose": "any"
     },
     {
-     "src": "/icons/48.png",
+     "src": "https://bedan.me/icons/48.png",
      "sizes": "48x48",
      "type": "image/png",
      "purpose": "any"
     },
     {
-      "src": "/icons/50.png",
+      "src": "https://bedan.me/icons/50.png",
       "sizes": "50x50",
       "type": "image/png",
       "purpose": "any"
     },
     {
-     "src": "/icons/72.png",
+     "src": "https://bedan.me/icons/72.png",
      "sizes": "72x72",
      "type": "image/png",
      "purpose": "any"
     },
     {
-      "src": "/icons/76.png",
+      "src": "https://bedan.me/icons/76.png",
       "sizes": "76x76",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/88.png",
+      "src": "https://bedan.me/icons/88.png",
       "sizes": "88x88",
       "type": "image/png",
       "purpose": "any"
     },
     {
-     "src": "/icons/96.png",
+     "src": "https://bedan.me/icons/96.png",
      "sizes": "96x96",
      "type": "image/png",
      "purpose": "any"
     },
     {
-      "src": "/icons/120.png",
+      "src": "https://bedan.me/icons/120.png",
       "sizes": "120x120",
       "type": "image/png",
       "purpose": "any"
     },
     {
-     "src": "/icons/144.png",
+     "src": "https://bedan.me/icons/144.png",
      "sizes": "144x144",
      "type": "image/png",
      "purpose": "any"
     },
     {
-      "src": "/icons/150.png",
+      "src": "https://bedan.me/icons/150.png",
       "sizes": "150x150",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/152.png",
+      "src": "https://bedan.me/icons/152.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/180.png",
+      "src": "https://bedan.me/icons/180.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-     "src": "/icons/192.png",
+     "src": "https://bedan.me/icons/192.png",
      "sizes": "192x192",
      "type": "image/png",
      "purpose": "any"
     },
     {
-      "src": "/icons/300.png",
+      "src": "https://bedan.me/icons/300.png",
       "sizes": "300x300",
       "type": "image/png",
       "purpose": "any"
     },
     {
-     "src": "/icons/512.png",
+     "src": "https://bedan.me/icons/512.png",
      "sizes": "512x512",
      "type": "image/png",
      "purpose": "any"
     },
     {
-      "src": "/icons/620x300.png",
+      "src": "https://bedan.me/icons/620x300.png",
       "sizes": "620x300",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/1240x600.png",
+      "src": "https://bedan.me/icons/1240x600.png",
       "sizes": "1240x600",
       "type": "image/png",
       "purpose": "any"
