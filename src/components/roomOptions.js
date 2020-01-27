@@ -442,33 +442,36 @@ class RoomOptions extends React.Component
                   <div>{ i18n('hand-cap') }</div>
                 </div>
 
-                <div className={ styles.field }>
+                {
+                  (process.env.PREVIEW) ?
+                    <div className={ styles.field }>
 
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    min='0'
-                    max='25'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.blankProbability }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...this.state.dirtyOptions,
-                        match: {
-                          ...this.state.dirtyOptions.match,
-                          blankProbability: value
-                        }
-                      }
-                    }, resize) }
-                  />
+                      <AutoSizeInput
+                        required
+                        type='number'
+                        min='0'
+                        max='25'
+                        maxLength={ 2 }
+                        id='options-input'
+                        master={ isMaster.toString() }
+                        className={ styles.input }
+                        placeholder={ i18n('options-placeholder') }
+                        value={ this.state.dirtyOptions.match.blankProbability }
+                        onUpdate={ (value, resize) => this.setState({
+                          dirtyOptions: {
+                            ...this.state.dirtyOptions,
+                            match: {
+                              ...this.state.dirtyOptions.match,
+                              blankProbability: value
+                            }
+                          }
+                        }, resize) }
+                      />
 
-                  <div className={ styles.inputSuffix }>{ '%' }</div>
-                  <div>{ i18n('blank-probability') }</div>
-                </div>
+                      <div className={ styles.inputSuffix }>{ '%' }</div>
+                      <div>{ i18n('blank-probability') }</div>
+                    </div> : <div/>
+                }
 
                 {/* Card Packs */}
 
