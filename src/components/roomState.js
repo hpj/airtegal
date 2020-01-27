@@ -95,12 +95,12 @@ class RoomState extends React.Component
     
     let matchState = this.state.matchState;
 
-    if (roomData.reason.message === 'choosing-phase')
+    if (roomData.reason.message === 'picking-phase')
     {
       if (roomData.judge)
         matchState = i18n('you-are-the-judge');
       else
-        matchState = i18n('choosing-phase');
+        matchState = i18n('picking-phase');
     }
     else if (roomData.reason.message === 'judging-phase')
     {

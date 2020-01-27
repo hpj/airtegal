@@ -68,7 +68,7 @@ class RoomTrackBar extends React.Component
                 // eslint-disable-next-line security/detect-object-injection
                 const player = this.state.playerProperties[playerId];
                 
-                const isTurn = player.state === 'judging' || player.state === 'playing';
+                const isTurn = player.state === 'judging' || player.state === 'picking';
 
                 return <div className={ styles.player } key={ playerId }>
 

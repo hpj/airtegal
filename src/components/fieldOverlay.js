@@ -161,7 +161,7 @@ class FieldOverlay extends React.Component
     overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
   }
 
-  /** send the card the judge choose to the server's match logic
+  /** send the card the judge judged to the server's match logic
   * @param { number } entryIndex
   * @param { boolean } isAllowed if the card can be picked
   */

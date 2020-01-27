@@ -18,9 +18,9 @@ Performance Issues and Bugs:
 Testing:
     
 UI/UX:
-  ✔ dark mode @done(20-01-22 12:52) @feature-update
+  ✔ dark mode @done(20-01-22 12:52)
 
-  ✔ editable room options @feature-update @done(20-01-26 10:32)
+  ✔ editable room options @done(20-01-26 10:32)
   
   ☐ blank card UI (make it a grid to allow multiple cards)
 

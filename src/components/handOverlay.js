@@ -128,16 +128,16 @@ class HandOverlay extends React.Component
       });
     }
 
-    // if in match and and has to choose a card from hand aka "playing"
+    // if in match and and has to pick a card
     if (
       roomData.state === 'match' &&
-      roomData.playerProperties[socket.id].state === 'playing'
+      roomData.playerProperties[socket.id].state === 'picking'
     )
     {
       this.visibility(true);
     }
     // client is in the lobby
-    // or not playing
+    // or not picking
     else
     {
       this.visibility(false);
@@ -212,7 +212,7 @@ class HandOverlay extends React.Component
     }
   }
 
-  /** send the card the player choose to the server's match logic
+  /** send the cards the player picked to the server's match logic
   * @param { number } cardIndex
   * @param { boolean } isAllowed if the card can be picked
   * @param { boolean } isPicked if the card is selected in the entry
@@ -241,14 +241,14 @@ class HandOverlay extends React.Component
     else
     {
       // add the card to entry
-      entry.push(cardIndex);
+      entry.push({ index: cardIndex });
 
       // if entry equal the amount that should be pick
       if (entry.length === this.state.pick)
       {
         // send it to match logic
         sendMessage('matchLogic', {
-          cardIndices: entry
+          picks: entry
         });
 
         // clean the entry
@@ -286,7 +286,7 @@ class HandOverlay extends React.Component
       boundaries.top = visibleSnapPoints[2].y;
     }
 
-    const isAllowed = this.state.playerState === 'playing';
+    const isAllowed = this.state.playerState === 'picking';
 
     // on overlay position changes
     overlayAnimatedY.removeAllListeners();
@@ -347,7 +347,7 @@ class HandOverlay extends React.Component
                   {
                     this.state.hand.map((card, i) =>
                     {
-                      const isPicked = entry.indexOf(i) > -1;
+                      const isPicked = entry.findIndex((v) => v.index === i) > -1;
 
                       const onMouseEnter = () =>
                       {

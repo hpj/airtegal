@@ -134,7 +134,7 @@
   
   // match state
 
-  "choosing-phase": "اختر كرتاً من يدك.",
+  "picking-phase": "اختر كرتاً من يدك.",
   "you-are-the-judge": "انت القاضي (انتظر دورك).",
 
   "judging-phase": "اختر الكرت الفائز بهذة الجولة.",
