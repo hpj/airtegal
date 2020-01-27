@@ -64,7 +64,7 @@ class AutoSizeInput extends React.Component
     }
 
     if (onUpdate)
-      onUpdate(value || '', this.resize);
+      onUpdate((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize);
   }
   
   onBlur(e)
@@ -84,7 +84,7 @@ class AutoSizeInput extends React.Component
     }
 
     if (onUpdate)
-      onUpdate(value || '', this.resize);
+      onUpdate((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize);
 
     if (preference)
       localStorage.setItem(preference, value);

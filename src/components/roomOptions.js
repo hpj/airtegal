@@ -442,6 +442,34 @@ class RoomOptions extends React.Component
                   <div>{ i18n('hand-cap') }</div>
                 </div>
 
+                <div className={ styles.field }>
+
+                  <AutoSizeInput
+                    required
+                    type='number'
+                    min='0'
+                    max='25'
+                    maxLength={ 2 }
+                    id='options-input'
+                    master={ isMaster.toString() }
+                    className={ styles.input }
+                    placeholder={ i18n('options-placeholder') }
+                    value={ this.state.dirtyOptions.match.blankProbability }
+                    onUpdate={ (value, resize) => this.setState({
+                      dirtyOptions: {
+                        ...this.state.dirtyOptions,
+                        match: {
+                          ...this.state.dirtyOptions.match,
+                          blankProbability: value
+                        }
+                      }
+                    }, resize) }
+                  />
+
+                  <div className={ styles.inputSuffix }>{ '%' }</div>
+                  <div>{ i18n('blank-probability') }</div>
+                </div>
+
                 {/* Card Packs */}
 
                 <div className={ styles.title }>{ i18n('card-packs') }</div>
@@ -703,8 +731,6 @@ const styles = createStyle({
     MozAppearance: 'textfield',
     appearance: 'textfield',
 
-    margin: '0 5px -2px 5px',
-
     direction: 'ltr',
 
     color: colors.blackText,
@@ -714,8 +740,8 @@ const styles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
+    margin: '0 5px -2px 5px',
     padding: 0,
-
     border: 0,
 
     borderColor: colors.blackText,
@@ -752,6 +778,10 @@ const styles = createStyle({
       WebkitAppearance: 'none',
       margin: 0
     }
+  },
+
+  inputSuffix: {
+    margin: (locale.direction === 'ltr') ? '0 5px 0 -5px': '0 -5px 0 5px'
   },
 
   packs: {
