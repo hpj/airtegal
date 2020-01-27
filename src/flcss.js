@@ -172,6 +172,8 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
       // it must be pseudo-class or pseudo-element
       rule.startsWith(':') ||
       rule.startsWith('::') ||
+      //
+      rule.includes('%this') ||
       // other selectors
       selectorsRegex.test(rule)
     )
@@ -181,11 +183,13 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
         let nextParent = '';
 
         if (nest)
-          nextParent = `${nest}${rule}`;
+          nextParent = `.${nest}${rule}`;
+        else if (rule.includes('%this'))
+          nextParent = rule.replace('%this', `.${className}`);
         else
-          nextParent = `${className}${rule}`;
+          nextParent = `.${className}${rule}`;
 
-        additionalCss = additionalCss + `.${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}`;
+        additionalCss = additionalCss + `${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}`;
       }
     }
     // at-rule selector

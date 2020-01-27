@@ -784,7 +784,24 @@ const styles = createStyle({
   },
 
   inputSuffix: {
-    margin: (locale.direction === 'ltr') ? '0 5px 0 -5px': '0 -5px 0 5px'
+    margin: (locale.direction === 'ltr') ? '0 5px -2px -5px': '0 -5px -2px 5px',
+
+    borderBottom: '2px solid',
+    borderColor: colors.blackText,
+
+    'input:placeholder-show ~ %this': {
+      color: colors.red,
+      borderColor: colors.red
+    },
+
+    'input:not(:valid) ~ %this': {
+      color: colors.red,
+      borderColor: colors.red
+    },
+
+    'input[master="false"] ~ %this': {
+      borderBottom: 0
+    }
   },
 
   packs: {
