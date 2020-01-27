@@ -358,12 +358,12 @@ class RoomOptions extends React.Component
                       <div>{ i18n('max-time-2') }</div>
                     </div> : <div/>
                 }
+
                 {/* Match Options */}
 
                 <div className={ styles.title }>{ i18n('match-options') }</div>
 
                 <div className={ styles.field }>
-
                   <AutoSizeInput
                     required
                     type='number'
@@ -387,11 +387,9 @@ class RoomOptions extends React.Component
                   />
 
                   <div>{ i18n('max-players') }</div>
-
                 </div>
 
                 <div className={ styles.field }>
-
                   <AutoSizeInput
                     required
                     type='number'
@@ -416,11 +414,9 @@ class RoomOptions extends React.Component
                   />
 
                   <div>{ i18n('round-countdown') }</div>
-
                 </div>
 
                 <div className={ styles.field }>
-
                   <AutoSizeInput
                     required
                     type='number'
@@ -444,7 +440,6 @@ class RoomOptions extends React.Component
                   />
 
                   <div>{ i18n('hand-cap') }</div>
-
                 </div>
 
                 {/* Card Packs */}
@@ -514,7 +509,7 @@ const styles = createStyle({
     overflowY: 'scroll',
 
     fontWeight: '700',
-    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     width: '100%',
@@ -644,16 +639,14 @@ const styles = createStyle({
   },
 
   title: {
-    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-
-    padding: '30px 30px 20px 30px'
+    padding: '20px 25px'
   },
 
   pick: {
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px',
+    padding: '0 25px 8px 25px',
 
     '[master="false"] > div': {
       pointerEvents: 'none'
@@ -703,7 +696,7 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 30px'
+    padding: '0 25px 8px 25px'
   },
 
   input: {
@@ -717,7 +710,7 @@ const styles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
