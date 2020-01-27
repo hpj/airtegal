@@ -35,6 +35,8 @@ class RoomOptions extends React.Component
 
     this.onRoomData = this.onRoomData.bind(this);
 
+    this.clearDirtyOptions = this.clearDirtyOptions.bind(this);
+
     this.editRequest = this.editRequest.bind(this);
     this.matchRequest = this.matchRequest.bind(this);
   }
@@ -54,18 +56,8 @@ class RoomOptions extends React.Component
     // if dirty options is undefined
     // or if the real room options were edited
     if (!this.state.dirtyOptions || roomData.reason.message === 'options-edit')
-    {
-      this.setState({
-        dirtyOptions: roomData.options
-      }, () =>
-      {
-        // force all inputs to auto resize
-        const inputs = document.querySelectorAll('#options-input');
-
-        inputs.forEach((elem) => autoSize(elem));
-      });
-    }
-
+      this.clearDirtyOptions(roomData.options);
+    
     this.setState({
       players: roomData.players,
       options: roomData.options,
@@ -76,6 +68,19 @@ class RoomOptions extends React.Component
   showErrorMessage(err)
   {
     this.setState({ errorMessage: err });
+  }
+
+  clearDirtyOptions(options)
+  {
+    this.setState({
+      dirtyOptions: options
+    }, () =>
+    {
+      // force all inputs to auto resize
+      const inputs = document.querySelectorAll('#options-input');
+
+      inputs.forEach((elem) => autoSize(elem));
+    });
   }
 
   checkValidity()
@@ -184,6 +189,9 @@ class RoomOptions extends React.Component
         this.state.players.length >= 3 &&
         this.state.roomState !== 'match'
       );
+
+    if (!this.state.dirtyOptions)
+      return <div/>;
 
     return (
       <div ref={ wrapperRef } className={ styles.wrapper }>

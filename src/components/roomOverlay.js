@@ -254,6 +254,9 @@ class RoomOverlay extends React.Component
 
     sendMessage('leave').then(() =>
     {
+      if (optionsRef.current)
+        optionsRef.current.clearDirtyOptions();
+    
       // after leaving the room
       // clean up some of the state values
       this.setState({
