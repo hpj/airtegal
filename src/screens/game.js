@@ -407,7 +407,7 @@ class Game extends React.Component
                     {
                       const pack = room.options.match.selectedPacks[0];
 
-                      const gameMode = `${i18n(room.options.gameMode)}.`;
+                      const gameMode = `(${i18n(room.options.gameMode)})`;
 
                       let winMethod;
 
