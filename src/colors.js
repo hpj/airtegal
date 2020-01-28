@@ -97,9 +97,12 @@ export default function(forceLight)
     handBackground: '#292929',
     handScrollbar: '#867878',
 
-    whiteCardBackground: '#484646',
-    whiteCardForeground: '#e2e1e1',
-    whiteCardPicked: '#101010',
+    blackCardBackground: '#3c3c3c',
+    blackCardForeground: '#e2e1e1',
+
+    whiteCardBackground: '#989898',
+    whiteCardForeground: '#040404',
+    whiteCardPicked: '#040404',
 
     client: '#ffffff',
 

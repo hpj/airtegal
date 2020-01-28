@@ -9,6 +9,9 @@ February Update Checklist:
   
   ☐ schedule the discord event
 
+  ☐ deploy the new version of server
+    - increase the default probability for blanks to 5%
+
   ☐ remove update flag from website (process.env.PREVIEW)
   
   ☐ activate new card packs in database
@@ -22,11 +25,15 @@ UI/UX:
 
   ✔ editable room options @done(20-01-26 10:32)
   
-  ☐ blank card UI (make it a grid to allow multiple cards)
+  ☐ blank card
 
-  ☐ sharing the winning card of the round on social media @feature-update
+  ☐ king mode
 
-  ☐ match end screen @feature-update 
+  ☐ democracy mode
+
+  ☐ sharing the winning card of the round on social media
+
+  ☐ match end screen
     - above room options there should be a stack-able (on top of each other) match reports
 
   ☐ design the mockups for the proposal and vote screens

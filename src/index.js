@@ -171,11 +171,6 @@ const connectivityPromise = () =>
     {
       ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
   
-      // TODO you can handle the user being online again
-      // and suggest to them to go back to playing
-      // equally you can warn the user if they go offline while playing
-      // window.addEventListener('online', on);
-      
       reject();
     }
     else

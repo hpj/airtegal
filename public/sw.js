@@ -167,7 +167,7 @@ workbox.precaching.precacheAndRoute([
   }
 ]);
 
-// Cache the bundle.js file with a stale-while-revalidate strategy
+// Cache the bundle.js file with a network-first strategy
 workbox.routing.registerRoute(
   new RegExp('bundle.js'),
   new workbox.strategies.NetworkFirst()
