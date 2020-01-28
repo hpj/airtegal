@@ -171,7 +171,7 @@ const connectivityPromise = () =>
     {
       ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
   
-      reject();
+      reject('offline');
     }
     else
     {
@@ -258,5 +258,8 @@ Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
   .then(() => fuckAdBlockPromise().then(loaded))
   .catch((e) =>
   {
+    if (e === 'offline')
+      return;
+    
     ReactDOM.render(<Error error={ e }/>, placeholder);
   });

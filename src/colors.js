@@ -73,7 +73,7 @@ export default function(forceLight)
 
     theme: 'dark',
 
-    holder: '#696060',
+    holder: '#564f4f',
 
     whiteText: '#ffffff',
     whiteBackground: '#211f1f',

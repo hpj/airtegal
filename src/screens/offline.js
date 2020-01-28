@@ -20,10 +20,29 @@ const Offline = () =>
   }, [ window.location ]);
 
   return (
-    <div>
+    <div className={ styles.container }>
       <p>You Are Offline</p>
     </div>
   );
 };
+
+const styles = createStyle({
+  container: {
+    display: 'flex',
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    color: colors.blackText,
+    backgroundColor: colors.whiteBackground,
+
+    width: '100vw',
+    height: '100vh',
+
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: 700
+  }
+});
 
 export default Offline;

@@ -541,7 +541,7 @@ const styles = createStyle({
   loading: {
     zIndex: 1,
     position: 'fixed',
-    backgroundColor: colors.blackBackground,
+    backgroundColor: colors.holder,
 
     opacity: 0.5,
     top: 0,
