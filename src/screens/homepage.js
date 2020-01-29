@@ -331,7 +331,6 @@ const playStyles = createStyle({
     
     border: `3px solid ${ colors.whiteText }`,
 
-    pointerEvents: 'none',
     userSelect: 'none',
 
     fontSize: 'calc(12px + 0.65vw + 0.65vh)',
@@ -341,14 +340,11 @@ const playStyles = createStyle({
     padding: '5% 12%',
     margin: '2vh 0',
 
-    '[href]': {
-      pointerEvents: 'all'
-    },
-
     ':hover': {
       background: `linear-gradient(to right, ${colors.playButtonGradient[0]}, ${colors.playButtonGradient[1]})`,
-      '-webkit-background-clip': 'text',
-      '-webkit-text-fill-color': 'transparent',
+      
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
 
       borderImage: `linear-gradient(to right, ${colors.playButtonGradient[0]}, ${colors.playButtonGradient[1]})`,
       borderImageSlice: 1

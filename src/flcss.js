@@ -162,6 +162,12 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
         });
       });
     }
+    else if (rule.includes('%this'))
+    {
+      const nextParent = `${rule.replace('%this', `.${className}`)}`;
+
+      additionalCss = additionalCss + `${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}`;
+    }
     else if (
       // it must be an attribute
       rule.startsWith('[') ||
@@ -172,8 +178,6 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
       // it must be pseudo-class or pseudo-element
       rule.startsWith(':') ||
       rule.startsWith('::') ||
-      //
-      rule.includes('%this') ||
       // other selectors
       selectorsRegex.test(rule)
     )
@@ -183,13 +187,11 @@ function handleStyle(key, obj, rootDirectory, rootStylesheet, nest)
         let nextParent = '';
 
         if (nest)
-          nextParent = `.${nest}${rule}`;
-        else if (rule.includes('%this'))
-          nextParent = rule.replace('%this', `.${className}`);
+          nextParent = `${nest}${rule}`;
         else
-          nextParent = `.${className}${rule}`;
+          nextParent = `${className}${rule}`;
 
-        additionalCss = additionalCss + `${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}`;
+        additionalCss = additionalCss + `.${nextParent}${handleStyle(rule, values[i], rootDirectory, rootStylesheet, nextParent)}`;
       }
     }
     // at-rule selector
