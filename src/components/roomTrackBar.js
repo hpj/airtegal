@@ -177,8 +177,7 @@ const styles = createStyle({
     padding: '0 10px 0 10px',
 
     '@media screen and (max-width: 1080px)': {
-      flexBasis: '100%',
-      padding: 0
+      flexBasis: '100%'
     }
   },
 

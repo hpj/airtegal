@@ -152,7 +152,7 @@ export default class LineTo extends Component
 
   detect()
   {
-    const { from, to, within = '' } = this.props;
+    const { from, to, size, within = '' } = this.props;
 
     const a = this.findElement(from);
     const b = this.findElement(to);
@@ -178,21 +178,34 @@ export default class LineTo extends Component
       offsetY -= boxp.top + (window.pageYOffset || document.documentElement.scrollTop);
     }
 
-    const x0 = box0.left + box0.width * anchor0.x + offsetX;
-    const x1 = box1.left + box1.width * anchor1.x + offsetX;
-    const y0 = box0.top + box0.height * anchor0.y + offsetY;
-    const y1 = box1.top + box1.height * anchor1.y + offsetY;
+    const x0 = Math.round(box0.left + box1.width * anchor0.x + offsetX);
+    const x1 = Math.round(box1.left + box1.width * anchor1.x + offsetX);
 
-    return { x0, y0, x1, y1 };
+    const y0 = Math.round(box0.top + box1.height * anchor0.y + offsetY);
+    const y1 = Math.round(box1.top + box1.height * anchor1.y + offsetY);
+
+    if (x0 > x1)
+    {
+      return [ { x0, y0: y1, x1, y1 } ];
+    }
+    else
+    {
+      return [ { x0, y0, x1: 0, y1: y0 }, { x0: size.width, y0: y1, x1, y1 } ];
+    }
   }
 
   render()
   {
     const points = this.detect();
 
-    return points ? (
-      <Line { ...points } { ...this.props } />
-    ) : null;
+    if (!points)
+      return <div/>;
+    
+    return <div>
+      {
+        points.map((value, i) => <Line key={ i } { ...value } { ...this.props } />)
+      }
+    </div>;
   }
 }
 
@@ -246,7 +259,9 @@ export class Line extends PureComponent
         : '1',
       transform: `rotate(${angle}deg)`,
       // Rotate around (x0, y0)
-      transformOrigin: '0 0'
+      transformOrigin: '0 0',
+      margin: 0,
+      padding: 0
     };
 
     const defaultStyle = {
