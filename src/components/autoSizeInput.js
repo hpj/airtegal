@@ -69,7 +69,7 @@ class AutoSizeInput extends React.Component
   
   onBlur(e)
   {
-    const { type, minutes, preference, onUpdate } = this.props;
+    const { type, minutes, onUpdate } = this.props;
 
     let value = e.target.value;
 
@@ -84,10 +84,7 @@ class AutoSizeInput extends React.Component
     }
 
     if (onUpdate)
-      onUpdate((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize);
-
-    if (preference)
-      localStorage.setItem(preference, value);
+      onUpdate((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize, true);
   }
 
   render()
@@ -145,7 +142,6 @@ AutoSizeInput.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.any,
 
-  preference: PropTypes.string,
   onUpdate: PropTypes.func
 };
 

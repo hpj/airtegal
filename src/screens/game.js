@@ -348,10 +348,18 @@ class Game extends React.Component
               required
               type='text'
               maxLength={ 18 }
-              preference='username'
               placeholder={ i18n('username-placeholder') }
               value={ this.state.username }
-              onUpdate={ (value, resize) => this.setState({ username: value }, resize) }
+              onUpdate={ (value, resize, blur) =>
+              {
+                const trimmed = (blur) ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
+
+                localStorage.setItem('username', trimmed);
+
+                this.setState({
+                  username: trimmed
+                }, resize);
+              } }
             />
 
           </div>
