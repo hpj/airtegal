@@ -128,9 +128,6 @@ export default function(forceLight)
 
 export function detectDeviceIsDark()
 {
-  if (!process.env.PREVIEW)
-    return false;
-
   if (localStorage.getItem('forceDark') === 'true')
     return true;
   else if (localStorage.getItem('forceDark') === 'false')

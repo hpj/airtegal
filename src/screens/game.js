@@ -384,11 +384,9 @@ class Game extends React.Component
             <RefreshIcon allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms } className={ roomsStyles.refresh }/>
 
             {
-              (process.env.PREVIEW) ?
-                (detectDeviceIsDark()) ?
-                  <Brightness2Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/> :
-                  <Brightness5Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/> :
-                <div/>
+              (detectDeviceIsDark()) ?
+                <Brightness2Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/> :
+                <Brightness5Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/>
             }
 
             <div className={ roomsStyles.roomsWrapper }>
