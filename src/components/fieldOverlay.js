@@ -105,7 +105,6 @@ class FieldOverlay extends React.Component
     if (roomData.state === 'lobby')
     {
       this.setState({
-        hoverIndex: undefined,
         field: []
       });
     }
@@ -113,7 +112,6 @@ class FieldOverlay extends React.Component
     if (roomData.reason.message === 'round-ended')
     {
       this.setState({
-        hoverIndex: undefined,
         winnerEntryIndex: (typeof roomData.reason.details === 'number') ? roomData.reason.details : undefined
       });
     }
@@ -128,16 +126,14 @@ class FieldOverlay extends React.Component
     {
       const lines = [];
 
-      roomData.field.forEach((entry, entryIndex) =>
+      roomData.field.forEach((entry) =>
       {
         entry.cards.forEach((card, i) =>
         {
           if (entry.cards[i + 1])
             lines.push({
-              id: entry.id !== undefined,
               from: card.key,
-              to: entry.cards[i + 1].key,
-              entryIndex: entryIndex
+              to: entry.cards[i + 1].key
             });
         });
       });
@@ -231,35 +227,14 @@ class FieldOverlay extends React.Component
                   {
                     let owner;
 
-                    // TODO make server cache a username even of the player left
-                    // a better way would be to keep the playerProperties even if player leaves
-                    // and jus splice them from the players array
-                    // keep in mind that this change must not break the joining/creating rooms
                     if (i === 0 && entry.id && entryIndex > 0 && this.state.playerProperties[entry.id])
                       owner = this.state.playerProperties[entry.id].username;
-
-                    const onMouseEnter = () =>
-                    {
-                      this.setState({
-                        hoverIndex: entryIndex
-                      });
-                    };
-
-                    const onMouseLeave = () =>
-                    {
-                      this.setState({
-                        hoverIndex: undefined
-                      });
-                    };
 
                     return <Card
                       key={ card.key }
                       elementId={ card.key }
-                      onMouseEnter={ (isAllowed) ? onMouseEnter : undefined }
-                      onMouseLeave={ (isAllowed) ? onMouseLeave : undefined }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       allowed={ isAllowed.toString() }
-                      highlighted={ (this.state.hoverIndex === entryIndex).toString() }
                       owner={ owner }
                       type={ card.type }
                       content={ card.content }
@@ -274,14 +249,15 @@ class FieldOverlay extends React.Component
           {
             this.state.lines.map((o, i) =>
             {
-              return (o.entryIndex === this.state.hoverIndex || o.id) ? <LineTo
+              return <LineTo
                 key={ i }
-                within={ styles.container }
+                size={ size }
+                within={ styles.wrapper }
                 borderColor={ colors.entryLine }
                 borderWidth={ 10 }
                 from={ o.from }
                 to={ o.to }
-              /> : <div key={ i }/>;
+              />;
             })
           }
 
@@ -306,7 +282,7 @@ const styles = createStyle({
 
   wrapper: {
     overflowX: 'hidden',
-    overflowY: 'scroll',
+    overflowY: 'overlay',
 
     position: 'relative',
     backgroundColor: colors.fieldBackground,
@@ -317,11 +293,7 @@ const styles = createStyle({
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      left: '-10px',
-      
-      width: '100%',
-      
-      padding: '0 10px'
+      width: '100%'
     },
 
     '::-webkit-scrollbar':
@@ -344,9 +316,22 @@ const styles = createStyle({
     gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
     justifyContent: 'space-around',
 
-    '> *': {
+    '> * > *': {
       width: 'calc(115px + 2vw + 2vh)',
+
+      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
+      height: 'auto',
+
       margin: '20px'
+    },
+
+    '> [owner="true"] > *': {
+      paddingTop: '5px',
+      paddingBottom: '5px'
+    },
+
+    '> * > * > textarea': {
+      minHeight: 'calc(100% - 20px)'
     }
   }
 });

@@ -2,8 +2,17 @@
   // brands
 
   "kuruit-bedan-fash5": "كروت بضان فشخ",
+
   "herp-project": "Herp Project",
   "hpj": "HP.J",
+
+  // hand
+
+  "confirm": "تاكيد",
+  "clear": "الغاء",
+
+  "kuruit-blank-blank": "كروت ____ ___",
+  "blank": "____",
 
   // error connection errors
 

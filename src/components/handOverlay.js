@@ -22,13 +22,19 @@ import { createStyle } from '../flcss.js';
 
 import { gestures } from './fieldOverlay.js';
 
+import PicksDialogue from './picksDialogue.js';
+
 const colors = getTheme();
 
 const overlayRef = createRef();
 const overlayContainerRef = createRef();
 
 const wrapperRef = createRef();
-const gridRef = createRef();
+
+const picksDialogueRef = createRef();
+
+const picksGridRef = createRef();
+const handGridRef = createRef();
 
 const overlayAnimatedY = new Value(0);
 
@@ -51,7 +57,6 @@ class HandOverlay extends React.Component
 
       blockDragging: false,
 
-      entry: [],
       hand: []
     };
 
@@ -60,6 +65,8 @@ class HandOverlay extends React.Component
     this.onRoomData = this.onRoomData.bind(this);
     this.onResize = this.onResize.bind(this);
     this.onScroll = this.onScroll.bind(this);
+
+    this.forceGridAnimations = this.forceGridAnimations.bind(this);
 
     this.maximize = this.maximize.bind(this);
     this.maximizeMinimize = this.maximizeMinimize.bind(this);
@@ -74,8 +81,6 @@ class HandOverlay extends React.Component
 
     if (isTouchScreen)
       gestures.on('up', this.maximize);
-   
-    this.animatedGrid = wrapGrid(gridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
   }
 
   componentWillUnmount()
@@ -110,22 +115,12 @@ class HandOverlay extends React.Component
 
   onRoomData(roomData)
   {
-    // if lobby clear hand and entry
+    // if lobby clear hand and picks
     if (roomData.state === 'lobby')
     {
       this.setState({
-        hoverIndex: undefined,
-        entry: [],
         hand: []
-      });
-    }
-
-    if (roomData.reason.message === 'round-started')
-    {
-      this.setState({
-        hoverIndex: undefined,
-        entry: []
-      });
+      }, this.forceGridAnimations);
     }
 
     // if in match and and has to pick a card
@@ -143,26 +138,14 @@ class HandOverlay extends React.Component
       this.visibility(false);
     }
 
-    // FIX compare it to how field updates
-    // if the player has a secret properties object in the data
-    // and it has the hand data for this client
     if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
     {
       this.setState({
         hand: roomData.playerSecretProperties.hand
-      });
+      }, this.forceGridAnimations);
     }
 
-    if (roomData.field && roomData.field.length > 0)
-    {
-      this.setState({
-        // the black card pick amount
-        pick: roomData.field[0].cards[0].pick
-      });
-    }
-    
     this.setState({
-      roomState: roomData.state,
       playerState: roomData.playerProperties[socket.id].state
     });
   }
@@ -212,60 +195,28 @@ class HandOverlay extends React.Component
     }
   }
 
-  /** send the cards the player picked to the server's match logic
-  * @param { number } cardIndex
-  * @param { boolean } isAllowed if the card can be picked
-  * @param { boolean } isPicked if the card is selected in the entry
-  */
-  pickCard(cardIndex, isAllowed, isPicked)
+  forceGridAnimations()
   {
-    let entry = [ ...this.state.entry ];
-
-    const { sendMessage } = this.props;
-
-    if (!isAllowed)
-      return;
-
-    // if card exists in entry already
-    if (isPicked)
+    // force a re-render
+    this.setState({
+      hand: this.state.hand
+    }, () =>
     {
-      // remove the card from entry
-      entry.splice(entry.indexOf(cardIndex), 1);
-
-      // update state to force re-render
-      this.setState({
-        entry: entry
-      });
-    }
-    // if not then add it
-    else
-    {
-      // add the card to entry
-      entry.push({ index: cardIndex });
-
-      // if entry equal the amount that should be pick
-      if (entry.length === this.state.pick)
+      // force grid animations
+      requestAnimationFrame(() =>
       {
-        // send it to match logic
-        sendMessage('matchLogic', {
-          picks: entry
-        });
+        if (this.animatedHandGrid)
+          this.animatedHandGrid.forceGridAnimation();
 
-        // clean the entry
-        entry = [];
-      }
-
-      // update state to force re-render
-      this.setState({
-        entry: entry
+        if (this.animatedPicksGrid)
+          this.animatedPicksGrid.forceGridAnimation();
       });
-    }
+    });
   }
 
   render()
   {
     const { size } = this.props;
-    const { entry } = this.state;
 
     let visibleSnapPoints;
     
@@ -281,10 +232,16 @@ class HandOverlay extends React.Component
     }
     else
     {
-      visibleSnapPoints = [ { y: percent(size.height, 80) }, { y: percent(size.height, 50) }, { y: percent(size.height, 15) } ];
+      visibleSnapPoints = [ { y: percent(size.height, 50) }, { y: percent(size.height, 80) }, { y: percent(size.height, 15) } ];
       
       boundaries.top = visibleSnapPoints[2].y;
     }
+
+    if (!this.animatedHandGrid && handGridRef.current)
+      this.animatedHandGrid = wrapGrid(handGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
+
+    if (!this.animatedPicksGrid && picksGridRef.current)
+      this.animatedPicksGrid = wrapGrid(picksGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
 
     const isAllowed = this.state.playerState === 'picking';
 
@@ -301,10 +258,10 @@ class HandOverlay extends React.Component
 
       // hide the overlay when it goes off-screen
       if (Math.round(value) >= size.height)
-        this.setState({ overlayHidden: true }, () => this.animatedGrid.forceGridAnimation());
+        this.setState({ overlayHidden: true }, this.forceGridAnimations);
       // only make the overlay visible if there's a reason
       else if (!this.state.overlayHidden || this.state.visible)
-        this.setState({ overlayHidden: false }, () => this.animatedGrid.forceGridAnimation());
+        this.setState({ overlayHidden: false }, this.forceGridAnimations);
     });
 
     // if size is not calculated yet
@@ -313,6 +270,7 @@ class HandOverlay extends React.Component
 
     return (
       <div className={ styles.view }>
+
         <Interactable.View
           ref={ overlayRef }
 
@@ -343,43 +301,37 @@ class HandOverlay extends React.Component
               </div>
 
               <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper } onScroll={ this.onScroll }>
-                <div ref= { gridRef } className={ styles.container }>
+
+                <PicksDialogue
+                  ref={ picksDialogueRef }
+                  gridRef={ picksGridRef }
+                  sendMessage={ this.props.sendMessage }
+                  forceGridAnimations={ this.forceGridAnimations }
+                />
+
+                <div ref= { handGridRef } className={ styles.handContainer }>
                   {
                     this.state.hand.map((card, i) =>
                     {
-                      const isPicked = entry.findIndex((v) => v.index === i) > -1;
-
-                      const onMouseEnter = () =>
-                      {
-                        this.setState({
-                          hoverIndex: i
-                        });
-                      };
-
-                      const onMouseLeave = () =>
-                      {
-                        this.setState({
-                          hoverIndex: undefined
-                        });
-                      };
+                      const isPicked = picksDialogueRef.current.isPicked(i);
 
                       return <Card
                         key={ card.key }
-                        onMouseEnter={ onMouseEnter }
-                        onMouseLeave={ onMouseLeave }
-                        onClick={ () => this.pickCard(i, isAllowed, isPicked) }
-                        picked={ isPicked.toString() }
+                        onClick={ () => picksDialogueRef.current.pickCard(i, isAllowed) }
+                        disabled={ isPicked }
                         allowed={ isAllowed.toString() }
-                        highlighted={ (this.state.hoverIndex === i).toString() }
-                        type='white'
+                        type={ card.type }
+                        blank={ card.blank }
                         content={ card.content }/>;
                     })
                   }
                 </div>
+
               </div>
             </div>
           </div>
         </Interactable.View>
+      
       </div>
     );
   }
@@ -400,7 +352,7 @@ const styles = createStyle({
 
   overlayWrapper: {
     // margin to avoid the trackbar
-    margin: '0 0 0 calc(15vw + 10px)',
+    margin: '0 0 0 15vw',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
@@ -469,7 +421,7 @@ const styles = createStyle({
     }
   },
 
-  container: {
+  handContainer: {
     display: 'grid',
 
     direction: locale.direction,
@@ -479,9 +431,17 @@ const styles = createStyle({
 
     padding: '0 10px',
 
-    '> *': {
+    '> * > *': {
       width: 'calc(115px + 2vw + 2vh)',
-      margin: '10px 20px 20px 20px'
+
+      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
+      height: 'auto',
+
+      margin: '20px'
+    },
+
+    '> * > * > textarea': {
+      minHeight: 'calc(100% - 20px)'
     }
   }
 });

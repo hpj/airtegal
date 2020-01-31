@@ -1,9 +1,9 @@
 export const locales = [
-  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', json: require('./i18n/ar-EG.json') }
+  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', blank: /[^\u0621-\u064A0-9 ]/g, json: require('./i18n/ar-EG.json') }
 ];
 
 /**
-* @type { { value: string, label: string, locale: string, direction: string, json: {} } }
+* @type { { value: string, label: string, locale: string, direction: string, blank: RegExp, json: {} } }
 */
 export let locale = getDefault();
 
