@@ -54,10 +54,11 @@ export default function(forceLight)
 
     blackCardBackground: '#000000',
     blackCardForeground: '#ffffff',
+    blackCardHover: '#484848',
 
     whiteCardBackground: '#ffffff',
     whiteCardForeground: '#000000',
-    whiteCardPicked: '#000000',
+    whiteCardHover: '#000000',
     
     entryLine: '#000000',
 
@@ -99,10 +100,11 @@ export default function(forceLight)
 
     blackCardBackground: '#3c3c3c',
     blackCardForeground: '#e2e1e1',
+    blackCardHover: '#615f5f',
 
     whiteCardBackground: '#989898',
     whiteCardForeground: '#040404',
-    whiteCardPicked: '#040404',
+    whiteCardHover: '#040404',
 
     client: '#ffffff',
 

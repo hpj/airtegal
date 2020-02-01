@@ -95,10 +95,17 @@ class RoomState extends React.Component
     
     let matchState = this.state.matchState;
 
-    if (roomData.reason.message === 'picking-phase')
+    if (roomData.options.gameMode === 'king' && roomData.reason.message === 'black-card')
     {
       if (roomData.judge)
-        matchState = i18n('you-are-the-judge');
+        matchState = i18n('picking-phase');
+      else
+        matchState = i18n('wait-until-judge-picks');
+    }
+    else if (roomData.reason.message === 'picking-phase')
+    {
+      if (roomData.judge)
+        matchState = i18n('you-are-the-judge-wait');
       else
         matchState = i18n('picking-phase');
     }
@@ -107,7 +114,7 @@ class RoomState extends React.Component
       if (roomData.judge)
         matchState = i18n('judging-phase');
       else
-        matchState = i18n('wait-for-the-judge');
+        matchState = i18n('wait-until-judge-judges');
     }
     else if (roomData.reason.message === 'round-ended' && typeof roomData.reason.details === 'number')
     {

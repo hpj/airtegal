@@ -234,6 +234,14 @@ const styles = createStyle({
       animationDirection: 'normal, alternate'
     },
 
+    '[type="black"][allowed="true"]:hover': {
+      boxShadow: `5px 5px 0px 0px ${colors.blackCardHover}`
+    },
+
+    '[type="white"][allowed="true"]:hover': {
+      boxShadow: `5px 5px 0px 0px ${colors.whiteCardHover}`
+    },
+
     '[type="black"]': {
       color: colors.blackCardForeground,
       backgroundColor: colors.blackCardBackground
@@ -278,6 +286,10 @@ const styles = createStyle({
 
     ':focus': {
       'outline': 'none'
+    },
+
+    ':not(:focus)::selection': {
+      backgroundColor: colors.transparent
     }
   },
 

@@ -58,10 +58,17 @@ class PicksDialogue extends React.Component
       this.clearPick();
     }
 
-    if (roomData.field && roomData.field.length > 0)
+    if (roomData.options.gameMode === 'king' && roomData.reason.message === 'black-card')
     {
+      // the black card picks max length
       this.setState({
-        // the black card pick amount
+        pick: 1
+      });
+    }
+    else if (roomData.field && roomData.field.length > 0)
+    {
+      // the white card picks max length
+      this.setState({
         pick: roomData.field[0].cards[0].pick
       });
     }
@@ -173,6 +180,7 @@ class PicksDialogue extends React.Component
 
               return <Card
                 key={ card.key }
+                // TODO remove button
                 // onClick={ () => this.pickCard(i, true) }
                 disabled={ (order >= 0) ? false : true }
                 allowed='false'

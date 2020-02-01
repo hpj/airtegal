@@ -98,15 +98,18 @@ class FieldOverlay extends React.Component
 
   onRoomData(roomData)
   {
-    // the field overlay is only visible in matches
-    this.visibility(roomData.state === 'match');
-
     // if lobby clear field
     if (roomData.state === 'lobby')
     {
       this.setState({
         field: []
       });
+
+      this.visibility(false);
+    }
+    else
+    {
+      this.visibility(true);
     }
 
     if (roomData.reason.message === 'round-ended')

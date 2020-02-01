@@ -216,6 +216,8 @@ class RoomOptions extends React.Component
 
                 {/* Game Mode */}
 
+                <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
+
                 <div className={ styles.title }>{ i18n('game-mode') }</div>
 
                 <div className={ styles.pick } master={ isMaster.toString() }>
@@ -663,6 +665,11 @@ const styles = createStyle({
       
       border: `1px ${colors.red} solid`
     }
+  },
+
+  dirty: {
+    textAlign: 'center',
+    padding: '10px'
   },
 
   title: {

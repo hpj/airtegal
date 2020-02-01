@@ -100,6 +100,8 @@
   "new-master": "اصبح هو سيد هذة الغرفة.",
 
   // room options
+  "changes-not-applied": "*هنالك تغييرات لم يتم تطبيقها",
+
   "room-edited": "تم تغير اعدادت الغرفة.",
   "game-mode": "نمط اللعبة:",
 
@@ -143,11 +145,13 @@
   
   // match state
 
+  "wait-until-judge-picks": "انتظر اختيار القاضي.",
+
   "picking-phase": "اختر كرتاً من يدك.",
-  "you-are-the-judge": "انت القاضي (انتظر دورك).",
+  "you-are-the-judge-wait": "انت القاضي (انتظر دورك).",
 
   "judging-phase": "اختر الكرت الفائز بهذة الجولة.",
-  "wait-for-the-judge": "انتظر حكم القاضي.",
+  "wait-until-judge-judges": "انتظر حكم القاضي.",
 
   "you-won-the-round": "لقد فزت بهذة الجولة.",
   "won-this-round": "لقد فاز %0 بهذة الجولة.",
