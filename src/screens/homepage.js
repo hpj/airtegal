@@ -102,9 +102,6 @@ class Homepage extends React.Component
               <br/>
   
               { i18n('freedom-of-speech-2') }
-              <br/>
-  
-              { i18n('freedom-of-speech-3') }
             </p>
   
             <p className={ qaStyles.question }>
