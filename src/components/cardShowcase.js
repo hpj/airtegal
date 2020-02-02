@@ -25,6 +25,10 @@ class CardShowcase extends React.Component
       hide: true,
       shownIndex: -1
     };
+
+    // bind functions that are use as callbacks
+
+    this.startShowcase = this.startShowcase.bind(this);
   }
 
   componentDidMount()
@@ -39,15 +43,15 @@ class CardShowcase extends React.Component
       {
         this.setState({
           data: response.data
-        }, this.startShowcase);
+        }, () => setTimeout(this.startShowcase, 1000));
       }
     }).catch(console.error);
   }
 
   componentWillUnmount()
   {
-    if (this.clear)
-      this.clear();
+    if (this.interval)
+      clearInterval(this.interval);
   }
 
   startShowcase()
@@ -85,15 +89,16 @@ class CardShowcase extends React.Component
     setTimeout(nextSet.bind(this), 1000);
 
     // cycle between different sets of cards every 5 seconds
-    const interval = setInterval(() =>
+    
+    if (this.interval)
+      clearInterval(this.interval);
+
+    this.interval = setInterval(() =>
     {
       this.setState({
         hide: true
       }, () => setTimeout(nextSet.bind(this), 1000));
     }, 5000);
-
-    // clear the interval on unmount
-    this.clear = () => clearInterval(interval);
   }
 
   render()
@@ -133,7 +138,7 @@ const styles = createStyle({
     width: 0,
 
     transition: 'width 1s',
-    transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    transitionTimingFunction: 'cubic-bezier(0.55, 0.09, 0.68, 0.53)',
     
     '@media screen and (max-width: 830px)': {
       display: 'none'
