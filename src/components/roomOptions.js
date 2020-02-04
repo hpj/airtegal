@@ -176,6 +176,8 @@ class RoomOptions extends React.Component
 
   render()
   {
+    const { dirtyOptions, options } = this.state;
+
     const isMaster = this.state.masterId === socket.id;
 
     const isValid = this.checkValidity();
@@ -220,21 +222,20 @@ class RoomOptions extends React.Component
 
                 <div className={ styles.title }>{ i18n('game-mode') }</div>
 
-                <div className={ styles.pick } master={ isMaster.toString() }>
+                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.gameMode === 'judge' && dirtyOptions.gameMode !== options.gameMode).toString() }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.gameMode === 'judge').toString() }
+                    ticked={ (dirtyOptions.gameMode === 'judge').toString() }
                     onClick={ () => this.onGameModeChange('judge') }
                   />
 
                   { i18n('judge')  }
                 </div>
                 
-                
-                <div className={ styles.pick } master={ isMaster.toString() }>
+                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.gameMode === 'democracy' && dirtyOptions.gameMode !== options.gameMode).toString() }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.gameMode === 'democracy').toString() }
+                    ticked={ (dirtyOptions.gameMode === 'democracy').toString() }
                     onClick={ () => this.onGameModeChange('democracy') }
                   />
 
@@ -242,10 +243,10 @@ class RoomOptions extends React.Component
                 </div>
 
                 
-                <div className={ styles.pick } master={ isMaster.toString() }>
+                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.gameMode === 'king' && dirtyOptions.gameMode !== options.gameMode).toString() }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.gameMode === 'king').toString() }
+                    ticked={ (dirtyOptions.gameMode === 'king').toString() }
                     onClick={ () => this.onGameModeChange('king') }
                   />
 
@@ -256,10 +257,10 @@ class RoomOptions extends React.Component
 
                 <div className={ styles.title }>{ i18n('win-method') }</div>
 
-                <div className={ styles.pick } master={ isMaster.toString() }>
+                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'points' && dirtyOptions.winMethod !== options.winMethod).toString() }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.winMethod === 'points').toString() }
+                    ticked={ (dirtyOptions.winMethod === 'points').toString() }
                     onClick={ () => this.onWinMethodChange('points') }
                   />
 
@@ -275,12 +276,12 @@ class RoomOptions extends React.Component
                     master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.pointsToCollect }
+                    value={ dirtyOptions.match.pointsToCollect }
                     onUpdate={ (value, resize) => this.setState({
                       dirtyOptions: {
-                        ...this.state.dirtyOptions,
+                        ...dirtyOptions,
                         match: {
-                          ...this.state.dirtyOptions.match,
+                          ...dirtyOptions.match,
                           pointsToCollect: value
                         }
                       }
@@ -291,10 +292,10 @@ class RoomOptions extends React.Component
                 </div>
 
                 
-                <div className={ styles.pick } master={ isMaster.toString() }>
+                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'limited' && dirtyOptions.winMethod !== options.winMethod).toString() }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.winMethod === 'limited').toString() }
+                    ticked={ (dirtyOptions.winMethod === 'limited').toString() }
                     onClick={ () => this.onWinMethodChange('limited') }
                   />
 
@@ -310,12 +311,12 @@ class RoomOptions extends React.Component
                     master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.maxRounds }
+                    value={ dirtyOptions.match.maxRounds }
                     onUpdate={ (value, resize) => this.setState({
                       dirtyOptions: {
-                        ...this.state.dirtyOptions,
+                        ...dirtyOptions,
                         match: {
-                          ...this.state.dirtyOptions.match,
+                          ...dirtyOptions.match,
                           maxRounds: value
                         }
                       }
@@ -326,10 +327,10 @@ class RoomOptions extends React.Component
                 </div>
 
                 
-                <div className={ styles.pick } master={ isMaster.toString() }>
+                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'timer' && dirtyOptions.winMethod !== options.winMethod).toString() }>
                   <div
                     className={ styles.checkbox }
-                    ticked={ (this.state.dirtyOptions.winMethod === 'timer').toString() }
+                    ticked={ (dirtyOptions.winMethod === 'timer').toString() }
                     onClick={ () => this.onWinMethodChange('timer') }
                   />
 
@@ -346,12 +347,12 @@ class RoomOptions extends React.Component
                     master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.maxTime }
+                    value={ dirtyOptions.match.maxTime }
                     onUpdate={ (value, resize) => this.setState({
                       dirtyOptions: {
-                        ...this.state.dirtyOptions,
+                        ...dirtyOptions,
                         match: {
-                          ...this.state.dirtyOptions.match,
+                          ...dirtyOptions.match,
                           maxTime: value
                         }
                       }
@@ -365,7 +366,7 @@ class RoomOptions extends React.Component
 
                 <div className={ styles.title }>{ i18n('match-options') }</div>
 
-                <div className={ styles.field }>
+                <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
                   <AutoSizeInput
                     required
                     type='number'
@@ -376,12 +377,12 @@ class RoomOptions extends React.Component
                     master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.maxPlayers }
+                    value={ dirtyOptions.match.maxPlayers }
                     onUpdate={ (value, resize) => this.setState({
                       dirtyOptions: {
-                        ...this.state.dirtyOptions,
+                        ...dirtyOptions,
                         match: {
-                          ...this.state.dirtyOptions.match,
+                          ...dirtyOptions.match,
                           maxPlayers: value
                         }
                       }
@@ -391,7 +392,7 @@ class RoomOptions extends React.Component
                   <div>{ i18n('max-players') }</div>
                 </div>
 
-                <div className={ styles.field }>
+                <div className={ styles.field } dirty={ (dirtyOptions.round.maxTime !== options.round.maxTime).toString() }>
                   <AutoSizeInput
                     required
                     type='number'
@@ -403,12 +404,12 @@ class RoomOptions extends React.Component
                     master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.round.maxTime }
+                    value={ dirtyOptions.round.maxTime }
                     onUpdate={ (value, resize) => this.setState({
                       dirtyOptions: {
-                        ...this.state.dirtyOptions,
+                        ...dirtyOptions,
                         round: {
-                          ...this.state.dirtyOptions.round,
+                          ...dirtyOptions.round,
                           maxTime: value
                         }
                       }
@@ -418,7 +419,7 @@ class RoomOptions extends React.Component
                   <div>{ i18n('round-countdown') }</div>
                 </div>
 
-                <div className={ styles.field }>
+                <div className={ styles.field } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
                   <AutoSizeInput
                     required
                     type='number'
@@ -429,12 +430,12 @@ class RoomOptions extends React.Component
                     master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.startingHandAmount }
+                    value={ dirtyOptions.match.startingHandAmount }
                     onUpdate={ (value, resize) => this.setState({
                       dirtyOptions: {
-                        ...this.state.dirtyOptions,
+                        ...dirtyOptions,
                         match: {
-                          ...this.state.dirtyOptions.match,
+                          ...dirtyOptions.match,
                           startingHandAmount: value
                         }
                       }
@@ -445,7 +446,7 @@ class RoomOptions extends React.Component
                 </div>
 
                 
-                <div className={ styles.field }>
+                <div className={ styles.field } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
 
                   <AutoSizeInput
                     required
@@ -457,12 +458,12 @@ class RoomOptions extends React.Component
                     master={ isMaster.toString() }
                     className={ styles.input }
                     placeholder={ i18n('options-placeholder') }
-                    value={ this.state.dirtyOptions.match.blankProbability }
+                    value={ dirtyOptions.match.blankProbability }
                     onUpdate={ (value, resize) => this.setState({
                       dirtyOptions: {
-                        ...this.state.dirtyOptions,
+                        ...dirtyOptions,
                         match: {
-                          ...this.state.dirtyOptions.match,
+                          ...dirtyOptions.match,
                           blankProbability: value
                         }
                       }
@@ -499,7 +500,7 @@ class RoomOptions extends React.Component
                   className={ styles.button }
                   master={ isMaster.toString() }
                   valid={ isValid.toString() }
-                  dirty={ isDirty.toString() }
+                  allowed={ isDirty.toString() }
                   onClick={ this.editRequest }>
                   { i18n('apply') }
                 </div>
@@ -648,7 +649,7 @@ const styles = createStyle({
       display: 'none'
     },
 
-    '[allowed="false"], [dirty="false"]': {
+    '[allowed="false"]': {
       pointerEvents: 'none',
 
       color: colors.greyText,
@@ -669,6 +670,8 @@ const styles = createStyle({
 
   dirty: {
     textAlign: 'center',
+    fontStyle: 'italic',
+    
     padding: '10px'
   },
 
@@ -681,6 +684,15 @@ const styles = createStyle({
     alignItems: 'center',
 
     padding: '0 25px 8px 25px',
+
+    '[dirty="true"]': {
+      fontStyle: 'italic',
+
+      ':after': {
+        display: 'block',
+        content: '"*"'
+      }
+    },
 
     '[master="false"] > div': {
       pointerEvents: 'none'
@@ -730,7 +742,16 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px 8px 25px'
+    padding: '0 25px 8px 25px',
+
+    '[dirty="true"]': {
+      fontStyle: 'italic',
+
+      ':after': {
+        display: 'block',
+        content: '"*"'
+      }
+    }
   },
 
   input: {
