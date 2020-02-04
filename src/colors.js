@@ -62,6 +62,7 @@ export default function(forceLight)
     
     entryLine: '#000000',
 
+    vote: '#28a500',
     winner: '#d4af37',
    
     red: 'red',

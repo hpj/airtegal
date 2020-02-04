@@ -104,6 +104,7 @@ export function createAnimation(animation)
   animation.timingFunction = animation.timingFunction || 'ease';
   animation.delay = animation.delay || '0s';
   animation.iterationCount = animation.iterationCount || '1';
+  animation.duration = animation.duration || '1s';
   animation.direction = animation.direction || 'normal';
   animation.fillMode = animation.fillMode || 'none';
 

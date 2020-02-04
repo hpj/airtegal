@@ -20,7 +20,7 @@ class TimedBlock extends React.Component
       progress: 0
     };
 
-    this.maxTime = 30000;
+    this.maxTime = 45000;
   }
 
   componentDidMount()

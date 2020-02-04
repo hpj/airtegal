@@ -97,24 +97,28 @@ class RoomState extends React.Component
 
     if (roomData.options.gameMode === 'king' && roomData.reason.message === 'black-card')
     {
-      if (roomData.judge)
+      if (roomData.judge === socket.id)
         matchState = i18n('picking-phase');
       else
-        matchState = i18n('wait-until-judge-picks');
+        matchState = i18n('wait-until-judge-picks', roomData.playerProperties[roomData.judge].username);
     }
     else if (roomData.reason.message === 'picking-phase')
     {
-      if (roomData.judge)
+      if (roomData.judge === socket.id)
         matchState = i18n('you-are-the-judge-wait');
       else
         matchState = i18n('picking-phase');
     }
     else if (roomData.reason.message === 'judging-phase')
     {
-      if (roomData.judge)
+      if (roomData.judge === socket.id)
         matchState = i18n('judging-phase');
       else
-        matchState = i18n('wait-until-judge-judges');
+        matchState = i18n('wait-until-judge-judges', roomData.playerProperties[roomData.judge].username);
+    }
+    else if (roomData.reason.message === 'voting-phase')
+    {
+      matchState = i18n('voting-phase');
     }
     else if (roomData.reason.message === 'round-ended' && typeof roomData.reason.details === 'number')
     {
@@ -124,6 +128,10 @@ class RoomState extends React.Component
         matchState = i18n('you-won-the-round');
       else
         matchState = i18n('won-this-round', roomData.playerProperties[winnerEntry.id].username);
+    }
+    else if (roomData.reason.message === 'round-ended')
+    {
+      matchState = i18n('round-canceled');
     }
 
     this.setState({

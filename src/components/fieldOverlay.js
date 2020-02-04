@@ -39,7 +39,9 @@ class FieldOverlay extends React.Component
       overlayHidden: true,
 
       field: [],
-      lines: []
+      lines: [],
+
+      votes: {}
     };
 
     this.panResponder = PanResponder.create({
@@ -110,6 +112,19 @@ class FieldOverlay extends React.Component
     else
     {
       this.visibility(true);
+    }
+
+    if (roomData.reason.message === 'vote')
+    {
+      this.setState({
+        votes: roomData.votes
+      });
+    }
+    else if (roomData.reason.message !== 'round-ended')
+    {
+      this.setState({
+        votes: {}
+      });
     }
 
     if (roomData.reason.message === 'round-ended')
@@ -224,22 +239,22 @@ class FieldOverlay extends React.Component
               {
                 this.state.field.map((entry, entryIndex) =>
                 {
-                  const isAllowed = this.state.playerState === 'judging' && entryIndex > 0;
+                  const isAllowed =
+                    (this.state.playerState === 'judging' || (this.state.playerState === 'voting' && entry.id !== socket.id))
+                    && entryIndex > 0;
 
-                  return entry.cards.map((card, i) =>
+                  return entry.cards.map((card) =>
                   {
-                    let owner;
-
-                    if (i === 0 && entry.id && entryIndex > 0 && this.state.playerProperties[entry.id])
-                      owner = this.state.playerProperties[entry.id].username;
-
                     return <Card
                       key={ card.key }
                       elementId={ card.key }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       allowed={ isAllowed.toString() }
-                      owner={ owner }
+                      self={ (entry.id && entry.id === socket.id && entryIndex > 0) }
+                      owner={ (entry.id && entryIndex > 0 && this.state.playerProperties[entry.id]) ? this.state.playerProperties[entry.id].username : undefined }
                       type={ card.type }
+                      // eslint-disable-next-line security/detect-object-injection
+                      votes={ this.state.votes[entryIndex] }
                       content={ card.content }
                       winner= { (entryIndex === this.state.winnerEntryIndex).toString() }
                       hidden={ card.hidden }/>;
@@ -271,8 +286,8 @@ class FieldOverlay extends React.Component
 }
 
 FieldOverlay.propTypes = {
-  size: PropTypes.object,
-  sendMessage: PropTypes.func.isRequired
+  sendMessage: PropTypes.func.isRequired,
+  size: PropTypes.object
 };
 
 const styles = createStyle({
@@ -319,22 +334,15 @@ const styles = createStyle({
     gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
     justifyContent: 'space-around',
 
-    '> * > *': {
-      width: 'calc(115px + 2vw + 2vh)',
-
-      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
-      height: 'auto',
-
+    '> *': {
       margin: '20px'
     },
 
-    '> [owner="true"] > *': {
-      paddingTop: '5px',
-      paddingBottom: '5px'
-    },
+    '> * > * > [type]': {
+      width: 'calc(115px + 2vw + 2vh)',
 
-    '> * > * > textarea': {
-      minHeight: 'calc(100% - 20px)'
+      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
+      height: 'auto'
     }
   }
 });

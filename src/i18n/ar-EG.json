@@ -48,28 +48,27 @@
   // random usernames
 
   "stupid-first-names": [
-    "ابن",
     "ابو",
     "ام",
     "طيز",
     "حمادة",
     "حمار",
     "حاحا",
+    "خدام",
     "فشيخ",
     "بضان",
     "عنتيل"
   ],
 
   "stupid-last-names": [
-    "الابيض",
-    "الاسمر",
-    "مطوة",
+    "الزنجي",
+    "المتناك",
     "السمكة",
-    "فقير",
-    "زبالة",
+    "الفقير",
+    "الزبالة",
     "البقرة",
     "الشبح",
-    "مزة"
+    "المزة"
   ],
 
   // matchmaking errors
@@ -91,7 +90,7 @@
 
   // room id sharing
 
-  "room-copied-to-clipboard": "تم نسخ رابط الغرفة الي جهازك!",
+  "room-copied-to-clipboard": "تم نسخ لينك الغرفة لجهازك!",
   "join-me": "يسطي افتح نلعب ماتش كروت",
 
   // room master changes
@@ -100,10 +99,10 @@
   "new-master": "اصبح هو سيد هذة الغرفة.",
 
   // room options
-  "changes-not-applied": "*هنالك تغييرات لم يتم تطبيقها",
+  "changes-not-applied": "*في تغييرات لم يتم تطبيقها",
 
-  "room-edited": "تم تغير اعدادت الغرفة.",
-  "game-mode": "نمط اللعبة:",
+  "room-edited": "تم تعديل اعدادت الغرفة.",
+  "game-mode": "نمط اللعب:",
 
   "judge": "القاضي",
   "democracy": "الديمقراطية فكرة غبية",
@@ -113,16 +112,16 @@
   
   "options-placeholder": "0",
 
-  "first-to-points-1": "أول من يصل الي",
+  "first-to-points-1": "أول حد يوصل",
   "first-to-points-2": "نقاط",
   
-  "max-rounds-1": "بعد مرور",
+  "max-rounds-1": "بعد اما يعدي",
   "max-rounds-2": "جولات",
 
-  "max-time-1": "بعد مرور",
+  "max-time-1": "بعد اما يعدي",
   "max-time-2": "دقيقة",
 
-  "match-options": "اختيارات المباراة:",
+  "match-options": "اعدادات المباراة:",
 
   "max-players": "عدد اللاعبين",
   "round-countdown": "دقيقه لكل جولة",
@@ -142,19 +141,26 @@
 
   "judge-timeout": "تم الغاء الجولة لنفاذ الوقت",
   "judge-left": "تم الغاء الجولة لنسحاب القاضي من المباراة",
+
+  "this-card-is-yours": "(كرتك)",
+  "vote-ended-in-draw": "انتهت الجولة بالتعادل.",
   
   // match state
 
-  "wait-until-judge-picks": "انتظر اختيار القاضي.",
+  "wait-until-judge-picks": "انتظر اختيار %0.",
 
   "picking-phase": "اختر كرتاً من يدك.",
-  "you-are-the-judge-wait": "انت القاضي (انتظر دورك).",
+  "you-are-the-judge-wait": "انت القاضي - انتظر دورك",
 
   "judging-phase": "اختر الكرت الفائز بهذة الجولة.",
-  "wait-until-judge-judges": "انتظر حكم القاضي.",
+  "wait-until-judge-judges": "انتظر حكم %0.",
+
+  "voting-phase": "صوت للكرت الذي تريدة ان يفوز بالجولة.",
 
   "you-won-the-round": "لقد فزت بهذة الجولة.",
   "won-this-round": "لقد فاز %0 بهذة الجولة.",
+
+  "round-canceled": "تم الغاء الجولة.",
 
   // match reports
 

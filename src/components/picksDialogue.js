@@ -285,17 +285,15 @@ const styles = createStyle({
 
     padding: '0 10px',
 
-    '> * > *': {
-      width: 'calc(115px + 2vw + 2vh)',
-
-      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
-      height: 'auto',
-
+    '> *': {
       margin: '10px 20px 20px 20px'
     },
 
-    '> * > * > textarea': {
-      minHeight: 'calc(100% - 20px)'
+    '> * > * > [type]': {
+      width: 'calc(115px + 2vw + 2vh)',
+
+      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
+      height: 'auto'
     }
   },
 

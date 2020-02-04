@@ -1,13 +1,9 @@
-February Update Checklist:
-  ☐ check the in-files TODOs
-
-  ☐ test every single new backend feature
-  
-  ☐ schedule the discord event
+February Checklist:
+  ☐ test all 3 modes & black cards UI
 
   ☐ deploy the new version of server
-
-  ☐ activate new card packs in database
+  
+  ☐ schedule the discord event
 
   ☐ release app on google play store
     ☐ build the pwa builder package using android studio
@@ -26,7 +22,7 @@ UI/UX:
 
   ✔ king mode @done(20-02-01 21:54)
 
-  ☐ democracy mode
+  ✔ democracy mode @done(20-02-04 16:31)
 
   ☐ sharing the winning card of the round on social media
 
@@ -44,7 +40,7 @@ UI/UX:
   ☐ handle 'online' / 'offline' event
 
   Homepage:
-    ☐ showcase handle black cards with (pick > 1)
+    ☐ showcase: handle black cards with (pick > 1)
 
   Lobby:
     ☐ find a better way to show the install prompt
