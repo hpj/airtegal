@@ -103,7 +103,7 @@ class Card extends React.Component
                   disabled={ (!blank || !picked) }
                   className={ (blank && picked) ? styles.input : styles.content }
 
-                  maxLength={ 80 }
+                  maxLength={ 105 }
 
                   value={ content }
                   placeholder={ (blank) ? i18n('blank') : undefined }
