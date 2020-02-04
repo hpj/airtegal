@@ -256,6 +256,9 @@ class RoomOverlay extends React.Component
     {
       if (optionsRef.current)
         optionsRef.current.clearDirtyOptions();
+
+      // refresh rooms list
+      this.props.requestRooms();
     
       // after leaving the room
       // clean up some of the state values
@@ -496,6 +499,7 @@ class RoomOverlay extends React.Component
 
 RoomOverlay.propTypes = {
   sendMessage: PropTypes.func.isRequired,
+  requestRooms: PropTypes.func.isRequired,
   size: PropTypes.object,
   username: PropTypes.string
 };

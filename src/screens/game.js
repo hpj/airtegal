@@ -452,7 +452,7 @@ class Game extends React.Component
           </div>
         </div>
 
-        <RoomOverlay ref={ overlayRef } sendMessage={ this.sendMessage.bind(this) } size={ this.state.size } username={ this.state.username }/>
+        <RoomOverlay ref={ overlayRef } sendMessage={ this.sendMessage.bind(this) } requestRooms={ this.requestRooms } size={ this.state.size } username={ this.state.username }/>
       </div>
     );
   }
