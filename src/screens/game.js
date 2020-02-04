@@ -411,7 +411,8 @@ class Game extends React.Component
                     </div> :
                     this.state.rooms.map((room, i) =>
                     {
-                      const pack = room.options.match.selectedPacks[0];
+                      // select random pack from room's selected packs
+                      const pack = room.options.match.selectedPacks[Math.floor(Math.random() * room.options.match.selectedPacks.length)];
 
                       const gameMode = `(${i18n(room.options.gameMode)})`;
 
