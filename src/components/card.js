@@ -294,9 +294,9 @@ const styles = createStyle({
     gridArea: 'content',
     textAlign: 'center',
 
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     resize: 'none',
 
