@@ -78,13 +78,16 @@ const styles = createStyle({
       boxShadow: '0px 0px 10px 0px #0000004d'
     },
 
+    '> div > div > [type]': {
+      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
+      height: 'auto'
+    },
+
     '> div:nth-child(1)': {
       transform: 'translate(0, 0) rotateZ(-5deg)'
     },
 
     '[direction="rtl"]> div': {
-      width: '155px',
-
       transform: 'translate(0, 0) rotateZ(-5deg)'
     },
 
