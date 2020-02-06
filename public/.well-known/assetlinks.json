@@ -1,5 +1,5 @@
 [{
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target" : { "namespace": "android_app", "package_name": "com.herpproject.kuruit",
-               "sha256_cert_fingerprints": ["87:2A:7F:F7:F5:BA:92:87:99:00:F2:55:C9:48:4E:16:89:F8:20:FE:C0:1F:6F:2F:DB:89:81:76:74:B5:C4:DA"] }
+               "sha256_cert_fingerprints": ["F4:4B:AF:02:BE:E2:7E:BD:9B:58:F0:87:6A:1A:37:72:CE:1B:ED:25:CB:90:E8:74:2B:DD:69:06:4B:65:FA:2B"] }
 }]
