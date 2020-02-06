@@ -196,13 +196,25 @@ class FieldOverlay extends React.Component
 
   shareEntry(entryIndex)
   {
+    const b64 = (str) =>
+    {
+      // first we use encodeURIComponent to get percent-encoded UTF-8,
+      // then we convert the percent encodings into raw bytes which
+      // can be fed into btoa.
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        (match, p1) =>
+        {
+          return String.fromCharCode('0x' + p1);
+        }));
+    };
+  
     const obj = {
       black: this.state.field[0].cards[0].content,
       // eslint-disable-next-line security/detect-object-injection
       white: this.state.field[entryIndex].cards.map((card) => card.content)
     };
 
-    const data = btoa(JSON.stringify(obj));
+    const data = b64(JSON.stringify(obj));
 
     const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
 
