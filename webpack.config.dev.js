@@ -25,7 +25,6 @@ module.exports = (env) => ({
   plugins: [
     new DefinePlugin({
       'process.env.API_ENDPOINT': env.API_ENDPOINT,
-      'process.env.KBF_API_KEY': env.KBF_API_KEY,
       'process.env.PREVIEW': true
     }),
     new BrowserSyncPlugin({

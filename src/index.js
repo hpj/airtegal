@@ -23,8 +23,6 @@ import TimedBlock from './components/timedBlock.js';
 import Offline from './screens/offline.js';
 import NotFound from './screens/404.js';
 
-import Picture from './screens/picture.js';
-
 import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
@@ -56,19 +54,10 @@ function registerServiceWorker()
   }
 }
 
-function getAllowAPIRoutes()
-{
-  const params = new URL(document.URL).searchParams;
-  
-  return (params && params.get('secret') === process.env.KBF_API_KEY);
-}
-
 /** when all required assets are loaded
 */
 function loaded()
 {
-  const allowAPIRoutes = getAllowAPIRoutes();
-
   const pages =
     <BrowserRouter>
       <Switch>
@@ -76,8 +65,6 @@ function loaded()
       
         <Route path='/play' component={ Game }/>
 
-        <Route path='/picture' component={ (allowAPIRoutes) ? Picture : NotFound }/>
-        
         <Route component={ NotFound }/>
       </Switch>
     </BrowserRouter>;
