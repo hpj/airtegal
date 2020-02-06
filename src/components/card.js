@@ -88,7 +88,7 @@ class Card extends React.Component
           winner={ winner.toString() }
         >
 
-          <div className={ styles.votes }>
+          <div visible={ 'true' } className={ styles.votes }>
             {
               this.for(votes).map((v, i) => <div key={ i } className={ styles.vote }/>)
             }
@@ -126,15 +126,13 @@ class Card extends React.Component
               </div>
           }
 
-          <div enabled={ ((self === undefined && owner === undefined) || type === 'black').toString() } className={ styles.bottom }>
+          <div visible={ ((!hidden && !self && !owner) || type === 'black').toString() } enabled={ (self === undefined && owner === undefined).toString() } className={ styles.bottom }>
             {
-              (!self && !owner && !hidden) ?
-                (blank) ? i18n('kuruit-blank-blank') : i18n('kuruit-bedan-fash5') :
-                <div/>
+              (blank) ? i18n('kuruit-blank-blank') : i18n('kuruit-bedan-fash5')
             }
           </div>
 
-          <div enabled={ ((self !== undefined || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
+          <div visible={ ((self !== undefined || owner !== undefined) && type === 'white').toString() } enabled={ (self !== undefined || owner !== undefined).toString() } className={ styles.bottom }>
             {
               (self) ? i18n('this-card-is-yours') : owner
             }
@@ -152,7 +150,6 @@ class Card extends React.Component
 }
 
 Card.propTypes = {
-  indexInEntry: PropTypes.number,
   elementId: PropTypes.string,
   onClick: PropTypes.func,
   onChange: PropTypes.func,
@@ -338,7 +335,11 @@ const styles = createStyle({
     userSelect: 'none',
 
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+
+    '[visible="false"]': {
+      display: 'none'
+    }
   },
 
   vote: {
@@ -370,6 +371,10 @@ const styles = createStyle({
 
     '[enabled="false"]': {
       padding: 0
+    },
+
+    '[visible="false"]': {
+      display: 'none'
     }
   },
 
