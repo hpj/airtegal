@@ -1,5 +1,5 @@
 [{
   "relation": ["delegate_permission/common.handle_all_urls"],
-  "target" : { "namespace": "android_app", "package_name": "com.hpj.kuruit",
+  "target" : { "namespace": "android_app", "package_name": "com.herpproject.kuruit",
                "sha256_cert_fingerprints": ["87:2A:7F:F7:F5:BA:92:87:99:00:F2:55:C9:48:4E:16:89:F8:20:FE:C0:1F:6F:2F:DB:89:81:76:74:B5:C4:DA"] }
 }]
