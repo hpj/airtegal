@@ -116,16 +116,16 @@ class Card extends React.Component
                   } }
                 />
     
-                {
-                  (blank) ?
-                    <p className={ styles.bottom }>{ i18n('kuruit-blank-blank') }</p> :
-                    <p className={ styles.bottom }>{ i18n('kuruit-bedan-fash5') }</p>
-                }
-    
               </div>
           }
 
-          <div className={ styles.owner }>
+          {
+            (blank) ?
+              <p className={ styles.bottom }>{ (self || owner) ? '' : i18n('kuruit-blank-blank') }</p> :
+              <p className={ styles.bottom }>{ (self || owner) ? '' : i18n('kuruit-bedan-fash5') }</p>
+          }
+
+          <div className={ styles.bottom }>
             {
               (self) ? i18n('this-card-is-yours') : owner
             }
@@ -201,6 +201,10 @@ const styles = createStyle({
     overflow: 'hidden',
     borderRadius: '10px',
 
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: 700,
+
     '[allowed="true"]': {
       cursor: 'pointer'
     },
@@ -249,10 +253,6 @@ const styles = createStyle({
     width: '100%',
     height: '100%',
 
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontWeight: 700,
-
     userSelect: 'none',
     borderRadius: '10px',
 
@@ -263,20 +263,21 @@ const styles = createStyle({
   },
 
   card: {
+    // display: 'grid',
+    // gridTemplateRows: ' 1fr auto',
+    // gridTemplateColumns: '100%',
+    // gridTemplateAreas: '"content" "bottom"',
+
     display: 'grid',
-    gridTemplateRows: ' 1fr auto',
+    gridTemplateRows: ' 1fr',
     gridTemplateColumns: '100%',
-    gridTemplateAreas: '"content" "bottom"',
+    gridTemplateAreas: '"content"',
 
     direction: locale.direction,
   
     width: '100%',
     height: '100%',
   
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontWeight: 700,
-
     userSelect: 'none',
 
     '[type="black"]> textarea': {
@@ -291,12 +292,11 @@ const styles = createStyle({
   },
 
   input: {
-    gridArea: 'content',
     textAlign: 'center',
 
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontWeight: '700',
+    fontWeight: 700,
 
     resize: 'none',
 
@@ -343,20 +343,12 @@ const styles = createStyle({
   },
 
   bottom: {
-    gridArea: 'bottom',
+    userSelect: 'none',
+    direction: locale.direction,
 
     fontSize: 'calc(5px + 0.4vw + 0.4vh)',
-    fontWeight: 700,
 
-    margin: '0 10px 10px 10px'
-  },
-
-  owner: {
-    userSelect: 'none',
-
-    fontSize: 'calc(4px + 0.35vw + 0.35vh)',
-    fontWeight: 700,
-
+    margin: 0,
     padding: '0 10px 10px 10px',
 
     transition: 'padding 0.5s',

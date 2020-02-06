@@ -145,11 +145,13 @@ const styles = createStyle({
     },
 
     '> div': {
-      transform: 'scale(1.35) translate(35%, 10%)',
-      margin: '0 4.5%',
-
       width: 'calc(120px + 2vw + 1vh)',
-      height: 'calc((120px + 2vw + 1vh) * 1.35)'
+      transform: 'scale(1.35) translate(35%, 10%)',
+      margin: '0 4.5%'
+    },
+
+    '> * > * > [type]': {
+      height: 'calc((120px + 2vw + 1vh) * 1.15)'
     },
 
     '> div:nth-child(2) > div': {

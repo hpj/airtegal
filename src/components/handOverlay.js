@@ -445,7 +445,7 @@ const styles = createStyle({
     '> * > * > [type]': {
       width: 'calc(115px + 2vw + 2vh)',
 
-      minHeight: 'calc((115px + 2vw + 2vh) * 1.35)',
+      minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
       height: 'auto'
     }
   }
