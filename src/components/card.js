@@ -1,6 +1,9 @@
 
 import React, { createRef } from 'react';
+
 import PropTypes from 'prop-types';
+
+import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import getTheme from '../colors.js';
 
@@ -60,9 +63,13 @@ class Card extends React.Component
       self, votes,
       owner, content, style, blank, type,
       elementId, disabled, allowed,
-      picked, winner, hidden,
-      onClick, onChange
+      picked, hidden,
+      onClick, onChange, shareEntry
     } = this.props;
+
+    let { winner } = this.props;
+
+    winner = winner || false;
 
     if (!this.sized && this.textareaRef && this.textareaRef.current)
       requestAnimationFrame(this.resize);
@@ -78,7 +85,7 @@ class Card extends React.Component
           onClick={ onClick }
           id={ elementId }
           allowed={ allowed }
-          winner={ winner }
+          winner={ winner.toString() }
         >
 
           <div className={ styles.votes }>
@@ -119,15 +126,23 @@ class Card extends React.Component
               </div>
           }
 
-          {
-            (blank) ?
-              <p className={ styles.bottom }>{ (self || owner) ? '' : i18n('kuruit-blank-blank') }</p> :
-              <p className={ styles.bottom }>{ (self || owner) ? '' : i18n('kuruit-bedan-fash5') }</p>
-          }
+          <div enabled={ ((self === undefined && owner === undefined) || type === 'black').toString() } className={ styles.bottom }>
+            {
+              (!self && !owner) ?
+                (blank) ? i18n('kuruit-blank-blank') : i18n('kuruit-bedan-fash5') :
+                <div/>
+            }
+          </div>
 
-          <div className={ styles.bottom }>
+          <div enabled={ ((self !== undefined || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
             {
               (self) ? i18n('this-card-is-yours') : owner
+            }
+
+            {
+              (winner) ?
+                <ShareIcon className={ styles.share } onClick={ shareEntry }/> :
+                <div/>
             }
           </div>
         </div>
@@ -141,13 +156,14 @@ Card.propTypes = {
   elementId: PropTypes.string,
   onClick: PropTypes.func,
   onChange: PropTypes.func,
+  shareEntry: PropTypes.func,
   allowed: PropTypes.string,
   self: PropTypes.bool,
   owner: PropTypes.string,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
   votes: PropTypes.number,
   content: PropTypes.string,
-  winner: PropTypes.string,
+  winner: PropTypes.bool,
   hidden: PropTypes.bool,
   picked: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -263,11 +279,6 @@ const styles = createStyle({
   },
 
   card: {
-    // display: 'grid',
-    // gridTemplateRows: ' 1fr auto',
-    // gridTemplateColumns: '100%',
-    // gridTemplateAreas: '"content" "bottom"',
-
     display: 'grid',
     gridTemplateRows: ' 1fr',
     gridTemplateColumns: '100%',
@@ -343,6 +354,9 @@ const styles = createStyle({
   },
 
   bottom: {
+    display: 'flex',
+    alignItems: 'center',
+    
     userSelect: 'none',
     direction: locale.direction,
 
@@ -354,9 +368,19 @@ const styles = createStyle({
     transition: 'padding 0.5s',
     transitionTimingFunction: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)',
 
-    ':empty': {
+    '[enabled="false"]': {
       padding: 0
     }
+  },
+
+  share: {
+    cursor: 'pointer',
+    fill: colors.blackText,
+
+    width: 'calc(14px + 0.3vw + 0.3vh)',
+    height: 'calc(14px + 0.3vw + 0.3vh)',
+
+    margin: '0 auto 0 0'
   }
 });
 

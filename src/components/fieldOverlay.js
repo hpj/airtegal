@@ -194,6 +194,26 @@ class FieldOverlay extends React.Component
       sendMessage('matchLogic', { entryIndex });
   }
 
+  shareEntry(entryIndex)
+  {
+    const obj = {
+      black: this.state.field[0].cards[0].content,
+      // eslint-disable-next-line security/detect-object-injection
+      white: this.state.field[entryIndex].cards.map((card) => card.content)
+    };
+
+    const data = btoa(JSON.stringify(obj));
+
+    const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
+
+    const facebookURL2 = `https://www.facebook.com/dialog/share?app_id=196958018362010&display=popup&href=${shareURL}`;
+
+    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
+
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(facebookURL2, 'Share', options);
+  }
+
   render()
   {
     const { size } = this.props;
@@ -256,6 +276,7 @@ class FieldOverlay extends React.Component
                       key={ card.key }
                       elementId={ card.key }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
+                      shareEntry={ () => this.shareEntry(entryIndex) }
                       allowed={ isAllowed.toString() }
                       self={ (entry.id && entry.id === socket.id && entryIndex > 0) }
                       owner={ (entry.id && entryIndex > 0 && this.state.playerProperties[entry.id]) ? this.state.playerProperties[entry.id].username : undefined }
@@ -263,7 +284,7 @@ class FieldOverlay extends React.Component
                       // eslint-disable-next-line security/detect-object-injection
                       votes={ this.state.votes[entryIndex] }
                       content={ card.content }
-                      winner= { (entryIndex === this.state.winnerEntryIndex).toString() }
+                      winner= { (entryIndex === this.state.winnerEntryIndex) }
                       hidden={ card.hidden }/>;
                   });
                 })
