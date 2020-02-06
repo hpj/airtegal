@@ -13,6 +13,8 @@ import i18n, { locale } from '../i18n.js';
 
 import Card from './card.js';
 
+import { requestRoomData } from './roomOverlay.js';
+
 const colors = getTheme();
 
 class PicksDialogue extends React.Component
@@ -34,6 +36,8 @@ class PicksDialogue extends React.Component
 
     this.clearPick = this.clearPick.bind(this);
     this.confirmPick = this.confirmPick.bind(this);
+
+    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -48,6 +52,9 @@ class PicksDialogue extends React.Component
 
   onRoomData(roomData)
   {
+    if (!roomData)
+      return;
+    
     // client is in the lobby
     // or not picking
     if (

@@ -22,6 +22,8 @@ import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
 
+import { requestRoomData } from './roomOverlay.js';
+
 const colors = getTheme();
 
 const overlayRef = createRef();
@@ -86,6 +88,8 @@ class FieldOverlay extends React.Component
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
+
+    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -100,6 +104,9 @@ class FieldOverlay extends React.Component
 
   onRoomData(roomData)
   {
+    if (!roomData)
+      return;
+    
     // if lobby clear field
     if (roomData.state === 'lobby')
     {

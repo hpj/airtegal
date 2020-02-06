@@ -24,6 +24,8 @@ import { gestures } from './fieldOverlay.js';
 
 import PicksDialogue from './picksDialogue.js';
 
+import { requestRoomData } from './roomOverlay.js';
+
 const colors = getTheme();
 
 const overlayRef = createRef();
@@ -70,6 +72,8 @@ class HandOverlay extends React.Component
 
     this.maximize = this.maximize.bind(this);
     this.maximizeMinimize = this.maximizeMinimize.bind(this);
+
+    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -115,6 +119,9 @@ class HandOverlay extends React.Component
 
   onRoomData(roomData)
   {
+    if (!roomData)
+      return;
+    
     // if lobby clear hand and picks
     if (roomData.state === 'lobby')
     {

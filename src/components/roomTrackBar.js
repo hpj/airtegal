@@ -10,6 +10,8 @@ import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
+import { requestRoomData } from './roomOverlay.js';
+
 const colors = getTheme();
 
 class RoomTrackBar extends React.Component
@@ -18,11 +20,15 @@ class RoomTrackBar extends React.Component
   {
     super();
 
-    this.state = {};
+    this.state = {
+      players: []
+    };
 
     // bind functions that are use as callbacks
-
+    
     this.onRoomData = this.onRoomData.bind(this);
+    
+    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -37,6 +43,9 @@ class RoomTrackBar extends React.Component
 
   onRoomData(roomData)
   {
+    if (!roomData)
+      return;
+    
     this.setState({
       roomState: roomData.state,
       players: roomData.players,

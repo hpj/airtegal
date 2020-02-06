@@ -17,6 +17,8 @@ import { gestures } from './fieldOverlay.js';
 
 import RoomTrackBar from './roomTrackBar.js';
 
+import { requestRoomData } from './roomOverlay.js';
+
 const colors = getTheme();
 
 const overlayRef = createRef();
@@ -40,6 +42,8 @@ class PocketOverlay extends React.Component
     this.onResize = this.onResize.bind(this);
 
     this.maximize = this.maximize.bind(this);
+
+    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -62,6 +66,9 @@ class PocketOverlay extends React.Component
 
   onRoomData(roomData)
   {
+    if (!roomData)
+      return;
+    
     // if client is in match
     if (roomData.state === 'match')
       this.visibility(true);

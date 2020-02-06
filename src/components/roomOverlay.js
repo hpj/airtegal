@@ -35,6 +35,8 @@ const adsRef = createRef();
 
 const overlayAnimatedX = new Value(0);
 
+export let requestRoomData;
+
 class RoomOverlay extends React.Component
 {
   constructor()
@@ -56,6 +58,14 @@ class RoomOverlay extends React.Component
       overlayHidden: true,
 
       handlerVisible: true
+    };
+
+    requestRoomData = () =>
+    {
+      return new Promise((resolve) =>
+      {
+        resolve(this.state.roomData);
+      });
     };
 
     // bind functions that are use as callbacks
@@ -176,6 +186,7 @@ class RoomOverlay extends React.Component
     }
 
     this.setState({
+      roomData,
       roomState: roomData.state,
       master: roomData.master
     });

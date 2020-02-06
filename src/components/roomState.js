@@ -13,6 +13,8 @@ import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
+import { requestRoomData } from './roomOverlay.js';
+
 const colors = getTheme();
 
 class RoomState extends React.Component
@@ -29,6 +31,8 @@ class RoomState extends React.Component
 
     this.shareRoomURL = this.shareRoomURL.bind(this);
     this.copyRoomURL = this.copyRoomURL.bind(this);
+
+    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -46,6 +50,9 @@ class RoomState extends React.Component
 
   onRoomData(roomData)
   {
+    if (!roomData)
+      return;
+
     if (roomData.counter !== undefined)
     {
       // clear the pervious countdown

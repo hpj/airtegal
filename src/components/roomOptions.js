@@ -14,6 +14,8 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
 
+import { requestRoomData } from './roomOverlay.js';
+
 const colors = getTheme();
 
 const wrapperRef = createRef();
@@ -39,6 +41,8 @@ class RoomOptions extends React.Component
 
     this.editRequest = this.editRequest.bind(this);
     this.matchRequest = this.matchRequest.bind(this);
+
+    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -53,6 +57,9 @@ class RoomOptions extends React.Component
 
   onRoomData(roomData)
   {
+    if (!roomData)
+      return;
+    
     // if dirty options is undefined
     // or if the real room options were edited
     if (!this.state.dirtyOptions || roomData.reason.message === 'options-edit')
