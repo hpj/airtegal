@@ -128,7 +128,7 @@ class Card extends React.Component
 
           <div enabled={ ((self === undefined && owner === undefined) || type === 'black').toString() } className={ styles.bottom }>
             {
-              (!self && !owner) ?
+              (!self && !owner && !hidden) ?
                 (blank) ? i18n('kuruit-blank-blank') : i18n('kuruit-bedan-fash5') :
                 <div/>
             }
