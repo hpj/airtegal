@@ -62,13 +62,13 @@ class Card extends React.Component
     const {
       self, votes,
       owner, content, style, blank, type,
-      elementId, disabled, allowed,
-      picked, hidden,
+      elementId, disabled, allowed, picked,
       onClick, onChange, shareEntry
     } = this.props;
 
-    let { winner } = this.props;
+    let { hidden, winner } = this.props;
 
+    hidden = hidden || false;
     winner = winner || false;
 
     if (!this.sized && this.textareaRef && this.textareaRef.current)
@@ -126,7 +126,7 @@ class Card extends React.Component
               </div>
           }
 
-          <div visible={ ((!hidden && !self && !owner) || type === 'black').toString() } enabled={ (self === undefined && owner === undefined).toString() } className={ styles.bottom }>
+          <div hide={ hidden.toString() } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ (self === undefined && owner === undefined).toString() } className={ styles.bottom }>
             {
               (blank) ? i18n('kuruit-blank-blank') : i18n('kuruit-bedan-fash5')
             }
@@ -259,18 +259,23 @@ const styles = createStyle({
   hidden: {
     display: 'flex',
 
-    direction: locale.direction,
     justifyContent: 'center',
     alignItems: 'center',
+
+    fontSize: 'calc(8px + 0.4vw + 0.4vh)',
+    direction: locale.direction,
     
     width: '100%',
     height: '100%',
 
     userSelect: 'none',
-    borderRadius: '10px',
 
     '> div': {
+      position: 'relative',
+      
+      top: '15px',
       width: 'min-content',
+
       lineHeight: '135%'
     }
   },
@@ -368,6 +373,10 @@ const styles = createStyle({
 
     transition: 'padding 0.5s',
     transitionTimingFunction: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)',
+
+    '[type="white"] > %this[hide="true"]': {
+      color: colors.whiteCardBackground
+    },
 
     '[enabled="false"]': {
       padding: 0
