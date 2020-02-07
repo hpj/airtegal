@@ -282,7 +282,7 @@ class FieldOverlay extends React.Component
 
                     if (totalLineWidth > size.width)
                     {
-                      totalLineWidth = 0;
+                      totalLineWidth = rowWidth;
                       newLine = true;
                     }
 
