@@ -60,8 +60,8 @@ class Card extends React.Component
   render()
   {
     const {
-      self, votes, newLine,
-      owner, content, style, blank,
+      self, votes, owner,
+      content, style, blank,
       type, disabled, allowed, picked,
       onClick, onChange, shareEntry
     } = this.props;
@@ -70,13 +70,10 @@ class Card extends React.Component
       hidden, winner, line
     } = this.props;
 
-    line = line || false;
     hidden = hidden || false;
     winner = winner || false;
 
-    if (line === 'left' && !newLine)
-      line = false;
-
+    // reverse lines if direction is right-to-left
     if (locale.direction === 'rtl' && line === 'right')
       line = 'left';
     else if (locale.direction === 'rtl' && line === 'left')
@@ -104,7 +101,8 @@ class Card extends React.Component
             }
           </div>
 
-          <div line={ line.toString() } className={ styles.line }><div/></div>
+          <div line={ (line === 'right' || line === 'both') ? 'right' : 'false' } className={ styles.line }><div/></div>
+          <div line={ (line === 'left' || line === 'both') ? 'left' : 'false' } className={ styles.line }><div/></div>
 
           {
             (hidden)
@@ -172,7 +170,6 @@ Card.propTypes = {
   votes: PropTypes.number,
   content: PropTypes.string,
   line: PropTypes.string,
-  newLine: PropTypes.bool,
   hidden: PropTypes.bool,
   winner: PropTypes.bool,
   picked: PropTypes.bool,
@@ -288,8 +285,7 @@ const styles = createStyle({
     },
 
     '[line="right"]': {
-      left: '100%',
-      // display: 'none'
+      left: '100%'
     },
 
     '> div': {

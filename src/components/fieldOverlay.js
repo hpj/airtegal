@@ -286,9 +286,18 @@ class FieldOverlay extends React.Component
                       newLine = true;
                     }
 
+                    let line;
+
+                    if (entry.cards[i - 1] && entry.cards[i + 1] && newLine)
+                      line = 'both';
+                    else if (entry.cards[i - 1] && newLine)
+                      line = 'left';
+                    else if (entry.cards[i + 1])
+                      line = 'right';
+
                     return <Card
                       key={ card.key }
-                      line={ (entry.cards[i - 1]) ? 'left' : (entry.cards[i + 1]) ? 'right' : undefined }
+                      line={ line }
                       newLine={ newLine }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       shareEntry={ () => this.shareEntry(entryIndex) }
