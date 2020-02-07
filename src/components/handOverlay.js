@@ -100,7 +100,7 @@ class HandOverlay extends React.Component
   {
     // it needs to be updated manually on every resize
     // or else it can go off-screen
-    overlayRef.current.snapTo({ index: 0 });
+    overlayRef.current.snapTo({ index: this.state.snapIndex });
 
     this.refreshViewableArea();
   }
