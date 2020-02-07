@@ -10,8 +10,6 @@ import PanResponder from 'react-panresponder-web';
 
 import Interactable from 'react-interactable/noNative';
 
-import LineTo from './lineTo.js';
-
 import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
@@ -41,8 +39,6 @@ class FieldOverlay extends React.Component
       overlayHidden: true,
 
       field: [],
-      lines: [],
-
       votes: {}
     };
 
@@ -149,23 +145,8 @@ class FieldOverlay extends React.Component
 
     if (roomData.field)
     {
-      const lines = [];
-
-      roomData.field.forEach((entry) =>
-      {
-        entry.cards.forEach((card, i) =>
-        {
-          if (entry.cards[i + 1])
-            lines.push({
-              from: card.key,
-              to: entry.cards[i + 1].key
-            });
-        });
-      });
-
       this.setState({
-        field: roomData.field,
-        lines: lines
+        field: roomData.field
       });
     }
     
@@ -230,6 +211,8 @@ class FieldOverlay extends React.Component
   {
     const { size } = this.props;
 
+    let totalLineWidth = 0;
+
     // on overlay position changes
     overlayAnimatedX.removeAllListeners();
 
@@ -278,15 +261,35 @@ class FieldOverlay extends React.Component
               {
                 this.state.field.map((entry, entryIndex) =>
                 {
+                  const percent = (s, percent) =>
+                  {
+                    const n = (s / 100) * percent;
+                  
+                    return n;
+                  };
+
                   const isAllowed =
                     (this.state.playerState === 'judging' || (this.state.playerState === 'voting' && entry.id !== socket.id))
                     && entryIndex > 0;
 
-                  return entry.cards.map((card) =>
+                  return entry.cards.map((card, i) =>
                   {
+                    const rowWidth = 115 + 40 + percent(size.width, 2) + percent(size.height, 2);
+
+                    let newLine = false;
+
+                    totalLineWidth = totalLineWidth + rowWidth;
+
+                    if (totalLineWidth > size.width)
+                    {
+                      totalLineWidth = 0;
+                      newLine = true;
+                    }
+
                     return <Card
                       key={ card.key }
-                      elementId={ card.key }
+                      line={ (entry.cards[i - 1]) ? 'left' : (entry.cards[i + 1]) ? 'right' : undefined }
+                      newLine={ newLine }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       shareEntry={ () => this.shareEntry(entryIndex) }
                       allowed={ isAllowed.toString() }
@@ -303,22 +306,6 @@ class FieldOverlay extends React.Component
               }
             </div>
           </div>
-
-          {
-            this.state.lines.map((o, i) =>
-            {
-              return <LineTo
-                key={ i }
-                size={ size }
-                within={ styles.wrapper }
-                borderColor={ colors.entryLine }
-                borderWidth={ 10 }
-                from={ o.from }
-                to={ o.to }
-              />;
-            })
-          }
-
         </Interactable.View>
       </div>
     );

@@ -60,16 +60,27 @@ class Card extends React.Component
   render()
   {
     const {
-      self, votes,
-      owner, content, style, blank, type,
-      elementId, disabled, allowed, picked,
+      self, votes, newLine,
+      owner, content, style, blank,
+      type, disabled, allowed, picked,
       onClick, onChange, shareEntry
     } = this.props;
 
-    let { hidden, winner } = this.props;
+    let {
+      hidden, winner, line
+    } = this.props;
 
+    line = line || false;
     hidden = hidden || false;
     winner = winner || false;
+
+    if (line === 'left' && !newLine)
+      line = false;
+
+    if (locale.direction === 'rtl' && line === 'right')
+      line = 'left';
+    else if (locale.direction === 'rtl' && line === 'left')
+      line = 'right';
 
     if (!this.sized && this.textareaRef && this.textareaRef.current)
       requestAnimationFrame(this.resize);
@@ -83,7 +94,6 @@ class Card extends React.Component
           className={ styles.container }
           type={ type }
           onClick={ onClick }
-          id={ elementId }
           allowed={ allowed }
           winner={ winner.toString() }
         >
@@ -93,6 +103,8 @@ class Card extends React.Component
               this.for(votes).map((v, i) => <div key={ i } className={ styles.vote }/>)
             }
           </div>
+
+          <div line={ line.toString() } className={ styles.line }><div/></div>
 
           {
             (hidden)
@@ -150,7 +162,6 @@ class Card extends React.Component
 }
 
 Card.propTypes = {
-  elementId: PropTypes.string,
   onClick: PropTypes.func,
   onChange: PropTypes.func,
   shareEntry: PropTypes.func,
@@ -160,8 +171,10 @@ Card.propTypes = {
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
   votes: PropTypes.number,
   content: PropTypes.string,
-  winner: PropTypes.bool,
+  line: PropTypes.string,
+  newLine: PropTypes.bool,
   hidden: PropTypes.bool,
+  winner: PropTypes.bool,
   picked: PropTypes.bool,
   disabled: PropTypes.bool,
   style: PropTypes.object,
@@ -211,7 +224,6 @@ const styles = createStyle({
   },
 
   container: {
-    overflow: 'hidden',
     borderRadius: '10px',
 
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
@@ -256,6 +268,38 @@ const styles = createStyle({
     }
   },
 
+  line: {
+    pointerEvents: 'none',
+
+    display: 'flex',
+    position: 'absolute',
+
+    alignItems: 'center',
+
+    width: '100%',
+    height: '100%',
+
+    '[line="false"]': {
+      display: 'none'
+    },
+
+    '[line="left"]': {
+      left: '-100%'
+    },
+
+    '[line="right"]': {
+      left: '100%',
+      // display: 'none'
+    },
+
+    '> div': {
+      backgroundColor: colors.entryLine,
+        
+      width: '100%',
+      height: '12px'
+    }
+  },
+
   hidden: {
     display: 'flex',
 
@@ -272,7 +316,7 @@ const styles = createStyle({
 
     '> div': {
       position: 'relative',
-      
+
       top: '15px',
       width: 'min-content',
 

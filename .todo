@@ -1,25 +1,9 @@
-February Checklist:
-  ☐ schedule the discord event
-
-  ☐ release app on google play store
-    ☐ build the pwa builder package using android studio
-    ☐ test the site's service worker (offline page)
-
 Performance Issues and Bugs:
 
 Testing:
+  ☐ loading issues
     
 UI/UX:
-  ✔ dark mode @done(20-01-22 12:52)
-
-  ✔ editable room options @done(20-01-26 10:32)
-  
-  ✔ blank card @done(20-01-31 05:25)
-
-  ✔ king mode @done(20-02-01 21:54)
-
-  ✔ democracy mode @done(20-02-04 16:31)
-
   ☐ sharing the winning card of the round on social media
 
   ☐ match end screen
