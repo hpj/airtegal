@@ -242,7 +242,8 @@ const fuckAdBlockPromise = () =>
 
 // remove the loading screen if all the promises resolve
 Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
-  .then(() => fuckAdBlockPromise().then(loaded))
+  .then(fuckAdBlockPromise)
+  .then(loaded)
   .catch((e) =>
   {
     if (e === 'offline')
