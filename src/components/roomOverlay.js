@@ -477,7 +477,7 @@ class RoomOverlay extends React.Component
               <HandOverlay sendMessage={ sendMessage } size={ size } />
 
               <div className={ styles.content }>
-                <FieldOverlay sendMessage={ sendMessage } size={ size }/>
+                <FieldOverlay sendMessage={ sendMessage } addNotification={ this.addNotification } size={ size }/>
                 
                 {
                   (isTouchScreen) ? <PocketOverlay size={ size }/> : <div/>

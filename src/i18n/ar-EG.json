@@ -90,7 +90,7 @@
 
   // room id sharing
 
-  "room-copied-to-clipboard": "تم نسخ لينك الغرفة لجهازك!",
+  "room-copied-to-clipboard": "تم نسخ رابط الغرفة لجهازك!",
   "join-me": "يسطي افتح نلعب ماتش كروت",
 
   // room master changes
@@ -161,6 +161,14 @@
   "won-this-round": "لقد فاز %0 بهذة الجولة.",
 
   "round-canceled": "تم الغاء الجولة.",
+
+  // share overlay
+  
+  "hashtag-kuruit": "#كروت",
+
+  "share-copied-to-clipboard": "تم نسخ الرابط لجهازك!",
+
+  "close": "الغاء",
 
   // match reports
 

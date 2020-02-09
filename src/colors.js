@@ -64,6 +64,15 @@ export default function(forceLight)
 
     vote: '#28a500',
     winner: '#d4af37',
+
+    shareBackground: '#C4C4C4',
+
+    shareUrlBackground: '#d2d2d2',
+    shareUrlText: '#232323',
+
+    facebook: '#1877F2',
+    twitter: '#1DA1F2',
+    reddit: '#FF4500',
    
     red: 'red',
     error: '#ad1818',
@@ -82,6 +91,8 @@ export default function(forceLight)
 
     blackBackground: '#101010',
     blackText: '#c3c3c3',
+
+    accentColor: '#c3c3c3',
 
     roomBackground: '#3e3d3d',
     roomForeground: '#ffffff',
@@ -114,16 +125,11 @@ export default function(forceLight)
     entryLine: '#696060',
 
     red: '#9c0202',
-
-    accentColor: '#c3c3c3'
-   
-    // selectBackground: '#1c1d24',
-
-    // headerGradient: [ '#4a225a', '#000004' ],
     
-    // playBackgroundGradient: [ '#000000', '#4a225a' ],
-    
-    // playButtonGradient: [ '#56106d', '#a022d2' ]
+    shareBackground: '#292929',
+
+    shareUrlBackground: '#525252',
+    shareUrlText: '#131313'
   };
 
   return (dark) ? darkTheme : lightTheme;

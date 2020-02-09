@@ -148,7 +148,7 @@ class Card extends React.Component
             }
 
             {
-              (winner) ?
+              (shareEntry) ?
                 <ShareIcon className={ styles.share } onClick={ shareEntry }/> :
                 <div/>
             }

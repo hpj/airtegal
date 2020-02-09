@@ -14,11 +14,13 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import { locale } from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
+
+import ShareOverlay from './shareOverlay.js';
 
 import { requestRoomData } from './roomOverlay.js';
 
@@ -198,13 +200,25 @@ class FieldOverlay extends React.Component
     const data = b64(JSON.stringify(obj));
 
     const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
+    const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
 
-    const facebookURL2 = `https://www.facebook.com/dialog/share?app_id=196958018362010&display=popup&href=${shareURL}`;
-
-    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
-
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(facebookURL2, 'Share', options);
+    if (navigator.share)
+    {
+      navigator.share({
+        title: 'Kuruit Bedan Fash5',
+        text: i18n('hashtag-kuruit'),
+        url: shareURL
+      }).catch(() =>
+      {
+        //
+      });
+    }
+    else
+    {
+      this.setState({
+        share: { active: true, url: shareURL, img: pictureURL }
+      });
+    }
   }
 
   render()
@@ -227,6 +241,11 @@ class FieldOverlay extends React.Component
 
     return (
       <div className={ styles.view }>
+        <ShareOverlay
+          addNotification={ this.props.addNotification }
+          share={ this.state.share }
+          hide={ () => this.setState({ share: { ...this.state.share, active: false } }) }/>
+
         <Interactable.View
           ref={ overlayRef }
 
@@ -300,7 +319,7 @@ class FieldOverlay extends React.Component
                       line={ line }
                       newLine={ newLine }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
-                      shareEntry={ () => this.shareEntry(entryIndex) }
+                      shareEntry={ (entryIndex === this.state.winnerEntryIndex && i == 0) ? () => this.shareEntry(entryIndex) : undefined }
                       allowed={ isAllowed.toString() }
                       self={ (entry.id && entry.id === socket.id && entryIndex > 0) }
                       owner={ (entry.id && entryIndex > 0 && this.state.playerProperties[entry.id]) ? this.state.playerProperties[entry.id].username : undefined }
@@ -323,6 +342,7 @@ class FieldOverlay extends React.Component
 
 FieldOverlay.propTypes = {
   sendMessage: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
   size: PropTypes.object
 };
 
