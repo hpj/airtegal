@@ -181,6 +181,19 @@ class RoomOptions extends React.Component
     });
   }
 
+  onRandosChange(value)
+  {
+    this.setState({
+      dirtyOptions: {
+        ...this.state.dirtyOptions,
+        match: {
+          ...this.state.dirtyOptions.match,
+          randos: value
+        }
+      }
+    });
+  }
+
   render()
   {
     const { dirtyOptions, options } = this.state;
@@ -238,7 +251,7 @@ class RoomOptions extends React.Component
 
                   { i18n('judge')  }
                 </div>
-                
+
                 <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.gameMode === 'democracy' && dirtyOptions.gameMode !== options.gameMode).toString() }>
                   <div
                     className={ styles.checkbox }
@@ -481,6 +494,13 @@ class RoomOptions extends React.Component
                   <div>{ i18n('blank-probability') }</div>
                 </div>
 
+                <div className={ styles.field } master={ isMaster.toString() } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
+                  <div style={ { margin: '0 5px' } }>{ i18n('randos') }</div>
+
+                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
+                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+                </div>
+
                 {/* Card Packs */}
 
                 <div className={ styles.title }>{ i18n('card-packs') }</div>
@@ -501,7 +521,6 @@ class RoomOptions extends React.Component
                     })
                   }
                 </div>
-
                 
                 <div
                   className={ styles.button }
@@ -758,6 +777,17 @@ const styles = createStyle({
         display: 'block',
         content: '"*"'
       }
+    }
+  },
+
+  choice: {
+    margin: '0 5px',
+    
+    '[choice="true"]': {
+      borderColor: colors.blackText,
+      borderBottom: '2px solid',
+
+      margin: '0 5px -2px 5px'
     }
   },
 
