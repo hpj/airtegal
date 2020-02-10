@@ -45,6 +45,12 @@
   "random-room": "غرفة عشؤئية",
   "available-rooms": "الغرف المتاحة",
 
+  // app options
+
+  "theme": "المظهر",
+  "region": "المنطقة",
+  "save": "حفظ",
+
   // random usernames
 
   "stupid-first-names": [
@@ -75,7 +81,7 @@
 
   "room-does-not-exists": "هذة الغرفة غير متوفرة",
   "no-rooms-available": "لا يوجد غرف متاحة",
-  "room-is-full": "هذة الغرف كاملة العدد",
+  "room-is-full": "هذة الغرفة كاملة العدد",
   "room-is-busy": "هذة الغرفة مشغولة",
   
   "request-has-wrong-parameters": "حطيت اسمك هناك؟",

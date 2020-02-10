@@ -2,15 +2,13 @@ import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
-
-import Brightness2Icon from 'mdi-react/Brightness2Icon';
-import Brightness5Icon from 'mdi-react/Brightness5Icon';
+import OptionsIcon from 'mdi-react/CogIcon';
 
 import io from 'socket.io-client';
 
 import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
-import getTheme, { detectDeviceIsDark } from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
 
@@ -22,6 +20,7 @@ import Error from '../components/error.js';
 import Warning from '../components/warning.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
+import OptionsOverlay from '../components/optionsOverlay.js';
 
 import i18n, { locale } from '../i18n.js';
 
@@ -119,7 +118,6 @@ class Game extends React.Component
 
     this.resize = this.resize.bind(this);
 
-    this.switchTheme = this.switchTheme.bind(this);
     this.requestRooms = this.requestRooms.bind(this);
 
     // set the title of this screen
@@ -313,18 +311,6 @@ class Game extends React.Component
     this.setState({ loadingHidden: visible = !visible });
   }
 
-  switchTheme()
-  {
-    // reverse current setting
-    if (detectDeviceIsDark())
-      localStorage.setItem('forceDark', 'false');
-    else
-      localStorage.setItem('forceDark', 'true');
-
-    // refresh page
-    location.reload();
-  }
-
   render()
   {
     return (
@@ -336,6 +322,10 @@ class Game extends React.Component
           text={ i18n('kbf-adults-warning') }
           button={ i18n('ok') }
         />
+
+        <OptionsOverlay
+          options={ this.state.options }
+          hide={ () => this.setState({ options: { active: false } }) }/>
 
         <div className={ mainStyles.container }>
 
@@ -381,13 +371,9 @@ class Game extends React.Component
 
             <div className={ roomsStyles.title }> { i18n('available-rooms') }</div>
 
-            <RefreshIcon allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms } className={ roomsStyles.refresh }/>
+            <RefreshIcon allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms } className={ roomsStyles.icon }/>
 
-            {
-              (detectDeviceIsDark()) ?
-                <Brightness2Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/> :
-                <Brightness5Icon onClick={ this.switchTheme } className={ roomsStyles.theme }/>
-            }
+            <OptionsIcon allowed={ this.state.loadingHidden.toString() } onClick={ () => this.setState({ options: { active: true } }) } className={ roomsStyles.icon }/>
 
             <div className={ roomsStyles.roomsWrapper }>
               <div style={ {
@@ -605,7 +591,7 @@ const roomsStyles = createStyle({
 
     gridTemplateColumns: '1fr auto auto',
     gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"title theme refresh" "rooms rooms rooms"',
+    gridTemplateAreas: '"title . ." "rooms rooms rooms"',
 
     gridColumnGap: '15px',
 
@@ -625,9 +611,7 @@ const roomsStyles = createStyle({
     margin: 'auto 0'
   },
 
-  refresh: {
-    gridArea: 'refresh',
-
+  icon: {
     width: 'calc(12px + 0.55vw + 0.55vh)',
     height: 'calc(12px + 0.55vw + 0.55vh)',
 
@@ -645,34 +629,6 @@ const roomsStyles = createStyle({
       pointerEvents: 'none',
       fill: colors.greyText
     },
-
-    ':hover': {
-      fill: colors.whiteText,
-      backgroundColor: colors.blackBackground,
-
-      transform: 'rotateZ(22deg)'
-    },
-
-    ':active': {
-      transform: 'scale(0.95) rotateZ(22deg)'
-    }
-  },
-
-  theme: {
-    gridArea: 'theme',
-
-    width: 'calc(12px + 0.55vw + 0.55vh)',
-    height: 'calc(12px + 0.55vw + 0.55vh)',
-
-    fill: colors.blackText,
-    backgroundColor: colors.whiteBackground,
-
-    cursor: 'pointer',
-    padding: '5px',
-    borderRadius: '50%',
-
-    transform: 'rotateZ(0deg) scale(1)',
-    transition: 'transform 0.25s, background-color 0.25s, fill 0.25s',
 
     ':hover': {
       fill: colors.whiteText,
