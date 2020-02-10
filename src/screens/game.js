@@ -257,7 +257,7 @@ class Game extends React.Component
         overlayRef.current.joinRoom(params.get('join'));
     }
 
-    // TODO show install pinned prompt
+    // TODO show install prompt
     // onInstallPrompt((e) =>
     // {
     //   if (localStorage.getItem('install-prompt-ignore'))

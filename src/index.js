@@ -105,23 +105,24 @@ export function hideLoadingScreen()
   visibleLoading = false;
 }
 
-export function onInstallPrompt(callback)
-{
-  if (installPromptEvent)
-    callback(installPromptEvent);
-  else
-    window.addEventListener('beforeinstallprompt', (e) => callback(e));
-}
+// TODO show install prompt
+// export function onInstallPrompt(callback)
+// {
+//   if (installPromptEvent)
+//     callback(installPromptEvent);
+//   else
+//     window.addEventListener('beforeinstallprompt', (e) => callback(e));
+// }
 
 // register the service worker
 registerServiceWorker();
 
-window.addEventListener('beforeinstallprompt', (e) =>
-{
-  e.preventDefault();
+// window.addEventListener('beforeinstallprompt', (e) =>
+// {
+//   e.preventDefault();
 
-  installPromptEvent = e;
-});
+//   installPromptEvent = e;
+// });
 
 // show a loading screen until the promises resolve
 ReactDOM.render(<Loading splash/>, placeholder);
