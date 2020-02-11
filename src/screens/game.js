@@ -107,6 +107,8 @@ class Game extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
+      adsBlocked: false,
+
       // load user preference or use default
       username: localStorage.getItem('username') || stupidNames(),
       size: {},
@@ -119,6 +121,8 @@ class Game extends React.Component
     this.resize = this.resize.bind(this);
 
     this.requestRooms = this.requestRooms.bind(this);
+
+    // this.adLoaded = this.adLoaded.bind(this);
 
     // set the title of this screen
     document.title = 'Kuruit Bedan Fash5';
@@ -245,6 +249,62 @@ class Game extends React.Component
     // auto-size the username input-box on resize
     window.addEventListener('resize', this.resize);
 
+    // ad block detection
+
+    if (window.fuckAdBlock)
+    {
+      window.fuckAdBlock
+        .on(true, () =>
+        {
+          this.setState({ adsBlocked: true });
+        });
+    }
+    else
+    {
+      this.setState({ adsBlocked: true });
+    }
+
+    // setTimeout(() =>
+    // {
+    //   let ads = true;
+
+    //   const elements = document.querySelector('#ads');
+
+    //   if (!elements)
+    //   {
+    //     ads = false;
+    //   }
+    //   else if (elements.children.length < 3)
+    //   {
+    //     ads = false;
+    //   }
+    //   else if (!this.adsLoaded)
+    //   {
+    //     ads = false;
+    //   }
+    //   else
+    //   {
+    //     for (let i = 0; i < elements.children.length; i++)
+    //     {
+    //       const element = elements.children.item(i);
+
+    //       if (typeof element.getAttribute('style') === 'string')
+    //       {
+    //         ads = false;
+
+    //         break;
+    //       }
+    //     }
+    //   }
+
+    //   if (!ads)
+    //   {
+    //     this.setState({
+    //       adsBlocked: true
+    //     });
+    //   }
+    // }, 5000);
+
     // process url parameters
 
     const params = new URL(document.URL).searchParams;
@@ -300,6 +360,11 @@ class Game extends React.Component
       }
     });
   }
+
+  // adLoaded()
+  // {
+  //   this.adsLoaded = true;
+  // }
 
   showErrorMessage(err)
   {
@@ -361,10 +426,14 @@ class Game extends React.Component
 
           </div>
 
-          <div className={ optionsStyles.ads }>
+          <div id='ads' className={ optionsStyles.ads }>
             <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
             <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
             <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
+          </div>
+
+          <div enabled={ this.state.adsBlocked.toString() } className={ optionsStyles.blockMessage }>
+            <div>{ i18n('ad-block-detected') }</div>
           </div>
 
           <div className={ roomsStyles.container }>
@@ -456,8 +525,8 @@ const mainStyles = createStyle({
   container: {
     display: 'grid',
 
-    gridTemplateAreas: '"header" "options" "." "rooms"',
-    gridTemplateRows: 'auto auto auto 1fr',
+    gridTemplateAreas: '"header" "options" "." "." "rooms"',
+    gridTemplateRows: 'auto auto auto auto 1fr',
     gridTemplateColumns: '100%',
 
     color: colors.blackText,
@@ -580,6 +649,36 @@ const optionsStyles = createStyle({
       {
         display: 'none'
       }
+    }
+  },
+
+  blockMessage: {
+    display: 'flex',
+    justifyContent: 'center',
+    maxWidth: 'inherit',
+
+    direction: locale.direction,
+
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontWeight: '700',
+
+    padding: '10px',
+    border: '1px black solid',
+    margin: '0 15px',
+    borderRadius: '5px',
+
+    '[enabled="false"]': {
+      display: 'none'
+    },
+
+    '> div': {
+      display: 'flex',
+      alignItems: 'center',
+
+      flexGrow: 1,
+
+      fontSize: 'calc(6px + 0.5vw + 0.5vh)'
     }
   }
 });

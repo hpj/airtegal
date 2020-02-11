@@ -18,8 +18,6 @@ import axios from 'axios';
 import Error from './components/error.js';
 import Loading from './components/loading.js';
 
-import TimedBlock from './components/timedBlock.js';
-
 import Offline from './screens/offline.js';
 import NotFound from './screens/404.js';
 
@@ -29,7 +27,7 @@ import Game from './screens/game.js';
 
 export let country = '';
 
-let installPromptEvent;
+// let installPromptEvent;
 
 let visibleLoading = true;
 let keepLoading = false;
@@ -216,34 +214,8 @@ const ipCheckPromise = () =>
   });
 };
 
-const fuckAdBlockPromise = () =>
-{
-  return new Promise((resolve) =>
-  {
-    if (process.env.NODE_ENV !== 'production')
-    {
-      resolve();
-
-      return;
-    }
-  
-    if (window.fuckAdBlock)
-    {
-      window.fuckAdBlock.on(true, () =>
-      {
-        ReactDOM.render(<TimedBlock resolvePromise={ resolve }/>, placeholder);
-      }).on(false, resolve);
-    }
-    else
-    {
-      ReactDOM.render(<TimedBlock resolvePromise={ resolve }/>, placeholder);
-    }
-  });
-};
-
 // remove the loading screen if all the promises resolve
 Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
-  .then(fuckAdBlockPromise)
   .then(loaded)
   .catch((e) =>
   {
