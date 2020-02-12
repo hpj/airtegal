@@ -136,13 +136,13 @@ class Card extends React.Component
               </div>
           }
 
-          <div hide={ hidden.toString() } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ (self === undefined && owner === undefined).toString() } className={ styles.bottom }>
+          <div hide={ hidden.toString() } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((self === undefined && owner === undefined) || type === 'black').toString() } className={ styles.bottom }>
             {
               (blank) ? i18n('kuruit-blank-blank') : i18n('kuruit-bedan-fash5')
             }
           </div>
 
-          <div visible={ ((self !== undefined || owner !== undefined) && type === 'white').toString() } enabled={ (self !== undefined || owner !== undefined).toString() } className={ styles.bottom }>
+          <div enabled={ ((self !== undefined || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
             {
               (self) ? i18n('this-card-is-yours') : owner
             }
@@ -429,7 +429,7 @@ const styles = createStyle({
 
   share: {
     cursor: 'pointer',
-    fill: colors.blackText,
+    fill: colors.whiteCardForeground,
 
     width: 'calc(14px + 0.3vw + 0.3vh)',
     height: 'calc(14px + 0.3vw + 0.3vh)',
