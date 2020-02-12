@@ -664,7 +664,7 @@ const optionsStyles = createStyle({
     fontWeight: '700',
 
     padding: '10px',
-    border: '1px black solid',
+    // border: '1px black solid',
     margin: '0 15px',
     borderRadius: '5px',
 
