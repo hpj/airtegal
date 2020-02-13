@@ -13,7 +13,7 @@ import i18n, { locale } from '../i18n.js';
 
 import Card from './card.js';
 
-import { requestRoomData } from './roomOverlay.js';
+import { requestRoomData, room } from './roomOverlay.js';
 
 const colors = getTheme();
 
@@ -42,12 +42,12 @@ class PicksDialogue extends React.Component
 
   componentDidMount()
   {
-    socket.on('roomData', this.onRoomData);
+    room.on('roomData', this.onRoomData);
   }
 
   componentWillUnmount()
   {
-    socket.off('roomData', this.onRoomData);
+    room.off('roomData', this.onRoomData);
   }
 
   onRoomData(roomData)

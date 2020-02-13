@@ -2,6 +2,8 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import { EventEmitter } from 'events';
+
 import { Value } from 'animated';
 import Interactable from 'react-interactable/noNative';
 
@@ -10,6 +12,8 @@ import i18n, { locale } from '../i18n.js';
 import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
+
+import { randomLastName } from '../stupidNames.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -37,6 +41,8 @@ const overlayAnimatedX = new Value(0);
 
 export let requestRoomData;
 
+export const room = new EventEmitter();
+
 class RoomOverlay extends React.Component
 {
   constructor()
@@ -59,6 +65,8 @@ class RoomOverlay extends React.Component
 
       handlerVisible: true
     };
+
+    this.randoProperties = {};
 
     requestRoomData = () =>
     {
@@ -114,6 +122,20 @@ class RoomOverlay extends React.Component
 
   onRoomData(roomData)
   {
+    // process randos usernames
+    roomData.players.forEach(id =>
+    {
+      // eslint-disable-next-line security/detect-object-injection
+      if (roomData.playerProperties[id].rando)
+      {
+        // eslint-disable-next-line security/detect-object-injection
+        this.randoProperties[id] = this.randoProperties[id] || `${i18n('rando')} ${randomLastName()}`;
+
+        // eslint-disable-next-line security/detect-object-injection
+        roomData.playerProperties[id].username = this.randoProperties[id];
+      }
+    });
+
     // handler is only visible if user is on the match's lobby screen
     this.handlerVisibility((roomData.state === 'lobby') ? true : false);
 
@@ -184,6 +206,8 @@ class RoomOverlay extends React.Component
       if (roomData.master !== socket.id)
         this.addNotification(i18n('room-edited'));
     }
+
+    room.emit('roomData', roomData);
 
     this.setState({
       roomData,

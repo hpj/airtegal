@@ -22,7 +22,7 @@ import Card from './card.js';
 
 import ShareOverlay from './shareOverlay.js';
 
-import { requestRoomData } from './roomOverlay.js';
+import { requestRoomData, room } from './roomOverlay.js';
 
 const colors = getTheme();
 
@@ -92,12 +92,12 @@ class FieldOverlay extends React.Component
 
   componentDidMount()
   {
-    socket.on('roomData', this.onRoomData);
+    room.on('roomData', this.onRoomData);
   }
 
   componentWillUnmount()
   {
-    socket.off('roomData', this.onRoomData);
+    room.off('roomData', this.onRoomData);
   }
 
   onRoomData(roomData)

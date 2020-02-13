@@ -24,7 +24,7 @@ import { gestures } from './fieldOverlay.js';
 
 import PicksDialogue from './picksDialogue.js';
 
-import { requestRoomData } from './roomOverlay.js';
+import { requestRoomData, room } from './roomOverlay.js';
 
 const colors = getTheme();
 
@@ -78,7 +78,7 @@ class HandOverlay extends React.Component
 
   componentDidMount()
   {
-    socket.on('roomData', this.onRoomData);
+    room.on('roomData', this.onRoomData);
 
     window.addEventListener('resize', this.onResize);
     wrapperRef.current.addEventListener('resize', this.onResize);
@@ -89,7 +89,7 @@ class HandOverlay extends React.Component
 
   componentWillUnmount()
   {
-    socket.off('roomData', this.onRoomData);
+    room.off('roomData', this.onRoomData);
 
     window.removeEventListener('resize', this.onResize);
     

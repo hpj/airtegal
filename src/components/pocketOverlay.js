@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import { Value } from 'animated';
 import Interactable from 'react-interactable/noNative';
 
-import { socket } from '../screens/game.js';
-
 import getTheme from '../colors.js';
 
 // import i18n, { locale } from '../i18n.js';
@@ -17,7 +15,7 @@ import { gestures } from './fieldOverlay.js';
 
 import RoomTrackBar from './roomTrackBar.js';
 
-import { requestRoomData } from './roomOverlay.js';
+import { requestRoomData, room } from './roomOverlay.js';
 
 const colors = getTheme();
 
@@ -48,7 +46,7 @@ class PocketOverlay extends React.Component
 
   componentDidMount()
   {
-    socket.on('roomData', this.onRoomData);
+    room.on('roomData', this.onRoomData);
 
     window.addEventListener('resize', this.onResize);
 
@@ -57,7 +55,7 @@ class PocketOverlay extends React.Component
 
   componentWillUnmount()
   {
-    socket.off('roomData', this.onRoomData);
+    room.off('roomData', this.onRoomData);
 
     window.removeEventListener('resize', this.onResize);
     

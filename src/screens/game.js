@@ -251,17 +251,20 @@ class Game extends React.Component
 
     // ad block detection
 
-    if (window.fuckAdBlock)
+    if (process.env.NODE_ENV !== 'development')
     {
-      window.fuckAdBlock
-        .on(true, () =>
-        {
-          this.setState({ adsBlocked: true });
-        });
-    }
-    else
-    {
-      this.setState({ adsBlocked: true });
+      if (window.fuckAdBlock)
+      {
+        window.fuckAdBlock
+          .on(true, () =>
+          {
+            this.setState({ adsBlocked: true });
+          });
+      }
+      else
+      {
+        this.setState({ adsBlocked: true });
+      }
     }
 
     // setTimeout(() =>

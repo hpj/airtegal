@@ -13,7 +13,7 @@ import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import { requestRoomData } from './roomOverlay.js';
+import { requestRoomData, room } from './roomOverlay.js';
 
 const colors = getTheme();
 
@@ -37,7 +37,7 @@ class RoomState extends React.Component
 
   componentDidMount()
   {
-    socket.on('roomData', this.onRoomData);
+    room.on('roomData', this.onRoomData);
   }
 
   componentWillUnmount()
@@ -45,7 +45,7 @@ class RoomState extends React.Component
     if (this.countdownInterval)
       clearInterval(this.countdownInterval);
 
-    socket.off('roomData', this.onRoomData);
+    room.off('roomData', this.onRoomData);
   }
 
   onRoomData(roomData)

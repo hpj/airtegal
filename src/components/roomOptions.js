@@ -14,7 +14,7 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
 
-import { requestRoomData } from './roomOverlay.js';
+import { requestRoomData, room } from './roomOverlay.js';
 
 const colors = getTheme();
 
@@ -47,12 +47,12 @@ class RoomOptions extends React.Component
 
   componentDidMount()
   {
-    socket.on('roomData', this.onRoomData);
+    room.on('roomData', this.onRoomData);
   }
 
   componentWillUnmount()
   {
-    socket.off('roomData', this.onRoomData);
+    room.off('roomData', this.onRoomData);
   }
 
   onRoomData(roomData)
