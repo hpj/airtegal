@@ -21,12 +21,12 @@
   },
   "homepage": "https://bedan.me",
   "dependencies": {
-    "@sentry/browser": "^5.11.0",
+    "@sentry/browser": "^5.12.1",
     "animate-css-grid": "^1.4.3",
     "animated": "^0.2.2",
     "autosize-input": "^1.0.2",
-    "axios": "^0.19.1",
-    "mdi-react": "^6.5.0",
+    "axios": "^0.19.2",
+    "mdi-react": "^6.7.0",
     "prevent-pull-refresh": "^1.0.5",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
@@ -41,22 +41,22 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/preset-react": "^7.7.4",
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "browser-sync": "^2.26.7",
     "browser-sync-webpack-plugin": "^2.2.2",
     "compression-webpack-plugin": "^3.1.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-security": "^1.4.0",
     "json5-loader": "^3.0.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1",
-    "workbox-cli": "^4.3.1"
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "workbox-cli": "^5.0.0"
   }
 }
