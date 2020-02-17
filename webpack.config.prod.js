@@ -32,7 +32,7 @@ module.exports = {
   },
   plugins: [
     new DefinePlugin({
-      'process.env.RELEASE': gitRevisionPlugin.commithash(),
+      'process.env.RELEASE': `${gitRevisionPlugin.commithash()}`,
       'process.env.API_ENDPOINT': process.env.API_ENDPOINT
     }),
     new SentryWebpackPlugin({
