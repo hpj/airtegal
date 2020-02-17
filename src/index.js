@@ -129,7 +129,10 @@ ReactDOM.render(<Loading splash/>, placeholder);
 if (process.env.NODE_ENV === 'production')
 {
   // sentry for error monitoring
-  Sentry.init({ dsn: 'https://48c0df63377d4467823a29295dbc3c5f@sentry.io/1521991' });
+  Sentry.init({
+    release: process.env.RELEASE,
+    dsn: 'https://48c0df63377d4467823a29295dbc3c5f@sentry.io/1521991'
+  });
 }
 
 // request the promises
