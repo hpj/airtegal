@@ -1,7 +1,7 @@
 {
   // brands
 
-  "kuruit-bedan-fash5": "كروت بضان فشخ",
+  "airtegal": "كروت بضان فشخ",
 
   "herp-project": "Herp Project",
   "hpj": "HP.J",
@@ -11,7 +11,7 @@
   "confirm": "تاكيد",
   "clear": "الغاء",
 
-  "kuruit-blank-blank": "كروت ____ ___",
+  "airtegal-blank": "كروت ____ ___",
   "blank": "____",
 
   // error connection errors
@@ -179,7 +179,7 @@
 
   // share overlay
   
-  "hashtag-kuruit": "#كروت",
+  "hashtag-airtegal": "#كروت",
 
   "share-copied-to-clipboard": "تم نسخ الرابط لجهازك!",
 

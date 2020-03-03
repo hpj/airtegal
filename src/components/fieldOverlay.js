@@ -205,8 +205,8 @@ class FieldOverlay extends React.Component
     if (navigator.share)
     {
       navigator.share({
-        title: 'Kuruit Bedan Fash5',
-        text: i18n('hashtag-kuruit'),
+        title: 'Airtegal',
+        text: i18n('hashtag-airtegal'),
         url: shareURL
       }).catch(() =>
       {

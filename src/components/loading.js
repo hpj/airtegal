@@ -17,7 +17,7 @@ const Loading = ({ splash }) =>
       {
         (splash) ?
           <div className={ styles.splash }><div/></div> :
-          <div className={ styles.loading }>{ i18n('kuruit-bedan-fash5') }</div>
+          <div className={ styles.loading }>{ i18n('airtegal') }</div>
       }
     </div>
   );

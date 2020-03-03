@@ -13,7 +13,7 @@ module.exports = (env) => ({
         use: [ 'babel-loader' ]
       },
       {
-        test: /\.json$/,
+        test: /\.(json|jsonc|json5)$/,
         use: 'json5-loader',
         type: 'javascript/auto'
       }

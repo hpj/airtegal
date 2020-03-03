@@ -21,8 +21,6 @@ class Homepage extends React.Component
   {
     super();
 
-    document.title = 'Kuruit Bedan Fash5';
-
     window.scrollTo(0, 0);
   }
 
@@ -66,7 +64,7 @@ class Homepage extends React.Component
                 { i18n('hpj') }
               </a>
   
-              <div className={ headerStyles.kbf }>{ i18n('kuruit-bedan-fash5') }
+              <div className={ headerStyles.kbf }>{ i18n('airtegal') }
                 <div className={ headerStyles.beta }>({ i18n('beta') })</div>
               </div>
             
@@ -139,9 +137,9 @@ class Homepage extends React.Component
               { i18n('herp-project') }
             </a>
             <div className={ footerStyles.sitemap }>
-              <a className={ footerStyles.privacy } href='https://herpproject.com/kuruit/privacy'>{ i18n('privacy-policy') }</a>
+              <a className={ footerStyles.privacy } href='https://herpproject.com/airtegal/privacy'>{ i18n('privacy-policy') }</a>
               _
-              <a className={ footerStyles.terms } href='https://herpproject.com/kuruit/terms'>{ i18n('terms-and-conditions') }</a>
+              <a className={ footerStyles.terms } href='https://herpproject.com/airtegal/terms'>{ i18n('terms-and-conditions') }</a>
             </div>
             <p className={ footerStyles.copyright }>
               { i18n('copyright-notice') }

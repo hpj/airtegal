@@ -1,5 +1,5 @@
 export const locales = [
-  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', blank: /[^\u0621-\u064A0-9 /؟_.]/g, json: require('./i18n/ar-EG.json') }
+  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', blank: /[^\u0621-\u064A0-9 /؟_.]/g, json: require('./i18n/ar-EG.jsonc') }
 ];
 
 /**
@@ -12,6 +12,8 @@ export let locale = getDefault();
 */
 export function setLocale(country)
 {
+  // TODO won't work since i18n data are not in an app-wide store
+  // and some of it are even used in FLCSS styles
   if (country)
   {
     const find = locales.find((e) => e.value === country.toLowerCase());

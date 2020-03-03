@@ -124,9 +124,6 @@ class Game extends React.Component
 
     // this.adLoaded = this.adLoaded.bind(this);
 
-    // set the title of this screen
-    document.title = 'Kuruit Bedan Fash5';
-
     // disable back button
 
     window.history.pushState(undefined, document.title, window.location.href);

@@ -151,7 +151,7 @@ class RoomState extends React.Component
   shareRoomURL()
   {
     navigator.share({
-      title: 'Kuruit Bedan Fash5',
+      title: 'Share Room URL',
       text: i18n('join-me'),
       url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomId}`
     }).catch(() =>

@@ -30,7 +30,7 @@ const ShareOverlay = ({ addNotification, share, hide }) =>
   
   const shareOnFacebook = () =>
   {
-    const url = `https://www.facebook.com/dialog/share?app_id=196958018362010&href=${share.url}&hashtag=${encodeURIComponent(i18n('hashtag-kuruit'))}`;
+    const url = `https://www.facebook.com/dialog/share?app_id=196958018362010&href=${share.url}&hashtag=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
@@ -40,7 +40,7 @@ const ShareOverlay = ({ addNotification, share, hide }) =>
   
   const shareOnTwitter = () =>
   {
-    const url = `https://twitter.com/intent/tweet?url=${share.url}&text=${encodeURIComponent(i18n('hashtag-kuruit'))}`;
+    const url = `https://twitter.com/intent/tweet?url=${share.url}&text=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
@@ -50,7 +50,7 @@ const ShareOverlay = ({ addNotification, share, hide }) =>
   
   const shareOnReddit = () =>
   {
-    const url = `https://www.reddit.com/submit?url=${share.url}&title=${encodeURIComponent(i18n('hashtag-kuruit'))}`;
+    const url = `https://www.reddit.com/submit?url=${share.url}&title=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
