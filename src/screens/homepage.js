@@ -29,8 +29,8 @@ class Homepage extends React.Component
     return (
       <div>
         <Warning
-          storageKey='kbf-adults-warning'
-          text={ i18n('kbf-adults-warning') }
+          storageKey='airtegal-adults-warning'
+          text={ i18n('airtegal-adults-warning') }
           button={ i18n('ok') }
         />
   
@@ -64,7 +64,7 @@ class Homepage extends React.Component
                 { i18n('hpj') }
               </a>
   
-              <div className={ headerStyles.kbf }>{ i18n('airtegal') }
+              <div className={ headerStyles.airtegal }>{ i18n('airtegal') }
                 <div className={ headerStyles.beta }>({ i18n('beta') })</div>
               </div>
             
@@ -75,11 +75,11 @@ class Homepage extends React.Component
         <div className={ qaStyles.wrapper }>
           <div className={ qaStyles.container }>
             <p className={ qaStyles.question }>
-              { i18n('what-is-kbf') }
+              { i18n('what-is-airtegal') }
             </p>
   
             <p className={ qaStyles.answer }>
-              { i18n('this-is-kbf') }
+              { i18n('this-is-airtegal') }
             </p>
   
             <p className={ qaStyles.question }>
@@ -247,7 +247,7 @@ const headerStyles = createStyle({
     ':hover': { color: colors.accentColor }
   },
 
-  kbf: {
+  airtegal: {
     margin: 'auto',
     fontSize: 'calc(35px + 1.5vw + 1.5vh)',
 

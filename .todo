@@ -1,5 +1,8 @@
 Performance Issues and Bugs:
   ☐ switch all urls to airtegal @high 
+    ☐ there is a lot of references to this domain
+      - cors (sentry / heroku / google cloud)
+
   ☐ loading issues
 
 Testing:

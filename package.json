@@ -1,5 +1,5 @@
 {
-  "name": "kbf",
+  "name": "airtegal",
   "version": "0.1.0",
   "description": "",
   "main": "./src/app.js",
@@ -12,12 +12,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.com:hpj/kbf.git"
+    "url": "git@gitlab.com:hpj/airtegal.git"
   },
   "author": "Herp Project",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://gitlab.com/hpj/kbf/issues"
+    "url": "https://gitlab.com/hpj/airtegal/issues"
   },
   "homepage": "https://bedan.me",
   "dependencies": {

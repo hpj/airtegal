@@ -383,8 +383,8 @@ class Game extends React.Component
 
         <Warning
           fullScreen={ true }
-          storageKey='kbf-adults-warning'
-          text={ i18n('kbf-adults-warning') }
+          storageKey='airtegal-adults-warning'
+          text={ i18n('airtegal-adults-warning') }
           button={ i18n('ok') }
         />
 

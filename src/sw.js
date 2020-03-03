@@ -20,7 +20,7 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
   new RegExp('https://api.bedan.me/check'),
   new workbox.strategies.CacheFirst({
-    cacheName: 'kbf-cache',
+    cacheName: 'airtegal-cache',
     plugins: [
       new workbox.expiration.Plugin({
         maxAgeSeconds: 60 * 60 * 24 * 1
