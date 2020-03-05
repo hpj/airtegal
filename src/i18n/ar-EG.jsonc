@@ -13,7 +13,7 @@
   "confirm": "تاكيد",
   "clear": "الغاء",
 
-  "airtegal-blank": "كروت ____ ___",
+  "airtegal-blank": "____",
   "blank": "____",
 
   // error connection errors
@@ -36,7 +36,7 @@
   // install prompt
 
   // "install": "دوس هنا",
-  // "install-prompt": "يمكن لك اضافة تطبيق كروت بضان فشخ علي جهازك.",
+  // "install-prompt": "يمكن لك اضافة تطبيق ارتجال علي جهازك.",
 
   // lobby
 
@@ -60,19 +60,16 @@
   "stupid-first-names": [
     "ابو",
     "ام",
-    "طيز",
     "حمادة",
     "حمار",
     "حاحا",
     "خدام",
     "فشيخ",
-    "بضان",
     "عنتيل"
   ],
 
   "stupid-last-names": [
     "الزنجي",
-    "المتناك",
     "السمكة",
     "الفقير",
     "الزبالة",
@@ -101,7 +98,7 @@
   // room id sharing
 
   "room-copied-to-clipboard": "تم نسخ رابط الغرفة لجهازك!",
-  "join-me": "يسطي افتح نلعب ماتش كروت",
+  "join-me": "يسطي افتح نلعب ارتجال",
 
   // room master changes
 
