@@ -110,6 +110,13 @@ export default function(forceLight)
     handBackground: '#292929',
     handScrollbar: '#867878',
 
+    headerGradient: [ '#000000', '#8a0e0e' ],
+   
+    playBackgroundGradient: [ '#101010', '#470077' ],
+    playBackgroundText: '#b9444e',
+   
+    playButtonGradient: [ '#46842d', '#306762' ],
+
     blackCardBackground: '#3c3c3c',
     blackCardForeground: '#e2e1e1',
     blackCardHover: '#615f5f',

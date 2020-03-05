@@ -13,7 +13,7 @@ import CardShowcase from '../components/cardShowcase.js';
 
 import i18n, { locales, locale, setLocale } from '../i18n.js';
 
-const colors = getTheme(true);
+const colors = getTheme();
 
 class Homepage extends React.Component
 {
@@ -64,7 +64,7 @@ class Homepage extends React.Component
                 { i18n('hpj') }
               </a>
   
-              <div className={ headerStyles.airtegal }>{ i18n('airtegal') }
+              <div className={ headerStyles.airtegal }>{ i18n('this-is-airtegal') }
                 <div className={ headerStyles.beta }>({ i18n('beta') })</div>
               </div>
             
@@ -79,7 +79,7 @@ class Homepage extends React.Component
             </p>
   
             <p className={ qaStyles.answer }>
-              { i18n('this-is-airtegal') }
+              { i18n('that-is-airtegal') }
             </p>
   
             <p className={ qaStyles.question }>
@@ -154,13 +154,13 @@ class Homepage extends React.Component
 const headerStyles = createStyle({
   wrapper: {
     background: `linear-gradient( 135deg, ${colors.headerGradient[0]} 10%, ${colors.headerGradient[1]} 100%);`,
-
     padding: '0 5vw'
   },
 
   container: {
     display: 'flex',
-    
+    minHeight: '450px',
+
     fontWeight: 700,
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
@@ -229,6 +229,7 @@ const headerStyles = createStyle({
     direction: locale.direction,
     userSelect: 'none',
 
+    minWidth: 'fit-content',
     overflow: 'hidden',
     
     padding: '5vh 0',
@@ -252,9 +253,7 @@ const headerStyles = createStyle({
     fontSize: 'calc(35px + 1.5vw + 1.5vh)',
 
     lineHeight: '135%',
-
     color: colors.whiteText,
-    width: 'min-content',
 
     padding: '10px 0'
   },
