@@ -1,7 +1,5 @@
 const { DefinePlugin } = require('webpack');
 
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-
 module.exports = (env) => ({
   devtool: 'source-map',
   entry: './src/index.js',
@@ -24,15 +22,7 @@ module.exports = (env) => ({
   },
   plugins: [
     new DefinePlugin({
-      'process.env.API_ENDPOINT': env.API_ENDPOINT,
-      'process.env.PREVIEW': true
-    }),
-    new BrowserSyncPlugin({
-      notify: false,
-      open: false,
-      port: 8081,
-      ghostMode: false,
-      proxy: 'http://localhost:8080'
+      'process.env.API_ENDPOINT': 'http://localhost:3000'
     })
   ],
   devServer: {

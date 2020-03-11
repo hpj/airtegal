@@ -8,7 +8,7 @@ self.addEventListener('message', (event) =>
     self.skipWaiting();
 });
 
-workbox.precaching.precacheAndRoute([]);
+workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 
 // Cache the bundle.js file with a network-first strategy
 workbox.routing.registerRoute(
