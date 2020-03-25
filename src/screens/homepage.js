@@ -40,6 +40,7 @@ class Homepage extends React.Component
             <Select
               className={ headerStyles.select }
               classNamePrefix='react-select'
+              noOptionsMessage={ () => i18n('no-options') }
               defaultValue={ locale }
               isRtl={ locale.direction === 'rtl' }
               isSearchable={ true }

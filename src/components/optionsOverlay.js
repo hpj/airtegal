@@ -91,6 +91,7 @@ class OptionsOverlay extends React.Component
               <Select
                 className={ styles.select }
                 classNamePrefix='react-select-2'
+                noOptionsMessage={ () => i18n('no-options') }
                 defaultValue={ locale }
                 isRtl={ locale.direction === 'rtl' }
                 isSearchable={ true }
