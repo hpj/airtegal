@@ -71,9 +71,9 @@ const ShareOverlay = ({ addNotification, share, hide }) =>
         </div>
 
         <div className={ styles.buttons }>
-          <FacebookIcon style={ { backgroundColor: colors.facebook } } onClick={ shareOnFacebook } className={ styles.social }/>
-          <TwitterIcon style={ { backgroundColor: colors.twitter } } onClick={ shareOnTwitter } className={ styles.social }/>
-          <RedditIcon style={ { backgroundColor: colors.reddit } } onClick={ shareOnReddit } className={ styles.social }/>
+          <FacebookIcon onClick={ shareOnFacebook } className={ styles.social }/>
+          <TwitterIcon onClick={ shareOnTwitter } className={ styles.social }/>
+          <RedditIcon onClick={ shareOnReddit } className={ styles.social }/>
         </div>
 
         <div className={ styles.close } onClick={ hide }>
@@ -182,7 +182,7 @@ const styles = createStyle({
 
     userSelect: 'all',
 
-    color: colors.shareUrlText,
+    color: colors.blackText,
     backgroundColor: colors.shareUrlBackground,
 
     height: '100%',
@@ -212,7 +212,7 @@ const styles = createStyle({
   social: {
     cursor: 'pointer',
 
-    color: colors.whiteText,
+    color: colors.blackText,
 
     width: '16px',
     height: '16px',

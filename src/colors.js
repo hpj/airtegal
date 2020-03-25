@@ -66,14 +66,8 @@ export default function(forceLight)
     winner: '#d4af37',
 
     shareBackground: '#C4C4C4',
+    shareUrlBackground: '#dcdcdc',
 
-    shareUrlBackground: '#d2d2d2',
-    shareUrlText: '#232323',
-
-    facebook: '#1877F2',
-    twitter: '#1DA1F2',
-    reddit: '#FF4500',
-   
     red: 'red',
     error: '#ad1818',
     transparent: 'transparent'
@@ -134,9 +128,7 @@ export default function(forceLight)
     red: '#9c0202',
     
     shareBackground: '#292929',
-
-    shareUrlBackground: '#525252',
-    shareUrlText: '#131313'
+    shareUrlBackground: '#171717'
   };
 
   return (dark) ? darkTheme : lightTheme;
