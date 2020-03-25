@@ -21,7 +21,7 @@ module.exports = {
         use: [ 'babel-loader' ]
       },
       {
-        test: /\.json$/,
+        test: /\.(json|jsonc|json5)$/,
         use: 'json5-loader',
         type: 'javascript/auto'
       }
@@ -32,8 +32,7 @@ module.exports = {
   },
   plugins: [
     new DefinePlugin({
-      'process.env.RELEASE': `"${gitRevisionPlugin.commithash()}"`,
-      'process.env.API_ENDPOINT': 'https://api.bedan.me'
+      'process.env.RELEASE': `"${gitRevisionPlugin.commithash()}"`
     }),
     new SentryWebpackPlugin({
       include: '.',

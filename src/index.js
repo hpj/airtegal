@@ -125,9 +125,13 @@ registerServiceWorker();
 // show a loading screen until the promises resolve
 ReactDOM.render(<Loading splash/>, placeholder);
 
+process.env.API_ENDPOINT = 'http://localhost:3000';
+
 // initialize third party service providers
 if (process.env.NODE_ENV === 'production')
 {
+  process.env.API_ENDPOINT = 'https://api.bedan.me';
+
   // sentry for error monitoring
   Sentry.init({
     release: process.env.RELEASE,

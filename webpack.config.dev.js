@@ -21,9 +21,7 @@ module.exports = (env) => ({
     extensions: [ '*', '.js', '.jsx' ]
   },
   plugins: [
-    new DefinePlugin({
-      'process.env.API_ENDPOINT': 'http://localhost:3000'
-    })
+    new DefinePlugin({})
   ],
   devServer: {
     contentBase: './public',
