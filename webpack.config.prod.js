@@ -1,3 +1,5 @@
+const { resolve } = require('path');
+
 const { DefinePlugin } = require('webpack');
 
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
@@ -37,8 +39,8 @@ module.exports = {
     new SentryWebpackPlugin({
       include: '.',
       release: gitRevisionPlugin.commithash(),
-      configFile: 'sentry.properties',
-      ignoreFile: '.sentrycliignore',
+      configFile: resolve(__dirname, '.sentryclirc'),
+      ignoreFile: resolve(__dirname, '.sentrycliignore'),
       ignore: [ 'node_modules' ]
     }),
     new CompressionPlugin({
