@@ -156,9 +156,6 @@ class RoomOverlay extends React.Component
     // and is about to return to room lobby
     if (this.state.roomState !== roomData.state && this.state.roomState === 'match')
     {
-      // reload ads
-      this.reloadAds();
-
       // reset room options scroll
       if (optionsRef.current)
         optionsRef.current.scrollTo({ top: 0 });
@@ -414,16 +411,9 @@ class RoomOverlay extends React.Component
       // hide the overlay and overlay holder when they are off-screen
       // (-5px is to make sure that the overlay is hidden even if tit ends up few pixels off from where it should of been)
       if (Math.round(value) >= size.width)
-      {
         this.setState({ overlayHidden: true });
-
-        // reload ads when overlay is off-screen
-        this.reloadAds();
-      }
       else
-      {
         this.setState({ overlayHidden: false });
-      }
     });
 
     // if size is not calculated yet
@@ -510,11 +500,6 @@ class RoomOverlay extends React.Component
                 {/* this instance of trackBar is only enabled on
                 touch screens in portrait mode  */}
                 <RoomOptions ref={ optionsRef } sendMessage={ sendMessage }>
-
-                  <div ref={ adsRef } className={ styles.ads }>
-                    <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
-                    <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
-                  </div>
 
                   <RoomTrackBar contained
                     enabled={ (isTouchScreen && size.width < 1080).toString() }
@@ -649,20 +634,6 @@ const styles = createStyle({
     gridArea: 'content',
 
     backgroundColor: colors.whiteBackground
-  },
-
-  ads: {
-    display: 'flex',
-    justifyContent: 'center',
-
-    padding: '10px',
-
-    '@media screen and (max-width: 1080px)': {
-      '> iframe:nth-child(1)':
-      {
-        display: 'none'
-      }
-    }
   }
 });
 

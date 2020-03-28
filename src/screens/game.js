@@ -246,65 +246,6 @@ class Game extends React.Component
     // auto-size the username input-box on resize
     window.addEventListener('resize', this.resize);
 
-    // ad block detection
-
-    if (process.env.NODE_ENV !== 'development')
-    {
-      if (window.fuckAdBlock)
-      {
-        window.fuckAdBlock
-          .on(true, () =>
-          {
-            this.setState({ adsBlocked: true });
-          });
-      }
-      else
-      {
-        this.setState({ adsBlocked: true });
-      }
-    }
-
-    // setTimeout(() =>
-    // {
-    //   let ads = true;
-
-    //   const elements = document.querySelector('#ads');
-
-    //   if (!elements)
-    //   {
-    //     ads = false;
-    //   }
-    //   else if (elements.children.length < 3)
-    //   {
-    //     ads = false;
-    //   }
-    //   else if (!this.adsLoaded)
-    //   {
-    //     ads = false;
-    //   }
-    //   else
-    //   {
-    //     for (let i = 0; i < elements.children.length; i++)
-    //     {
-    //       const element = elements.children.item(i);
-
-    //       if (typeof element.getAttribute('style') === 'string')
-    //       {
-    //         ads = false;
-
-    //         break;
-    //       }
-    //     }
-    //   }
-
-    //   if (!ads)
-    //   {
-    //     this.setState({
-    //       adsBlocked: true
-    //     });
-    //   }
-    // }, 5000);
-
     // process url parameters
 
     const params = new URL(document.URL).searchParams;
@@ -424,16 +365,6 @@ class Game extends React.Component
             <div className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
             <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
 
-          </div>
-
-          <div id='ads' className={ optionsStyles.ads }>
-            <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
-            <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
-            <iframe src="https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=3665471&output=noscript&type=300x50" width="300" height="50" scrolling="no" marginWidth="0" marginHeight="0" frameBorder="0"/>
-          </div>
-
-          <div enabled={ this.state.adsBlocked.toString() } className={ optionsStyles.blockMessage }>
-            <div>{ i18n('ad-block-detected') }</div>
           </div>
 
           <div className={ roomsStyles.container }>
@@ -629,26 +560,6 @@ const optionsStyles = createStyle({
 
     ':active': {
       transform: 'scale(0.95)'
-    }
-  },
-
-  ads: {
-    display: 'flex',
-    justifyContent: 'center',
-    maxWidth: 'inherit',
-
-    '@media screen and (max-width: 1080px)': {
-      '> iframe:nth-child(1)':
-      {
-        display: 'none'
-      }
-    },
-
-    '@media screen and (max-width: 620px)': {
-      '> iframe:nth-child(2)':
-      {
-        display: 'none'
-      }
     }
   },
 
