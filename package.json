@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://gitlab.com/hpj/airtegal/issues"
   },
-  "homepage": "https://bedan.me",
+  "homepage": "https://airtegal.me",
   "dependencies": {
     "@sentry/browser": "^5.15.0",
     "animate-css-grid": "^1.4.3",

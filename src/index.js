@@ -130,7 +130,7 @@ process.env.API_ENDPOINT = 'http://localhost:3000';
 // initialize third party service providers
 if (process.env.NODE_ENV === 'production')
 {
-  process.env.API_ENDPOINT = 'https://api.bedan.me';
+  process.env.API_ENDPOINT = 'https://api.airtegal.me';
 
   // sentry for error monitoring
   Sentry.init({
