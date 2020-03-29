@@ -34,8 +34,7 @@ class CardShowcase extends React.Component
   componentDidMount()
   {
     // request the data from server
-    axios({
-      url: `${process.env.API_ENDPOINT}/combos?region=${locale.value}`,
+    axios.get(`${process.env.API_ENDPOINT}/combos?region=${locale.value}`, {
       timeout: 20000
     }).then((response) =>
     {

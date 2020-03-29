@@ -2,9 +2,9 @@ Performance Issues and Bugs:
   ☐ loading issues
 
 Testing:
-  ☐ graphql server
+  ✔ graphql server @done(20-03-28 20:01)
   ☐ express server
-  ☐ the we app itself
+  ☐ the web app itself
 
 UI/UX:
   ☐ match end screen

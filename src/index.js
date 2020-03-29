@@ -185,8 +185,7 @@ const ipCheckPromise = () =>
       return;
     }
   
-    axios({
-      url: `${process.env.API_ENDPOINT}/check`,
+    axios.get(`${process.env.API_ENDPOINT}/check`, {
       timeout: 20000
     })
       .then((response) =>
