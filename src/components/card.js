@@ -345,7 +345,7 @@ const styles = createStyle({
   },
 
   input: {
-    textAlign: 'center',
+    textAlign: (locale.direction === 'ltr') ? 'left' : 'right',
 
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
