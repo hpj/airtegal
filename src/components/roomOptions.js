@@ -346,7 +346,6 @@ class RoomOptions extends React.Component
                   <div>{ i18n('max-rounds-2') }</div>
                 </div>
 
-                
                 <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'timer' && dirtyOptions.winMethod !== options.winMethod).toString() }>
                   <div
                     className={ styles.checkbox }
@@ -465,7 +464,6 @@ class RoomOptions extends React.Component
                   <div>{ i18n('hand-cap') }</div>
                 </div>
 
-                
                 <div className={ styles.field } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
 
                   <AutoSizeInput
@@ -494,11 +492,11 @@ class RoomOptions extends React.Component
                   <div>{ i18n('blank-probability') }</div>
                 </div>
 
-                <div className={ styles.field } master={ isMaster.toString() } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
+                <div className={ styles.field } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
                   <div style={ { margin: '0 5px' } }>{ i18n('randos') }</div>
 
-                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
-                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
+                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
                 </div>
 
                 {/* Card Packs */}
@@ -786,8 +784,14 @@ const styles = createStyle({
     '[choice="true"]': {
       borderColor: colors.blackText,
       borderBottom: '2px solid',
+      pointerEvents: 'none',
 
       margin: '0 5px -2px 5px'
+    },
+
+    '[master="false"]':
+    {
+      pointerEvents: 'none'
     }
   },
 
