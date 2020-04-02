@@ -272,9 +272,9 @@ class RoomOptions extends React.Component
           <AutoSizeInput
             required
             type='number'
-            min='3'
-            max='16'
-            maxLength={ 2 }
+            min='2'
+            max='7'
+            maxLength={ 1 }
             id='options-input'
             master={ isMaster.toString() }
             className={ styles.input }
