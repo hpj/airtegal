@@ -32,7 +32,30 @@ class OptionsOverlay extends React.Component
 
     // bind functions that are use as callbacks
 
+    this.hide = this.hide.bind(this);
+
     // this.apply = this.apply.bind(this);
+  }
+
+  componentDidMount()
+  {
+    window.addEventListener('keyup', this.hide);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener('keyup', this.hide);
+  }
+
+  hide(e)
+  {
+    if (!this.props.hide)
+      return;
+    
+    if (!(e instanceof KeyboardEvent))
+      this.props.hide();
+    else if (e.keyCode === 27)
+      this.props.hide();
   }
 
   apply()
@@ -61,8 +84,6 @@ class OptionsOverlay extends React.Component
 
   render()
   {
-    const { hide } = this.props;
-
     let { options } = this.props;
 
     if (!options)
@@ -71,7 +92,10 @@ class OptionsOverlay extends React.Component
     // const isDirty = JSON.stringify(this.state.dirty) !== JSON.stringify(this.state.options);
   
     return (
-      <div enabled={ options.active.toString() } className={ styles.wrapper }>
+      <div
+        enabled={ options.active.toString() }
+        className={ styles.wrapper }
+      >
         <div className={ styles.holder }/>
 
         <div className={ styles.container }>
@@ -94,7 +118,7 @@ class OptionsOverlay extends React.Component
                 noOptionsMessage={ () => i18n('no-options') }
                 defaultValue={ locale }
                 isRtl={ locale.direction === 'rtl' }
-                isSearchable={ true }
+                isSearchable={ false }
                 options={ locales }
                 onChange={ (locale) => setLocale(locale.value) }
                 theme={ theme => ({
@@ -113,7 +137,7 @@ class OptionsOverlay extends React.Component
               { i18n('save') }
             </div> */}
 
-            <div className={ styles.button } enabled={ 'true' } onClick={ hide }>
+            <div className={ styles.button } enabled={ 'true' } onClick={ this.hide }>
               { i18n('close') }
             </div>
           </div>
@@ -244,29 +268,62 @@ const styles = createStyle({
     flexGrow: 1,
     margin: '0 5px',
 
-    ':focus': {
-      outline: colors.whiteText
+    ' .react-select-2__menu': {
+      backgroundColor: colors.whiteBackground,
+
+      boxShadow: `0 0 25px -5px ${colors.greyText}`,
+      border: '1px solid',
+      borderColor: colors.greyText
     },
 
     ' .react-select-2__option': {
-      cursor: 'pointer'
+      cursor: 'pointer',
+
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground,
+
+      ':active': {
+        color: colors.blackText,
+        backgroundColor: colors.whiteBackground
+      }
     },
 
-    ' .react-select-2__option--is-selected': {
+    ' .react-select-2__option--is-focused': {
+      color: colors.whiteText,
       backgroundColor: colors.greyText,
 
       ':active': {
+        color: colors.whiteText,
         backgroundColor: colors.greyText
       }
     },
-    '.react-select-2__input': {
-      color: colors.greyText
+
+    ' .react-select-2__option--is-selected': {
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground,
+
+      ':active': {
+        color: colors.blackText,
+        backgroundColor: colors.whiteBackground
+      }
+    },
+
+    ' .react-select-2__option--is-selected.react-select-2__option--is-focused': {
+      color: colors.whiteText,
+      backgroundColor: colors.greyText,
+
+      ':active': {
+        color: colors.whiteText,
+        backgroundColor: colors.greyText
+      }
     },
 
     ' .react-select-2__control': {
       cursor: 'pointer',
 
+      color: colors.blackText,
       background: 'none',
+
       borderColor: colors.greyText,
       outline: colors.greyText
     },
@@ -287,14 +344,16 @@ const styles = createStyle({
     },
 
     ' .react-select-2__control--is-focused': {
+      color: colors.blackText,
       background: colors.whiteBackground,
+      
       boxShadow: 'none',
       borderColor: colors.transparent,
       outline: colors.transparent
     },
 
     ' .react-select-2__single-value': {
-      color: colors.greyText
+      color: 'inherit'
     },
 
     ' .react-select-2__indicator-separator': {
@@ -302,11 +361,11 @@ const styles = createStyle({
     },
 
     ' .react-select-2__indicator': {
-      color: colors.greyText
+      color: 'inherit'
     },
 
     ' .react-select-2__indicator:hover': {
-      color: colors.whiteBackground
+      color: 'inherit'
     }
   },
 

@@ -2,6 +2,8 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import Select from 'react-select';
+
 import autoSize from 'autosize-input';
 
 import i18n, { locale } from '../i18n.js';
@@ -215,6 +217,289 @@ class RoomOptions extends React.Component
     if (!this.state.dirtyOptions)
       return <div/>;
 
+    const GameModes = () =>
+    {
+      return <div>
+        <div className={ styles.title }>{ i18n('game-mode') }</div>
+
+        {
+          (isMaster) ?
+            <Select
+              className={ (dirtyOptions.gameMode !== options.gameMode) ? styles.selectDirty : styles.select }
+              classNamePrefix='react-select-game-mode'
+              noOptionsMessage={ () => i18n('no-options') }
+              defaultValue={ { label: i18n(dirtyOptions.gameMode), value: dirtyOptions.gameMode } }
+              isRtl={ locale.direction === 'rtl' }
+              isSearchable={ false }
+              options={ [
+                { label: i18n('judge'), value: 'judge' },
+                { label: i18n('king'), value: 'king' },
+                { label: i18n('democracy'), value: 'democracy' }
+              ] }
+              onChange={ (mode) => this.onGameModeChange(mode.value) }
+            /> :
+            <div className={ styles.field }>{ i18n(dirtyOptions.gameMode) }</div>
+        }
+        
+      </div>;
+    };
+
+    const KuruitOptions = () =>
+    {
+      return <div>
+        {/* Win Method */}
+
+        <div className={ styles.title }>{ i18n('win-method') }</div>
+
+        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'points' && (dirtyOptions.winMethod !== options.winMethod || options.match.pointsToCollect !== dirtyOptions.match.pointsToCollect)).toString() }>
+          <div
+            className={ styles.checkbox }
+            ticked={ (dirtyOptions.winMethod === 'points').toString() }
+            onClick={ () => this.onWinMethodChange('points') }
+          />
+
+          <div>{ i18n('first-to-points-1') }</div>
+        
+          <AutoSizeInput
+            required
+            type='number'
+            min='3'
+            max='16'
+            maxLength={ 2 }
+            id='options-input'
+            master={ isMaster.toString() }
+            className={ styles.input }
+            placeholder={ i18n('options-placeholder') }
+            value={ dirtyOptions.match.pointsToCollect }
+            onUpdate={ (value, resize) => this.setState({
+              dirtyOptions: {
+                ...dirtyOptions,
+                match: {
+                  ...dirtyOptions.match,
+                  pointsToCollect: value
+                }
+              }
+            }, resize) }
+          />
+
+          <div>{ i18n('first-to-points-2') }</div>
+        </div>
+
+        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'limited' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxRounds !== dirtyOptions.match.maxRounds)).toString() }>
+          <div
+            className={ styles.checkbox }
+            ticked={ (dirtyOptions.winMethod === 'limited').toString() }
+            onClick={ () => this.onWinMethodChange('limited') }
+          />
+
+          <div>{ i18n('max-rounds-1') }</div>
+
+          <AutoSizeInput
+            required
+            type='number'
+            min='3'
+            max='30'
+            maxLength={ 2 }
+            id='options-input'
+            master={ isMaster.toString() }
+            className={ styles.input }
+            placeholder={ i18n('options-placeholder') }
+            value={ dirtyOptions.match.maxRounds }
+            onUpdate={ (value, resize) => this.setState({
+              dirtyOptions: {
+                ...dirtyOptions,
+                match: {
+                  ...dirtyOptions.match,
+                  maxRounds: value
+                }
+              }
+            }, resize) }
+          />
+
+          <div>{ i18n('max-rounds-2') }</div>
+        </div>
+
+        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'timer' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxTime !== dirtyOptions.match.maxTime)).toString() }>
+          <div
+            className={ styles.checkbox }
+            ticked={ (dirtyOptions.winMethod === 'timer').toString() }
+            onClick={ () => this.onWinMethodChange('timer') }
+          />
+
+          <div>{ i18n('max-time-1') }</div>
+
+          <AutoSizeInput
+            required
+            type='number'
+            minutes={ true }
+            min='5'
+            max='30'
+            maxLength={ 2 }
+            id='options-input'
+            master={ isMaster.toString() }
+            className={ styles.input }
+            placeholder={ i18n('options-placeholder') }
+            value={ dirtyOptions.match.maxTime }
+            onUpdate={ (value, resize) => this.setState({
+              dirtyOptions: {
+                ...dirtyOptions,
+                match: {
+                  ...dirtyOptions.match,
+                  maxTime: value
+                }
+              }
+            }, resize) }
+          />
+
+          <div>{ i18n('max-time-2') }</div>
+        </div>
+
+        {/* Match Options */}
+
+        <div className={ styles.title }>{ i18n('match-options') }</div>
+
+        <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
+          <AutoSizeInput
+            required
+            type='number'
+            min='3'
+            max='16'
+            maxLength={ 2 }
+            id='options-input'
+            master={ isMaster.toString() }
+            className={ styles.input }
+            placeholder={ i18n('options-placeholder') }
+            value={ dirtyOptions.match.maxPlayers }
+            onUpdate={ (value, resize) => this.setState({
+              dirtyOptions: {
+                ...dirtyOptions,
+                match: {
+                  ...dirtyOptions.match,
+                  maxPlayers: value
+                }
+              }
+            }, resize) }
+          />
+
+          <div>{ i18n('max-players') }</div>
+        </div>
+
+        <div className={ styles.field } dirty={ (dirtyOptions.round.maxTime !== options.round.maxTime).toString() }>
+          <AutoSizeInput
+            required
+            type='number'
+            minutes={ true }
+            min='1'
+            max='5'
+            maxLength={ 1 }
+            id='options-input'
+            master={ isMaster.toString() }
+            className={ styles.input }
+            placeholder={ i18n('options-placeholder') }
+            value={ dirtyOptions.round.maxTime }
+            onUpdate={ (value, resize) => this.setState({
+              dirtyOptions: {
+                ...dirtyOptions,
+                round: {
+                  ...dirtyOptions.round,
+                  maxTime: value
+                }
+              }
+            }, resize) }
+          />
+
+          <div>{ i18n('round-countdown') }</div>
+        </div>
+
+        <div className={ styles.field } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
+          <AutoSizeInput
+            required
+            type='number'
+            min='3'
+            max='12'
+            maxLength={ 2 }
+            id='options-input'
+            master={ isMaster.toString() }
+            className={ styles.input }
+            placeholder={ i18n('options-placeholder') }
+            value={ dirtyOptions.match.startingHandAmount }
+            onUpdate={ (value, resize) => this.setState({
+              dirtyOptions: {
+                ...dirtyOptions,
+                match: {
+                  ...dirtyOptions.match,
+                  startingHandAmount: value
+                }
+              }
+            }, resize) }
+          />
+
+          <div>{ i18n('hand-cap') }</div>
+        </div>
+
+        <div className={ styles.field } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
+
+          <AutoSizeInput
+            required
+            type='number'
+            min='0'
+            max='25'
+            maxLength={ 2 }
+            id='options-input'
+            master={ isMaster.toString() }
+            className={ styles.input }
+            placeholder={ i18n('options-placeholder') }
+            value={ dirtyOptions.match.blankProbability }
+            onUpdate={ (value, resize) => this.setState({
+              dirtyOptions: {
+                ...dirtyOptions,
+                match: {
+                  ...dirtyOptions.match,
+                  blankProbability: value
+                }
+              }
+            }, resize) }
+          />
+
+          <div className={ styles.inputSuffix }>{ '%' }</div>
+          <div>{ i18n('blank-probability') }</div>
+        </div>
+
+        <div className={ styles.field } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
+          <div style={ { margin: '0 5px' } }>{ i18n('randos') }</div>
+
+          <div className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
+          <div className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+        </div>
+
+        {/* Card Packs */}
+
+        <div className={ styles.title }>{ i18n('card-packs') }</div>
+
+        <div className={ styles.packs }>
+          {
+            this.state.options.match.availablePacks.map((pack) =>
+            {
+              return <div key={ pack.id } style={ {
+                color: pack.foreground_color,
+                backgroundImage: `url(${pack.background_url})`,
+                backgroundColor: pack.background_url
+              } } className={ styles.pack }>
+                <div className={ styles.packName }>
+                  { pack.display_name }
+                </div>
+              </div>;
+            })
+          }
+        </div>
+      </div>;
+    };
+
+    const AirtegalOptions = () =>
+    {
+      return <div/>;
+    };
+
     return (
       <div ref={ wrapperRef } className={ styles.wrapper }>
 
@@ -233,293 +518,24 @@ class RoomOptions extends React.Component
           }
 
           {
-            (this.state.options) ?
+            (!this.state.options) ? <div/> :
               <div>
-
-                {/* Game Mode */}
-
                 <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
-
-                <div className={ styles.title }>{ i18n('game-mode') }</div>
-
-                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.gameMode === 'judge' && dirtyOptions.gameMode !== options.gameMode).toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (dirtyOptions.gameMode === 'judge').toString() }
-                    onClick={ () => this.onGameModeChange('judge') }
-                  />
-
-                  { i18n('judge')  }
-                </div>
-
-                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.gameMode === 'democracy' && dirtyOptions.gameMode !== options.gameMode).toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (dirtyOptions.gameMode === 'democracy').toString() }
-                    onClick={ () => this.onGameModeChange('democracy') }
-                  />
-
-                  { i18n('democracy')  }
-                </div>
-
+ 
+                {/* Game Mode Selector */}
+                { GameModes() }
                 
-                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.gameMode === 'king' && dirtyOptions.gameMode !== options.gameMode).toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (dirtyOptions.gameMode === 'king').toString() }
-                    onClick={ () => this.onGameModeChange('king') }
-                  />
+                {
+                  (
+                    dirtyOptions.gameMode === 'judge' ||
+                    dirtyOptions.gameMode === 'king' ||
+                    dirtyOptions.gameMode === 'democracy'
+                  ) ?
+                    KuruitOptions() : AirtegalOptions()
+                }
 
-                  { i18n('king')  }
-                </div>
+                {/* Apply Button */}
 
-                {/* Win Method */}
-
-                <div className={ styles.title }>{ i18n('win-method') }</div>
-
-                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'points' && dirtyOptions.winMethod !== options.winMethod).toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (dirtyOptions.winMethod === 'points').toString() }
-                    onClick={ () => this.onWinMethodChange('points') }
-                  />
-
-                  <div>{ i18n('first-to-points-1') }</div>
-                  
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    min='3'
-                    max='16'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ dirtyOptions.match.pointsToCollect }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...dirtyOptions,
-                        match: {
-                          ...dirtyOptions.match,
-                          pointsToCollect: value
-                        }
-                      }
-                    }, resize) }
-                  />
-
-                  <div>{ i18n('first-to-points-2') }</div>
-                </div>
-
-                
-                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'limited' && dirtyOptions.winMethod !== options.winMethod).toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (dirtyOptions.winMethod === 'limited').toString() }
-                    onClick={ () => this.onWinMethodChange('limited') }
-                  />
-
-                  <div>{ i18n('max-rounds-1') }</div>
-
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    min='3'
-                    max='30'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ dirtyOptions.match.maxRounds }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...dirtyOptions,
-                        match: {
-                          ...dirtyOptions.match,
-                          maxRounds: value
-                        }
-                      }
-                    }, resize) }
-                  />
-
-                  <div>{ i18n('max-rounds-2') }</div>
-                </div>
-
-                <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'timer' && dirtyOptions.winMethod !== options.winMethod).toString() }>
-                  <div
-                    className={ styles.checkbox }
-                    ticked={ (dirtyOptions.winMethod === 'timer').toString() }
-                    onClick={ () => this.onWinMethodChange('timer') }
-                  />
-
-                  <div>{ i18n('max-time-1') }</div>
-
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    minutes={ true }
-                    min='5'
-                    max='30'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ dirtyOptions.match.maxTime }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...dirtyOptions,
-                        match: {
-                          ...dirtyOptions.match,
-                          maxTime: value
-                        }
-                      }
-                    }, resize) }
-                  />
-
-                  <div>{ i18n('max-time-2') }</div>
-                </div>
-
-                {/* Match Options */}
-
-                <div className={ styles.title }>{ i18n('match-options') }</div>
-
-                <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    min='3'
-                    max='16'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ dirtyOptions.match.maxPlayers }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...dirtyOptions,
-                        match: {
-                          ...dirtyOptions.match,
-                          maxPlayers: value
-                        }
-                      }
-                    }, resize) }
-                  />
-
-                  <div>{ i18n('max-players') }</div>
-                </div>
-
-                <div className={ styles.field } dirty={ (dirtyOptions.round.maxTime !== options.round.maxTime).toString() }>
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    minutes={ true }
-                    min='1'
-                    max='5'
-                    maxLength={ 1 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ dirtyOptions.round.maxTime }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...dirtyOptions,
-                        round: {
-                          ...dirtyOptions.round,
-                          maxTime: value
-                        }
-                      }
-                    }, resize) }
-                  />
-
-                  <div>{ i18n('round-countdown') }</div>
-                </div>
-
-                <div className={ styles.field } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    min='3'
-                    max='12'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ dirtyOptions.match.startingHandAmount }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...dirtyOptions,
-                        match: {
-                          ...dirtyOptions.match,
-                          startingHandAmount: value
-                        }
-                      }
-                    }, resize) }
-                  />
-
-                  <div>{ i18n('hand-cap') }</div>
-                </div>
-
-                <div className={ styles.field } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
-
-                  <AutoSizeInput
-                    required
-                    type='number'
-                    min='0'
-                    max='25'
-                    maxLength={ 2 }
-                    id='options-input'
-                    master={ isMaster.toString() }
-                    className={ styles.input }
-                    placeholder={ i18n('options-placeholder') }
-                    value={ dirtyOptions.match.blankProbability }
-                    onUpdate={ (value, resize) => this.setState({
-                      dirtyOptions: {
-                        ...dirtyOptions,
-                        match: {
-                          ...dirtyOptions.match,
-                          blankProbability: value
-                        }
-                      }
-                    }, resize) }
-                  />
-
-                  <div className={ styles.inputSuffix }>{ '%' }</div>
-                  <div>{ i18n('blank-probability') }</div>
-                </div>
-
-                <div className={ styles.field } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
-                  <div style={ { margin: '0 5px' } }>{ i18n('randos') }</div>
-
-                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
-                  <div className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
-                </div>
-
-                {/* Card Packs */}
-
-                <div className={ styles.title }>{ i18n('card-packs') }</div>
-
-                <div className={ styles.packs }>
-                  {
-                    this.state.options.match.availablePacks.map((pack) =>
-                    {
-                      return <div key={ pack.id } style={ {
-                        color: pack.foreground_color,
-                        backgroundImage: `url(${pack.background_url})`,
-                        backgroundColor: pack.background_url
-                      } } className={ styles.pack }>
-                        <div className={ styles.packName }>
-                          { pack.display_name }
-                        </div>
-                      </div>;
-                    })
-                  }
-                </div>
-                
                 <div
                   className={ styles.button }
                   master={ isMaster.toString() }
@@ -529,6 +545,8 @@ class RoomOptions extends React.Component
                   { i18n('apply') }
                 </div>
 
+                {/* Start Button */}
+
                 <div
                   className={ styles.button }
                   master={ isMaster.toString() }
@@ -536,7 +554,7 @@ class RoomOptions extends React.Component
                   onClick={ this.matchRequest }>
                   { i18n('start') }
                 </div>
-              </div> : <div/>
+              </div>
           }
         </div>
       </div>
@@ -759,6 +777,128 @@ const styles = createStyle({
     '[ticked="false"]:after':
     {
       display: 'none'
+    }
+  },
+
+  select: {
+    padding: '0 25px 8px 25px',
+
+    ' .react-select-game-mode__menu': {
+      backgroundColor: colors.whiteBackground,
+
+      boxShadow: `0 0 25px -5px ${colors.greyText}`,
+      border: '1px solid',
+      borderColor: colors.greyText,
+      
+      width: 'calc(100% - 50px)'
+    },
+
+    ' .react-select-game-mode__option': {
+      cursor: 'pointer',
+
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground,
+
+      ':active': {
+        color: colors.blackText,
+        backgroundColor: colors.whiteBackground
+      }
+    },
+
+    ' .react-select-game-mode__option--is-focused': {
+      color: colors.whiteText,
+      backgroundColor: colors.greyText,
+
+      ':active': {
+        color: colors.whiteText,
+        backgroundColor: colors.greyText
+      }
+    },
+
+    ' .react-select-game-mode__option--is-selected': {
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground,
+
+      ':active': {
+        color: colors.blackText,
+        backgroundColor: colors.whiteBackground
+      }
+    },
+
+    ' .react-select-game-mode__option--is-selected.react-select-game-mode__option--is-focused': {
+      color: colors.whiteText,
+      backgroundColor: colors.greyText,
+
+      ':active': {
+        color: colors.whiteText,
+        backgroundColor: colors.greyText
+      }
+    },
+
+    ' .react-select-game-mode__control': {
+      cursor: 'pointer',
+
+      color: colors.blackText,
+      background: 'none',
+
+      borderColor: colors.blackText,
+      outline: colors.blackText
+    },
+
+    ' .react-select-game-mode__control:hover:not(.react-select-game-mode__control--is-focused)': {
+      borderColor: colors.blackText,
+      outline: colors.blackText
+    },
+
+    ' .react-select-game-mode__control--is-focused:hover': {
+      borderColor: colors.transparent,
+      outline: colors.transparent
+    },
+
+    ' .react-select-game-mode__control:focus': {
+      borderColor: colors.transparent,
+      outline: colors.transparent
+    },
+
+    ' .react-select-game-mode__control--is-focused': {
+      color: colors.whiteText,
+      background: colors.greyText,
+      
+      boxShadow: 'none',
+      borderColor: colors.transparent,
+      outline: colors.transparent
+    },
+
+    ' .react-select-game-mode__single-value': {
+      color: 'inherit'
+    },
+
+    ' .react-select-game-mode__indicator-separator': {
+      backgroundColor: colors.transparent
+    },
+
+    ' .react-select-game-mode__indicator': {
+      color: 'inherit'
+    },
+
+    ' .react-select-game-mode__indicator:hover': {
+      color: 'inherit'
+    }
+  },
+
+  selectDirty: {
+    extend: 'select',
+
+    ' .react-select-game-mode__single-value': {
+      display: 'flex',
+      alignItems: 'center',
+      color: 'inherit',
+      fontStyle: 'italic'
+    },
+
+    ' .react-select-game-mode__single-value:after': {
+      display: 'block',
+      content: '"*"'
     }
   },
 

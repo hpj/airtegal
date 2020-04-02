@@ -43,7 +43,7 @@ class Homepage extends React.Component
               noOptionsMessage={ () => i18n('no-options') }
               defaultValue={ locale }
               isRtl={ locale.direction === 'rtl' }
-              isSearchable={ true }
+              isSearchable={ false }
               options={ locales }
               onChange={ (locale) => setLocale(locale.value) }
               theme={ theme => ({
@@ -100,7 +100,7 @@ class Homepage extends React.Component
               { i18n('freedom-of-speech-1') }
               <br/>
   
-              { i18n('freedom-of-speech-2') }
+              { i18n('freedom-of-speech') }
             </p>
   
             <p className={ qaStyles.question }>
@@ -162,41 +162,76 @@ const headerStyles = createStyle({
   },
 
   select: {
-
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    ':focus': {
-      outline: colors.whiteText
+    ' .react-select__menu': {
+      backgroundColor: colors.whiteBackground,
+
+      boxShadow: `0 0 25px -5px ${colors.greyText}`,
+      border: '1px solid',
+      borderColor: colors.greyText
+    },
+    
+    ' .react-select__option': {
+      cursor: 'pointer',
+
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground,
+
+      ':active': {
+        color: colors.blackText,
+        backgroundColor: colors.whiteBackground
+      }
     },
 
-    ' .react-select__option': {
-      cursor: 'pointer'
+    ' .react-select__option--is-focused': {
+      color: colors.whiteText,
+      backgroundColor: colors.greyText,
+
+      ':active': {
+        color: colors.whiteText,
+        backgroundColor: colors.greyText
+      }
     },
 
     ' .react-select__option--is-selected': {
-      backgroundColor: colors.selectBackground,
+      color: colors.blackText,
+      backgroundColor: colors.whiteBackground,
 
       ':active': {
-        backgroundColor: colors.selectBackground
+        color: colors.blackText,
+        backgroundColor: colors.whiteBackground
       }
     },
-    ' .react-select__input': {
-      color: colors.whiteText
+
+    ' .react-select__option--is-selected.react-select__option--is-focused': {
+      color: colors.whiteText,
+      backgroundColor: colors.greyText,
+
+      ':active': {
+        color: colors.whiteText,
+        backgroundColor: colors.greyText
+      }
     },
 
     ' .react-select__control': {
       cursor: 'pointer',
 
       background: 'none',
-      border: 'none'
+      color: colors.whiteText,
+
+      border: 'none',
+      outline: 'none'
     },
 
     ' .react-select__control--is-focused': {
-      outline: colors.whiteText
+      color: colors.blackText,
+      background: colors.whiteBackground,
+      boxShadow: 'none'
     },
 
     ' .react-select__single-value': {
-      color: colors.whiteText
+      color: 'inherit'
     },
 
     ' .react-select__indicator-separator': {
@@ -204,11 +239,11 @@ const headerStyles = createStyle({
     },
 
     ' .react-select__indicator': {
-      color: colors.whiteText
+      color: 'inherit'
     },
 
     ' .react-select__indicator:hover': {
-      color: colors.whiteText
+      color: 'inherit'
     }
   },
 
