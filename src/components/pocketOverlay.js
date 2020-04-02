@@ -29,7 +29,9 @@ class PocketOverlay extends React.Component
     super();
 
     this.state = {
+      init: false,
       zIndex: 3,
+
       visible: false,
       overlayHidden: true
     };
@@ -40,8 +42,6 @@ class PocketOverlay extends React.Component
     this.onResize = this.onResize.bind(this);
 
     this.maximize = this.maximize.bind(this);
-
-    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -73,10 +73,17 @@ class PocketOverlay extends React.Component
     // else client is in the lobby
     else
       this.visibility(false);
+
+    this.setState({
+      init: true
+    });
   }
 
   onResize()
   {
+    if (!overlayRef.current)
+      return;
+    
     // it needs to be updated manually on every resize
     // or else it can go off-screen
     overlayRef.current.snapTo({ index: 0 });
@@ -86,6 +93,9 @@ class PocketOverlay extends React.Component
   */
   visibility(visible)
   {
+    if (!overlayRef.current)
+      return;
+    
     this.setState({ visible: visible },
       () => overlayRef.current.snapTo({ index: 0 }));
   }
@@ -97,6 +107,13 @@ class PocketOverlay extends React.Component
 
   render()
   {
+    if (!this.state.init)
+    {
+      requestRoomData().then((roomData) => this.onRoomData(roomData));
+      
+      return <div/>;
+    }
+
     const { size } = this.props;
 
     // on overlay position changes

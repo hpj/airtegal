@@ -29,6 +29,8 @@ class RoomOptions extends React.Component
     super();
 
     this.state = {
+      init: false,
+
       loadingHidden: true,
       errorMessage: '',
 
@@ -43,8 +45,6 @@ class RoomOptions extends React.Component
 
     this.editRequest = this.editRequest.bind(this);
     this.matchRequest = this.matchRequest.bind(this);
-
-    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -68,6 +68,7 @@ class RoomOptions extends React.Component
       this.clearDirtyOptions(roomData.options);
     
     this.setState({
+      init: true,
       players: roomData.players,
       options: roomData.options,
       masterId: roomData.master
@@ -198,6 +199,13 @@ class RoomOptions extends React.Component
 
   render()
   {
+    if (!this.state.init)
+    {
+      requestRoomData().then((roomData) => this.onRoomData(roomData));
+      
+      return <div/>;
+    }
+    
     const { dirtyOptions, options } = this.state;
 
     const isMaster = this.state.masterId === socket.id;

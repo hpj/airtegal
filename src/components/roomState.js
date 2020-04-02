@@ -23,7 +23,10 @@ class RoomState extends React.Component
   {
     super();
 
-    this.state = {};
+    this.state = {
+      init: false,
+      roomId: ''
+    };
 
     // bind functions that are use as callbacks
 
@@ -31,8 +34,6 @@ class RoomState extends React.Component
 
     this.shareRoomURL = this.shareRoomURL.bind(this);
     this.copyRoomURL = this.copyRoomURL.bind(this);
-
-    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -142,6 +143,7 @@ class RoomState extends React.Component
     }
 
     this.setState({
+      init: true,
       roomId: roomData.id,
       roomState: roomData.state,
       matchState
@@ -180,8 +182,12 @@ class RoomState extends React.Component
 
   render()
   {
-    if (!this.state.roomId)
+    if (!this.state.init)
+    {
+      requestRoomData().then((roomData) => this.onRoomData(roomData));
+      
       return <div/>;
+    }
 
     const isMatch = this.state.roomState === 'match';
 

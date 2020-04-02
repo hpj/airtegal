@@ -38,6 +38,7 @@ class FieldOverlay extends React.Component
     super();
 
     this.state = {
+      init: false,
       overlayHidden: true,
 
       field: [],
@@ -86,8 +87,6 @@ class FieldOverlay extends React.Component
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
-
-    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -153,6 +152,7 @@ class FieldOverlay extends React.Component
     }
     
     this.setState({
+      init: true,
       playerState: roomData.playerProperties[socket.id].state,
       playerProperties: roomData.playerProperties
     });
@@ -162,6 +162,9 @@ class FieldOverlay extends React.Component
   */
   visibility(visible)
   {
+    if (!overlayRef.current)
+      return;
+    
     overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
   }
 
@@ -223,6 +226,13 @@ class FieldOverlay extends React.Component
 
   render()
   {
+    if (!this.state.init)
+    {
+      requestRoomData().then((roomData) => this.onRoomData(roomData));
+      
+      return <div/>;
+    }
+    
     const { size } = this.props;
 
     let totalLineWidth = 0;

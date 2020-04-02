@@ -54,6 +54,8 @@ class HandOverlay extends React.Component
     super();
 
     this.state = {
+      init: false,
+
       visible: false,
       overlayHidden: true,
 
@@ -72,8 +74,6 @@ class HandOverlay extends React.Component
 
     this.maximize = this.maximize.bind(this);
     this.maximizeMinimize = this.maximizeMinimize.bind(this);
-
-    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -81,7 +81,6 @@ class HandOverlay extends React.Component
     room.on('roomData', this.onRoomData);
 
     window.addEventListener('resize', this.onResize);
-    wrapperRef.current.addEventListener('resize', this.onResize);
 
     if (isTouchScreen)
       gestures.on('up', this.maximize);
@@ -98,6 +97,9 @@ class HandOverlay extends React.Component
 
   onResize()
   {
+    if (!overlayRef.current)
+      return;
+    
     // it needs to be updated manually on every resize
     // or else it can go off-screen
     overlayRef.current.snapTo({ index: this.state.snapIndex });
@@ -107,7 +109,7 @@ class HandOverlay extends React.Component
 
   onScroll()
   {
-    if (!isTouchScreen)
+    if (!isTouchScreen || !wrapperRef.current)
       return;
     
     const y = wrapperRef.current.scrollTop;
@@ -153,6 +155,7 @@ class HandOverlay extends React.Component
     }
 
     this.setState({
+      init: true,
       playerState: roomData.playerProperties[socket.id].state
     });
   }
@@ -162,6 +165,9 @@ class HandOverlay extends React.Component
   */
   visibility(visible)
   {
+    if (!overlayRef.current)
+      return;
+    
     this.setState({ visible: visible },
       () => overlayRef.current.snapTo({ index: 0 }));
   }
@@ -223,6 +229,13 @@ class HandOverlay extends React.Component
 
   render()
   {
+    if (!this.state.init)
+    {
+      requestRoomData().then((roomData) => this.onRoomData(roomData));
+      
+      return <div/>;
+    }
+    
     const { size } = this.props;
 
     let visibleSnapPoints;

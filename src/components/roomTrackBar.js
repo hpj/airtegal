@@ -21,14 +21,13 @@ class RoomTrackBar extends React.Component
     super();
 
     this.state = {
+      init: false,
       players: []
     };
 
     // bind functions that are use as callbacks
     
     this.onRoomData = this.onRoomData.bind(this);
-    
-    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -47,6 +46,7 @@ class RoomTrackBar extends React.Component
       return;
     
     this.setState({
+      init: true,
       roomState: roomData.state,
       players: roomData.players,
       playerProperties: roomData.playerProperties,
@@ -56,9 +56,13 @@ class RoomTrackBar extends React.Component
 
   render()
   {
-    if (!this.state.players)
+    if (!this.state.init)
+    {
+      requestRoomData().then((roomData) => this.onRoomData(roomData));
+      
       return <div/>;
-    
+    }
+
     const isContained = (this.props.contained !== undefined);
     const isEnabled = this.props.enabled;
 

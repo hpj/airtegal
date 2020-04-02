@@ -24,6 +24,9 @@ class PicksDialogue extends React.Component
     super();
 
     this.state = {
+      init: false,
+
+      hand: [],
       picks: [],
       blanks: []
     };
@@ -36,8 +39,6 @@ class PicksDialogue extends React.Component
 
     this.clearPick = this.clearPick.bind(this);
     this.confirmPick = this.confirmPick.bind(this);
-
-    requestRoomData().then((roomData) => this.onRoomData(roomData));
   }
 
   componentDidMount()
@@ -86,6 +87,10 @@ class PicksDialogue extends React.Component
         hand: roomData.playerSecretProperties.hand
       }, this.props.forceGridAnimations);
     }
+
+    this.setState({
+      init: true
+    });
   }
 
   pickCard(cardIndex, isAllowed)
@@ -173,8 +178,12 @@ class PicksDialogue extends React.Component
 
   render()
   {
-    if (!this.state.hand)
+    if (!this.state.init)
+    {
+      requestRoomData().then((roomData) => this.onRoomData(roomData));
+      
       return <div/>;
+    }
     
     return (
       <div className={ styles.wrapper } style={ { display: (this.state.picks.length > 0) ? '' : 'none' } }>

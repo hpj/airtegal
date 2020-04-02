@@ -35,7 +35,6 @@ const colors = getTheme();
 
 const overlayRef = createRef();
 const optionsRef = createRef();
-const adsRef = createRef();
 
 const overlayAnimatedX = new Value(0);
 
@@ -386,15 +385,6 @@ class RoomOverlay extends React.Component
       if (optionsRef.current)
         optionsRef.current.scrollTo({ top: 0 });
     }
-  }
-
-  reloadAds()
-  {
-    if (!adsRef.current)
-      return;
-
-    adsRef.current.replaceChild(adsRef.current.children[0].cloneNode(), adsRef.current.children[0]);
-    adsRef.current.replaceChild(adsRef.current.children[1].cloneNode(), adsRef.current.children[1]);
   }
 
   render()
