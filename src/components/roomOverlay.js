@@ -49,31 +49,23 @@ class RoomOverlay extends React.Component
     super();
     
     this.state = {
-      loadingHidden: true,
-      errorMessage: '',
+      overlayLoadingHidden: true,
+      overlayErrorMessage: '',
 
-      blockDragging: false,
+      overlayBlockDragging: false,
 
-      master: undefined,
-
-      incremental: 1,
+      notificationsIncremental: 1,
       notifications: [],
 
       overlayHolderOpacity: 0,
       overlayHidden: true,
 
-      handlerVisible: true
+      overlayHandlerVisible: true
     };
 
     this.randoProperties = {};
 
-    requestRoomData = () =>
-    {
-      return new Promise((resolve) =>
-      {
-        resolve(this.state.roomData);
-      });
-    };
+    requestRoomData = () => Promise.resolve(this.state.roomData);
 
     // bind functions that are use as callbacks
 
@@ -142,7 +134,7 @@ class RoomOverlay extends React.Component
     if (roomData.state === 'lobby')
     {
       // send notification if the room's master changes
-      if (this.state.master && this.state.master !== roomData.master)
+      if (this.state.roomData?.master && this.state.roomData?.master !== roomData.master)
       {
         if (roomData.master === socket.id)
           this.addNotification(i18n('you-are-now-master'));
@@ -153,7 +145,7 @@ class RoomOverlay extends React.Component
 
     // if client was in a match
     // and is about to return to room lobby
-    if (this.state.roomState !== roomData.state && this.state.roomState === 'match')
+    if (this.state.roomData?.state !== roomData.state && this.state.roomData?.state === 'match')
     {
       // reset room options scroll
       if (optionsRef.current)
@@ -206,9 +198,7 @@ class RoomOverlay extends React.Component
     room.emit('roomData', roomData);
 
     this.setState({
-      roomData,
-      roomState: roomData.state,
-      master: roomData.master
+      roomData
     });
   }
 
@@ -216,14 +206,14 @@ class RoomOverlay extends React.Component
   {
     // block dragging if it started 25vw far from the left edge of the screen
     this.setState({
-      blockDragging: (e.touches[0].pageX > (this.props.size.width / 100) * 25) ? true: false
+      overlayBlockDragging: (e.touches[0].pageX > (this.props.size.width / 100) * 25) ? true: false
     });
   }
 
   handleTouchEnd()
   {
     this.setState({
-      blockDragging: false
+      overlayBlockDragging: false
     });
   }
 
@@ -301,18 +291,18 @@ class RoomOverlay extends React.Component
 
   showErrorMessage(err)
   {
-    this.setState({ errorMessage: err });
+    this.setState({ overlayErrorMessage: err });
   }
 
   loadingVisibility(visible)
   {
-    this.setState({ loadingHidden: visible = !visible });
+    this.setState({ overlayLoadingHidden: visible = !visible });
   }
 
   handlerVisibility(visible)
   {
     // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
-    this.setState({ handlerVisible: visible });
+    this.setState({ overlayHandlerVisible: visible });
 
     // refresh overlay position to show the handler
     requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
@@ -339,13 +329,13 @@ class RoomOverlay extends React.Component
       }
     }
 
-    const key = this.state.incremental;
+    const key = this.state.notificationsIncremental;
 
     // increase
     this.setState({
       // set 99 as the limit
       // if it is reached then set as 0
-      incremental: (key >= 99) ? 0 : key + 1
+      notificationsIncremental: (key >= 99) ? 0 : key + 1
     });
    
     const item = {
@@ -415,14 +405,14 @@ class RoomOverlay extends React.Component
         <Notifications notifications={ this.state.notifications }/>
 
         <div style={ {
-          display: (this.state.loadingHidden) ? 'none' : ''
+          display: (this.state.overlayLoadingHidden) ? 'none' : ''
         } } className={ styles.loading }
         />
 
         <div className={ styles.error } style={ {
-          display: (this.state.errorMessage) ? '' : 'none'
+          display: (this.state.overlayErrorMessage) ? '' : 'none'
         } } onClick={ () => this.showErrorMessage('') }>
-          <div>{ this.state.errorMessage }</div>
+          <div>{ this.state.overlayErrorMessage }</div>
         </div>
 
         <div style={ {
@@ -442,7 +432,7 @@ class RoomOverlay extends React.Component
             backgroundColor: colors.whiteBackground,
           
             top: 0,
-            width: (this.state.handlerVisible) ? '100vw' : 'calc(100vw + 18px)',
+            width: (this.state.overlayHandlerVisible) ? '100vw' : 'calc(100vw + 18px)',
             height: '100%',
 
             paddingRight: '20vw'
@@ -450,16 +440,16 @@ class RoomOverlay extends React.Component
 
           animatedValueX={ overlayAnimatedX }
 
-          dragEnabled={ this.state.handlerVisible && !this.state.blockDragging }
+          dragEnabled={ this.state.overlayHandlerVisible && !this.state.overlayBlockDragging }
           
           horizontalOnly={ true }
           initialPosition={ { x: size.width } }
           
           onSnap={ this.onSnap.bind(this) }
-          snapPoints={ [ { x: (this.state.handlerVisible) ? 0 : -18 }, { x: size.width } ] }
+          snapPoints={ [ { x: (this.state.overlayHandlerVisible) ? 0 : -18 }, { x: size.width } ] }
 
           boundaries={ {
-            left: (this.state.handlerVisible) ? 0 : -18,
+            left: (this.state.overlayHandlerVisible) ? 0 : -18,
             right: size.width
           } }
         >

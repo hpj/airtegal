@@ -21,8 +21,7 @@ class RoomTrackBar extends React.Component
     super();
 
     this.state = {
-      init: false,
-      players: []
+      init: false
     };
 
     // bind functions that are use as callbacks
@@ -47,10 +46,7 @@ class RoomTrackBar extends React.Component
     
     this.setState({
       init: true,
-      roomState: roomData.state,
-      players: roomData.players,
-      playerProperties: roomData.playerProperties,
-      masterId: roomData.master
+      roomData
     });
   }
 
@@ -66,20 +62,20 @@ class RoomTrackBar extends React.Component
     const isContained = (this.props.contained !== undefined);
     const isEnabled = this.props.enabled;
 
-    const isMatch = this.state.roomState === 'match';
+    const isMatch = this.state.roomData?.state === 'match';
 
     return (
       <div className={ styles.wrapper } contained={ isContained.toString() } enabled={ isEnabled }>
         <div className={ styles.container }>
           <div className={ styles.players } contained={ isContained.toString() }>
             {
-              this.state.players.map((playerId) =>
+              this.state.roomData?.players.map((playerId) =>
               {
-                const isMaster = playerId === this.state.masterId;
+                const isMaster = playerId === this.state.roomData?.master;
                 const isClient = playerId === socket.id;
 
                 // eslint-disable-next-line security/detect-object-injection
-                const player = this.state.playerProperties[playerId];
+                const player = this.state.roomData?.playerProperties[playerId];
                 
                 const isTurn = player.state === 'judging' || player.state === 'picking' || player.state === 'voting';
 

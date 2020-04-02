@@ -32,8 +32,8 @@ class PocketOverlay extends React.Component
       init: false,
       zIndex: 3,
 
-      visible: false,
-      overlayHidden: true
+      pocketVisible: false,
+      pocketHidden: true
     };
 
     // bind functions that are use as callbacks
@@ -96,7 +96,7 @@ class PocketOverlay extends React.Component
     if (!overlayRef.current)
       return;
     
-    this.setState({ visible: visible },
+    this.setState({ pocketVisible: visible },
       () => overlayRef.current.snapTo({ index: 0 }));
   }
 
@@ -128,9 +128,9 @@ class PocketOverlay extends React.Component
 
       // hide the overlay when it's off-screen
       if (Math.abs(Math.round(value)) >= size.width)
-        this.setState({ overlayHidden: true });
-      else if (!this.state.overlayHidden || this.state.visible)
-        this.setState({ overlayHidden: false });
+        this.setState({ pocketHidden: true });
+      else if (!this.state.pocketHidden || this.state.pocketVisible)
+        this.setState({ pocketHidden: false });
     });
     
     return (
@@ -162,11 +162,11 @@ class PocketOverlay extends React.Component
             right: 0
           } }
         >
-          <div className={ styles.handlerWrapper } style={ { display: (this.state.visible) ? '' : 'none' } }>
+          <div className={ styles.handlerWrapper } style={ { display: (this.state.pocketVisible) ? '' : 'none' } }>
             <div className={ styles.handler }/>
           </div>
 
-          <div style={ { display: (this.state.overlayHidden) ? 'none' : '' } } className={ styles.container }>
+          <div style={ { display: (this.state.pocketHidden) ? 'none' : '' } } className={ styles.container }>
             <RoomTrackBar contained enabled='true'/>
           </div>
         </Interactable.View>

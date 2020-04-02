@@ -56,10 +56,10 @@ class HandOverlay extends React.Component
     this.state = {
       init: false,
 
-      visible: false,
-      overlayHidden: true,
+      handVisible: false,
+      handHidden: true,
 
-      blockDragging: false,
+      handBlockDragging: false,
 
       hand: []
     };
@@ -115,7 +115,7 @@ class HandOverlay extends React.Component
     const y = wrapperRef.current.scrollTop;
 
     this.setState({
-      blockDragging: (y > 0) ? true : false
+      handBlockDragging: (y > 0) ? true : false
     });
   }
 
@@ -125,6 +125,7 @@ class HandOverlay extends React.Component
       return;
     
     // if lobby clear hand and picks
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.state === 'lobby')
     {
       this.setState({
@@ -147,6 +148,7 @@ class HandOverlay extends React.Component
       this.visibility(false);
     }
 
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
     {
       this.setState({
@@ -156,19 +158,19 @@ class HandOverlay extends React.Component
 
     this.setState({
       init: true,
-      playerState: roomData.playerProperties[socket.id].state
+      roomData
     });
   }
 
   /**
-  * @param { boolean } visible
+  * @param { boolean } hvisible
   */
-  visibility(visible)
+  visibility(hvisible)
   {
     if (!overlayRef.current)
       return;
     
-    this.setState({ visible: visible },
+    this.setState({ handVisible: hvisible },
       () => overlayRef.current.snapTo({ index: 0 }));
   }
   
@@ -181,7 +183,7 @@ class HandOverlay extends React.Component
 
   maximize()
   {
-    if (this.state.snapIndex === 0 && this.state.visible)
+    if (this.state.snapIndex === 0 && this.state.handVisible)
       overlayRef.current.snapTo({ index: 1 });
   }
 
@@ -241,8 +243,10 @@ class HandOverlay extends React.Component
     let visibleSnapPoints;
     
     const hiddenSnapPoints = [ { y: size.height } ];
-
+    
     const boundaries = {};
+
+    const playerState = this.state.roomData?.playerProperties[socket.id]?.state;
 
     if (isTouchScreen)
     {
@@ -263,14 +267,14 @@ class HandOverlay extends React.Component
     if (!this.animatedPicksGrid && picksGridRef.current)
       this.animatedPicksGrid = wrapGrid(picksGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
 
-    const isAllowed = this.state.playerState === 'picking';
+    const isAllowed = playerState === 'picking';
 
     // on overlay position changes
     overlayAnimatedY.removeAllListeners();
 
     overlayAnimatedY.addListener(({ value }) =>
     {
-      // determined the the area of the overlay that is visible on screen
+      // determined the the area of the overlay that is handVisible on screen
       // set set that amount as the wrapper hight
       // so that the user can view all cards without maximizing the the overlay
       if (wrapperRef.current)
@@ -278,10 +282,10 @@ class HandOverlay extends React.Component
 
       // hide the overlay when it goes off-screen
       if (Math.round(value) >= size.height)
-        this.setState({ overlayHidden: true }, this.forceGridAnimations);
-      // only make the overlay visible if there's a reason
-      else if (!this.state.overlayHidden || this.state.visible)
-        this.setState({ overlayHidden: false }, this.forceGridAnimations);
+        this.setState({ handHidden: true }, this.forceGridAnimations);
+      // only make the overlay handVisible if there's a reason
+      else if (!this.state.handHidden || this.state.handVisible)
+        this.setState({ handHidden: false }, this.forceGridAnimations);
     });
 
     // if size is not calculated yet
@@ -296,21 +300,21 @@ class HandOverlay extends React.Component
 
           style={ {
             zIndex: 4,
-            display: (this.state.overlayHidden) ? 'none' : ''
+            display: (this.state.handHidden) ? 'none' : ''
           } }
 
           animatedValueY={ overlayAnimatedY }
 
           onSnap={ this.onSnap.bind(this) }
 
-          dragEnabled={ !this.state.blockDragging }
+          dragEnabled={ !this.state.handBlockDragging }
 
           frictionAreas={ [ { damping: 0.6 } ] }
 
           verticalOnly={ true }
           initialPosition={ { x: 0, y: size.height } }
 
-          snapPoints={ (this.state.visible) ? visibleSnapPoints : hiddenSnapPoints }
+          snapPoints={ (this.state.handVisible) ? visibleSnapPoints : hiddenSnapPoints }
 
           boundaries={ boundaries }
         >

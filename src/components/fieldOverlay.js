@@ -39,8 +39,10 @@ class FieldOverlay extends React.Component
 
     this.state = {
       init: false,
-      overlayHidden: true,
+      fieldHidden: true,
 
+      // TODO move to roomOverlay (need only to be set once with the store)
+      
       field: [],
       votes: {}
     };
@@ -105,6 +107,7 @@ class FieldOverlay extends React.Component
       return;
     
     // if lobby clear field
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.state === 'lobby')
     {
       this.setState({
@@ -118,6 +121,7 @@ class FieldOverlay extends React.Component
       this.visibility(true);
     }
 
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.reason.message === 'vote')
     {
       this.setState({
@@ -131,6 +135,7 @@ class FieldOverlay extends React.Component
       });
     }
 
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.reason.message === 'round-ended')
     {
       this.setState({
@@ -144,6 +149,7 @@ class FieldOverlay extends React.Component
       });
     }
 
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.field)
     {
       this.setState({
@@ -153,8 +159,7 @@ class FieldOverlay extends React.Component
     
     this.setState({
       init: true,
-      playerState: roomData.playerProperties[socket.id].state,
-      playerProperties: roomData.playerProperties
+      roomData
     });
   }
 
@@ -235,6 +240,8 @@ class FieldOverlay extends React.Component
     
     const { size } = this.props;
 
+    const playerState = this.state.roomData?.playerProperties[socket.id]?.state;
+
     let totalLineWidth = 0;
 
     // on overlay position changes
@@ -244,9 +251,9 @@ class FieldOverlay extends React.Component
     {
       // hide the overlay and overlay holder when they are off-screen
       if (Math.round(value) >= size.width)
-        this.setState({ overlayHidden: true });
+        this.setState({ fieldHidden: true });
       else
-        this.setState({ overlayHidden: false });
+        this.setState({ fieldHidden: false });
     });
 
     return (
@@ -261,7 +268,7 @@ class FieldOverlay extends React.Component
 
           style={ {
             zIndex: 2,
-            display: (this.state.overlayHidden) ? 'none' : '',
+            display: (this.state.fieldHidden) ? 'none' : '',
 
             overflow: 'hidden',
 
@@ -298,7 +305,7 @@ class FieldOverlay extends React.Component
                   };
 
                   const isAllowed =
-                    (this.state.playerState === 'judging' || (this.state.playerState === 'voting' && entry.id !== socket.id))
+                    (playerState === 'judging' || (playerState === 'voting' && entry.id !== socket.id))
                     && entryIndex > 0;
 
                   return entry.cards.map((card, i) =>
@@ -332,7 +339,7 @@ class FieldOverlay extends React.Component
                       shareEntry={ (entryIndex === this.state.winnerEntryIndex && i == 0) ? () => this.shareEntry(entryIndex) : undefined }
                       allowed={ isAllowed.toString() }
                       self={ (entry.id && entry.id === socket.id && entryIndex > 0) }
-                      owner={ (entry.id && entryIndex > 0 && this.state.playerProperties[entry.id]) ? this.state.playerProperties[entry.id].username : undefined }
+                      owner={ (entry.id && entryIndex > 0 && this.state.roomData?.playerProperties[entry.id]) ? this.state.roomData?.playerProperties[entry.id].username : undefined }
                       type={ card.type }
                       // eslint-disable-next-line security/detect-object-injection
                       votes={ this.state.votes[entryIndex] }

@@ -24,8 +24,7 @@ class RoomState extends React.Component
     super();
 
     this.state = {
-      init: false,
-      roomId: ''
+      init: false
     };
 
     // bind functions that are use as callbacks
@@ -53,6 +52,8 @@ class RoomState extends React.Component
   {
     if (!roomData)
       return;
+
+    // TODO all this match state & counter code should stay as-is but added to the store
 
     if (roomData.counter !== undefined)
     {
@@ -144,9 +145,8 @@ class RoomState extends React.Component
 
     this.setState({
       init: true,
-      roomId: roomData.id,
-      roomState: roomData.state,
-      matchState
+      matchState,
+      roomData
     });
   }
 
@@ -155,7 +155,7 @@ class RoomState extends React.Component
     navigator.share({
       title: 'Share Room URL',
       text: i18n('join-me'),
-      url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomId}`
+      url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`
     }).catch(() =>
     {
       //
@@ -166,7 +166,7 @@ class RoomState extends React.Component
   {
     const { addNotification } = this.props;
 
-    navigator.clipboard.writeText(`${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomId}`);
+    navigator.clipboard.writeText(`${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`);
 
     addNotification(i18n('room-copied-to-clipboard'));
   }
@@ -189,7 +189,7 @@ class RoomState extends React.Component
       return <div/>;
     }
 
-    const isMatch = this.state.roomState === 'match';
+    const isMatch = this.state.roomData?.state === 'match';
 
     return (
       <div className={ styles.wrapper }>
@@ -210,7 +210,7 @@ class RoomState extends React.Component
                 // copy the room's id
                   (navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } onClick={ this.copyRoomURL }/> :
                   // just show the room's id
-                    <div className={ styles.id }>{ this.state.roomId }</div>
+                    <div className={ styles.id }>{ this.state.roomData?.id }</div>
               }
             </div>
         }

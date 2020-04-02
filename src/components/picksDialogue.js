@@ -26,6 +26,8 @@ class PicksDialogue extends React.Component
     this.state = {
       init: false,
 
+      // TODO move to roomOverlay (need only to be set once with the store)
+
       hand: [],
       picks: [],
       blanks: []
@@ -58,6 +60,7 @@ class PicksDialogue extends React.Component
     
     // client is in the lobby
     // or not picking
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (
       roomData.state !== 'match' ||
       roomData.playerProperties[socket.id].state !== 'picking'
@@ -66,6 +69,7 @@ class PicksDialogue extends React.Component
       this.clearPick();
     }
 
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.options.gameMode === 'king' && roomData.reason.message === 'black-card')
     {
       // the black card picks max length
@@ -81,6 +85,7 @@ class PicksDialogue extends React.Component
       });
     }
 
+    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
     {
       this.setState({

@@ -31,8 +31,8 @@ class RoomOptions extends React.Component
     this.state = {
       init: false,
 
-      loadingHidden: true,
-      errorMessage: '',
+      optionsLoadingHidden: true,
+      optionsErrorMessage: '',
 
       dirtyOptions: undefined
     };
@@ -61,6 +61,8 @@ class RoomOptions extends React.Component
   {
     if (!roomData)
       return;
+
+    // TODO handle dirtyOptions after switching to a store
     
     // if dirty options is undefined
     // or if the real room options were edited
@@ -69,15 +71,13 @@ class RoomOptions extends React.Component
     
     this.setState({
       init: true,
-      players: roomData.players,
-      options: roomData.options,
-      masterId: roomData.master
+      roomData
     });
   }
 
   showErrorMessage(err)
   {
-    this.setState({ errorMessage: err });
+    this.setState({ optionsErrorMessage: err });
   }
 
   clearDirtyOptions(options)
@@ -155,7 +155,7 @@ class RoomOptions extends React.Component
 
   loadingVisibility(visible)
   {
-    this.setState({ loadingHidden: visible = !visible });
+    this.setState({ optionsLoadingHidden: visible = !visible });
   }
 
   scrollTo(options)
@@ -206,23 +206,24 @@ class RoomOptions extends React.Component
       return <div/>;
     }
     
-    const { dirtyOptions, options } = this.state;
+    const options = this.state.roomData?.options;
+    const dirtyOptions = this.state.dirtyOptions;
 
-    const isMaster = this.state.masterId === socket.id;
+    const isMaster = this.state.roomData?.master === socket.id;
 
     const isValid = this.checkValidity();
 
-    const isDirty = JSON.stringify(this.state.dirtyOptions) !== JSON.stringify(this.state.options);
+    const isDirty = JSON.stringify(dirtyOptions) !== JSON.stringify(options);
     
     const isAllowed =
       process.env.NODE_ENV === 'development' ||
       (
-        this.state.players &&
-        this.state.players.length >= 3 &&
-        this.state.roomState !== 'match'
+        this.state.roomData?.players &&
+        this.state.roomData?.players.length >= 3 &&
+        this.state.roomData?.state !== 'match'
       );
 
-    if (!this.state.dirtyOptions)
+    if (!dirtyOptions)
       return <div/>;
 
     const GameModes = () =>
@@ -486,7 +487,7 @@ class RoomOptions extends React.Component
 
         <div className={ styles.packs }>
           {
-            this.state.options.match.availablePacks.map((pack) =>
+            options.match.availablePacks.map((pack) =>
             {
               return <div key={ pack.id } style={ {
                 color: pack.foreground_color,
@@ -511,22 +512,22 @@ class RoomOptions extends React.Component
     return (
       <div ref={ wrapperRef } className={ styles.wrapper }>
 
-        <div style={ { display: (this.state.loadingHidden) ? 'none' : '' } } className={ styles.loading }>
+        <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
           <div className={ styles.loadingSpinner }></div>
         </div>
 
-        <div className={ styles.error } style={ { display: (this.state.errorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
-          <div>{ this.state.errorMessage }</div>
+        <div className={ styles.error } style={ { display: (this.state.optionsErrorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
+          <div>{ this.state.optionsErrorMessage }</div>
         </div>
 
-        <div className={ styles.container } style={ { display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none' } }>
+        <div className={ styles.container } style={ { display: (this.state.optionsLoadingHidden && !this.state.optionsErrorMessage) ? '' : 'none' } }>
 
           {
             this.props.children
           }
 
           {
-            (!this.state.options) ? <div/> :
+            (!options) ? <div/> :
               <div>
                 <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
  

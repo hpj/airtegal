@@ -51,7 +51,7 @@ class OptionsOverlay extends React.Component
   {
     if (!this.props.hide)
       return;
-    
+
     if (!(e instanceof KeyboardEvent))
       this.props.hide();
     else if (e.keyCode === 27)
@@ -197,6 +197,7 @@ const styles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.shareBackground,
 
+    opacity: 1,
     borderRadius: '10px',
 
     maxWidth: '490px',
@@ -208,10 +209,11 @@ const styles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    transition: 'top 0.25s',
+    transition: 'top 0.25s, opacity 0.5s',
     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
 
     'div[enabled="false"] > %this': {
+      opacity: 0,
       top: '100vh'
     }
   },
