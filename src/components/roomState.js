@@ -44,6 +44,23 @@ class RoomState extends StoreComponent
       clearInterval(this.countdownInterval);
   }
 
+  /**
+  * @param { string[] } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.roomData?.state ||
+      changes?.roomData?.counter ||
+      changes?.roomData?.judge ||
+      changes?.roomData?.options?.gameMode ||
+      changes?.roomData?.playerProperties ||
+      changes?.roomData?.reason?.message ||
+      changes?.roomData?.reason?.details ||
+      changes?.matchState)
+      return true;
+  }
+
   stateWillChange({ roomData })
   {
     const state = {};

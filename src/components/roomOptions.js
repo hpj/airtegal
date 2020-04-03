@@ -53,13 +53,29 @@ class RoomOptions extends StoreComponent
     return state;
   }
 
+  /**
+  * @param { string[] } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.roomData?.reason?.message ||
+      changes?.roomData?.options ||
+      changes?.roomData?.master ||
+      changes?.roomData?.players ||
+      changes?.optionsLoadingHidden ||
+      changes?.optionsErrorMessage ||
+      changes?.dirtyOptions)
+      return true;
+  }
+
   stateDidChange(state, changes, old)
   {
     // if the real room options were edited
     if (
       changes.roomData && old.roomData &&
-      changes.roomData.reason.message !== old.roomData.reason.message &&
-      changes.roomData.reason.message === 'options-edit')
+      changes.roomData.reason?.message !== old.roomData.reason.message &&
+      changes.roomData.reason?.message === 'options-edit')
     {
       this.store.set({
         dirtyOptions: state.roomData.options

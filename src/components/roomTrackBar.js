@@ -16,6 +16,19 @@ const colors = getTheme();
 
 class RoomTrackBar extends StoreComponent
 {
+  /**
+  * @param { string[] } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.roomData?.state ||
+      changes?.roomData?.master ||
+      changes?.roomData?.players ||
+      changes?.roomData?.playerProperties)
+      return true;
+  }
+
   render()
   {
     const isContained = (this.props.contained !== undefined);

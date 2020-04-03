@@ -82,6 +82,25 @@ class FieldOverlay extends StoreComponent
     });
   }
 
+  /**
+  * @param { string[] } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.roomData?.state ||
+      changes?.roomData?.reason?.message ||
+      changes?.roomData?.reason?.details ||
+      changes?.roomData?.field ||
+      changes?.roomData?.votes ||
+      changes?.field ||
+      changes?.share ||
+      changes?.fieldHidden ||
+      changes?.winnerEntryIndex ||
+      changes?.votes)
+      return true;
+  }
+
   stateWillChange({ roomData })
   {
     const state = {};

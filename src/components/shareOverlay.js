@@ -16,73 +16,116 @@ import i18n from '../i18n.js';
 
 const colors = getTheme();
 
-const ShareOverlay = ({ addNotification, share, hide }) =>
+class ShareOverlay extends React.Component
 {
-  if (!share)
-    share = { active: false };
-
-  const copyURL = () =>
+  constructor()
   {
+    super();
+
+    // bind functions that are use as callbacks
+
+    this.copyURL = this.copyURL.bind(this);
+    this.hide = this.hide.bind(this);
+  }
+
+  componentDidMount()
+  {
+    window.addEventListener('keyup', this.hide);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener('keyup', this.hide);
+  }
+
+  hide(e)
+  {
+    const { hide } = this.props;
+
+    if (!(e instanceof KeyboardEvent))
+      hide();
+    else if (e.keyCode === 27)
+      hide();
+  }
+
+  copyURL()
+  {
+    const { share, addNotification } = this.props;
+
     navigator.clipboard.writeText(share.url);
   
     addNotification(i18n('share-copied-to-clipboard'));
-  };
-  
-  const shareOnFacebook = () =>
+  }
+
+  shareOnFacebook()
   {
+    const { share } = this.props;
+
     const url = `https://www.facebook.com/dialog/share?app_id=196958018362010&href=${share.url}&hashtag=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, 'Share', options);
-  };
-  
-  const shareOnTwitter = () =>
+  }
+
+  shareOnTwitter()
   {
+    const { share } = this.props;
+
     const url = `https://twitter.com/intent/tweet?url=${share.url}&text=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, 'Share', options);
-  };
-  
-  const shareOnReddit = () =>
+  }
+
+  shareOnReddit()
   {
+    const { share } = this.props;
+
     const url = `https://www.reddit.com/submit?url=${share.url}&title=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, 'Share', options);
-  };
+  }
 
-  return (
-    <div enabled={ share.active.toString() } className={ styles.wrapper }>
-      <div className={ styles.holder }/>
+  render()
+  {
+    let { share } = this.props;
 
-      <div className={ styles.container }>
-        <img src={ share.img } className={ styles.image }/>
+    if (!share)
+      share = { active: false };
 
-        <div className={ styles.url }>
-          <div className={ styles.urlText }>{ share.url }</div>
-          <CopyIcon className={ styles.urlCopy } onClick={ copyURL }/>
-        </div>
+    return (
+      <div enabled={ share.active.toString() } className={ styles.wrapper }>
+        <div className={ styles.holder }/>
 
-        <div className={ styles.buttons }>
-          <FacebookIcon onClick={ shareOnFacebook } className={ styles.social }/>
-          <TwitterIcon onClick={ shareOnTwitter } className={ styles.social }/>
-          <RedditIcon onClick={ shareOnReddit } className={ styles.social }/>
-        </div>
+        <div className={ styles.container }>
+          <img src={ share.img } className={ styles.image }/>
 
-        <div className={ styles.close } onClick={ hide }>
-          { i18n('close') }
+          <div className={ styles.url }>
+            <div className={ styles.urlText }>{ share.url }</div>
+            <CopyIcon className={ styles.urlCopy } onClick={ this.copyURL }/>
+          </div>
+
+          <div className={ styles.buttons }>
+            <FacebookIcon onClick={ this.shareOnFacebook } className={ styles.social }/>
+            <TwitterIcon onClick={ this.shareOnTwitter } className={ styles.social }/>
+            <RedditIcon onClick={ this.shareOnReddit } className={ styles.social }/>
+          </div>
+
+          <div className={ styles.close } onClick={ this.hide }>
+            { i18n('close') }
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 ShareOverlay.propTypes = {
   addNotification: PropTypes.func.isRequired,

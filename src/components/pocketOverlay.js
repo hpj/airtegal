@@ -57,6 +57,18 @@ class PocketOverlay extends StoreComponent
     gestures.off('right', this.maximize);
   }
 
+  /**
+  * @param { string[] } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.pocketIndex ||
+      changes?.pocketHidden ||
+      changes?.pocketVisible)
+      return true;
+  }
+
   stateWillChange({ roomData })
   {
     const state = {};

@@ -108,6 +108,24 @@ class HandOverlay extends StoreComponent
     });
   }
 
+  /**
+  * @param { string[] } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.roomData?.state ||
+      changes?.roomData?.playerProperties ||
+      changes?.roomData?.playerSecretProperties ||
+      changes?.handVisible ||
+      changes?.handHidden ||
+      changes?.handBlockDragging ||
+      changes?.handViewableArea ||
+      changes?.hand ||
+      changes?.picks)
+      return true;
+  }
+
   stateWillChange({ roomData })
   {
     const state = {};

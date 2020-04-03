@@ -1,17 +1,15 @@
 Performance Issues and Bugs:
+  ☐ re-factor hand and picks grids animation @today 
+
   ☐ loading issues
-
-  ☐ don't re-render components if that don't need to be updated ti improve overall performance
-
-  ☐ re-factor hand and picks grids animation
 
 Testing:
   ✔ graphql server @done(20-03-28 20:01)
-  ☐ test all modes with 4 players
+  
+  ☐ test all modes with 4 players @today 
 
 UI/UX:
-  ☐ match end screen
-    - above room options there should be a stack-able (on top of each other) match reports
+  ☐ match end screen @today 
 
   ☐ design the mockups for the proposal and vote screens
 

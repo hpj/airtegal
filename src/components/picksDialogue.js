@@ -37,6 +37,19 @@ class PicksDialogue extends StoreComponent
     this.confirmPick = this.confirmPick.bind(this);
   }
 
+  /**
+  * @param { string[] } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.pick ||
+      changes?.picks ||
+      changes?.blanks ||
+      changes?.hand)
+      return true;
+  }
+
   stateWillChange({ roomData })
   {
     const state = {};

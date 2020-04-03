@@ -1,3 +1,5 @@
+/* eslint-disable security/detect-object-injection */
+
 import React from 'react';
 
 const stores = {};
@@ -92,6 +94,18 @@ export class StoreComponent extends React.Component
     this.store.unsubscribe(this);
   }
 
+  /** whitelist what changes all allowed to be dispatched to this component
+  * refusing any dispatch improves app performance and is recommended (specially on large apps)
+  * not overriding this function will allow the component to receive all dispatches
+  * @param { {} } changes the changes made to this state dispatch
+  * @returns { boolean }
+  */
+  // eslint-disable-next-line no-unused-vars
+  stateWhitelist(changes)
+  {
+    return true;
+  }
+
   /** Emits before the state changes,
   * allows modification to the state before it's dispatched
   * @param { {} } newState
@@ -180,20 +194,14 @@ export default class Store
   */
   set(state, callback)
   {
-    const old = {
-      ...this.state
-    };
-
-    const change = {
+    // update state
+    this.state = {
       ...this.state,
       ...state
     };
 
-    // update state
-    this.state = change;
-
     // dispatch changes
-    this.dispatch(state, old).then(callback);
+    this.dispatch().then(callback);
 
     return this;
   }
@@ -201,7 +209,7 @@ export default class Store
   /**
   * @returns { Promise }
   */
-  dispatch(changes, old)
+  dispatch()
   {
     return new Promise((resolve) =>
     {
@@ -223,18 +231,62 @@ export default class Store
             ...this.state,
             ...modified
           };
-
-          changes = {
-            ...changes,
-            ...modified
-          };
         }
       });
 
+      // deep filter changes objects to only dispatch real changes
+      const diff = (current, changes) =>
+      {
+        const out = { ...changes };
+
+        const changesKeys = Object.keys(changes);
+
+        changesKeys.forEach((key) =>
+        {
+          if (!Array.isArray(changes[key]) && typeof changes[key] === 'object')
+          {
+            if (!current[key])
+              return;
+            
+            out[key] = diff(current[key], changes[key]);
+
+            if (Object.keys(out[key]).length <= 0)
+              delete out[key];
+          }
+          else if (current[key] === changes[key])
+          {
+            delete out[key];
+          }
+        });
+
+        return out;
+      };
+
+      const heat = (obj) =>
+      {
+        const out = {};
+
+        const keys = Object.keys(obj);
+
+        keys.forEach((key) =>
+        {
+          if (!Array.isArray(obj[key]) && typeof obj[key] === 'object')
+            out[key] = heat(obj[key]);
+          else
+            out[key] = true;
+        });
+
+        return out;
+      };
+      
       // loop though all subscriptions again to dispatch the new state
       this.subscriptions.forEach((component) =>
       {
-        if (component && component.setState)
+        const old = { ...component.state };
+        const changes = diff(component.state, this.state);
+
+        // filter dispatches
+        if (component?.setState && component?.stateWhitelist && component.stateWhitelist(heat(changes)))
         {
           promises.push(new Promise((resolve) =>
           {

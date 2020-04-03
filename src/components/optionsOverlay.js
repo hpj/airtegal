@@ -49,13 +49,12 @@ class OptionsOverlay extends React.Component
 
   hide(e)
   {
-    if (!this.props.hide)
-      return;
+    const { hide } = this.props;
 
     if (!(e instanceof KeyboardEvent))
-      this.props.hide();
+      hide();
     else if (e.keyCode === 27)
-      this.props.hide();
+      hide();
   }
 
   apply()
