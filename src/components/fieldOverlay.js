@@ -10,6 +10,8 @@ import PanResponder from 'react-panresponder-web';
 
 import Interactable from 'react-interactable/noNative';
 
+import { StoreComponent } from '../store.js';
+
 import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
@@ -22,8 +24,6 @@ import Card from './card.js';
 
 import ShareOverlay from './shareOverlay.js';
 
-import { requestRoomData, room } from './roomOverlay.js';
-
 const colors = getTheme();
 
 const overlayRef = createRef();
@@ -31,21 +31,16 @@ const overlayAnimatedX = new Value(0);
 
 export const gestures = new EventEmitter();
 
-class FieldOverlay extends React.Component
+class FieldOverlay extends StoreComponent
 {
   constructor()
   {
-    super();
-
-    this.state = {
-      init: false,
+    super({
       fieldHidden: true,
 
-      // TODO move to roomOverlay (need only to be set once with the store)
-      
       field: [],
       votes: {}
-    };
+    });
 
     this.panResponder = PanResponder.create({
       onMoveShouldSetPanResponderCapture: () => true,
@@ -85,34 +80,19 @@ class FieldOverlay extends React.Component
           gestures.emit('down');
       }
     });
-
-    // bind functions that are use as callbacks
-
-    this.onRoomData = this.onRoomData.bind(this);
   }
 
-  componentDidMount()
+  stateWillChange({ roomData })
   {
-    room.on('roomData', this.onRoomData);
-  }
+    const state = {};
 
-  componentWillUnmount()
-  {
-    room.off('roomData', this.onRoomData);
-  }
-
-  onRoomData(roomData)
-  {
     if (!roomData)
       return;
     
     // if lobby clear field
-    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.state === 'lobby')
     {
-      this.setState({
-        field: []
-      });
+      state.field = [];
 
       this.visibility(false);
     }
@@ -121,46 +101,20 @@ class FieldOverlay extends React.Component
       this.visibility(true);
     }
 
-    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.reason.message === 'vote')
-    {
-      this.setState({
-        votes: roomData.votes
-      });
-    }
+      state.votes = roomData.votes;
     else if (roomData.reason.message !== 'round-ended')
-    {
-      this.setState({
-        votes: {}
-      });
-    }
+      state.votes = {};
 
-    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.reason.message === 'round-ended')
-    {
-      this.setState({
-        winnerEntryIndex: (typeof roomData.reason.details === 'number') ? roomData.reason.details : undefined
-      });
-    }
-    else
-    {
-      this.setState({
-        winnerEntryIndex: undefined
-      });
-    }
+      state.winnerEntryIndex = (typeof roomData.reason.details === 'number') ? roomData.reason.details : undefined;
+    else if (roomData.reason.message === 'round-started')
+      state.winnerEntryIndex = undefined;
 
-    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.field)
-    {
-      this.setState({
-        field: roomData.field
-      });
-    }
-    
-    this.setState({
-      init: true,
-      roomData
-    });
+      state.field = roomData.field;
+
+    return state;
   }
 
   /** @param { boolean } visible
@@ -223,7 +177,7 @@ class FieldOverlay extends React.Component
     }
     else
     {
-      this.setState({
+      this.store.set({
         share: { active: true, url: shareURL, img: pictureURL }
       });
     }
@@ -231,13 +185,6 @@ class FieldOverlay extends React.Component
 
   render()
   {
-    if (!this.state.init)
-    {
-      requestRoomData().then((roomData) => this.onRoomData(roomData));
-      
-      return <div/>;
-    }
-    
     const { size } = this.props;
 
     const playerState = this.state.roomData?.playerProperties[socket.id]?.state;
@@ -251,9 +198,9 @@ class FieldOverlay extends React.Component
     {
       // hide the overlay and overlay holder when they are off-screen
       if (Math.round(value) >= size.width)
-        this.setState({ fieldHidden: true });
+        this.store.set({ fieldHidden: true });
       else
-        this.setState({ fieldHidden: false });
+        this.store.set({ fieldHidden: false });
     });
 
     return (
@@ -261,7 +208,7 @@ class FieldOverlay extends React.Component
         <ShareOverlay
           addNotification={ this.props.addNotification }
           share={ this.state.share }
-          hide={ () => this.setState({ share: { ...this.state.share, active: false } }) }/>
+          hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
 
         <Interactable.View
           ref={ overlayRef }

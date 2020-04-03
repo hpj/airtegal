@@ -2,6 +2,8 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
+import { StoreComponent } from '../store.js';
+
 import { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
@@ -10,55 +12,12 @@ import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import { requestRoomData, room } from './roomOverlay.js';
-
 const colors = getTheme();
 
-class RoomTrackBar extends React.Component
+class RoomTrackBar extends StoreComponent
 {
-  constructor()
-  {
-    super();
-
-    this.state = {
-      init: false
-    };
-
-    // bind functions that are use as callbacks
-    
-    this.onRoomData = this.onRoomData.bind(this);
-  }
-
-  componentDidMount()
-  {
-    room.on('roomData', this.onRoomData);
-  }
-
-  componentWillUnmount()
-  {
-    room.off('roomData', this.onRoomData);
-  }
-
-  onRoomData(roomData)
-  {
-    if (!roomData)
-      return;
-    
-    this.setState({
-      init: true,
-      roomData
-    });
-  }
-
   render()
   {
-    if (!this.state.init)
-    {
-      requestRoomData().then((roomData) => this.onRoomData(roomData));
-      
-      return <div/>;
-    }
-
     const isContained = (this.props.contained !== undefined);
     const isEnabled = this.props.enabled;
 

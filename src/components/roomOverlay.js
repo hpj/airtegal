@@ -2,10 +2,10 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { EventEmitter } from 'events';
-
 import { Value } from 'animated';
 import Interactable from 'react-interactable/noNative';
+
+import { StoreComponent } from '../store.js';
 
 import i18n, { locale } from '../i18n.js';
 
@@ -40,15 +40,11 @@ const overlayAnimatedX = new Value(0);
 
 export let requestRoomData;
 
-export const room = new EventEmitter();
-
-class RoomOverlay extends React.Component
+class RoomOverlay extends StoreComponent
 {
   constructor()
   {
-    super();
-    
-    this.state = {
+    super({
       overlayLoadingHidden: true,
       overlayErrorMessage: '',
 
@@ -61,11 +57,9 @@ class RoomOverlay extends React.Component
       overlayHidden: true,
 
       overlayHandlerVisible: true
-    };
+    });
 
     this.randoProperties = {};
-
-    requestRoomData = () => Promise.resolve(this.state.roomData);
 
     // bind functions that are use as callbacks
 
@@ -80,6 +74,8 @@ class RoomOverlay extends React.Component
 
   componentDidMount()
   {
+    super.componentDidMount();
+
     socket.on('roomData', this.onRoomData);
     // socket.on('kicked', this.onKicked);
 
@@ -89,6 +85,8 @@ class RoomOverlay extends React.Component
 
   componentWillUnmount()
   {
+    super.componentWillUnmount();
+
     socket.off('roomData', this.onRoomData);
     // socket.off('kicked', this.onKicked);
     
@@ -104,7 +102,7 @@ class RoomOverlay extends React.Component
   // {
   //   // after leaving the room
   //   // clean up some of the state values
-  //   this.setState({
+  //   this.store.set({
   //     master: undefined
   //   });
 
@@ -130,7 +128,6 @@ class RoomOverlay extends React.Component
     // handler is only visible if user is on the match's lobby screen
     this.handlerVisibility((roomData.state === 'lobby') ? true : false);
 
-    // if players are in the room's lobby
     if (roomData.state === 'lobby')
     {
       // send notification if the room's master changes
@@ -195,9 +192,7 @@ class RoomOverlay extends React.Component
         this.addNotification(i18n('room-edited'));
     }
 
-    room.emit('roomData', roomData);
-
-    this.setState({
+    this.store.set({
       roomData
     });
   }
@@ -205,14 +200,14 @@ class RoomOverlay extends React.Component
   handleTouchStart(e)
   {
     // block dragging if it started 25vw far from the left edge of the screen
-    this.setState({
+    this.store.set({
       overlayBlockDragging: (e.touches[0].pageX > (this.props.size.width / 100) * 25) ? true: false
     });
   }
 
   handleTouchEnd()
   {
-    this.setState({
+    this.store.set({
       overlayBlockDragging: false
     });
   }
@@ -275,37 +270,38 @@ class RoomOverlay extends React.Component
 
     sendMessage('leave').then(() =>
     {
-      if (optionsRef.current)
-        optionsRef.current.clearDirtyOptions();
-
       // refresh rooms list
       this.props.requestRooms();
     
       // after leaving the room
-      // clean up some of the state values
-      this.setState({
-        master: undefined
+      this.store.set({
+        field: [],
+        hand: [],
+        picks: [],
+        blanks: [],
+
+        matchState: undefined,
+        dirtyOptions: undefined,
+        roomData: undefined
       });
     }).catch(console.warn);
   }
 
   showErrorMessage(err)
   {
-    this.setState({ overlayErrorMessage: err });
+    this.store.set({ overlayErrorMessage: err });
   }
 
   loadingVisibility(visible)
   {
-    this.setState({ overlayLoadingHidden: visible = !visible });
+    this.store.set({ overlayLoadingHidden: visible = !visible });
   }
 
   handlerVisibility(visible)
   {
     // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
-    this.setState({ overlayHandlerVisible: visible });
-
-    // refresh overlay position to show the handler
-    requestAnimationFrame(() => overlayRef.current.snapTo({ index: 0 }));
+    this.store.set({ overlayHandlerVisible: visible },
+      () => overlayRef.current.snapTo({ index: 0 }));
   }
   
   /**
@@ -332,7 +328,7 @@ class RoomOverlay extends React.Component
     const key = this.state.notificationsIncremental;
 
     // increase
-    this.setState({
+    this.store.set({
       // set 99 as the limit
       // if it is reached then set as 0
       notificationsIncremental: (key >= 99) ? 0 : key + 1
@@ -347,7 +343,7 @@ class RoomOverlay extends React.Component
    
     this.state.notifications.push(item);
    
-    this.setState({ notifications: this.state.notifications });
+    this.store.set({ notifications: this.state.notifications });
 
     // by doing this it makes sure that all the notifications are cleared at once
     // which is more pleasant to the human eye
@@ -360,7 +356,7 @@ class RoomOverlay extends React.Component
 
   removeNotification()
   {
-    this.setState({ notifications: [] });
+    this.store.set({ notifications: [] });
     
     this.notificationsTimeout = undefined;
   }
@@ -386,14 +382,14 @@ class RoomOverlay extends React.Component
 
     overlayAnimatedX.addListener(({ value }) =>
     {
-      this.setState({ overlayHolderOpacity: 0.5 - (Math.round(value) / (size.width * 2)) });
+      this.store.set({ overlayHolderOpacity: 0.5 - (Math.round(value) / (size.width * 2)) });
 
       // hide the overlay and overlay holder when they are off-screen
       // (-5px is to make sure that the overlay is hidden even if tit ends up few pixels off from where it should of been)
       if (Math.round(value) >= size.width)
-        this.setState({ overlayHidden: true });
+        this.store.set({ overlayHidden: true });
       else
-        this.setState({ overlayHidden: false });
+        this.store.set({ overlayHidden: false });
     });
 
     // if size is not calculated yet

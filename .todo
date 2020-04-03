@@ -1,6 +1,10 @@
 Performance Issues and Bugs:
   ☐ loading issues
 
+  ☐ don't re-render components if that don't need to be updated ti improve overall performance
+
+  ☐ re-factor hand and picks grids animation
+
 Testing:
   ✔ graphql server @done(20-03-28 20:01)
   ☐ test all modes with 4 players

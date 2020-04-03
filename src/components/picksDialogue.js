@@ -1,7 +1,10 @@
 /* eslint-disable security/detect-object-injection */
+
 import React from 'react';
 
 import PropTypes from 'prop-types';
+
+import { StoreComponent } from '../store.js';
 
 import { socket } from '../screens/game.js';
 
@@ -13,29 +16,20 @@ import i18n, { locale } from '../i18n.js';
 
 import Card from './card.js';
 
-import { requestRoomData, room } from './roomOverlay.js';
-
 const colors = getTheme();
 
-class PicksDialogue extends React.Component
+class PicksDialogue extends StoreComponent
 {
   constructor()
   {
-    super();
+    super({
+      pick: undefined,
 
-    this.state = {
-      init: false,
-
-      // TODO move to roomOverlay (need only to be set once with the store)
-
-      hand: [],
       picks: [],
       blanks: []
-    };
+    });
 
     // bind functions that are use as callbacks
-
-    this.onRoomData = this.onRoomData.bind(this);
 
     this.isPicked = this.isPicked.bind(this);
 
@@ -43,59 +37,39 @@ class PicksDialogue extends React.Component
     this.confirmPick = this.confirmPick.bind(this);
   }
 
-  componentDidMount()
+  stateWillChange({ roomData })
   {
-    room.on('roomData', this.onRoomData);
-  }
+    const state = {};
 
-  componentWillUnmount()
-  {
-    room.off('roomData', this.onRoomData);
-  }
-
-  onRoomData(roomData)
-  {
     if (!roomData)
       return;
     
     // client is in the lobby
     // or not picking
-    // TODO move to roomOverlay (need only to be set once with the store)
     if (
-      roomData.state !== 'match' ||
-      roomData.playerProperties[socket.id].state !== 'picking'
+      (roomData.state !== 'match' && this.state.picks.length > 0) ||
+      (roomData.playerProperties[socket.id].state !== 'picking')
     )
     {
-      this.clearPick();
+      state.picks = [];
+      state.blanks = [];
     }
 
-    // TODO move to roomOverlay (need only to be set once with the store)
-    if (roomData.options.gameMode === 'king' && roomData.reason.message === 'black-card')
+    if (roomData.options.gameMode === 'king' &&
+      roomData.reason.message === 'black-card')
     {
       // the black card picks max length
-      this.setState({
-        pick: 1
-      });
+      state.pick = 1;
     }
-    else if (roomData.field && roomData.field.length > 0)
+    else if (
+      roomData.field && roomData.field.length > 0 &&
+      this.state.pick !== roomData.field[0].cards[0].pick)
     {
       // the white card picks max length
-      this.setState({
-        pick: roomData.field[0].cards[0].pick
-      });
+      state.pick = roomData.field[0].cards[0].pick;
     }
 
-    // TODO move to roomOverlay (need only to be set once with the store)
-    if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
-    {
-      this.setState({
-        hand: roomData.playerSecretProperties.hand
-      }, this.props.forceGridAnimations);
-    }
-
-    this.setState({
-      init: true
-    });
+    return state;
   }
 
   pickCard(cardIndex, isAllowed)
@@ -121,18 +95,18 @@ class PicksDialogue extends React.Component
     }
 
     // update state
-    this.setState({
-      picks,
-      blanks
-    }, this.props.forceGridAnimations);
+    this.store.set({
+      picks: picks,
+      blanks: blanks
+    });
   }
 
   clearPick()
   {
-    this.setState({
+    this.store.set({
       picks: [],
       blanks: []
-    }, this.props.forceGridAnimations);
+    });
   }
 
   confirmPick()
@@ -183,17 +157,10 @@ class PicksDialogue extends React.Component
 
   render()
   {
-    if (!this.state.init)
-    {
-      requestRoomData().then((roomData) => this.onRoomData(roomData));
-      
-      return <div/>;
-    }
-    
     return (
       <div className={ styles.wrapper } style={ { display: (this.state.picks.length > 0) ? '' : 'none' } }>
 
-        <div ref= { this.props.gridRef } className={ styles.container }>
+        <div className={ styles.container }>
           {
             this.state.hand.map((card, i) =>
             {
@@ -218,9 +185,7 @@ class PicksDialogue extends React.Component
 
                   blanks[order] = trimmed;
 
-                  this.setState({
-                    blanks: blanks
-                  });
+                  this.store.set({  blanks });
                 } : undefined }
               />;
             })
@@ -252,9 +217,7 @@ class PicksDialogue extends React.Component
 }
 
 PicksDialogue.propTypes = {
-  gridRef: PropTypes.object.isRequired,
-  sendMessage: PropTypes.func.isRequired,
-  forceGridAnimations: PropTypes.func.isRequired
+  sendMessage: PropTypes.func.isRequired
 };
 
 const styles = createStyle({

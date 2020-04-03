@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 import CopyIcon from 'mdi-react/ContentCopyIcon';
 
+import { StoreComponent } from '../store.js';
+
 import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
@@ -13,50 +15,46 @@ import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
 
-import { requestRoomData, room } from './roomOverlay.js';
-
 const colors = getTheme();
 
-class RoomState extends React.Component
+class RoomState extends StoreComponent
 {
   constructor()
   {
     super();
 
-    this.state = {
-      init: false
-    };
+    this.current = undefined;
+    this.countdown = undefined;
+    
+    this.formatted = undefined;
+
+    this.countdownInterval = undefined;
 
     // bind functions that are use as callbacks
-
-    this.onRoomData = this.onRoomData.bind(this);
 
     this.shareRoomURL = this.shareRoomURL.bind(this);
     this.copyRoomURL = this.copyRoomURL.bind(this);
   }
 
-  componentDidMount()
-  {
-    room.on('roomData', this.onRoomData);
-  }
-
   componentWillUnmount()
   {
+    super.componentWillMount();
+    
     if (this.countdownInterval)
       clearInterval(this.countdownInterval);
-
-    room.off('roomData', this.onRoomData);
   }
 
-  onRoomData(roomData)
+  stateWillChange({ roomData })
   {
+    const state = {};
+
     if (!roomData)
       return;
 
-    // TODO all this match state & counter code should stay as-is but added to the store
-
-    if (roomData.counter !== undefined)
+    if (roomData.counter !== this.current)
     {
+      this.current = roomData.counter;
+
       // clear the pervious countdown
       if (this.countdownInterval)
         clearInterval(this.countdownInterval);
@@ -74,80 +72,81 @@ class RoomState extends React.Component
 
           if (remaining >= 0)
           {
-            this.setState({ counter: this.formatMs(remaining) });
+            this.formatted = this.formatMs(remaining);
           }
           else
           {
-            this.setState({ counter: this.formatMs(0) });
+            this.formatted = this.formatMs(0);
 
             clearInterval(this.countdownInterval);
           }
+
+          // re-render to show correct counter
+          this.forceUpdate();
         }, 1000);
 
         // update the counter immediately since the first interval won't execute immediately
-        this.setState({ counter: this.formatMs(roomData.counter) });
+        this.formatted = this.formatMs(roomData.counter);
+
+        // re-render to show correct counter
+        this.forceUpdate();
       }
       // if not display it as is
       else
       {
-        this.setState({ counter: roomData.counter });
+        this.formatted = roomData.counter;
+
+        // re-render to show correct counter
+        this.forceUpdate();
       }
     }
 
     // if lobby clear match state
     if (roomData.state === 'lobby')
     {
-      this.setState({
-        matchState: undefined
-      });
+      state.matchState = undefined;
     }
     
-    let matchState = this.state.matchState;
-
     if (roomData.options.gameMode === 'king' && roomData.reason.message === 'black-card')
     {
       if (roomData.judge === socket.id)
-        matchState = i18n('picking-phase');
+        state.matchState = i18n('picking-phase');
       else
-        matchState = i18n('wait-until-judge-picks', roomData.playerProperties[roomData.judge].username);
+        state.matchState = i18n('wait-until-judge-picks', roomData.playerProperties[roomData.judge].username);
     }
     else if (roomData.reason.message === 'picking-phase')
     {
       if (roomData.judge === socket.id)
-        matchState = i18n('you-are-the-judge-wait');
+        state.matchState = i18n('you-are-the-judge-wait');
       else
-        matchState = i18n('picking-phase');
+        state.matchState = i18n('picking-phase');
     }
     else if (roomData.reason.message === 'judging-phase')
     {
       if (roomData.judge === socket.id)
-        matchState = i18n('judging-phase');
+        state.matchState = i18n('judging-phase');
       else
-        matchState = i18n('wait-until-judge-judges', roomData.playerProperties[roomData.judge].username);
+        state.matchState = i18n('wait-until-judge-judges', roomData.playerProperties[roomData.judge].username);
     }
     else if (roomData.reason.message === 'voting-phase')
     {
-      matchState = i18n('voting-phase');
+      state.matchState = i18n('voting-phase');
     }
     else if (roomData.reason.message === 'round-ended' && typeof roomData.reason.details === 'number')
     {
       const winnerEntry = roomData.field[roomData.reason.details];
 
       if (winnerEntry.id === socket.id)
-        matchState = i18n('you-won-the-round');
+        state.matchState = i18n('you-won-the-round');
       else
-        matchState = i18n('won-this-round', roomData.playerProperties[winnerEntry.id].username);
+        state.matchState = i18n('won-this-round', roomData.playerProperties[winnerEntry.id].username);
     }
     else if (roomData.reason.message === 'round-ended')
     {
-      matchState = i18n('round-canceled');
+      state.matchState = i18n('round-canceled');
     }
 
-    this.setState({
-      init: true,
-      matchState,
-      roomData
-    });
+    return state;
   }
 
   shareRoomURL()
@@ -182,13 +181,6 @@ class RoomState extends React.Component
 
   render()
   {
-    if (!this.state.init)
-    {
-      requestRoomData().then((roomData) => this.onRoomData(roomData));
-      
-      return <div/>;
-    }
-
     const isMatch = this.state.roomData?.state === 'match';
 
     return (
@@ -198,11 +190,11 @@ class RoomState extends React.Component
             <div match='true' className={ styles.container }>
               <div match='true' className={ styles.state }>{ this.state.matchState }</div>
 
-              <div className={ styles.counter }>{ this.state.counter }</div>
+              <div className={ styles.counter }>{ this.formatted }</div>
             </div>
             :
             <div match='false' className={ styles.container }>
-              <div match='false' className={ styles.state }>{ this.state.counter }</div>
+              <div match='false' className={ styles.state }>{ this.formatted }</div>
 
               {
               // share the room

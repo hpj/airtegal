@@ -2,11 +2,11 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { wrapGrid } from 'animate-css-grid';
-
 import { Value } from 'animated';
 
 import Interactable from 'react-interactable/noNative';
+
+import { StoreComponent } from '../store.js';
 
 import { socket } from '../screens/game.js';
 
@@ -24,8 +24,6 @@ import { gestures } from './fieldOverlay.js';
 
 import PicksDialogue from './picksDialogue.js';
 
-import { requestRoomData, room } from './roomOverlay.js';
-
 const colors = getTheme();
 
 const overlayRef = createRef();
@@ -34,9 +32,6 @@ const overlayContainerRef = createRef();
 const wrapperRef = createRef();
 
 const picksDialogueRef = createRef();
-
-const picksGridRef = createRef();
-const handGridRef = createRef();
 
 const overlayAnimatedY = new Value(0);
 
@@ -47,30 +42,24 @@ const percent = (height, percent) =>
   return n;
 };
 
-class HandOverlay extends React.Component
+class HandOverlay extends StoreComponent
 {
   constructor()
   {
-    super();
-
-    this.state = {
-      init: false,
-
+    super({
       handVisible: false,
       handHidden: true,
 
       handBlockDragging: false,
-
+      handViewableArea: undefined,
+      
       hand: []
-    };
+    });
 
     // bind functions that are use as callbacks
 
-    this.onRoomData = this.onRoomData.bind(this);
     this.onResize = this.onResize.bind(this);
     this.onScroll = this.onScroll.bind(this);
-
-    this.forceGridAnimations = this.forceGridAnimations.bind(this);
 
     this.maximize = this.maximize.bind(this);
     this.maximizeMinimize = this.maximizeMinimize.bind(this);
@@ -78,7 +67,7 @@ class HandOverlay extends React.Component
 
   componentDidMount()
   {
-    room.on('roomData', this.onRoomData);
+    super.componentDidMount();
 
     window.addEventListener('resize', this.onResize);
 
@@ -88,7 +77,7 @@ class HandOverlay extends React.Component
 
   componentWillUnmount()
   {
-    room.off('roomData', this.onRoomData);
+    super.componentWillUnmount();
 
     window.removeEventListener('resize', this.onResize);
     
@@ -102,7 +91,7 @@ class HandOverlay extends React.Component
     
     // it needs to be updated manually on every resize
     // or else it can go off-screen
-    overlayRef.current.snapTo({ index: this.state.snapIndex });
+    overlayRef.current.snapTo({ index: this.handSnapIndex });
 
     this.refreshViewableArea();
   }
@@ -114,82 +103,57 @@ class HandOverlay extends React.Component
     
     const y = wrapperRef.current.scrollTop;
 
-    this.setState({
+    this.store.set({
       handBlockDragging: (y > 0) ? true : false
     });
   }
 
-  onRoomData(roomData)
+  stateWillChange({ roomData })
   {
+    const state = {};
+
     if (!roomData)
       return;
     
     // if lobby clear hand and picks
-    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.state === 'lobby')
-    {
-      this.setState({
-        hand: []
-      }, this.forceGridAnimations);
-    }
+      state.hand = [];
 
     // if in match and and has to pick a card
     if (
       roomData.state === 'match' &&
       roomData.playerProperties[socket.id].state === 'picking'
     )
-    {
-      this.visibility(true);
-    }
-    // client is in the lobby
-    // or not picking
+      state.handVisible = true;
     else
-    {
-      this.visibility(false);
-    }
+      state.handVisible = false;
 
-    // TODO move to roomOverlay (need only to be set once with the store)
     if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
-    {
-      this.setState({
-        hand: roomData.playerSecretProperties.hand
-      }, this.forceGridAnimations);
-    }
+      state.hand = roomData.playerSecretProperties.hand;
 
-    this.setState({
-      init: true,
-      roomData
-    });
+    return state;
   }
 
-  /**
-  * @param { boolean } hvisible
-  */
-  visibility(hvisible)
+  stateDidChange(state, changes, old)
   {
-    if (!overlayRef.current)
-      return;
-    
-    this.setState({ handVisible: hvisible },
-      () => overlayRef.current.snapTo({ index: 0 }));
+    if (changes.handVisible !== old.handVisible)
+      overlayRef.current.snapTo({ index: 0 });
   }
-  
+
   onSnap(e)
   {
-    this.setState({
-      snapIndex: e.index
-    });
+    this.handSnapIndex = e.index;
   }
 
   maximize()
   {
-    if (this.state.snapIndex === 0 && this.state.handVisible)
+    if (this.handSnapIndex === 0 && this.state.handVisible)
       overlayRef.current.snapTo({ index: 1 });
   }
 
   maximizeMinimize()
   {
-    if (this.state.snapIndex <= 0)
+    if (this.handSnapIndex <= 0)
       overlayRef.current.snapTo({ index: (isTouchScreen) ? 1 : 2 });
     else
       overlayRef.current.snapTo({ index: 0 });
@@ -204,40 +168,14 @@ class HandOverlay extends React.Component
       
       const rect = wrapperRef.current.getBoundingClientRect();
 
-      this.setState({
-        viewableArea: size.height - rect.y
+      this.store.set({
+        handViewableArea: size.height - rect.y
       });
     }
-  }
-
-  forceGridAnimations()
-  {
-    // force a re-render
-    this.setState({
-      hand: this.state.hand
-    }, () =>
-    {
-      // force grid animations
-      requestAnimationFrame(() =>
-      {
-        if (this.animatedHandGrid)
-          this.animatedHandGrid.forceGridAnimation();
-
-        if (this.animatedPicksGrid)
-          this.animatedPicksGrid.forceGridAnimation();
-      });
-    });
   }
 
   render()
   {
-    if (!this.state.init)
-    {
-      requestRoomData().then((roomData) => this.onRoomData(roomData));
-      
-      return <div/>;
-    }
-    
     const { size } = this.props;
 
     let visibleSnapPoints;
@@ -261,11 +199,11 @@ class HandOverlay extends React.Component
       boundaries.top = visibleSnapPoints[2].y;
     }
 
-    if (!this.animatedHandGrid && handGridRef.current)
-      this.animatedHandGrid = wrapGrid(handGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
+    // if (!this.animatedHandGrid && handGridRef.current)
+    //   this.animatedHandGrid = wrapGrid(handGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
 
-    if (!this.animatedPicksGrid && picksGridRef.current)
-      this.animatedPicksGrid = wrapGrid(picksGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
+    // if (!this.animatedPicksGrid && picksGridRef.current)
+    //   this.animatedPicksGrid = wrapGrid(picksGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
 
     const isAllowed = playerState === 'picking';
 
@@ -282,10 +220,10 @@ class HandOverlay extends React.Component
 
       // hide the overlay when it goes off-screen
       if (Math.round(value) >= size.height)
-        this.setState({ handHidden: true }, this.forceGridAnimations);
+        this.store.set({ handHidden: true });
       // only make the overlay handVisible if there's a reason
       else if (!this.state.handHidden || this.state.handVisible)
-        this.setState({ handHidden: false }, this.forceGridAnimations);
+        this.store.set({ handHidden: false });
     });
 
     // if size is not calculated yet
@@ -324,20 +262,19 @@ class HandOverlay extends React.Component
                 <div className={ styles.handler } onClick={ this.maximizeMinimize }/>
               </div>
 
-              <div ref={ wrapperRef } style={ { height: this.state.viewableArea } } className={ styles.wrapper } onScroll={ this.onScroll }>
+              <div ref={ wrapperRef } style={ { height: this.state.handViewableArea } } className={ styles.wrapper } onScroll={ this.onScroll }>
 
                 <PicksDialogue
                   ref={ picksDialogueRef }
-                  gridRef={ picksGridRef }
                   sendMessage={ this.props.sendMessage }
-                  forceGridAnimations={ this.forceGridAnimations }
                 />
 
-                <div ref= { handGridRef } className={ styles.handContainer }>
+                <div
+                  className={ styles.handContainer }>
                   {
                     this.state.hand.map((card, i) =>
                     {
-                      const isPicked = picksDialogueRef.current.isPicked(i);
+                      const isPicked = this.state.picks.includes(i);
 
                       return <Card
                         key={ card.key }

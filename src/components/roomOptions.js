@@ -6,6 +6,8 @@ import Select from 'react-select';
 
 import autoSize from 'autosize-input';
 
+import { StoreComponent } from '../store.js';
+
 import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
@@ -16,81 +18,66 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from '../flcss.js';
 
-import { requestRoomData, room } from './roomOverlay.js';
-
 const colors = getTheme();
 
 const wrapperRef = createRef();
 
-class RoomOptions extends React.Component
+class RoomOptions extends StoreComponent
 {
   constructor()
   {
-    super();
-
-    this.state = {
-      init: false,
-
+    super({
       optionsLoadingHidden: true,
       optionsErrorMessage: '',
 
       dirtyOptions: undefined
-    };
+    });
 
     // bind functions that are use as callbacks
-
-    this.onRoomData = this.onRoomData.bind(this);
-
-    this.clearDirtyOptions = this.clearDirtyOptions.bind(this);
 
     this.editRequest = this.editRequest.bind(this);
     this.matchRequest = this.matchRequest.bind(this);
   }
 
-  componentDidMount()
+  stateWillChange({ roomData })
   {
-    room.on('roomData', this.onRoomData);
-  }
+    const state = {};
 
-  componentWillUnmount()
-  {
-    room.off('roomData', this.onRoomData);
-  }
-
-  onRoomData(roomData)
-  {
     if (!roomData)
       return;
 
-    // TODO handle dirtyOptions after switching to a store
-    
     // if dirty options is undefined
-    // or if the real room options were edited
-    if (!this.state.dirtyOptions || roomData.reason.message === 'options-edit')
-      this.clearDirtyOptions(roomData.options);
-    
-    this.setState({
-      init: true,
-      roomData
-    });
+    if (!this.state.dirtyOptions)
+      state.dirtyOptions = roomData.options;
+
+    return state;
   }
 
-  showErrorMessage(err)
+  stateDidChange(state, changes, old)
   {
-    this.setState({ optionsErrorMessage: err });
-  }
+    // if the real room options were edited
+    if (
+      changes.roomData && old.roomData &&
+      changes.roomData.reason.message !== old.roomData.reason.message &&
+      changes.roomData.reason.message === 'options-edit')
+    {
+      this.store.set({
+        dirtyOptions: state.roomData.options
+      });
+    }
 
-  clearDirtyOptions(options)
-  {
-    this.setState({
-      dirtyOptions: options
-    }, () =>
+    if (changes.dirtyOptions)
     {
       // force all inputs to auto resize
       const inputs = document.querySelectorAll('#options-input');
 
       inputs.forEach((elem) => autoSize(elem));
-    });
+    }
+  }
+
+  showErrorMessage(err)
+  {
+    this.store.set({ optionsErrorMessage: err });
   }
 
   checkValidity()
@@ -155,7 +142,7 @@ class RoomOptions extends React.Component
 
   loadingVisibility(visible)
   {
-    this.setState({ optionsLoadingHidden: visible = !visible });
+    this.store.set({ optionsLoadingHidden: visible = !visible });
   }
 
   scrollTo(options)
@@ -166,7 +153,7 @@ class RoomOptions extends React.Component
 
   onGameModeChange(value)
   {
-    this.setState({
+    this.store.set({
       dirtyOptions: {
         ...this.state.dirtyOptions,
         gameMode: value
@@ -176,7 +163,7 @@ class RoomOptions extends React.Component
 
   onWinMethodChange(value)
   {
-    this.setState({
+    this.store.set({
       dirtyOptions: {
         ...this.state.dirtyOptions,
         winMethod: value
@@ -186,7 +173,7 @@ class RoomOptions extends React.Component
 
   onRandosChange(value)
   {
-    this.setState({
+    this.store.set({
       dirtyOptions: {
         ...this.state.dirtyOptions,
         match: {
@@ -199,13 +186,6 @@ class RoomOptions extends React.Component
 
   render()
   {
-    if (!this.state.init)
-    {
-      requestRoomData().then((roomData) => this.onRoomData(roomData));
-      
-      return <div/>;
-    }
-    
     const options = this.state.roomData?.options;
     const dirtyOptions = this.state.dirtyOptions;
 
@@ -280,7 +260,7 @@ class RoomOptions extends React.Component
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
             value={ dirtyOptions.match.pointsToCollect }
-            onUpdate={ (value, resize) => this.setState({
+            onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
                 match: {
@@ -314,7 +294,7 @@ class RoomOptions extends React.Component
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
             value={ dirtyOptions.match.maxRounds }
-            onUpdate={ (value, resize) => this.setState({
+            onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
                 match: {
@@ -349,7 +329,7 @@ class RoomOptions extends React.Component
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
             value={ dirtyOptions.match.maxTime }
-            onUpdate={ (value, resize) => this.setState({
+            onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
                 match: {
@@ -379,7 +359,7 @@ class RoomOptions extends React.Component
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
             value={ dirtyOptions.match.maxPlayers }
-            onUpdate={ (value, resize) => this.setState({
+            onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
                 match: {
@@ -406,7 +386,7 @@ class RoomOptions extends React.Component
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
             value={ dirtyOptions.round.maxTime }
-            onUpdate={ (value, resize) => this.setState({
+            onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
                 round: {
@@ -432,7 +412,7 @@ class RoomOptions extends React.Component
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
             value={ dirtyOptions.match.startingHandAmount }
-            onUpdate={ (value, resize) => this.setState({
+            onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
                 match: {
@@ -459,7 +439,7 @@ class RoomOptions extends React.Component
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
             value={ dirtyOptions.match.blankProbability }
-            onUpdate={ (value, resize) => this.setState({
+            onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
                 match: {

@@ -13,6 +13,8 @@ import WebFont from 'webfontloader';
 
 import axios from 'axios';
 
+import { createStore } from './store.js';
+
 import Error from './components/error.js';
 import Loading from './components/loading.js';
 
@@ -119,6 +121,9 @@ registerServiceWorker();
 
 //   installPromptEvent = e;
 // });
+
+// create app-wide store
+createStore('app');
 
 // show a loading screen until the promises resolve
 ReactDOM.render(<Loading splash/>, placeholder);
