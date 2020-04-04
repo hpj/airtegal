@@ -38,7 +38,7 @@ export function shareEntry(black, white)
 
   const obj = { black, white };
 
-  const data = b64(JSON.stringify(obj));
+  const data = b64(JSON.stringify(obj)).replace('/', '_').replace('+', '-');
 
   const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
   const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
