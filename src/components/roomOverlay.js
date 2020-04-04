@@ -29,6 +29,8 @@ import HandOverlay from './handOverlay.js';
 
 import PocketOverlay from './pocketOverlay.js';
 
+import ShareOverlay from './shareOverlay.js';
+
 import { isTouchScreen } from '../index.js';
 
 const colors = getTheme();
@@ -399,6 +401,11 @@ class RoomOverlay extends StoreComponent
     return (
       <div>
         <Notifications notifications={ this.state.notifications }/>
+
+        <ShareOverlay
+          addNotification={ this.addNotification }
+          share={ this.state.share }
+          hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
 
         <div style={ {
           display: (this.state.overlayLoadingHidden) ? 'none' : ''

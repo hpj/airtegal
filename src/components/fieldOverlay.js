@@ -16,13 +16,13 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import i18n, { locale } from '../i18n.js';
+import { locale } from '../i18n.js';
 
 import { createStyle } from '../flcss.js';
 
 import Card from './card.js';
 
-import ShareOverlay from './shareOverlay.js';
+import { shareEntry } from './shareOverlay.js';
 
 const colors = getTheme();
 
@@ -94,7 +94,6 @@ class FieldOverlay extends StoreComponent
       changes?.roomData?.field ||
       changes?.roomData?.votes ||
       changes?.field ||
-      changes?.share ||
       changes?.fieldHidden ||
       changes?.winnerEntryIndex ||
       changes?.votes)
@@ -160,46 +159,10 @@ class FieldOverlay extends StoreComponent
 
   shareEntry(entryIndex)
   {
-    const b64 = (str) =>
-    {
-      // first we use encodeURIComponent to get percent-encoded UTF-8,
-      // then we convert the percent encodings into raw bytes which
-      // can be fed into btoa.
-      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-        (match, p1) =>
-        {
-          return String.fromCharCode('0x' + p1);
-        }));
-    };
-  
-    const obj = {
-      black: this.state.field[0].cards[0].content,
+    shareEntry(
+      this.state.field[0].cards[0].content,
       // eslint-disable-next-line security/detect-object-injection
-      white: this.state.field[entryIndex].cards.map((card) => card.content)
-    };
-
-    const data = b64(JSON.stringify(obj));
-
-    const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
-    const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
-
-    if (navigator.share)
-    {
-      navigator.share({
-        title: 'Airtegal',
-        text: i18n('hashtag-airtegal'),
-        url: shareURL
-      }).catch(() =>
-      {
-        //
-      });
-    }
-    else
-    {
-      this.store.set({
-        share: { active: true, url: shareURL, img: pictureURL }
-      });
-    }
+      this.state.field[entryIndex].cards.map((card) => card.content));
   }
 
   render()
@@ -224,11 +187,6 @@ class FieldOverlay extends StoreComponent
 
     return (
       <div className={ styles.view }>
-        <ShareOverlay
-          addNotification={ this.props.addNotification }
-          share={ this.state.share }
-          hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
-
         <Interactable.View
           ref={ overlayRef }
 

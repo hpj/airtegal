@@ -14,7 +14,53 @@ import { createStyle } from '../flcss.js';
 
 import i18n from '../i18n.js';
 
+import { getStore } from '../store.js';
+
 const colors = getTheme();
+
+/**
+* @param { string } black
+* @param { string[] } white
+*/
+export function shareEntry(black, white)
+{
+  const b64 = (str) =>
+  {
+    // first we use encodeURIComponent to get percent-encoded UTF-8,
+    // then we convert the percent encodings into raw bytes which
+    // can be fed into btoa.
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+      (match, p1) =>
+      {
+        return String.fromCharCode('0x' + p1);
+      }));
+  };
+
+  const obj = { black, white };
+
+  const data = b64(JSON.stringify(obj));
+
+  const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
+  const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
+
+  if (navigator.share)
+  {
+    navigator.share({
+      title: 'Airtegal',
+      text: i18n('hashtag-airtegal'),
+      url: shareURL
+    }).catch(() =>
+    {
+      //
+    });
+  }
+  else
+  {
+    getStore('app').set({
+      share: { active: true, url: shareURL, img: pictureURL }
+    });
+  }
+}
 
 class ShareOverlay extends React.Component
 {

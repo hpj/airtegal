@@ -186,6 +186,8 @@
 
   // match reports
 
+  "match-report": "تقرير المبارة",
+
   "no-one-wins": "لم ينجح احد.",
 
   "points:match-ended": "%0",
