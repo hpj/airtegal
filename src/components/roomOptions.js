@@ -14,7 +14,7 @@ import { socket } from '../screens/game.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
-// import MatchReport from './matchReport.js';
+import MatchReport from './matchReport.js';
 
 import getTheme from '../colors.js';
 
@@ -524,7 +524,7 @@ class RoomOptions extends StoreComponent
             this.props.children
           }
 
-          {/* <MatchReport/> */}
+          <MatchReport/>
 
           {
             (!options) ? <div/> :

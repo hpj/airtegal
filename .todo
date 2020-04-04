@@ -2,12 +2,11 @@ Performance Issues and Bugs:
   ☐ loading issues
 
 Testing:
-  ✔ graphql server @done(20-03-28 20:01)
-  
-  ☐ test all modes with 4 players @today
 
 UI/UX:
-  ☐ match end screen @today
+  ☐ match end screen
+    ☐ scalable UI for more than one entry
+    ☐ use better system than random chance
 
   ☐ design the mockups for the proposal and vote screens
 

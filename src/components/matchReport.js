@@ -6,16 +6,27 @@ import { createStyle } from '../flcss.js';
 
 import i18n, { locale } from '../i18n.js';
 
+import { StoreComponent } from '../store.js';
+
 import Card from './card.js';
+
 import { shareEntry } from './shareOverlay.js';
 
 const colors = getTheme();
 
-class MatchReport extends React.Component
+class MatchReport extends StoreComponent
 {
   constructor()
   {
-    super();
+    super({
+      entires: []
+    });
+  }
+
+  stateWhitelist(changes)
+  {
+    if (changes?.entires)
+      return true;
   }
 
   /**
@@ -30,14 +41,9 @@ class MatchReport extends React.Component
 
   render()
   {
-    const entires = [
-      [
-        { type: 'black', content: 'blah' },
-        { type: 'white', content: 'blah' },
-        { type: 'white', content: 'blah' }
-      ]
-    ];
-
+    if (this.state.entires.length <= 0)
+      return <div/>;
+    
     return (
       <div className={ styles.container }>
 
@@ -45,11 +51,9 @@ class MatchReport extends React.Component
           { i18n('match-report') }
         </div>
 
-        {/* TODO share cards */}
-        
         <div className={ styles.entries }>
           {
-            entires.map((entry, i) =>
+            this.state.entires.map((entry, i) =>
             {
               return <div key={ i } className={ styles.entry }>
                 {
@@ -89,6 +93,8 @@ const styles = createStyle({
 
   entries: {
     display: 'flex',
+    justifyContent: 'center',
+
     overflow: 'hidden',
     margin: '5px'
   },
@@ -117,8 +123,8 @@ const styles = createStyle({
     },
 
     '> * > * > [type]': {
-      width: 'calc(85px + 1vw + 1vh)',
-      minHeight: 'calc((85px + 1vw + 1vh) * 1.15)',
+      width: 'calc(95px + 1vw + 1vh)',
+      minHeight: 'calc((95px + 1vw + 1vh) * 1.15)',
       height: 'auto'
     }
   }

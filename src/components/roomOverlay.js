@@ -120,10 +120,11 @@ class RoomOverlay extends StoreComponent
       if (roomData.playerProperties[id].rando)
       {
         // eslint-disable-next-line security/detect-object-injection
-        this.randoProperties[id] = this.randoProperties[id] || `${i18n('rando')} ${randomLastName()}`;
-
+        roomData.playerProperties[id].username =
         // eslint-disable-next-line security/detect-object-injection
-        roomData.playerProperties[id].username = this.randoProperties[id];
+        this.randoProperties[id] =
+        // eslint-disable-next-line security/detect-object-injection
+        (this.randoProperties[id] || `${i18n('rando')} ${randomLastName()}`);
       }
     });
 
@@ -175,12 +176,15 @@ class RoomOverlay extends StoreComponent
             i18n(`${roomData.options.gameMode}:you`)));
       }
       // a different client won
-      else if (roomData.playerProperties[roomData.reason.id])
+      else if (
+        roomData.playerProperties[roomData.reason.id] ||
+        this.randoProperties[roomData.reason.id])
       {
         this.addNotification(
           i18n(`${roomData.reason.details}:match-ended`,
             i18n(`${roomData.options.gameMode}:other`,
-              roomData.playerProperties[roomData.reason.id].username)));
+              roomData.playerProperties[roomData.reason.id]?.username ||
+              this.randoProperties[roomData.reason.id])));
       }
       else
       {
@@ -281,6 +285,8 @@ class RoomOverlay extends StoreComponent
         hand: [],
         picks: [],
         blanks: [],
+        
+        entries: [],
 
         matchState: undefined,
         dirtyOptions: undefined,
