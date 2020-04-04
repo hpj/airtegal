@@ -1,15 +1,13 @@
 Performance Issues and Bugs:
-  ☐ re-factor hand and picks grids animation @today 
-
   ☐ loading issues
 
 Testing:
   ✔ graphql server @done(20-03-28 20:01)
   
-  ☐ test all modes with 4 players @today 
+  ☐ test all modes with 4 players @today
 
 UI/UX:
-  ☐ match end screen @today 
+  ☐ match end screen @today
 
   ☐ design the mockups for the proposal and vote screens
 

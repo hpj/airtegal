@@ -25,6 +25,11 @@ class ShareOverlay extends React.Component
     // bind functions that are use as callbacks
 
     this.copyURL = this.copyURL.bind(this);
+
+    this.shareOnFacebook = this.shareOnFacebook.bind(this);
+    this.shareOnTwitter = this.shareOnTwitter.bind(this);
+    this.shareOnReddit = this.shareOnReddit.bind(this);
+
     this.hide = this.hide.bind(this);
   }
 

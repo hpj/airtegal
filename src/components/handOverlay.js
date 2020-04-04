@@ -6,6 +6,8 @@ import { Value } from 'animated';
 
 import Interactable from 'react-interactable/noNative';
 
+import { wrapGrid } from 'animate-css-grid';
+
 import { StoreComponent } from '../store.js';
 
 import { socket } from '../screens/game.js';
@@ -32,6 +34,8 @@ const overlayContainerRef = createRef();
 const wrapperRef = createRef();
 
 const picksDialogueRef = createRef();
+
+const handGridRef = createRef();
 
 const overlayAnimatedY = new Value(0);
 
@@ -70,6 +74,8 @@ class HandOverlay extends StoreComponent
     super.componentDidMount();
 
     window.addEventListener('resize', this.onResize);
+
+    this.animatedHandGrid = wrapGrid(handGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
 
     if (isTouchScreen)
       gestures.on('up', this.maximize);
@@ -152,10 +158,13 @@ class HandOverlay extends StoreComponent
     return state;
   }
 
-  stateDidChange(state, changes, old)
+  stateDidChange(state, changes)
   {
-    if (changes.handVisible !== old.handVisible)
+    if (changes.handVisible !== undefined)
       overlayRef.current.snapTo({ index: 0 });
+      
+    if (changes.picks)
+      this.animatedHandGrid.forceGridAnimation();
   }
 
   onSnap(e)
@@ -217,12 +226,6 @@ class HandOverlay extends StoreComponent
       boundaries.top = visibleSnapPoints[2].y;
     }
 
-    // if (!this.animatedHandGrid && handGridRef.current)
-    //   this.animatedHandGrid = wrapGrid(handGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
-
-    // if (!this.animatedPicksGrid && picksGridRef.current)
-    //   this.animatedPicksGrid = wrapGrid(picksGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
-
     const isAllowed = playerState === 'picking';
 
     // on overlay position changes
@@ -245,8 +248,8 @@ class HandOverlay extends StoreComponent
     });
 
     // if size is not calculated yet
-    if (!size.height)
-      return <div/>;
+    // if (!size.height)
+    //   return <div/>;
 
     return (
       <div className={ styles.view }>
@@ -287,8 +290,7 @@ class HandOverlay extends StoreComponent
                   sendMessage={ this.props.sendMessage }
                 />
 
-                <div
-                  className={ styles.handContainer }>
+                <div ref= { handGridRef } className={ styles.handContainer }>
                   {
                     this.state.hand.map((card, i) =>
                     {

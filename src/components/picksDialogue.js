@@ -1,8 +1,10 @@
 /* eslint-disable security/detect-object-injection */
 
-import React from 'react';
+import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
+
+import { wrapGrid } from 'animate-css-grid';
 
 import { StoreComponent } from '../store.js';
 
@@ -17,6 +19,8 @@ import i18n, { locale } from '../i18n.js';
 import Card from './card.js';
 
 const colors = getTheme();
+
+const picksGridRef = createRef();
 
 class PicksDialogue extends StoreComponent
 {
@@ -35,6 +39,13 @@ class PicksDialogue extends StoreComponent
 
     this.clearPick = this.clearPick.bind(this);
     this.confirmPick = this.confirmPick.bind(this);
+  }
+
+  componentDidMount()
+  {
+    super.componentDidMount();
+
+    this.animatedPicksGrid = wrapGrid(picksGridRef.current, { easing: 'backOut', stagger: 25, duration: 250 });
   }
 
   /**
@@ -85,12 +96,19 @@ class PicksDialogue extends StoreComponent
     return state;
   }
 
+  stateDidChange(state, changes)
+  {
+    if (changes.picks)
+      this.animatedPicksGrid.forceGridAnimation();
+  }
+
   pickCard(cardIndex, isAllowed)
   {
     if (!isAllowed)
       return;
     
-    const { picks, blanks } = this.state;
+    const picks = [ ...this.state.picks ];
+    const blanks = [ ...this.state.blanks ];
 
     // remove card from the array
     if (this.isPicked(cardIndex))
@@ -109,8 +127,8 @@ class PicksDialogue extends StoreComponent
 
     // update state
     this.store.set({
-      picks: picks,
-      blanks: blanks
+      picks,
+      blanks
     });
   }
 
@@ -173,7 +191,7 @@ class PicksDialogue extends StoreComponent
     return (
       <div className={ styles.wrapper } style={ { display: (this.state.picks.length > 0) ? '' : 'none' } }>
 
-        <div className={ styles.container }>
+        <div ref={ picksGridRef } className={ styles.container }>
           {
             this.state.hand.map((card, i) =>
             {
