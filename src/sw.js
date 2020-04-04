@@ -18,7 +18,7 @@ workbox.routing.registerRoute(
 
 // Cache the ip check with a cache-first strategy for 1 day
 workbox.routing.registerRoute(
-  new RegExp('https://api.airtegal.me/check'),
+  new RegExp('https://airtegal.herokuapp.com/check'),
   new workbox.strategies.CacheFirst({
     cacheName: 'airtegal-cache',
     plugins: [
