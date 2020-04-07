@@ -21,6 +21,13 @@ class Homepage extends React.Component
   {
     super();
 
+    // new Promise((re, rj) => rj('test'));
+
+    setTimeout(() =>
+    {
+      throw new Error('Arrrr');
+    }, 2000);
+    
     window.scrollTo(0, 0);
   }
 

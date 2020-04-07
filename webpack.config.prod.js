@@ -37,7 +37,7 @@ module.exports = {
       'process.env.RELEASE': `"${gitRevisionPlugin.commithash()}"`
     }),
     new SentryWebpackPlugin({
-      include: '.',
+      include: './public',
       release: gitRevisionPlugin.commithash(),
       configFile: resolve(__dirname, '.sentryclirc'),
       ignoreFile: resolve(__dirname, '.sentrycliignore'),

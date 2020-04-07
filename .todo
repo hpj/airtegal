@@ -1,5 +1,10 @@
 Performance Issues and Bugs:
-  ☐ loading issues
+  ☐ resolve the Sentry error
+
+  ☐ refactor cards connecting lines
+    ☐ would be more logical to recostract the entrie field
+
+  ☐ refactor hand to be more plugable and open to non-cards modes
 
 Testing:
 

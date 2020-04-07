@@ -20,7 +20,7 @@
   },
   "homepage": "https://airtegal.me",
   "dependencies": {
-    "@sentry/browser": "^5.15.0",
+    "@sentry/browser": "^5.15.4",
     "animate-css-grid": "^1.4.3",
     "animated": "^0.2.2",
     "autosize-input": "^1.0.2",
@@ -57,6 +57,6 @@
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
-    "workbox-cli": "^5.1.1"
+    "workbox-cli": "^5.1.2"
   }
 }
