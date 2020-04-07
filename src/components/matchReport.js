@@ -1,5 +1,7 @@
 import React from 'react';
 
+import CloseIcon from 'mdi-react/CloseThickIcon';
+
 import getTheme from '../colors.js';
 
 import { createStyle } from '../flcss.js';
@@ -19,14 +21,51 @@ class MatchReport extends StoreComponent
   constructor()
   {
     super({
-      entires: []
+      entries: [
+        [
+          { type: 'black', 'content': 'a' },
+          { type: 'white', 'content': 'a' }
+        ],
+        [
+          { type: 'black', 'content': 'b' },
+          { type: 'white', 'content': 'b' },
+          { type: 'white', 'content': 'b' }
+        ],
+        [
+          { type: 'black', 'content': 'b' },
+          { type: 'white', 'content': 'b' },
+          { type: 'white', 'content': 'b' }
+        ],
+        [
+          { type: 'black', 'content': 'b' },
+          { type: 'white', 'content': 'b' },
+          { type: 'white', 'content': 'b' },
+          { type: 'white', 'content': 'b' }
+        ],
+        [
+          { type: 'black', 'content': 'b' },
+          { type: 'white', 'content': 'b' },
+          { type: 'white', 'content': 'b' }
+        ]
+      ]
     });
+
+    // bind functions that are use as callbacks
+
+    this.clearEntries = this.clearEntries.bind(this);
   }
 
   stateWhitelist(changes)
   {
-    if (changes?.entires)
+    if (changes?.entries)
       return true;
+  }
+
+  clearEntries()
+  {
+    this.store.set({
+      entries: []
+    });
   }
 
   /**
@@ -41,19 +80,16 @@ class MatchReport extends StoreComponent
 
   render()
   {
-    if (this.state.entires.length <= 0)
+    if (this.state.entries.length <= 0)
       return <div/>;
     
     return (
       <div className={ styles.container }>
-
-        <div className={ styles.title }>
-          { i18n('match-report') }
-        </div>
+        <CloseIcon className={ styles.close } onClick={ this.clearEntries }/>
 
         <div className={ styles.entries }>
           {
-            this.state.entires.map((entry, i) =>
+            this.state.entries.map((entry, i) =>
             {
               return <div key={ i } className={ styles.entry }>
                 {
@@ -81,19 +117,26 @@ const styles = createStyle({
     backgroundColor: colors.handBackground,
     
     margin: '20px 25px',
+    padding: '5px 0',
     borderRadius: '5px',
 
     boxShadow: `5px 5px 0px ${colors.greyText}`
   },
 
-  title: {
-    color: colors.greyText,
-    padding: '10px'
+  close: {
+    cursor: 'pointer',
+    fill: colors.greyText,
+    
+    width: 'calc(22px + 0.25vw + 0.25vh)',
+    height: 'calc(22px + 0.25vw + 0.25vh)',
+    
+    margin: '5px 10px'
   },
 
   entries: {
     display: 'flex',
     justifyContent: 'center',
+    flexWrap: 'wrap',
 
     overflow: 'hidden',
     margin: '5px'

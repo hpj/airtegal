@@ -1,8 +1,15 @@
 Performance Issues and Bugs:
   ☐ refactor cards connecting lines
-    ☐ would be more logical to recostract the entrie field
 
-  ☐ refactor hand to be more plugable and open to non-cards modes
+  ☐ refactor rando name handling to avoid the round-end state issue
+  
+  ☐ refactor anything that uses cards exclusivly to allow more fludility
+    ☐ refactor room options entirlly because each mode has its own sets of options
+
+    ☐ refactor looby's room tiles
+
+    ☐ refactor hand to be more plugable and open to non-cards modes
+    ☐ refactor field to be more plugable and open to non-cards modes
 
 Testing:
 

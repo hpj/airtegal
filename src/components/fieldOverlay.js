@@ -153,36 +153,23 @@ class FieldOverlay extends StoreComponent
   {
     const { sendMessage } = this.props;
 
-    // TODO allow more change 1 entry to match report
-
-    if (this.state.entires.length <= 0)
-    {
-      this.store.set({
-        entires: [
-          [
-            this.state.field[0].cards[0],
-            // eslint-disable-next-line security/detect-object-injection
-            ...this.state.field[entryIndex].cards
-          ]
-        ]
-      });
-    }
-    // random chance
-    else if ((Math.random() * 5) >= 3.8)
-    {
-      this.store.set({
-        entires: [
-          [
-            this.state.field[0].cards[0],
-            // eslint-disable-next-line security/detect-object-injection
-            ...this.state.field[entryIndex].cards
-          ]
-        ]
-      });
-    }
-
     if (isAllowed)
-      sendMessage('matchLogic', { entryIndex });
+      sendMessage('matchLogic', { entryIndex }).then(() =>
+      {
+        // send the entry to match report
+
+        const entries = [ ...this.state.entries ];
+
+        entries.push([
+          this.state.field[0].cards[0],
+          // eslint-disable-next-line security/detect-object-injection
+          ...this.state.field[entryIndex].cards
+        ]);
+  
+        this.store.set({
+          entries
+        });
+      });
   }
 
   shareEntry(entryIndex)
