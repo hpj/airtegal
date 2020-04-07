@@ -38,7 +38,7 @@ class RoomState extends StoreComponent
 
   componentWillUnmount()
   {
-    super.componentWillMount();
+    super.componentWillUnmount();
     
     if (this.countdownInterval)
       clearInterval(this.countdownInterval);
