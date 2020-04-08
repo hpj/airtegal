@@ -529,7 +529,6 @@ class RoomOptions extends StoreComponent
           {
             (!options) ? <div/> :
               <div>
-                <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
  
                 {/* Game Mode Selector */}
                 { GameModes() }
@@ -542,6 +541,10 @@ class RoomOptions extends StoreComponent
                   ) ?
                     KuruitOptions() : AirtegalOptions()
                 }
+
+                {/* Dirty Changes Notice */}
+
+                <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
 
                 {/* Apply Button */}
 

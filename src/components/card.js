@@ -15,11 +15,19 @@ const colors = getTheme();
 
 class Card extends React.Component
 {
-  componentDidMount()
+  constructor()
   {
-    this.sized = false;
+    super();
 
     this.textareaRef = createRef();
+  }
+  componentDidMount()
+  {
+    // workaround: text area not resizing when card first appears on field
+
+    setTimeout(() => this.resize(), 10);
+    setTimeout(() => this.resize(), 250);
+    setTimeout(() => this.resize(), 500);
 
     // bind functions that are use as callbacks
 
@@ -35,18 +43,16 @@ class Card extends React.Component
 
   resize()
   {
-    if (!this.textareaRef || !this.textareaRef.current)
-      return;
-    
     const el = this.textareaRef.current;
+
+    if (!el)
+      return;
                   
     el.style.height = '0';
     el.style.overflowY = 'hidden';
 
     el.style.height = `${el.scrollHeight}px`;
     el.style.overflowY = 'auto';
-
-    this.sized = true;
   }
 
   for(number)
@@ -78,9 +84,6 @@ class Card extends React.Component
       line = 'left';
     else if (locale.direction === 'rtl' && line === 'left')
       line = 'right';
-
-    if (!this.sized && this.textareaRef && this.textareaRef.current)
-      requestAnimationFrame(this.resize);
 
     return (
       <div
