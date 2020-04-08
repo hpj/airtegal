@@ -21,33 +21,7 @@ class MatchReport extends StoreComponent
   constructor()
   {
     super({
-      entries: [
-        [
-          { type: 'black', 'content': 'a' },
-          { type: 'white', 'content': 'a' }
-        ],
-        [
-          { type: 'black', 'content': 'b' },
-          { type: 'white', 'content': 'b' },
-          { type: 'white', 'content': 'b' }
-        ],
-        [
-          { type: 'black', 'content': 'b' },
-          { type: 'white', 'content': 'b' },
-          { type: 'white', 'content': 'b' }
-        ],
-        [
-          { type: 'black', 'content': 'b' },
-          { type: 'white', 'content': 'b' },
-          { type: 'white', 'content': 'b' },
-          { type: 'white', 'content': 'b' }
-        ],
-        [
-          { type: 'black', 'content': 'b' },
-          { type: 'white', 'content': 'b' },
-          { type: 'white', 'content': 'b' }
-        ]
-      ]
+      entries: []
     });
 
     // bind functions that are use as callbacks
@@ -135,21 +109,22 @@ const styles = createStyle({
 
   entries: {
     display: 'flex',
-    justifyContent: 'center',
     flexWrap: 'wrap',
-
+    
     overflow: 'hidden',
-    margin: '5px'
+    margin: '0 5px -15px 5px'
   },
 
   entry: {
     display: 'flex',
+    flexWrap: 'wrap',
+
     direction: locale.direction,
     margin: '0px 30px',
 
     '> *': {
       zIndex: 0,
-      margin: '10px -10px'
+      margin: '0 -10px 25px -10px'
     },
 
     '> * > [type]': {
