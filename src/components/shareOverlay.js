@@ -234,6 +234,8 @@ const styles = createStyle({
     top: '25vh',
     width: '70vw',
     height: '50vh',
+    
+    overflow: 'hidden',
 
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',

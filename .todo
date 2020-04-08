@@ -1,7 +1,7 @@
 Performance Issues and Bugs:
-  ☐ refactor cards connecting lines
-
   ☐ refactor rando name handling to avoid the round-end state issue
+
+  ☐ refactor cards connecting lines
   
   ☐ refactor anything that uses cards exclusivly to allow more fludility
     ☐ refactor room options entirlly because each mode has its own sets of options
@@ -14,10 +14,6 @@ Performance Issues and Bugs:
 Testing:
 
 UI/UX:
-  ☐ match end screen
-    ☐ scalable UI for more than one entry
-    ☐ use better system than random chance
-
   ☐ design the mockups for the proposal and vote screens
 
   ☐ animations for cards appearing and disappearing from field
@@ -32,4 +28,4 @@ UI/UX:
     ☐ showcase: handle black cards with (pick > 1)
 
   Lobby:
-    ☐ find a better way to show the install prompt
+    ☐ find a better way to show the install prompt             
