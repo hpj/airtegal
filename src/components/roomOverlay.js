@@ -13,7 +13,7 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import { randomLastName } from '../stupidNames.js';
+import { lastNames } from '../stupidNames.js';
 
 import { createStyle } from '../flcss.js';
 
@@ -61,8 +61,6 @@ class RoomOverlay extends StoreComponent
       overlayHandlerVisible: true
     });
 
-    this.randoProperties = {};
-
     // bind functions that are use as callbacks
 
     this.onRoomData = this.onRoomData.bind(this);
@@ -101,17 +99,19 @@ class RoomOverlay extends StoreComponent
   onRoomData(roomData)
   {
     // process randos usernames
-    roomData.players.forEach(id =>
+    let randoIndex = -1;
+
+    Object.values(roomData.playerProperties).forEach((player) =>
     {
-      // eslint-disable-next-line security/detect-object-injection
-      if (roomData.playerProperties[id].rando)
+      if (player.rando && !player.username)
       {
+        randoIndex = randoIndex + 1;
+
+        if (randoIndex >= lastNames.length)
+          randoIndex = 0;
+
         // eslint-disable-next-line security/detect-object-injection
-        roomData.playerProperties[id].username =
-        // eslint-disable-next-line security/detect-object-injection
-        this.randoProperties[id] =
-        // eslint-disable-next-line security/detect-object-injection
-        (this.randoProperties[id] || `${i18n('rando')} ${randomLastName()}`);
+        player.username = `${i18n('rando')} ${lastNames[randoIndex]}`;
       }
     });
 
@@ -163,15 +163,12 @@ class RoomOverlay extends StoreComponent
             i18n(`${roomData.options.gameMode}:you`)));
       }
       // a different client won
-      else if (
-        roomData.playerProperties[roomData.reason.id] ||
-        this.randoProperties[roomData.reason.id])
+      else if (roomData.playerProperties[roomData.reason.id])
       {
         this.addNotification(
           i18n(`${roomData.reason.details}:match-ended`,
             i18n(`${roomData.options.gameMode}:other`,
-              roomData.playerProperties[roomData.reason.id]?.username ||
-              this.randoProperties[roomData.reason.id])));
+              roomData.playerProperties[roomData.reason.id].username)));
       }
       else
       {

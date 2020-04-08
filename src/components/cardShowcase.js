@@ -37,17 +37,6 @@ class CardShowcase extends React.Component
 
   componentDidMount()
   {
-    // this.setState({
-    //   hide: false,
-    //   shownIndex: 0,
-    //   data: [
-    //     { card: { type: 'black', content: 'Debug' }, combos: [
-    //       { type: 'white', content: 'Debug. 2' },
-    //       { type: 'white', content: 'Debug. 3' }
-    //     ] }
-    //   ]
-    // }, () => cardsContainer.current.style.width = '100%');
-
     // request the data from server
     axios.get(`${process.env.API_ENDPOINT}/combos?region=${locale.value}`, {
       timeout: 20000

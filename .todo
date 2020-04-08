@@ -1,6 +1,4 @@
 Performance Issues and Bugs:
-  ☐ refactor rando name handling to avoid the round-end state issue
-
   ☐ refactor cards connecting lines
 
   ☐ refactor anything that uses cards exclusivly to allow more fludility
@@ -16,6 +14,8 @@ Performance Issues and Bugs:
 Testing:
 
 UI/UX:
+  ☐ card showcase: responsive desgin
+
   ☐ design the mockups for the proposal and vote screens
 
   ☐ animations for cards appearing and disappearing from field
