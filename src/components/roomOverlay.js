@@ -79,7 +79,6 @@ class RoomOverlay extends StoreComponent
     super.componentDidMount();
 
     socket.on('roomData', this.onRoomData);
-    // socket.on('kicked', this.onKicked);
 
     window.addEventListener('touchstart', this.handleTouchStart);
     window.addEventListener('touchend', this.handleTouchEnd);
@@ -98,18 +97,6 @@ class RoomOverlay extends StoreComponent
     // make sure socket is closed before component unmount
     socket.close();
   }
-
-  // TODO finish kick logic
-  // onKicked()
-  // {
-  //   // after leaving the room
-  //   // clean up some of the state values
-  //   this.store.set({
-  //     master: undefined
-  //   });
-
-  //   overlayRef.current.snapTo({ index: 1 });
-  // }
 
   onRoomData(roomData)
   {

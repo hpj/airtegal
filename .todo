@@ -2,14 +2,16 @@ Performance Issues and Bugs:
   ☐ refactor rando name handling to avoid the round-end state issue
 
   ☐ refactor cards connecting lines
-  
+
   ☐ refactor anything that uses cards exclusivly to allow more fludility
-    ☐ refactor room options entirlly because each mode has its own sets of options
+  ☐ refactor room options entirlly because each mode has its own sets of options
 
-    ☐ refactor looby's room tiles
+  ☐ refactor looby's room tiles
 
-    ☐ refactor hand to be more plugable and open to non-cards modes
-    ☐ refactor field to be more plugable and open to non-cards modes
+  ☐ refactor hand to be more plugable and open to non-cards modes
+  ☐ refactor field to be more plugable and open to non-cards modes
+
+  ☐ added a better fix for the card first resize
 
 Testing:
 
@@ -24,8 +26,7 @@ UI/UX:
 
   ☐ handle 'online' / 'offline' event
 
-  Homepage:
-    ☐ showcase: handle black cards with (pick > 1)
+Homepage:
 
-  Lobby:
-    ☐ find a better way to show the install prompt             
+Lobby:
+  ☐ find a better way to show the install prompt             
