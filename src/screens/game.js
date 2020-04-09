@@ -286,6 +286,155 @@ class Game extends React.Component
 
   render()
   {
+    const Header = () =>
+    {
+      return <div className={ headerStyles.container }>
+        <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
+
+        <AutoSizeInput
+          className={ headerStyles.username }
+          required
+          type='text'
+          maxLength={ 18 }
+          placeholder={ i18n('username-placeholder') }
+          value={ this.state.username }
+          onUpdate={ (value, resize, blur) =>
+          {
+            const trimmed = (blur) ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
+
+            localStorage.setItem('username', trimmed);
+
+            this.setState({
+              username: trimmed
+            }, resize);
+          } }
+        />
+      </div>;
+    };
+
+    const Options = () =>
+    {
+      return <div className={ optionsStyles.container }>
+
+        <div className={ optionsStyles.buttons }>
+          <div className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
+          <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
+        </div>
+
+
+        <div className={ optionsStyles.title }> { i18n('available-rooms') }</div>
+
+        <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
+
+        <OptionsIcon className={ optionsStyles.icon } onClick={ () => this.setState({ options: { active: true } }) }/>
+
+      </div>;
+    };
+
+    // TODO design title in a way doesn't have packs in the tiles
+    // so it will be easier to showcase non-card game-modes
+
+    const RoomTiles = () =>
+    {
+      // eslint-disable-next-line react/no-direct-mutation-state
+      this.state.rooms = [
+        {
+          players: 3,
+          options: {
+            gameMode: 'king',
+            winMethod: 'points',
+            match: {
+              pointsToCollect: 3,
+              maxPlayers: 8
+            }
+          }
+        }
+      ];
+
+      for (let i = 0; i < 50; i++)
+      {
+        this.state.rooms.push({
+          players: 3,
+          options: {
+            gameMode: 'king',
+            winMethod: 'points',
+            match: {
+              pointsToCollect: 3,
+              maxPlayers: 8
+            }
+          }
+        });
+      }
+
+      return <div className={ roomsStyles.container }>
+
+        <div className={ roomsStyles.roomsWrapper }>
+          <div style={ {
+            display: (this.state.loadingHidden) ? 'none' : ''
+          } } className={ roomsStyles.loading }
+          >
+            <div className={ roomsStyles.loadingSpinner }></div>
+          </div>
+
+          <div className={ roomsStyles.error } style={ {
+            display: (this.state.errorMessage) ? '' : 'none'
+          } } >
+            {this.state.errorMessage}
+          </div>
+
+          <div className={ roomsStyles.roomsContainer } style={ { display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none' } }>
+            {
+              (this.state.rooms.length <= 0) ?
+                <div className={ roomsStyles.indicator }>
+                  { i18n('no-rooms-available') }
+                </div> :
+                this.state.rooms.map((room, i) =>
+                {
+                  // select random pack from room's selected packs
+                  // const pack = room.options.match.selectedPacks[Math.floor(Math.random() * room.options.match.selectedPacks.length)];
+
+                  const gameMode = `${i18n(room.options.gameMode)}.`;
+
+                  let winMethod;
+
+                  if (room.options.winMethod === 'points')
+                    winMethod = `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.`;
+                  else if (room.options.winMethod === 'limited')
+                    winMethod = `${i18n('max-rounds-1')} ${room.options.match.maxRounds} ${i18n('max-rounds-2')}.`;
+                  else if (room.options.winMethod === 'timer')
+                    winMethod = `${i18n('max-time-1')} ${room.options.match.maxTime / 60 / 1000} ${i18n('max-time-2')}.`;
+
+                  return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
+                    <div className={ roomsStyles.highlights }>
+                      
+                      <div className={ roomsStyles.counter }>
+                        <span>{room.players}</span>
+                        <span>/</span>
+                        <span>{ room.options.match.maxPlayers }</span>
+                      </div>
+
+                      <div>{ gameMode }</div>
+                      <div>{ winMethod }</div>
+                    </div>
+
+                    <div className={ roomsStyles.packs }>
+                      <div style={ {
+                        // color: pack.foreground_color,
+                        // backgroundImage: `url(${pack.background_url})`,
+                        // backgroundColor: pack.background_url
+                      } } className={ roomsStyles.pack }>
+                        {/* <div className={ roomsStyles.packName }>{ pack.display_name }</div> */}
+                      </div>
+                    </div>
+
+                  </div>;
+                })
+            }
+          </div>
+        </div>
+      </div>;
+    };
+
     return (
       <div className={ mainStyles.wrapper }>
 
@@ -302,108 +451,11 @@ class Game extends React.Component
 
         <div className={ mainStyles.container }>
 
-          <div className={ headerStyles.container }>
+          { Header() }
+          
+          { Options() }
 
-            <p className={ headerStyles.welcome }> { i18n('welcome') } </p>
-
-            <AutoSizeInput
-              className={ headerStyles.username }
-              required
-              type='text'
-              maxLength={ 18 }
-              placeholder={ i18n('username-placeholder') }
-              value={ this.state.username }
-              onUpdate={ (value, resize, blur) =>
-              {
-                const trimmed = (blur) ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
-
-                localStorage.setItem('username', trimmed);
-
-                this.setState({
-                  username: trimmed
-                }, resize);
-              } }
-            />
-
-          </div>
-
-          <div className={ optionsStyles.container }>
-
-            <div className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
-            <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
-
-          </div>
-
-          <div className={ roomsStyles.container }>
-
-            <div className={ roomsStyles.title }> { i18n('available-rooms') }</div>
-
-            <RefreshIcon allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms } className={ roomsStyles.icon }/>
-
-            <OptionsIcon allowed={ this.state.loadingHidden.toString() } onClick={ () => this.setState({ options: { active: true } }) } className={ roomsStyles.icon }/>
-
-            <div className={ roomsStyles.roomsWrapper }>
-              <div style={ {
-                display: (this.state.loadingHidden) ? 'none' : ''
-              } } className={ roomsStyles.loading }
-              >
-                <div className={ roomsStyles.loadingSpinner }></div>
-              </div>
-
-              <div className={ roomsStyles.error } style={ {
-                display: (this.state.errorMessage) ? '' : 'none'
-              } } >
-                {this.state.errorMessage}
-              </div>
-
-              <div className={ roomsStyles.roomsContainer } style={ { display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none' } }>
-                {
-                  (this.state.rooms.length <= 0) ?
-                    <div className={ roomsStyles.indicator }>
-                      { i18n('no-rooms-available') }
-                    </div> :
-                    this.state.rooms.map((room, i) =>
-                    {
-                      // select random pack from room's selected packs
-                      const pack = room.options.match.selectedPacks[Math.floor(Math.random() * room.options.match.selectedPacks.length)];
-
-                      const gameMode = `(${i18n(room.options.gameMode)})`;
-
-                      let winMethod;
-
-                      if (room.options.winMethod === 'points')
-                        winMethod = `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.`;
-                      else if (room.options.winMethod === 'limited')
-                        winMethod = `${i18n('max-rounds-1')} ${room.options.match.pointsToCollect} ${i18n('max-rounds-2')}.`;
-                      else if (room.options.winMethod === 'timer')
-                        winMethod = `${i18n('max-time-1')} ${room.options.match.pointsToCollect} ${i18n('max-time-2')}.`;
-
-                      return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
-                        <div className={ roomsStyles.highlights }>
-
-                          <div className={ roomsStyles.counter }>{ `${room.players}/${room.options.match.maxPlayers}` }</div>
-
-                          <div>{ gameMode }</div>
-                          <div>{ winMethod }</div>
-
-                        </div>
-
-                        <div className={ roomsStyles.packs }>
-                          <div style={ {
-                            color: pack.foreground_color,
-                            backgroundImage: `url(${pack.background_url})`,
-                            backgroundColor: pack.background_url
-                          } } className={ roomsStyles.pack }>
-                            <div className={ roomsStyles.packName }>{ pack.display_name }</div>
-                          </div>
-                        </div>
-
-                      </div>;
-                    })
-                }
-              </div>
-            </div>
-          </div>
+          { RoomTiles() }
         </div>
 
         <RoomOverlay ref={ overlayRef } sendMessage={ this.sendMessage.bind(this) } requestRooms={ this.requestRooms } size={ this.state.size } username={ this.state.username }/>
@@ -423,8 +475,8 @@ const mainStyles = createStyle({
   container: {
     display: 'grid',
 
-    gridTemplateAreas: '"header" "options" "." "." "rooms"',
-    gridTemplateRows: 'auto auto auto auto 1fr',
+    gridTemplateAreas: '"header" "options" "rooms"',
+    gridTemplateRows: 'auto auto 1fr',
     gridTemplateColumns: '100%',
 
     color: colors.blackText,
@@ -492,8 +544,12 @@ const optionsStyles = createStyle({
 
     direction: locale.direction,
 
-    gridTemplateAreas: '". ."',
-    gridColumnGap: '5%',
+    gridTemplateColumns: '1fr 1fr auto auto',
+    gridTemplateRows: '1fr auto',
+    gridTemplateAreas: '"buttons buttons buttons buttons" "title title . ."',
+
+    gridGap: '15px',
+    margin: '15px 0px',
 
     fontWeight: '700',
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
@@ -501,7 +557,16 @@ const optionsStyles = createStyle({
     padding: '0 3vw'
   },
 
+  buttons: {
+    gridArea: 'buttons',
+    display: 'grid',
+
+    gridTemplateAreas: '". ."',
+    gridColumnGap: '15px'
+  },
+
   button: {
+    flexGrow: 1,
     display: 'flex',
 
     alignItems: 'center',
@@ -514,8 +579,7 @@ const optionsStyles = createStyle({
     border: `1px ${colors.blackText} solid`,
 
     cursor: 'pointer',
-    padding: '5px 0',
-    margin: '5% 0',
+    padding: '6px 0',
 
     transform: 'scale(1)',
     transition: 'transform 0.15s, background-color 0.25s, color 0.25s',
@@ -528,56 +592,6 @@ const optionsStyles = createStyle({
     ':active': {
       transform: 'scale(0.95)'
     }
-  },
-
-  blockMessage: {
-    display: 'flex',
-    justifyContent: 'center',
-    maxWidth: 'inherit',
-
-    direction: locale.direction,
-
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    fontWeight: '700',
-
-    padding: '10px',
-    margin: '0 15px',
-    borderRadius: '5px',
-
-    '[enabled="false"]': {
-      display: 'none'
-    },
-
-    '> div': {
-      display: 'flex',
-      alignItems: 'center',
-
-      flexGrow: 1,
-
-      fontSize: 'calc(6px + 0.5vw + 0.5vh)'
-    }
-  }
-});
-
-const roomsStyles = createStyle({
-  container: {
-    gridArea: 'rooms',
-    display: 'grid',
-
-    gridTemplateColumns: '1fr auto auto',
-    gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"title . ." "rooms rooms rooms"',
-
-    gridColumnGap: '15px',
-
-    direction: locale.direction,
-    
-    alignItems: 'center',
-    overflow: 'hidden',
-
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
-    padding: '10px 3vw 0 3vw'
   },
 
   title: {
@@ -616,11 +630,19 @@ const roomsStyles = createStyle({
     ':active': {
       transform: 'scale(0.95) rotateZ(22deg)'
     }
+  }
+});
+
+const roomsStyles = createStyle({
+  container: {
+    gridArea: 'rooms',
+    overflow: 'hidden',
+
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    padding: '10px 3vw 0 3vw'
   },
 
   roomsWrapper: {
-    direction: locale.direction,
-
     gridArea: 'rooms',
     position: 'relative',
     
@@ -643,6 +665,7 @@ const roomsStyles = createStyle({
 
   roomsContainer: {
     display: 'grid',
+    direction: locale.direction,
 
     gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
     gridTemplateRows: 'min-content',
@@ -715,7 +738,6 @@ const roomsStyles = createStyle({
     width: 'auto',
     height: 'fit-content',
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
@@ -741,7 +763,8 @@ const roomsStyles = createStyle({
   },
 
   counter: {
-    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
+    display: 'flex',
+    fontSize: 'calc(12px + 0.35vw + 0.35vh)',
 
     width: 'min-content',
     margin: '0 0 5px 0'

@@ -31,14 +31,9 @@
   "play": "العب",
   "airtegal-adults-warning": "اللعبه دي معموله للكبار بس... لو انت تحت سن ال16 فاحنا لازم نقولك تمشي من هنا.",
 
-  // install prompt
-
-  // "install": "دوس هنا",
-  // "install-prompt": "يمكن لك اضافة تطبيق ارتجال علي جهازك.",
-
   // lobby
 
-  "welcome": "اهلاً",
+  "username-prefix": "أنا",
   "username-placeholder": "حط اسمك هنا",
   
   "create-room": "اصنع غرفتك",
@@ -130,7 +125,7 @@
   "max-rounds-2": "جولات",
 
   "max-time-1": "بعد مرور",
-  "max-time-2": "دقيقة",
+  "max-time-2": "دقائق",
 
   "match-options": "اعدادات المباراة:",
 
