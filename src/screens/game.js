@@ -257,34 +257,6 @@ class Game extends React.Component
       if (params.get('join'))
         overlayRef.current.joinRoom(params.get('join'));
     }
-
-    // TODO show install prompt
-    // onInstallPrompt((e) =>
-    // {
-    //   if (localStorage.getItem('install-prompt-ignore'))
-    //     return;
-      
-    //   this.setState({
-    //     pin: {
-    //       closeCallback: () =>
-    //       {
-    //         localStorage.setItem('install-prompt-ignore', true);
-  
-    //         this.hidePin();
-    //       },
-    //       title: '',
-    //       content: i18n('install-prompt'),
-    //       buttons: [ {
-    //         title: i18n('install'),
-    //         // shows browser's install prompt
-    //         callback: () => e.prompt()
-    //       } ]
-    //     }
-    //   });
-      
-    //   // hide the install prompt when the user installs the pwa
-    //   window.addEventListener('appinstalled', () => this.hidePin());
-    // });
   }
 
   componentWillUnmount()
@@ -301,11 +273,6 @@ class Game extends React.Component
       }
     });
   }
-
-  // adLoaded()
-  // {
-  //   this.adsLoaded = true;
-  // }
 
   showErrorMessage(err)
   {

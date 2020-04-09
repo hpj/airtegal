@@ -95,6 +95,7 @@ class FieldOverlay extends StoreComponent
       changes?.roomData?.votes ||
       changes?.field ||
       changes?.fieldHidden ||
+      changes?.fieldVisible ||
       changes?.winnerEntryIndex ||
       changes?.votes)
       return true;
@@ -106,18 +107,12 @@ class FieldOverlay extends StoreComponent
 
     if (!roomData)
       return;
-    
-    // if lobby clear field
-    if (roomData.state === 'lobby')
-    {
-      state.field = [];
 
-      this.visibility(false);
-    }
+    // if in match
+    if (roomData.state === 'match')
+      state.fieldVisible = true;
     else
-    {
-      this.visibility(true);
-    }
+      state.fieldVisible = false;
 
     if (roomData.reason.message === 'vote')
       state.votes = roomData.votes;
@@ -135,14 +130,10 @@ class FieldOverlay extends StoreComponent
     return state;
   }
 
-  /** @param { boolean } visible
-  */
-  visibility(visible)
+  stateDidChange(state, changes)
   {
-    if (!overlayRef.current)
-      return;
-    
-    overlayRef.current.snapTo({ index: (visible) ? 1 : 0 });
+    if (changes.fieldVisible !== undefined)
+      overlayRef.current.snapTo({ index: (changes.fieldVisible) ? 1 : 0 });
   }
 
   /** send the card the judge judged to the server's match logic
@@ -196,7 +187,7 @@ class FieldOverlay extends StoreComponent
       // hide the overlay and overlay holder when they are off-screen
       if (Math.round(value) >= size.width)
         this.store.set({ fieldHidden: true });
-      else
+      else if (!this.state.fieldHidden || this.state.fieldVisible)
         this.store.set({ fieldHidden: false });
     });
 

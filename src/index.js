@@ -27,8 +27,6 @@ import Game from './screens/game.js';
 
 export let country = '';
 
-// let installPromptEvent;
-
 let visibleLoading = true;
 let keepLoading = false;
 
@@ -103,24 +101,8 @@ export function hideLoadingScreen()
   visibleLoading = false;
 }
 
-// TODO show install prompt
-// export function onInstallPrompt(callback)
-// {
-//   if (installPromptEvent)
-//     callback(installPromptEvent);
-//   else
-//     window.addEventListener('beforeinstallprompt', (e) => callback(e));
-// }
-
 // register the service worker
 registerServiceWorker();
-
-// window.addEventListener('beforeinstallprompt', (e) =>
-// {
-//   e.preventDefault();
-
-//   installPromptEvent = e;
-// });
 
 // create app-wide store
 createStore('app');
