@@ -24,6 +24,25 @@ const colors = getTheme();
 
 const wrapperRef = createRef();
 
+const gameModes = [
+  {
+    label: i18n('pvp'),
+    options: [
+      { label: i18n('judge'), value: 'judge' },
+      { label: i18n('king'), value: 'king' },
+      { label: i18n('democracy'), value: 'democracy' }
+    ]
+  },
+  {
+    label: i18n('co-op'),
+    options: []
+  },
+  {
+    label: i18n('teams'),
+    options: []
+  }
+];
+
 class RoomOptions extends StoreComponent
 {
   constructor()
@@ -238,11 +257,8 @@ class RoomOptions extends StoreComponent
               defaultValue={ { label: i18n(dirtyOptions.gameMode), value: dirtyOptions.gameMode } }
               isRtl={ locale.direction === 'rtl' }
               isSearchable={ false }
-              options={ [
-                { label: i18n('judge'), value: 'judge' },
-                { label: i18n('king'), value: 'king' },
-                { label: i18n('democracy'), value: 'democracy' }
-              ] }
+              formatGroupLabel={ groupLabel }
+              options={ gameModes }
               onChange={ (mode) => this.onGameModeChange(mode.value) }
             /> :
             <div className={ styles.field }>{ i18n(dirtyOptions.gameMode) }</div>
@@ -251,10 +267,11 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
-    const KuruitOptions = () =>
+    const groupLabel = (data) => <div className={ styles.selectLabel }>{data.label}</div>;
+
+    const KuruitWinMethod = () =>
     {
       return <div>
-        {/* Win Method */}
 
         <div className={ styles.title }>{ i18n('win-method') }</div>
 
@@ -266,7 +283,7 @@ class RoomOptions extends StoreComponent
           />
 
           <div>{ i18n('first-to-points-1') }</div>
-        
+
           <AutoSizeInput
             required
             type='number'
@@ -360,9 +377,12 @@ class RoomOptions extends StoreComponent
 
           <div>{ i18n('max-time-2') }</div>
         </div>
+      </div>;
+    };
 
-        {/* Match Options */}
-
+    const KuruitMatchOptions = (gameMode) =>
+    {
+      return <div>
         <div className={ styles.title }>{ i18n('match-options') }</div>
 
         <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
@@ -444,7 +464,7 @@ class RoomOptions extends StoreComponent
           <div>{ i18n('hand-cap') }</div>
         </div>
 
-        <div className={ styles.field } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
+        <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
 
           <AutoSizeInput
             required
@@ -478,10 +498,13 @@ class RoomOptions extends StoreComponent
           <div className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
           <div className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
         </div>
+      </div>;
+    };
 
-        {/* Card Packs */}
-
-        <div className={ styles.title }>{ i18n('card-packs') }</div>
+    const KuruitCardPacks = () =>
+    {
+      return <div>
+        {/* <div className={ styles.title }>{ i18n('card-packs') }</div>
 
         <div className={ styles.packs }>
           {
@@ -498,7 +521,18 @@ class RoomOptions extends StoreComponent
               </div>;
             })
           }
-        </div>
+        </div> */}
+      </div>;
+    };
+
+    const KuruitOptions = () =>
+    {
+      return <div>
+        { KuruitWinMethod() }
+
+        { KuruitMatchOptions(dirtyOptions.gameMode) }
+
+        { KuruitCardPacks() }
       </div>;
     };
 
@@ -805,6 +839,19 @@ const styles = createStyle({
       width: 'calc(100% - 50px)'
     },
 
+    ' .react-select-game-mode__menu-list': {
+      '::-webkit-scrollbar':
+      {
+        width: '8px'
+      },
+  
+      '::-webkit-scrollbar-thumb':
+      {
+        borderRadius: '8px',
+        boxShadow: `inset 0 0 8px 8px ${colors.greyText}`
+      }
+    },
+
     ' .react-select-game-mode__option': {
       cursor: 'pointer',
 
@@ -914,6 +961,14 @@ const styles = createStyle({
     }
   },
 
+  selectLabel: {
+    color: colors.greyText,
+
+    fontSize: 'calc(8px + 0.2vw + 0.2vh)',
+    fontWeight: '400',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
+  },
+
   field: {
     display: 'flex',
     alignItems: 'center',
@@ -927,6 +982,10 @@ const styles = createStyle({
         display: 'block',
         content: '"*"'
       }
+    },
+
+    '[visible="false"]': {
+      display: 'none'
     }
   },
 
