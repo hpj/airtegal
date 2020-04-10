@@ -438,7 +438,7 @@ class RoomOptions extends StoreComponent
           <div>{ i18n('round-countdown') }</div>
         </div>
 
-        <div className={ styles.field } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
+        <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
           <AutoSizeInput
             required
             type='number'

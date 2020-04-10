@@ -321,7 +321,6 @@ class Game extends React.Component
           <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
         </div>
 
-
         <div className={ optionsStyles.title }> { i18n('available-rooms') }</div>
 
         <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
@@ -331,41 +330,94 @@ class Game extends React.Component
       </div>;
     };
 
-    // TODO design title in a way doesn't have packs in the tiles
-    // so it will be easier to showcase non-card game-modes
+    const RoomHighlights = (room) =>
+    {
+      const highlights = [];
+
+      const gameMode = room.options.gameMode;
+
+      // cards based game modes
+      if (gameMode === 'judge' || gameMode === 'king' || gameMode === 'democracy')
+      {
+        if (room.options.winMethod === 'points')
+          highlights.push(`${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.`);
+        else if (room.options.winMethod === 'limited')
+          highlights.push(`${i18n('max-rounds-1')} ${room.options.match.maxRounds} ${i18n('max-rounds-2')}.`);
+        else if (room.options.winMethod === 'timer')
+          highlights.push(`${i18n('max-time-1')} ${room.options.match.maxTime / 60 / 1000} ${i18n('max-time-2')}.`);
+
+        if (gameMode === 'king')
+        {
+          highlights.push(`${room.options.round.maxTime / 60 / 1000} ${i18n('round-countdown')}.`);
+        }
+        else
+        {
+          highlights.push(`${room.options.match.startingHandAmount} ${i18n('hand-cap-lobby')}.`);
+          highlights.push(`%${room.options.match.blankProbability} ${i18n('blank-probability-lobby')}.`);
+        }
+
+        // if (room.options.match.randos)
+        //   highlights.push(`${i18n('randos')}.`);
+      }
+
+      return <div>
+        {
+          highlights.map((s, i) => <div key={ i }>{ s }</div>)
+        }
+      </div>;
+    };
+
+    const RoomCover = (room) =>
+    {
+      const gameMode = room.options.gameMode;
+
+      let title = i18n(room.options.gameMode);
+
+      let coverStyle, coverBeforeStyle, titleStyle;
+
+      // cards based game modes
+      if (gameMode === 'judge' || gameMode === 'king' || gameMode === 'democracy')
+      {
+        coverBeforeStyle = {
+          left: 0,
+          top: '4px',
+          backgroundColor: colors.whiteBackground,
+          transform: 'rotate(5deg)'
+        };
+
+        if (gameMode === 'king')
+        {
+          title = `${title}___.`;
+
+          titleStyle = {
+            transform: 'skew(11deg, 13deg)'
+          };
+        }
+        else if (gameMode === 'democracy')
+        {
+          titleStyle = {
+            color: colors.transparent,
+            textShadow: `${colors.whiteText} -10px 20px 1px,
+            ${colors.whiteText} 10px -20px 1px,
+            ${colors.whiteText} 12px 12px 1px,
+            ${colors.whiteText} -5px -30px 1px,
+            ${colors.whiteText} -5px 30px 1px`
+          };
+        }
+      }
+
+      return <div className={ roomsStyles.cover }>
+        <div style={ coverBeforeStyle }/>
+        <div style={ coverStyle }>
+          <div style={ titleStyle } className={ roomsStyles.coverTitle }>
+            { title }
+          </div>
+        </div>
+      </div>;
+    };
 
     const RoomTiles = () =>
     {
-      // eslint-disable-next-line react/no-direct-mutation-state
-      this.state.rooms = [
-        {
-          players: 3,
-          options: {
-            gameMode: 'king',
-            winMethod: 'points',
-            match: {
-              pointsToCollect: 3,
-              maxPlayers: 8
-            }
-          }
-        }
-      ];
-
-      for (let i = 0; i < 50; i++)
-      {
-        this.state.rooms.push({
-          players: 3,
-          options: {
-            gameMode: 'king',
-            winMethod: 'points',
-            match: {
-              pointsToCollect: 3,
-              maxPlayers: 8
-            }
-          }
-        });
-      }
-
       return <div className={ roomsStyles.container }>
 
         <div className={ roomsStyles.roomsWrapper }>
@@ -390,20 +442,6 @@ class Game extends React.Component
                 </div> :
                 this.state.rooms.map((room, i) =>
                 {
-                  // select random pack from room's selected packs
-                  // const pack = room.options.match.selectedPacks[Math.floor(Math.random() * room.options.match.selectedPacks.length)];
-
-                  const gameMode = `${i18n(room.options.gameMode)}.`;
-
-                  let winMethod;
-
-                  if (room.options.winMethod === 'points')
-                    winMethod = `${i18n('first-to-points-1')} ${room.options.match.pointsToCollect} ${i18n('first-to-points-2')}.`;
-                  else if (room.options.winMethod === 'limited')
-                    winMethod = `${i18n('max-rounds-1')} ${room.options.match.maxRounds} ${i18n('max-rounds-2')}.`;
-                  else if (room.options.winMethod === 'timer')
-                    winMethod = `${i18n('max-time-1')} ${room.options.match.maxTime / 60 / 1000} ${i18n('max-time-2')}.`;
-
                   return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
                     <div className={ roomsStyles.highlights }>
                       
@@ -413,19 +451,10 @@ class Game extends React.Component
                         <span>{ room.options.match.maxPlayers }</span>
                       </div>
 
-                      <div>{ gameMode }</div>
-                      <div>{ winMethod }</div>
+                      { RoomHighlights(room) }
                     </div>
 
-                    <div className={ roomsStyles.packs }>
-                      <div style={ {
-                        // color: pack.foreground_color,
-                        // backgroundImage: `url(${pack.background_url})`,
-                        // backgroundColor: pack.background_url
-                      } } className={ roomsStyles.pack }>
-                        {/* <div className={ roomsStyles.packName }>{ pack.display_name }</div> */}
-                      </div>
-                    </div>
+                    { RoomCover(room) }
 
                   </div>;
                 })
@@ -638,7 +667,7 @@ const roomsStyles = createStyle({
     gridArea: 'rooms',
     overflow: 'hidden',
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontSize: 'calc(8px + 0.2vw + 0.2vh)',
     padding: '10px 3vw 0 3vw'
   },
 
@@ -756,40 +785,47 @@ const roomsStyles = createStyle({
   highlights: {
     direction: locale.direction,
 
+    minHeight: '165px',
     width: 'calc(50% - 40px)',
-    height: 'calc(155px - 20px + 1vw + 1vh)',
+    height: 'auto',
 
     margin: '10px 20px'
   },
 
   counter: {
     display: 'flex',
-    fontSize: 'calc(12px + 0.35vw + 0.35vh)',
+    fontSize: 'calc(10px + 0.35vw + 0.35vh)',
 
     width: 'min-content',
     margin: '0 0 5px 0'
   },
 
-  packs: {
-    width: '50%'
+  cover: {
+    position: 'relative',
+    width: '50%',
+
+    '> div': {
+      position: 'absolute',
+
+      color: colors.whiteText,
+      backgroundColor: colors.blackBackground,
+
+      left: 0,
+
+      // width: 'calc(100% + 10px)',
+      // height: 'calc(100% + 20px)',
+      // margin: '-10px 0 0 -10px',
+
+      width: 'calc(100% - 20px)',
+      height: 'calc(100% - 30px)',
+
+      overflow: 'hidden',
+      borderRadius: '7px',
+      margin: '15px'
+    }
   },
 
-  pack: {
-    color: colors.whiteText,
-    backgroundColor: colors.blackBackground,
-
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-
-    width: '80%',
-    height: '85%',
-    
-    borderRadius: '10px',
-    margin: (locale.direction === 'ltr') ? '35% 20% 0 0' : '35% 0 0 20%'
-  },
-
-  packName: {
+  coverTitle: {
     display: 'flex',
     
     alignItems: 'center',

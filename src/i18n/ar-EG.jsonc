@@ -131,9 +131,12 @@
 
   "max-players": "عدد اللاعبين",
   "round-countdown": "دقيقه لكل جولة",
-  "hand-cap": "عدد الاوراق بيد كل لاعب",
+
+  "hand-cap": "عدد الكروت بيد كل لاعب",
+  "hand-cap-lobby": "كروت",
 
   "blank-probability": "نسبة سحب كرت فاضي",
+  "blank-probability-lobby": "كرت فاضي",
 
   "room-options": "اعدادات الغرفة:",
 
