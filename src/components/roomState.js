@@ -23,11 +23,10 @@ class RoomState extends StoreComponent
   {
     super();
 
-    this.current = undefined;
-    this.countdown = undefined;
-    
-    this.formatted = undefined;
+    this.current = '';
+    this.formatted = '';
 
+    this.countdown = undefined;
     this.countdownInterval = undefined;
 
     // bind functions that are use as callbacks
@@ -70,7 +69,23 @@ class RoomState extends StoreComponent
     if (!roomData)
       return;
 
-    if (roomData.counter !== this.current)
+    // if not display it as is
+    if (roomData.state === 'lobby')
+    {
+      // clear the pervious countdown
+      if (this.countdownInterval)
+        clearInterval(this.countdownInterval);
+      
+      // set state as players count
+      if (locale.direction === 'ltr')
+        this.formatted = `${roomData.players.length}/${roomData.options.match.maxPlayers}`;
+      else
+        this.formatted = `${roomData.options.match.maxPlayers}/${roomData.players.length}`;
+
+      // re-render to show correct counter
+      this.forceUpdate();
+    }
+    else if (roomData.counter !== this.current)
     {
       this.current = roomData.counter;
 
@@ -78,8 +93,7 @@ class RoomState extends StoreComponent
       if (this.countdownInterval)
         clearInterval(this.countdownInterval);
 
-      // if counter is number
-      // then it's a countdown
+      // if counter is number then it's a countdown
       if (typeof roomData.counter === 'number')
       {
         this.countdown = Date.now() + roomData.counter;
@@ -106,18 +120,6 @@ class RoomState extends StoreComponent
 
         // update the counter immediately since the first interval won't execute immediately
         this.formatted = this.formatMs(roomData.counter);
-
-        // re-render to show correct counter
-        this.forceUpdate();
-      }
-      // if not display it as is
-      else
-      {
-        // set state as players count
-        if (locale.direction === 'ltr')
-          this.formatted = `${roomData.players.length}/${roomData.options.match.maxPlayers}`;
-        else
-          this.formatted = `${roomData.options.match.maxPlayers}/${roomData.players.length}`;
 
         // re-render to show correct counter
         this.forceUpdate();
