@@ -54,6 +54,8 @@ class RoomState extends StoreComponent
       changes?.roomData?.counter ||
       changes?.roomData?.judge ||
       changes?.roomData?.options?.gameMode ||
+      changes?.roomData?.options?.match?.maxPlayers ||
+      changes?.roomData?.players ||
       changes?.roomData?.playerProperties ||
       changes?.roomData?.reason?.message ||
       changes?.roomData?.reason?.details ||
@@ -111,7 +113,11 @@ class RoomState extends StoreComponent
       // if not display it as is
       else
       {
-        this.formatted = roomData.counter;
+        // set state as players count
+        if (locale.direction === 'ltr')
+          this.formatted = `${roomData.players.length}/${roomData.options.match.maxPlayers}`;
+        else
+          this.formatted = `${roomData.options.match.maxPlayers}/${roomData.players.length}`;
 
         // re-render to show correct counter
         this.forceUpdate();

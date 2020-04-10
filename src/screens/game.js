@@ -107,12 +107,10 @@ class Game extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
-      adsBlocked: false,
-
       // load user preference or use default
       username: localStorage.getItem('username') || stupidNames(),
-      size: {},
 
+      size: {},
       rooms: []
     };
 
@@ -355,14 +353,14 @@ class Game extends React.Component
           highlights.push(`${room.options.match.startingHandAmount} ${i18n('hand-cap-lobby')}.`);
           highlights.push(`%${room.options.match.blankProbability} ${i18n('blank-probability-lobby')}.`);
         }
-
-        // if (room.options.match.randos)
-        //   highlights.push(`${i18n('randos')}.`);
       }
 
       return <div>
         {
-          highlights.map((s, i) => <div key={ i }>{ s }</div>)
+          highlights.map((s, i) =>
+          {
+            return <div key={ i }>{ s }</div>;
+          })
         }
       </div>;
     };
@@ -408,6 +406,7 @@ class Game extends React.Component
 
       return <div className={ roomsStyles.cover }>
         <div style={ coverBeforeStyle }/>
+
         <div style={ coverStyle }>
           <div style={ titleStyle } className={ roomsStyles.coverTitle }>
             { title }
@@ -476,18 +475,24 @@ class Game extends React.Component
 
         <OptionsOverlay
           options={ this.state.options }
-          hide={ () => this.setState({ options: { active: false } }) }/>
+          hide={ () => this.setState({ options: { active: false } }) }
+        />
 
         <div className={ mainStyles.container }>
 
           { Header() }
-          
           { Options() }
-
           { RoomTiles() }
+
         </div>
 
-        <RoomOverlay ref={ overlayRef } sendMessage={ this.sendMessage.bind(this) } requestRooms={ this.requestRooms } size={ this.state.size } username={ this.state.username }/>
+        <RoomOverlay
+          ref={ overlayRef }
+          sendMessage={ this.sendMessage.bind(this) }
+          requestRooms={ this.requestRooms }
+          size={ this.state.size }
+          username={ this.state.username }
+        />
       </div>
     );
   }

@@ -26,7 +26,7 @@ const wrapperRef = createRef();
 
 const gameModes = [
   {
-    label: i18n('pvp'),
+    label: i18n('free-for-all'),
     options: [
       { label: i18n('judge'), value: 'judge' },
       { label: i18n('king'), value: 'king' },
@@ -964,8 +964,8 @@ const styles = createStyle({
   selectLabel: {
     color: colors.greyText,
 
-    fontSize: 'calc(8px + 0.2vw + 0.2vh)',
     fontWeight: '400',
+    fontSize: 'calc(8px + 0.2vw + 0.2vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
