@@ -11,6 +11,7 @@ Performance Issues and Bugs:
     ☐ refactor hand to be more plugable and open to non-cards modes
 
 Testing:
+  // await page.click('div[title="Lista de Tarefas"]');
 
 UI/UX:
   ☐ card showcase: responsive desgin

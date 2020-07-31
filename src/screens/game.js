@@ -10,7 +10,7 @@ import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../i
 
 import getTheme from '../colors.js';
 
-import { createStyle, createAnimation } from '../flcss.js';
+import { createStyle, createAnimation } from 'flcss';
 
 import stupidNames from '../stupidNames.js';
 

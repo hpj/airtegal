@@ -20,7 +20,7 @@ import { locale } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import { gestures } from './fieldOverlay.js';
 

@@ -7,7 +7,7 @@ import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import getTheme from '../colors.js';
 
-import { createStyle, createAnimation } from '../flcss.js';
+import { createStyle, createAnimation } from 'flcss';
 
 import i18n, { locale } from '../i18n.js';
 

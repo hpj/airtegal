@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { animated, useTransition } from 'react-spring';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import { locale } from '../i18n.js';
 

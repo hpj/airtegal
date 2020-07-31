@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import i18n, { locale } from '../i18n.js';
 

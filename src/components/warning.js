@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import getTheme from '../colors.js';
 

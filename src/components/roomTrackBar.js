@@ -10,7 +10,7 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 const colors = getTheme();
 

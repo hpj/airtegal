@@ -10,7 +10,7 @@ import TwitterIcon from 'mdi-react/TwitterIcon';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import i18n from '../i18n.js';
 

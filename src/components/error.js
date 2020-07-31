@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import { locale } from '../i18n.js';
 

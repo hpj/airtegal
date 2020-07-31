@@ -15,7 +15,7 @@ import getTheme from '../colors.js';
 
 import { lastNames } from '../stupidNames.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import Notifications from './notifications.js';
 

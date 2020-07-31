@@ -9,7 +9,7 @@ import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
 import getTheme, { detectDeviceIsDark } from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import i18n, { locales, locale, setLocale } from '../i18n.js';
 

@@ -6,7 +6,7 @@ import Select from 'react-select';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import Warning from '../components/warning.js';
 import CardShowcase from '../components/cardShowcase.js';

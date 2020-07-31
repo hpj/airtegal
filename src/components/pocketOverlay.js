@@ -11,7 +11,7 @@ import getTheme from '../colors.js';
 
 // import i18n, { locale } from '../i18n.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import { gestures } from './fieldOverlay.js';
 

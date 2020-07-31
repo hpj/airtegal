@@ -1,5 +1,5 @@
 export const locales = [
-  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', blank: /[^\u0621-\u064A0-9 /؟_\-.]/g, json: require('./i18n/ar-EG.jsonc') }
+  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', blank: /[^\u0621-\u064A0-9 /؟_\-.]/g, json: require('./i18n/ar-EG.jsonc').default }
 ];
 
 /**
@@ -12,13 +12,13 @@ export let locale = getDefault();
 */
 export function setLocale(country)
 {
-  if (country)
-  {
-    const find = locales.find((e) => e.value === country.toLowerCase());
+  if (!country)
+    return;
 
-    if (find)
-      locale = find;
-  }
+  const find = locales.find((e) => e.value === country.toLowerCase());
+
+  if (find)
+    locale = find;
 }
 
 function getDefault()
@@ -27,10 +27,7 @@ function getDefault()
 
   const find = locales.find((e) => e.locale === browserLocale);
 
-  if (find)
-    return find;
-  else
-    return locales[0];
+  return (find) ? find : locales[0];
 }
 
 /**
@@ -42,16 +39,16 @@ export default function i18n(key, ...args)
 {
   args = args || [];
 
-  if (locale)
-  {
-    /**
-    * @type { string }
-    */
-    // eslint-disable-next-line security/detect-object-injection
-    let value = locale.json[key];
+  if (!locale)
+    return undefined;
 
-    args.forEach((s, i) => value = value.replace(`%${i}`, s));
+  /**
+  * @type { string }
+  */
+  // eslint-disable-next-line security/detect-object-injection
+  let value = locale.json[key];
 
-    return value;
-  }
+  args.forEach((s, i) => value = value.replace(`%${i}`, s));
+
+  return value;
 }

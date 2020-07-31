@@ -18,7 +18,7 @@ import getTheme from '../colors.js';
 
 import { locale } from '../i18n.js';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import Card from './card.js';
 

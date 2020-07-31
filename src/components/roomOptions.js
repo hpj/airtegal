@@ -18,7 +18,7 @@ import MatchReport from './matchReport.js';
 
 import getTheme from '../colors.js';
 
-import { createStyle, createAnimation } from '../flcss.js';
+import { createStyle, createAnimation } from 'flcss';
 
 const colors = getTheme();
 

@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 
 import axios from 'axios';
 
-import { createStyle } from '../flcss.js';
+import { createStyle } from 'flcss';
 
 import Card from './card.js';
 
