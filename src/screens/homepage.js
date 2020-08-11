@@ -42,7 +42,7 @@ class Homepage extends React.Component
               classNamePrefix='react-select'
               noOptionsMessage={ () => i18n('no-options') }
               defaultValue={ locale }
-              isRtl={ locale.direction  === 'rtl' }
+              isRtl={ locale.direction === 'rtl' }
               isSearchable={ false }
               options={ locales }
               onChange={ (locale) => setLocale(locale.value) }
