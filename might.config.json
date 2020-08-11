@@ -1,0 +1,49 @@
+{
+	"startCommand": "(npm run start & (cd ../Backend && npm run start:dev))",
+	"url": "http://localhost:8080",
+  "viewport": {
+    "width": null,
+    "height": null
+  },
+  "parallelTests": null,
+  "defaultTimeout": null,
+  "coverageExclude": [
+    "**/*.css",
+    "/node_modules/**",
+    "/webpack/**",
+    "/ws '('ignored')'",
+    "/'('webpack')'/**",
+    "/'('webpack')'-dev-server/**"
+  ],
+  "coverageIgnoreLines": {
+    "equal": [
+      "",
+      "{",
+      "}",
+      "};",
+      "})",
+      "});",
+      "}));",
+      "]",
+      "];",
+      "else",
+      "*/"
+    ],
+    "startsWith": [
+      "//",
+      "*",
+      "/**"
+    ],
+    "endsWith": [],
+    "startsEndsWith": [
+      [
+        "</",
+        ">"
+      ],
+      [
+        "</",
+        ">;"
+      ]
+    ]
+  }
+}

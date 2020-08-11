@@ -27,7 +27,7 @@ class Homepage extends React.Component
   render()
   {
     return (
-      <div>
+      <div id={ 'homepage' }>
         <Warning
           storageKey='airtegal-adults-warning'
           text={ i18n('airtegal-adults-warning') }

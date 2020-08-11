@@ -1,6 +1,6 @@
 const { DefinePlugin } = require('webpack');
 
-module.exports = (env) => ({
+module.exports = {
   devtool: 'source-map',
   entry: './src/index.js',
   module: {
@@ -33,4 +33,4 @@ module.exports = (env) => ({
     publicPath: '/',
     filename: 'bundle.js'
   }
-});
+};

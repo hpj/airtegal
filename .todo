@@ -1,4 +1,6 @@
 Performance Issues and Bugs:
+  ☐ test if everything works correctly on heroku @critical 
+
   ☐ refactor anything that uses cards exclusivly to allow more fludility
     ✔ refactor room options entirlly because each mode has its own sets of options @done(20-04-09 07:32)
     

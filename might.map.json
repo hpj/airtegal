@@ -1,0 +1,13 @@
+{
+  "data": [
+    {
+      "title": "",
+      "steps": [
+        {
+          "action": "wait",
+          "value": "#homepage"
+        }
+      ]
+    }
+  ]
+}
