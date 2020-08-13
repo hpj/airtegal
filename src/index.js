@@ -163,7 +163,7 @@ const ipCheckPromise = () =>
   return new Promise((resolve, reject) =>
   {
     // bypass check if on a development builds
-    if (process.env.NODE_ENV === 'development')
+    if (process.env.NODE_ENV !== 'production')
     {
       country = 'Egypt';
   

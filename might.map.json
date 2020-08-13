@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "title": "Clicking the adult warning",
+      "title": "Homepage",
       "steps": [
         {
           "action": "viewport",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "title": "Homepage",
+      "title": "Homepage (Warning)",
       "steps": [
         {
           "action": "viewport",
@@ -31,6 +31,40 @@
         {
           "action": "wait",
           "value": "#homepage"
+        }
+      ]
+    },
+    {
+      "title": "Game (Warning)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play"
+        },
+        {
+          "action": "wait",
+          "value": "#game"
+        }
+      ]
+    },
+    {
+      "title": "Game (Lobby)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play"
+        },
+        {
+          "action": "wait",
+          "value": "#game"
+        },
+        {
+          "action": "select",
+          "value": "#warning-button"
+        },
+        {
+          "action": "click",
+          "value": "left"
         }
       ]
     }

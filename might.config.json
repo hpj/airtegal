@@ -1,12 +1,12 @@
 {
-	"startCommand": "(npm run start & (cd ../Backend && npm run start:dev))",
+	"startCommand": "(npm run start:testing & (cd ../Backend && npm run start:dev))",
 	"url": "http://localhost:8080",
   "viewport": {
     "width": null,
     "height": null
   },
   "parallelTests": null,
-  "defaultTimeout": null,
+  "defaultTimeout": 60000,
   "coverageExclude": [
     "**/*.css",
     "/node_modules/**",

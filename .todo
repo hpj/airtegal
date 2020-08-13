@@ -13,6 +13,7 @@ Performance Issues and Bugs:
     ☐ refactor hand to be more plugable and open to non-cards modes
 
 Testing:
+  ☐ stop things being random when testing is on 
 
 UI/UX:
   ☐ card showcase: responsive desgin

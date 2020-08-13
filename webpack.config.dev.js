@@ -21,7 +21,9 @@ module.exports = {
     extensions: [ '*', '.js', '.jsx' ]
   },
   plugins: [
-    new DefinePlugin({})
+    new DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    })
   ],
   devServer: {
     contentBase: './public',

@@ -464,7 +464,7 @@ class Game extends React.Component
     };
 
     return (
-      <div className={ mainStyles.wrapper }>
+      <div id={ 'game' } className={ mainStyles.wrapper }>
 
         <Warning
           fullScreen={ true }

@@ -233,7 +233,7 @@ class RoomOptions extends StoreComponent
     const isDirty = JSON.stringify(dirtyOptions) !== JSON.stringify(options);
     
     const isAllowed =
-      process.env.NODE_ENV === 'development' ||
+      process.env.NODE_ENV !== 'production' ||
       (
         this.state.roomData?.players &&
         this.state.roomData?.players.length >= 3 &&
