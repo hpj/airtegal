@@ -19,7 +19,7 @@ import Error from './components/error.js';
 import Loading from './components/loading.js';
 
 import Offline from './screens/offline.js';
-import NotFound from './screens/404.js';
+// import NotFound from './screens/404.js';
 
 import Homepage from './screens/homepage.js';
 
@@ -57,11 +57,11 @@ function loaded()
   const pages =
     <BrowserRouter>
       <Switch>
-        <Route exact path='/' component={ Homepage }/>
-      
         <Route path='/play' component={ Game }/>
+      
+        <Route exact path='*' component={ Homepage }/>
 
-        <Route component={ NotFound }/>
+        {/* <Route component={ NotFound }/> */}
       </Switch>
     </BrowserRouter>;
 

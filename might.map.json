@@ -1,8 +1,33 @@
 {
   "data": [
     {
-      "title": "",
+      "title": "Clicking the adult warning",
       "steps": [
+        {
+          "action": "viewport",
+          "value": "f"
+        },
+        {
+          "action": "wait",
+          "value": "#homepage"
+        },
+        {
+          "action": "select",
+          "value": "#warning-button"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        }
+      ]
+    },
+    {
+      "title": "Homepage",
+      "steps": [
+        {
+          "action": "viewport",
+          "value": "f"
+        },
         {
           "action": "wait",
           "value": "#homepage"

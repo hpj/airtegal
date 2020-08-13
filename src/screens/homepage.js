@@ -375,7 +375,9 @@ const playStyles = createStyle({
 });
 
 const footerStyles = createStyle({
-  wrapper: { backgroundColor: colors.blackBackground },
+  wrapper: {
+    backgroundColor: colors.blackBackground
+  },
 
   container: {
     display: 'grid',

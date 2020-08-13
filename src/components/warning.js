@@ -42,7 +42,7 @@ const Warning = ({ fullScreen, storageKey, text, button }) =>
       <div fullscreen={ fullScreen.toString() } className={ styles.wrapper }>
         <div className={ styles.container }>
           {text}
-          <div className={ styles.button } onClick={ onClick }>
+          <div id={ 'warning-button' } className={ styles.button } onClick={ onClick }>
             {button}
           </div>
         </div>
