@@ -24,7 +24,7 @@ jobs:
         with:
           name: errors
           path: might.error.*.png
-      - name: Upload results Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1.0.12
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
