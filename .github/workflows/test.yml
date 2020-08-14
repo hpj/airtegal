@@ -19,8 +19,8 @@ jobs:
       - name: Run Tests
         run: npm run test:coverage
       - name: Upload any errors
-      - uses: actions/upload-artifact@v2
         if: failure()
+        uses: actions/upload-artifact@v2
         with:
           name: errors
           path: might.error.*.png
