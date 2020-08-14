@@ -110,10 +110,13 @@ createStore('app');
 // show a loading screen until the promises resolve
 ReactDOM.render(<Loading splash/>, placeholder);
 
-process.env.API_ENDPOINT = 'http://localhost:3000';
-
-// initialize third party service providers
-if (process.env.NODE_ENV === 'production')
+// set the endpoint to the development server
+if (process.env.NODE_ENV === 'development')
+{
+  process.env.API_ENDPOINT = 'http://localhost:3000';
+}
+// set the endpoint to the production server
+else if (process.env.NODE_ENV === 'production')
 {
   process.env.API_ENDPOINT = 'https://airtegal.herokuapp.com';
 
@@ -162,7 +165,7 @@ const ipCheckPromise = () =>
 {
   return new Promise((resolve, reject) =>
   {
-    // bypass check if on a development builds
+    // bypass check if on a development or testing environments
     if (process.env.NODE_ENV !== 'production')
     {
       country = 'Egypt';

@@ -12,6 +12,8 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
+import * as mocks from '../mocks/io.js';
+
 import stupidNames from '../stupidNames.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
@@ -52,7 +54,11 @@ function connect()
   {
     try
     {
-      socket = io(process.env.API_ENDPOINT, { path: '/io' });
+      // mock socket.io client
+      if (process.env.NODE_ENV === 'testing')
+        socket = mocks.socket;
+      else
+        socket = io(process.env.API_ENDPOINT, { path: '/io' });
 
       socket.once('connect', resolve)
         .once('error', (e) =>
@@ -119,8 +125,6 @@ class Game extends React.Component
     this.resize = this.resize.bind(this);
 
     this.requestRooms = this.requestRooms.bind(this);
-
-    // this.adLoaded = this.adLoaded.bind(this);
 
     // disable back button
 

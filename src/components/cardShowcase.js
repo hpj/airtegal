@@ -37,6 +37,10 @@ class CardShowcase extends React.Component
 
   componentDidMount()
   {
+    // TODO test showcase
+    if (process.env.NODE_ENV === 'testing')
+      return;
+
     // request the data from server
     axios.get(`${process.env.API_ENDPOINT}/combos?region=${locale.value}`, {
       timeout: 20000
