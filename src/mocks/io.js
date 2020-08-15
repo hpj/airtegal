@@ -1,4 +1,6 @@
 export const socket = {
+  id: 'skye',
+
   on,
   once,
   emit,
@@ -53,6 +55,8 @@ function emit(eventName, args)
 
   const params = new URL(document.URL).searchParams;
 
+  let returnValue;
+
   if (eventName === 'list')
   {
     const list = [
@@ -106,8 +110,57 @@ function emit(eventName, args)
     ];
 
     // answer with an empty array of rooms
-    setTimeout(() => emitter.emit('done', nonce, params?.get('list') ? list : []), 100);
+    returnValue = params?.get('list') ? list : [];
+  }
+  else if (eventName === 'create')
+  {
+    roomData('player-joined', 'lobby');
   }
 
+  // call done
+  setTimeout(() => emitter.emit('done', nonce, returnValue), 100);
+
   return true;
+}
+
+/**
+* @param { string } reason
+* @param { 'lobby' | 'match' } state
+*/
+function roomData(reason, state)
+{
+  const data = {
+    id: 'skye',
+    reason,
+    state,
+    master: 'skye',
+    players: [ 'skye' ],
+    playerProperties: {
+      'skye': {
+        username: 'Skye'
+      }
+    },
+    options: {
+      gameMode: 'judge',
+      winMethod: 'points',
+      match: {
+        maxPlayers: 8,
+        maxRounds: 5,
+        maxTime: 10 * 60 * 1000,
+        pointsToCollect: 3,
+        blankProbability: 0,
+        startingHandAmount: 7,
+        randos: false,
+        availablePacks: [],
+        selectedPacks: []
+      },
+      round: {
+        maxTime: 2 * 60 * 1000,
+        delay: 2000,
+        maxDelay: 10000
+      }
+    }
+  };
+
+  setTimeout(() => emitter.emit('roomData', data));
 }

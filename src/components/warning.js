@@ -29,12 +29,19 @@ const Warning = ({ fullScreen, storageKey, text, button }) =>
   // on url change
   useEffect(() =>
   {
+    const params = new URL(document.URL).searchParams;
+
+    // the quiet param is used for testing
+    // so we don't have to click on the warning each test
+    if (process.env.NODE_ENV !== 'production' && params?.get('quiet'))
+      return;
+    
     // because the warning starts hidden
     // we need to check if the user didn't accept the warning already
     // if they didn't then we assume it's the first time they open the page and show them the warning
     if (!localStorage.getItem(storageKey))
       changeVisibility(true);
-  }, [ window.location ]);
+  }, []);
 
   // if the waring is visible
   if (visible)

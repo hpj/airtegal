@@ -306,7 +306,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div>{ i18n('first-to-points-2') }</div>
+          <div>{ i18n('first-to-points-2', dirtyOptions.match.pointsToCollect) }</div>
         </div>
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'limited' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxRounds !== dirtyOptions.match.maxRounds)).toString() }>
@@ -340,7 +340,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div>{ i18n('max-rounds-2') }</div>
+          <div>{ i18n('max-rounds-2', dirtyOptions.match.maxRounds) }</div>
         </div>
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'timer' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxTime !== dirtyOptions.match.maxTime)).toString() }>
@@ -375,7 +375,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div>{ i18n('max-time-2') }</div>
+          <div>{ i18n('max-time-2', dirtyOptions.match.maxTime / 60 / 1000) }</div>
         </div>
       </div>;
     };

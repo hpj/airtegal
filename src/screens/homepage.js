@@ -29,7 +29,7 @@ class Homepage extends React.Component
     return (
       <div id={ 'homepage' }>
         <Warning
-          storageKey='airtegal-adults-warning'
+          storageKey={ 'airtegal-adults-warning' }
           text={ i18n('airtegal-adults-warning') }
           button={ i18n('ok') }
         />

@@ -54,9 +54,9 @@ export default function i18n(key, ...args)
     const split = value.split('~');
 
     if (args[0] === 1 || (locale.language === 'ar' && args[0] > 10))
-      return `${args[0]} ${split[1]}`;
+      return args[1] ? `${args[0]} ${split[1]}` : split[1];
     
-    return `${args[0]} ${split[0]}`;
+    return args[1] ? `${args[0]} ${split[0]}` : split[0];
   }
   // replace with args
   else

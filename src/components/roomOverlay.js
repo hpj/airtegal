@@ -388,105 +388,103 @@ class RoomOverlay extends StoreComponent
     if (!size.width)
       return <div/>;
 
-    return (
-      <div>
-        <Notifications notifications={ this.state.notifications }/>
+    return <div>
+      <Notifications notifications={ this.state.notifications }/>
 
-        <ShareOverlay
-          addNotification={ this.addNotification }
-          share={ this.state.share }
-          hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
+      <ShareOverlay
+        addNotification={ this.addNotification }
+        share={ this.state.share }
+        hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
 
-        <div style={ {
-          display: (this.state.overlayLoadingHidden) ? 'none' : ''
-        } } className={ styles.loading }
-        />
+      <div style={ {
+        display: (this.state.overlayLoadingHidden) ? 'none' : ''
+      } } className={ styles.loading }
+      />
 
-        <div className={ styles.error } style={ {
-          display: (this.state.overlayErrorMessage) ? '' : 'none'
-        } } onClick={ () => this.showErrorMessage('') }>
-          <div>{ this.state.overlayErrorMessage }</div>
-        </div>
-
-        <div style={ {
-          zIndex: 1,
-          display: (this.state.overlayHidden) ? 'none' : '',
-          opacity: this.state.overlayHolderOpacity || 0
-        } } className={ styles.holder }/>
-    
-        <Interactable.View
-          ref={ overlayRef }
-
-          style={ {
-            zIndex: 1,
-            position: 'fixed',
-            display: (this.state.overlayHidden) ? 'none' : '',
-
-            backgroundColor: colors.whiteBackground,
-          
-            top: 0,
-            width: (this.state.overlayHandlerVisible) ? '100vw' : 'calc(100vw + 18px)',
-            height: '100%',
-
-            paddingRight: '20vw'
-          } }
-
-          animatedValueX={ overlayAnimatedX }
-
-          dragEnabled={ this.state.overlayHandlerVisible && !this.state.overlayBlockDragging }
-          
-          horizontalOnly={ true }
-          initialPosition={ { x: size.width } }
-          
-          onSnap={ this.onSnap.bind(this) }
-          snapPoints={ [ { x: (this.state.overlayHandlerVisible) ? 0 : -18 }, { x: size.width } ] }
-
-          boundaries={ {
-            left: (this.state.overlayHandlerVisible) ? 0 : -18,
-            right: size.width
-          } }
-        >
-          <div className={ styles.wrapper }>
-            <div className={ styles.handlerWrapper }>
-              <div className={ styles.handler }/>
-            </div>
-
-            <div className={ styles.container }>
-
-              <RoomState addNotification={ this.addNotification }/>
-
-              {/* this instance of trackBar is always enabled on
-              non-touch screens or on touch screens in landscape mode */}
-              <RoomTrackBar
-                enabled={ (!isTouchScreen || size.width >= 1080).toString() }
-              />
-
-              <HandOverlay sendMessage={ sendMessage } size={ size } />
-
-              <div className={ styles.content }>
-                <FieldOverlay sendMessage={ sendMessage } addNotification={ this.addNotification } size={ size }/>
-                
-                {
-                  (isTouchScreen) ? <PocketOverlay size={ size }/> : <div/>
-                }
-
-                {/* this instance of trackBar is only enabled on
-                touch screens in portrait mode  */}
-                <RoomOptions ref={ optionsRef } sendMessage={ sendMessage }>
-
-                  <RoomTrackBar contained
-                    enabled={ (isTouchScreen && size.width < 1080).toString() }
-                  />
-
-                </RoomOptions>
-              </div>
-            </div>
-
-          </div>
-        </Interactable.View>
-
+      <div className={ styles.error } style={ {
+        display: (this.state.overlayErrorMessage) ? '' : 'none'
+      } } onClick={ () => this.showErrorMessage('') }>
+        <div>{ this.state.overlayErrorMessage }</div>
       </div>
-    );
+
+      <div style={ {
+        zIndex: 1,
+        display: (this.state.overlayHidden) ? 'none' : '',
+        opacity: this.state.overlayHolderOpacity || 0
+      } } className={ styles.holder }/>
+    
+      <Interactable.View
+        ref={ overlayRef }
+
+        style={ {
+          zIndex: 1,
+          position: 'fixed',
+          display: (this.state.overlayHidden) ? 'none' : '',
+
+          backgroundColor: colors.whiteBackground,
+          
+          top: 0,
+          width: (this.state.overlayHandlerVisible) ? '100vw' : 'calc(100vw + 18px)',
+          height: '100%',
+
+          paddingRight: '20vw'
+        } }
+
+        animatedValueX={ overlayAnimatedX }
+
+        dragEnabled={ this.state.overlayHandlerVisible && !this.state.overlayBlockDragging }
+          
+        horizontalOnly={ true }
+        initialPosition={ { x: size.width } }
+          
+        onSnap={ this.onSnap.bind(this) }
+        snapPoints={ [ { x: (this.state.overlayHandlerVisible) ? 0 : -18 }, { x: size.width } ] }
+
+        boundaries={ {
+          left: (this.state.overlayHandlerVisible) ? 0 : -18,
+          right: size.width
+        } }
+      >
+        <div className={ styles.wrapper }>
+          <div className={ styles.handlerWrapper }>
+            <div className={ styles.handler }/>
+          </div>
+
+          <div className={ styles.container }>
+
+            <RoomState addNotification={ this.addNotification }/>
+
+            {/* this instance of trackBar is always enabled on
+              non-touch screens or on touch screens in landscape mode */}
+            <RoomTrackBar
+              enabled={ (!isTouchScreen || size.width >= 1080).toString() }
+            />
+
+            <HandOverlay sendMessage={ sendMessage } size={ size } />
+
+            <div className={ styles.content }>
+              <FieldOverlay sendMessage={ sendMessage } addNotification={ this.addNotification } size={ size }/>
+                
+              {
+                (isTouchScreen) ? <PocketOverlay size={ size }/> : <div/>
+              }
+
+              {/* this instance of trackBar is only enabled on
+                touch screens in portrait mode  */}
+              <RoomOptions ref={ optionsRef } sendMessage={ sendMessage }>
+
+                <RoomTrackBar contained
+                  enabled={ (isTouchScreen && size.width < 1080).toString() }
+                />
+
+              </RoomOptions>
+            </div>
+          </div>
+
+        </div>
+      </Interactable.View>
+
+    </div>;
   }
 }
 

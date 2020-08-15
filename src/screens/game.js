@@ -315,8 +315,8 @@ class Game extends React.Component
       return <div className={ optionsStyles.container }>
 
         <div className={ optionsStyles.buttons }>
-          <div className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
-          <div className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
+          <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
+          <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
         </div>
 
         <div className={ optionsStyles.title }> { i18n('available-rooms') }</div>
@@ -391,7 +391,7 @@ class Game extends React.Component
 
         <Warning
           fullScreen={ true }
-          storageKey='airtegal-adults-warning'
+          storageKey={ 'airtegal-adults-warning' }
           text={ i18n('airtegal-adults-warning') }
           button={ i18n('ok') }
         />
@@ -431,11 +431,11 @@ const RoomHighlights = (room) =>
   if (gameMode === 'judge' || gameMode === 'king' || gameMode === 'democracy')
   {
     if (room.options.winMethod === 'points')
-      highlights.push(`${i18n('first-to-points-1')} ${i18n('first-to-points-2', room.options.match.pointsToCollect)}.`);
+      highlights.push(`${i18n('first-to-points-1')} ${i18n('first-to-points-2', room.options.match.pointsToCollect, true)}.`);
     else if (room.options.winMethod === 'limited')
-      highlights.push(`${i18n('max-rounds-1')} ${i18n('max-rounds-2', room.options.match.maxRounds)}.`);
+      highlights.push(`${i18n('max-rounds-1')} ${i18n('max-rounds-2', room.options.match.maxRounds, true)}.`);
     else if (room.options.winMethod === 'timer')
-      highlights.push(`${i18n('max-time-1')} ${i18n('max-time-2', room.options.match.maxTime / 60 / 1000)}.`);
+      highlights.push(`${i18n('max-time-1')} ${i18n('max-time-2', room.options.match.maxTime / 60 / 1000, true)}.`);
 
     if (gameMode === 'king')
     {

@@ -77,27 +77,32 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play"
+          "value": "/play?quiet=1&list=1"
         },
         {
           "action": "wait",
-          "value": "#game"
+          "value": 1
+        }
+      ]
+    },
+    {
+      "title": "Room Overlay (Created)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet=1&list=1"
         },
         {
           "action": "select",
-          "value": "#warning-button"
+          "value": "#create-room"
         },
         {
           "action": "click",
           "value": "left"
         },
         {
-          "action": "goto",
-          "value": "/play?list=1"
-        },
-        {
           "action": "wait",
-          "value": 1
+          "value": 2
         }
       ]
     }
