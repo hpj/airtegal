@@ -53,6 +53,7 @@
   "rando": "راندو",
 
   "stupid-first-names": [
+    "اسلام",
     "ابو",
     "ام",
     "حمادة",
@@ -64,8 +65,11 @@
   ],
 
   "stupid-last-names": [
+    "المرج",
     "الزنجي",
     "السمكة",
+    "البضان",
+    "الاهبل",
     "الفقير",
     "الزبالة",
     "البقرة",
@@ -114,18 +118,22 @@
   "democracy": "الديمقراطية فكرة غبية",
   "king": "ملك العشوئيات",
 
+  "judge:cover": "القاضي",
+  "democracy:cover": "الديمقراطية الديمقراطية الديمقراطية غبية غبية غبية",
+  "king:cover": "ملك الـ__و___ت!",
+
   "win-method": "طريقة الفوز:",
   
   "options-placeholder": "0",
 
   "first-to-points-1": "أول حد يوصل",
-  "first-to-points-2": "نقاط",
+  "first-to-points-2": "نقاط~نقطة",
   
   "max-rounds-1": "بعد مرور",
-  "max-rounds-2": "جولات",
+  "max-rounds-2": "جولات~جولة",
 
   "max-time-1": "بعد مرور",
-  "max-time-2": "دقائق",
+  "max-time-2": "دقائق~دقيقة",
 
   "match-options": "اعدادات المباراة:",
 
@@ -133,10 +141,10 @@
   "round-countdown": "دقيقه لكل جولة",
 
   "hand-cap": "عدد الكروت بيد كل لاعب",
-  "hand-cap-lobby": "كروت",
+  "hand-cap-lobby": "كروت~كرت",
 
   "blank-probability": "نسبة سحب كرت فاضي",
-  "blank-probability-lobby": "كرت فاضي",
+  "blank-probability:cover": "كرت فاضي",
 
   "room-options": "اعدادات الغرفة:",
 

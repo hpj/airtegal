@@ -48,7 +48,7 @@
       ]
     },
     {
-      "title": "Game (Lobby)",
+      "title": "Empty Lobby",
       "steps": [
         {
           "action": "goto",
@@ -68,7 +68,36 @@
         },
         {
           "action": "wait",
-          "value": 2
+          "value": 1
+        }
+      ]
+    },
+    {
+      "title": "Lobby With Rooms",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play"
+        },
+        {
+          "action": "wait",
+          "value": "#game"
+        },
+        {
+          "action": "select",
+          "value": "#warning-button"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "goto",
+          "value": "/play?list=1"
+        },
+        {
+          "action": "wait",
+          "value": 1
         }
       ]
     }

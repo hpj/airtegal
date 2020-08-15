@@ -6,7 +6,7 @@ export const lastNames = i18n('stupid-last-names');
 export function randomFirstName(firstNames)
 {
   if (process.env.NODE_ENV === 'testing')
-    firstNames = [ 'First' ];
+    firstNames = [ 'اسلام' ];
   
   return firstNames[Math.floor(Math.random() * firstNames.length)];
 }
@@ -14,7 +14,7 @@ export function randomFirstName(firstNames)
 export function randomLastName(lastNames)
 {
   if (process.env.NODE_ENV === 'testing')
-    lastNames = [ 'Last' ];
+    lastNames = [ 'المرج' ];
   
   return lastNames[Math.floor(Math.random() * lastNames.length)];
 }

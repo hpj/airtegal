@@ -1,5 +1,5 @@
 export const locales = [
-  { value: 'egypt', label: 'مصر', locale: 'ar-EG', direction: 'rtl', blank: /[^\u0621-\u064A0-9 /؟_\-.]/g, json: require('./i18n/ar-EG.jsonc').default }
+  { value: 'egypt', label: 'مصر', language: 'ar', locale: 'ar-EG', direction: 'rtl', blank: /[^\u0621-\u064A0-9 /؟_\-.]/g, json: require('./i18n/ar-EG.jsonc').default }
 ];
 
 /**
@@ -48,7 +48,21 @@ export default function i18n(key, ...args)
   // eslint-disable-next-line security/detect-object-injection
   let value = locale.json[key];
 
-  args.forEach((s, i) => value = value.replace(`%${i}`, s));
+  // handle plurals
+  if (value.includes('~'))
+  {
+    const split = value.split('~');
+
+    if (args[0] === 1 || (locale.language === 'ar' && args[0] > 10))
+      return `${args[0]} ${split[1]}`;
+    
+    return `${args[0]} ${split[0]}`;
+  }
+  // replace with args
+  else
+  {
+    args.forEach((s, i) => value = value.replace(`%${i}`, s));
+  }
 
   return value;
 }
