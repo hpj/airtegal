@@ -114,7 +114,18 @@ function emit(eventName, args)
   }
   else if (eventName === 'create')
   {
-    roomData('player-joined', 'lobby');
+    roomData('player-joined');
+  }
+  else if (eventName === 'join')
+  {
+    roomData('player-joined', {
+      master: 'mika',
+      players: [ 'skye', 'mika' ],
+      playerProperties: {
+        'skye': { username: 'Skye' },
+        'mika': { username: 'Mika' }
+      }
+    });
   }
 
   // call done
@@ -125,25 +136,25 @@ function emit(eventName, args)
 
 /**
 * @param { string } reason
-* @param { 'lobby' | 'match' } state
+* @param { import('../../../Backend/src/matchmaking.js').RoomOptions } opt
 */
-function roomData(reason, state)
+function roomData(reason, opt)
 {
+  opt = opt ?? {};
+
   const data = {
-    id: 'skye',
+    id: 'sskye',
     reason,
-    state,
-    master: 'skye',
-    players: [ 'skye' ],
-    playerProperties: {
-      'skye': {
-        username: 'Skye'
-      }
+    state: opt.state ?? 'lobby',
+    master: opt.master ?? 'skye',
+    players: opt.players ?? [ 'skye' ],
+    playerProperties: opt.playerProperties ?? {
+      'skye': { username: 'Skye' }
     },
     options: {
-      gameMode: 'judge',
-      winMethod: 'points',
-      match: {
+      gameMode: opt.gameMode ?? 'judge',
+      winMethod: opt.winMethod ??'points',
+      match: opt.match ?? {
         maxPlayers: 8,
         maxRounds: 5,
         maxTime: 10 * 60 * 1000,
@@ -154,7 +165,7 @@ function roomData(reason, state)
         availablePacks: [],
         selectedPacks: []
       },
-      round: {
+      round: opt.round ?? {
         maxTime: 2 * 60 * 1000,
         delay: 2000,
         maxDelay: 10000

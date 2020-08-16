@@ -93,8 +93,37 @@
           "value": "/play?quiet=1&list=1"
         },
         {
-          "action": "select",
+          "action": "wait",
+          "value": 1
+        },
+        {
+          "action": "wait",
           "value": "#create-room"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Room Overlay (Random)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet=1&list=1"
+        },
+        {
+          "action": "wait",
+          "value": 1
+        },
+        {
+          "action": "wait",
+          "value": "#random-room"
         },
         {
           "action": "click",
