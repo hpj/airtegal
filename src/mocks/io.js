@@ -110,7 +110,7 @@ function emit(eventName, args)
     ];
 
     // answer with an empty array of rooms
-    returnValue = params?.get('list') ? list : [];
+    returnValue = params?.has('list') ? list : [];
   }
   else if (eventName === 'create')
   {

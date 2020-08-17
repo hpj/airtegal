@@ -106,7 +106,7 @@ class RoomOptions extends StoreComponent
     if (changes.dirtyOptions)
     {
       // force all inputs to auto resize
-      const inputs = document.querySelectorAll('#options-input');
+      const inputs = document.querySelectorAll('#room-options-input');
 
       inputs.forEach((elem) => autoSize(elem));
     }
@@ -119,7 +119,7 @@ class RoomOptions extends StoreComponent
 
   checkValidity()
   {
-    const inputs = document.querySelectorAll('#options-input');
+    const inputs = document.querySelectorAll('#room-options-input');
 
     for (let i = 0; i < inputs.length; i++)
     {
@@ -290,7 +290,7 @@ class RoomOptions extends StoreComponent
             min='2'
             max='7'
             maxLength={ 1 }
-            id='options-input'
+            id='room-options-input'
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -324,7 +324,7 @@ class RoomOptions extends StoreComponent
             min='3'
             max='30'
             maxLength={ 2 }
-            id='options-input'
+            id='room-options-input'
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -359,7 +359,7 @@ class RoomOptions extends StoreComponent
             min='5'
             max='30'
             maxLength={ 2 }
-            id='options-input'
+            id='room-options-input'
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -392,7 +392,7 @@ class RoomOptions extends StoreComponent
             min='3'
             max='16'
             maxLength={ 2 }
-            id='options-input'
+            id='room-options-input'
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -419,7 +419,7 @@ class RoomOptions extends StoreComponent
             min='1'
             max='5'
             maxLength={ 1 }
-            id='options-input'
+            id='room-options-input'
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -445,7 +445,7 @@ class RoomOptions extends StoreComponent
             min='3'
             max='12'
             maxLength={ 2 }
-            id='options-input'
+            id='room-options-input'
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -472,7 +472,7 @@ class RoomOptions extends StoreComponent
             min='0'
             max='25'
             maxLength={ 2 }
-            id='options-input'
+            id='room-options-input'
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -583,6 +583,7 @@ class RoomOptions extends StoreComponent
                 {/* Apply Button */}
 
                 <div
+                  id={ 'room-options-apply' }
                   className={ styles.button }
                   master={ isMaster.toString() }
                   valid={ isValid.toString() }
@@ -746,7 +747,7 @@ const styles = createStyle({
       border: `1px ${colors.greyText} solid`
     },
 
-    '[dirty="true"][valid="false"]': {
+    '[allowed="true"][valid="false"]': {
       pointerEvents: 'none',
 
       color: colors.whiteText,

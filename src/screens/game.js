@@ -253,8 +253,11 @@ class Game extends React.Component
     const params = new URL(document.URL).searchParams;
     
     // join room
-    if (params?.get('join'))
+    if (params?.has('join'))
       overlayRef.current.joinRoom(params.get('join'));
+    // create room
+    else if (params?.has('create'))
+      overlayRef.current.createRoom();
   }
 
   componentWillUnmount()
@@ -290,6 +293,7 @@ class Game extends React.Component
         <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
 
         <AutoSizeInput
+          id={ 'username-input' }
           className={ headerStyles.username }
           required
           type='text'
@@ -443,7 +447,7 @@ const RoomHighlights = (room) =>
     }
     else
     {
-      highlights.push(`${i18n('hand-cap-lobby', room.options.match.startingHandAmount)}.`);
+      highlights.push(`${i18n('hand-cap-lobby', room.options.match.startingHandAmount, true)}.`);
 
       if (room.options.match.blankProbability)
         highlights.push(`%${room.options.match.blankProbability} ${i18n('blank-probability:cover')}.`);

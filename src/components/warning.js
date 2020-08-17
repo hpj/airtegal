@@ -33,7 +33,7 @@ const Warning = ({ fullScreen, storageKey, text, button }) =>
 
     // the quiet param is used for testing
     // so we don't have to click on the warning each test
-    if (process.env.NODE_ENV !== 'production' && params?.get('quiet'))
+    if (process.env.NODE_ENV !== 'production' && params?.has('quiet'))
       return;
     
     // because the warning starts hidden

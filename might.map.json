@@ -73,28 +73,11 @@
       ]
     },
     {
-      "title": "Lobby With Rooms",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet=1&list=1"
-        },
-        {
-          "action": "wait",
-          "value": 1
-        }
-      ]
-    },
-    {
       "title": "Room Overlay (Created)",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet=1&list=1"
-        },
-        {
-          "action": "wait",
-          "value": 1
+          "value": "/play?quiet&list"
         },
         {
           "action": "wait",
@@ -115,11 +98,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet=1&list=1"
-        },
-        {
-          "action": "wait",
-          "value": 1
+          "value": "/play?quiet&list"
         },
         {
           "action": "wait",
@@ -132,6 +111,61 @@
         {
           "action": "wait",
           "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Lobby With Rooms",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&list"
+        },
+        {
+          "action": "wait",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "title": "Room Options (Invalid)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-input"
+        },
+        {
+          "action": "type",
+          "value": "-1"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-apply"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "title": "Room Options (Valid)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-input"
         }
       ]
     }
