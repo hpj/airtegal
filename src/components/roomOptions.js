@@ -251,8 +251,9 @@ class RoomOptions extends StoreComponent
         {
           (isMaster) ?
             <Select
+              id={ 'room-options-kuruit-mode' }
               className={ (dirtyOptions.gameMode !== options.gameMode) ? styles.selectDirty : styles.select }
-              classNamePrefix='react-select-game-mode'
+              classNamePrefix={ 'room-options-select-kuruit-mode' }
               noOptionsMessage={ () => i18n('no-options') }
               defaultValue={ { label: i18n(dirtyOptions.gameMode), value: dirtyOptions.gameMode } }
               isRtl={ locale.direction === 'rtl' }
@@ -277,6 +278,7 @@ class RoomOptions extends StoreComponent
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'points' && (dirtyOptions.winMethod !== options.winMethod || options.match.pointsToCollect !== dirtyOptions.match.pointsToCollect)).toString() }>
           <div
+            id={ 'room-options-kuruit-points' }
             className={ styles.checkbox }
             ticked={ (dirtyOptions.winMethod === 'points').toString() }
             onClick={ () => this.onWinMethodChange('points') }
@@ -311,6 +313,7 @@ class RoomOptions extends StoreComponent
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'limited' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxRounds !== dirtyOptions.match.maxRounds)).toString() }>
           <div
+            id={ 'room-options-kuruit-limited' }
             className={ styles.checkbox }
             ticked={ (dirtyOptions.winMethod === 'limited').toString() }
             onClick={ () => this.onWinMethodChange('limited') }
@@ -345,6 +348,7 @@ class RoomOptions extends StoreComponent
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'timer' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxTime !== dirtyOptions.match.maxTime)).toString() }>
           <div
+            id={ 'room-options-kuruit-timer' }
             className={ styles.checkbox }
             ticked={ (dirtyOptions.winMethod === 'timer').toString() }
             onClick={ () => this.onWinMethodChange('timer') }
@@ -495,8 +499,8 @@ class RoomOptions extends StoreComponent
         <div className={ styles.field } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
           <div style={ { margin: '0 5px' } }>{ i18n('randos') }</div>
 
-          <div className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
-          <div className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+          <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
+          <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
         </div>
       </div>;
     };
@@ -830,7 +834,7 @@ const styles = createStyle({
   select: {
     padding: '0 25px 8px 25px',
 
-    ' .react-select-game-mode__menu': {
+    ' .room-options-select-kuruit-mode__menu': {
       backgroundColor: colors.whiteBackground,
 
       boxShadow: `0 0 25px -5px ${colors.greyText}`,
@@ -840,7 +844,7 @@ const styles = createStyle({
       width: 'calc(100% - 50px)'
     },
 
-    ' .react-select-game-mode__menu-list': {
+    ' .room-options-select-kuruit-mode__menu-list': {
       '::-webkit-scrollbar':
       {
         width: '8px'
@@ -853,7 +857,7 @@ const styles = createStyle({
       }
     },
 
-    ' .react-select-game-mode__option': {
+    ' .room-options-select-kuruit-mode__option': {
       cursor: 'pointer',
 
       color: colors.blackText,
@@ -865,7 +869,7 @@ const styles = createStyle({
       }
     },
 
-    ' .react-select-game-mode__option--is-focused': {
+    ' .room-options-select-kuruit-mode__option--is-focused': {
       color: colors.whiteText,
       backgroundColor: colors.greyText,
 
@@ -875,7 +879,7 @@ const styles = createStyle({
       }
     },
 
-    ' .react-select-game-mode__option--is-selected': {
+    ' .room-options-select-kuruit-mode__option--is-selected': {
       color: colors.blackText,
       backgroundColor: colors.whiteBackground,
 
@@ -885,7 +889,7 @@ const styles = createStyle({
       }
     },
 
-    ' .react-select-game-mode__option--is-selected.react-select-game-mode__option--is-focused': {
+    ' .room-options-select-kuruit-mode__option--is-selected.room-options-select-kuruit-mode__option--is-focused': {
       color: colors.whiteText,
       backgroundColor: colors.greyText,
 
@@ -895,7 +899,7 @@ const styles = createStyle({
       }
     },
 
-    ' .react-select-game-mode__control': {
+    ' .room-options-select-kuruit-mode__control': {
       cursor: 'pointer',
 
       color: colors.blackText,
@@ -905,22 +909,22 @@ const styles = createStyle({
       outline: colors.blackText
     },
 
-    ' .react-select-game-mode__control:hover:not(.react-select-game-mode__control--is-focused)': {
+    ' .room-options-select-kuruit-mode__control:hover:not(.room-options-select-kuruit-mode__control--is-focused)': {
       borderColor: colors.blackText,
       outline: colors.blackText
     },
 
-    ' .react-select-game-mode__control--is-focused:hover': {
+    ' .room-options-select-kuruit-mode__control--is-focused:hover': {
       borderColor: colors.transparent,
       outline: colors.transparent
     },
 
-    ' .react-select-game-mode__control:focus': {
+    ' .room-options-select-kuruit-mode__control:focus': {
       borderColor: colors.transparent,
       outline: colors.transparent
     },
 
-    ' .react-select-game-mode__control--is-focused': {
+    ' .room-options-select-kuruit-mode__control--is-focused': {
       color: colors.whiteText,
       background: colors.greyText,
       
@@ -929,19 +933,19 @@ const styles = createStyle({
       outline: colors.transparent
     },
 
-    ' .react-select-game-mode__single-value': {
+    ' .room-options-select-kuruit-mode__single-value': {
       color: 'inherit'
     },
 
-    ' .react-select-game-mode__indicator-separator': {
+    ' .room-options-select-kuruit-mode__indicator-separator': {
       backgroundColor: colors.transparent
     },
 
-    ' .react-select-game-mode__indicator': {
+    ' .room-options-select-kuruit-mode__indicator': {
       color: 'inherit'
     },
 
-    ' .react-select-game-mode__indicator:hover': {
+    ' .room-options-select-kuruit-mode__indicator:hover': {
       color: 'inherit'
     }
   },
@@ -949,14 +953,14 @@ const styles = createStyle({
   selectDirty: {
     extend: 'select',
 
-    ' .react-select-game-mode__single-value': {
+    ' .room-options-select-kuruit-mode__single-value': {
       display: 'flex',
       alignItems: 'center',
       color: 'inherit',
       fontStyle: 'italic'
     },
 
-    ' .react-select-game-mode__single-value:after': {
+    ' .room-options-select-kuruit-mode__single-value:after': {
       display: 'block',
       content: '"*"'
     }
