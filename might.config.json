@@ -5,6 +5,7 @@
     "width": null,
     "height": null
   },
+  "titleBasedScreenshots": true,
   "parallelTests": null,
   "defaultTimeout": 60000,
   "coverageExclude": [

@@ -202,6 +202,10 @@
         {
           "action": "click",
           "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 1
         }
       ]
     }
