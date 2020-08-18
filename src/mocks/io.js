@@ -110,6 +110,7 @@ function emit(eventName, args)
     ];
 
     // answer with an empty array of rooms
+    // or a list of rooms if list is parma in the URL
     returnValue = params?.has('list') ? list : [];
   }
   else if (eventName === 'create')
@@ -125,6 +126,12 @@ function emit(eventName, args)
         'skye': { username: 'Skye' },
         'mika': { username: 'Mika' }
       }
+    });
+  }
+  else if (eventName === 'edit')
+  {
+    roomData('options-edit', {
+      ...args.options
     });
   }
 

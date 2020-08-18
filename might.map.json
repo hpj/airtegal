@@ -208,6 +208,71 @@
           "value": 1
         }
       ]
+    },
+    {
+      "title": "Room Options (Apply)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-input"
+        },
+        {
+          "action": "type",
+          "value": "5"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-rando-yes"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-kuruit-limited"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-kuruit-mode"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": ".room-options-select-kuruit-mode__option:nth-child(2)"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 1
+        },
+        {
+          "action": "select",
+          "value": "#room-options-apply"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 1
+        }
+      ]
     }
   ]
 }
