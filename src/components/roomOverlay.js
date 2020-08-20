@@ -215,6 +215,9 @@ class RoomOverlay extends StoreComponent
       // hide the loading indictor
       this.loadingVisibility(false);
 
+      // request a screen wake lock.
+      navigator.wakeLock?.request('screen').then(wakeLock => this.wakeLock = wakeLock);
+
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
@@ -242,6 +245,9 @@ class RoomOverlay extends StoreComponent
       // hide the loading indictor
       this.loadingVisibility(false);
 
+      // request a screen wake lock.
+      navigator.wakeLock?.request('screen').then(wakeLock => this.wakeLock = wakeLock);
+
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
@@ -262,6 +268,11 @@ class RoomOverlay extends StoreComponent
     {
       // refresh rooms list
       this.props.requestRooms();
+
+      // release screen wake lock
+      this.wakeLock?.release();
+
+      this.wakeLock = undefined;
     
       // after leaving the room
       this.store.set({
