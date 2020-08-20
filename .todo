@@ -1,4 +1,6 @@
 Performance Issues and Bugs:
+  ☐ change the slogan "A game for horrible people" @high 
+
   ☐ test if everything works correctly on heroku @critical 
 
   ☐ refactor anything that uses cards exclusivly to allow more fludility

@@ -110,7 +110,7 @@ class AutoSizeInput extends React.Component
       required={ required }
       type={ type }
 
-      autoComplete={ 'false' }
+      autoComplete={ 'off' }
 
       min={ min }
       max={ max }
