@@ -242,7 +242,8 @@ class RoomOptions extends StoreComponent
 
               className={ dirtyOptions.gameMode !== options.gameMode ? styles.selectDirty : styles.select }
               menuClassName={ styles.selectMenu }
-              optionClassName={ `${styles.selectOption} room-options-game-mode` }
+              optionClassName={ styles.selectOption }
+              optionsIdPrefix={ 'room-options-game-mode' }
           
               defaultIndex={ 0 }
               options={ gameModes }

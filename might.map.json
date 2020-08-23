@@ -189,7 +189,7 @@
         },
         {
           "action": "select",
-          "value": "#room-options-kuruit-mode"
+          "value": "#room-options-select-game-mode"
         },
         {
           "action": "click",
@@ -197,7 +197,7 @@
         },
         {
           "action": "select",
-          "value": ".room-options-select-kuruit-mode__option:nth-child(2)"
+          "value": "#room-options-game-mode-2"
         },
         {
           "action": "click",
@@ -242,7 +242,7 @@
         },
         {
           "action": "select",
-          "value": "#room-options-kuruit-mode"
+          "value": "#room-options-select-game-mode"
         },
         {
           "action": "click",
@@ -250,7 +250,7 @@
         },
         {
           "action": "select",
-          "value": ".room-options-select-kuruit-mode__option:nth-child(2)"
+          "value": "#room-options-game-mode-2"
         },
         {
           "action": "click",

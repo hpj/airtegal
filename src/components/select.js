@@ -185,7 +185,13 @@ class Select extends React.Component
 
               return <div key={ i }>
                 { opt.group ? this.props.formatLabel(opt.group) : <div/> }
-                <div highlighted={ highlighted.toString() } className={ `${styles.option} ${this.props.optionClassName ?? ''}` } onMouseOver={ () => this.hover(i) } onClick={ () => this.onChange(opt) }>
+                <div
+                  highlighted={ highlighted.toString() }
+                  id={ (this.props.optionsIdPrefix) ? `${this.props.optionsIdPrefix}-${i + 1}` : '' }
+                  className={ `${styles.option} ${this.props.optionClassName ?? ''}` }
+                  onMouseOver={ () => this.hover(i) }
+                  onClick={ () => this.onChange(opt) }
+                >
                   { opt.label }
                 </div>
               </div>;
@@ -203,6 +209,7 @@ Select.propTypes = {
   className: PropTypes.string,
   menuClassName: PropTypes.string,
   optionClassName: PropTypes.string,
+  optionsIdPrefix: PropTypes.string,
   
   defaultIndex: PropTypes.number,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
