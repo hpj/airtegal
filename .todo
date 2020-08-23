@@ -1,6 +1,4 @@
 Performance Issues and Bugs:
-  ☐ update tests since we changes select dialogs
-  
   ☐ test if everything works correctly on heroku @high 
 
   ☐ refactor anything that uses cards exclusivly to allow more fludility
