@@ -6,8 +6,10 @@
     "height": null
   },
   "titleBasedScreenshots": true,
-  "parallelTests": null,
+  "parallelTests": 3,
   "defaultTimeout": 60000,
+  "tolerance": 2.3,
+  "antialiasingTolerance": 5,
   "coverageExclude": [
     "**/*.css",
     "/node_modules/**",

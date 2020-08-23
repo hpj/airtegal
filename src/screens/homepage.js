@@ -150,6 +150,9 @@ const headerStyles = createStyle({
     width: 'auto',
 
     fontWeight: 700,
+    fontFamily: 'Noto Arabic',
+    fontSize: 'calc(12px + 0.2vw + 0.2vh)',
+
     padding: '10px 0 0 0'
   },
 
