@@ -2,11 +2,11 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 
-import Select from 'react-select';
+import { createStyle } from 'flcss';
+
+import Select from '../components/select.js';
 
 import getTheme from '../colors.js';
-
-import { createStyle } from 'flcss';
 
 import Warning from '../components/warning.js';
 import CardShowcase from '../components/cardShowcase.js';
@@ -39,20 +39,12 @@ class Homepage extends React.Component
           <div className={ headerStyles.regionalOptions }>
             <Select
               className={ headerStyles.select }
-              classNamePrefix='react-select'
-              noOptionsMessage={ () => i18n('no-options') }
-              defaultValue={ locale }
-              isRtl={ locale.direction === 'rtl' }
-              isSearchable={ false }
+              menuClassName={ headerStyles.selectMenu }
+          
+              defaultValue={ locales.indexOf(locale) }
               options={ locales }
+
               onChange={ (locale) => setLocale(locale.value) }
-              theme={ theme => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary: colors.whiteText
-                }
-              }) }
             />
           </div>
   
@@ -162,89 +154,20 @@ const headerStyles = createStyle({
   },
 
   select: {
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    direction: locale.direction,
 
-    ' .react-select__menu': {
-      backgroundColor: colors.whiteBackground,
+    color: colors.whiteText,
+    backgroundColor: colors.transparent,
+    borderColor: colors.transparent,
 
-      boxShadow: `0 0 25px -5px ${colors.greyText}`,
-      border: '1px solid',
-      borderColor: colors.greyText
-    },
-    
-    ' .react-select__option': {
-      cursor: 'pointer',
-
+    '[shown="true"]': {
       color: colors.blackText,
-      backgroundColor: colors.whiteBackground,
-
-      ':active': {
-        color: colors.blackText,
-        backgroundColor: colors.whiteBackground
-      }
-    },
-
-    ' .react-select__option--is-focused': {
-      color: colors.whiteText,
-      backgroundColor: colors.greyText,
-
-      ':active': {
-        color: colors.whiteText,
-        backgroundColor: colors.greyText
-      }
-    },
-
-    ' .react-select__option--is-selected': {
-      color: colors.blackText,
-      backgroundColor: colors.whiteBackground,
-
-      ':active': {
-        color: colors.blackText,
-        backgroundColor: colors.whiteBackground
-      }
-    },
-
-    ' .react-select__option--is-selected.react-select__option--is-focused': {
-      color: colors.whiteText,
-      backgroundColor: colors.greyText,
-
-      ':active': {
-        color: colors.whiteText,
-        backgroundColor: colors.greyText
-      }
-    },
-
-    ' .react-select__control': {
-      cursor: 'pointer',
-
-      background: 'none',
-      color: colors.whiteText,
-
-      border: 'none',
-      outline: 'none'
-    },
-
-    ' .react-select__control--is-focused': {
-      color: colors.blackText,
-      background: colors.whiteBackground,
-      boxShadow: 'none'
-    },
-
-    ' .react-select__single-value': {
-      color: 'inherit'
-    },
-
-    ' .react-select__indicator-separator': {
-      display: 'none'
-    },
-
-    ' .react-select__indicator': {
-      color: 'inherit'
-    },
-
-    ' .react-select__indicator:hover': {
-      color: 'inherit'
+      backgroundColor: colors.whiteBackground
     }
+  },
+
+  selectMenu: {
+    borderColor: colors.greyText
   },
 
   title: {

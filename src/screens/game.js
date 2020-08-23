@@ -293,8 +293,8 @@ class Game extends React.Component
         <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
 
         <AutoSizeInput
-          id={ 'user-input' }
-          className={ headerStyles.user }
+          id={ 'usrname-input' }
+          className={ headerStyles.usrname }
           required
           type='text'
           maxLength={ 18 }
@@ -507,7 +507,7 @@ const headerStyles = createStyle({
     margin: '0'
   },
 
-  user: {
+  usrname: {
     margin: '0 5px -2px 5px',
     direction: locale.direction,
 

@@ -2,14 +2,14 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Select from 'react-select';
+import { createStyle } from 'flcss';
 
 import Brightness2Icon from 'mdi-react/Brightness2Icon';
 import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
-import getTheme, { detectDeviceIsDark } from '../colors.js';
+import Select from './select.js';
 
-import { createStyle } from 'flcss';
+import getTheme, { detectDeviceIsDark } from '../colors.js';
 
 import i18n, { locales, locale, setLocale } from '../i18n.js';
 
@@ -113,20 +113,12 @@ class OptionsOverlay extends React.Component
 
               <Select
                 className={ styles.select }
-                classNamePrefix='react-select-2'
-                noOptionsMessage={ () => i18n('no-options') }
-                defaultValue={ locale }
-                isRtl={ locale.direction === 'rtl' }
-                isSearchable={ false }
+                menuClassName={ styles.selectMenu }
+            
+                defaultIndex={ locales.indexOf(locale) }
                 options={ locales }
-                onChange={ (locale) => setLocale(locale.value) }
-                theme={ theme => ({
-                  ...theme,
-                  colors: {
-                    ...theme.colors,
-                    primary: colors.whiteText
-                  }
-                }) }
+
+                onChange={ (locale) => setLocale(locale) }
               />
             </div>
           </div>
@@ -271,105 +263,19 @@ const styles = createStyle({
     flexGrow: 1,
     margin: '0 5px',
 
-    ' .react-select-2__menu': {
-      backgroundColor: colors.whiteBackground,
+    color: colors.blackText,
+    backgroundColor: colors.transparent,
 
-      boxShadow: `0 0 25px -5px ${colors.greyText}`,
-      border: '1px solid',
-      borderColor: colors.greyText
-    },
+    borderColor: colors.greyText,
 
-    ' .react-select-2__option': {
-      cursor: 'pointer',
-
+    '[shown="true"]': {
       color: colors.blackText,
-      backgroundColor: colors.whiteBackground,
-
-      ':active': {
-        color: colors.blackText,
-        backgroundColor: colors.whiteBackground
-      }
-    },
-
-    ' .react-select-2__option--is-focused': {
-      color: colors.whiteText,
-      backgroundColor: colors.greyText,
-
-      ':active': {
-        color: colors.whiteText,
-        backgroundColor: colors.greyText
-      }
-    },
-
-    ' .react-select-2__option--is-selected': {
-      color: colors.blackText,
-      backgroundColor: colors.whiteBackground,
-
-      ':active': {
-        color: colors.blackText,
-        backgroundColor: colors.whiteBackground
-      }
-    },
-
-    ' .react-select-2__option--is-selected.react-select-2__option--is-focused': {
-      color: colors.whiteText,
-      backgroundColor: colors.greyText,
-
-      ':active': {
-        color: colors.whiteText,
-        backgroundColor: colors.greyText
-      }
-    },
-
-    ' .react-select-2__control': {
-      cursor: 'pointer',
-
-      color: colors.blackText,
-      background: 'none',
-
-      borderColor: colors.greyText,
-      outline: colors.greyText
-    },
-
-    ' .react-select-2__control:hover:not(.react-select-2__control--is-focused)': {
-      borderColor: colors.greyText,
-      outline: colors.greyText
-    },
-
-    ' .react-select-2__control--is-focused:hover': {
-      borderColor: colors.transparent,
-      outline: colors.transparent
-    },
-
-    ' .react-select-2__control:focus': {
-      borderColor: colors.transparent,
-      outline: colors.transparent
-    },
-
-    ' .react-select-2__control--is-focused': {
-      color: colors.blackText,
-      background: colors.whiteBackground,
-      
-      boxShadow: 'none',
-      borderColor: colors.transparent,
-      outline: colors.transparent
-    },
-
-    ' .react-select-2__single-value': {
-      color: 'inherit'
-    },
-
-    ' .react-select-2__indicator-separator': {
-      backgroundColor: colors.greyText
-    },
-
-    ' .react-select-2__indicator': {
-      color: 'inherit'
-    },
-
-    ' .react-select-2__indicator:hover': {
-      color: 'inherit'
+      backgroundColor: colors.whiteBackground
     }
+  },
+
+  selectMenu: {
+    borderColor: colors.greyText
   },
 
   buttons: {

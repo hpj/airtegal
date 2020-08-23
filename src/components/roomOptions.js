@@ -2,8 +2,6 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Select from 'react-select';
-
 import autoSize from 'autosize-input';
 
 import { StoreComponent } from '../store.js';
@@ -11,6 +9,8 @@ import { StoreComponent } from '../store.js';
 import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
+
+import Select from './select.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
@@ -25,22 +25,9 @@ const colors = getTheme();
 const wrapperRef = createRef();
 
 const gameModes = [
-  {
-    label: i18n('free-for-all'),
-    options: [
-      { label: i18n('judge'), value: 'judge' },
-      { label: i18n('king'), value: 'king' },
-      { label: i18n('democracy'), value: 'democracy' }
-    ]
-  },
-  {
-    label: i18n('co-op'),
-    options: []
-  },
-  {
-    label: i18n('teams'),
-    options: []
-  }
+  { group: i18n('free-for-all'), label: i18n('judge'), value: 'judge' },
+  { label: i18n('king'), value: 'king' },
+  { label: i18n('democracy'), value: 'democracy' }
 ];
 
 class RoomOptions extends StoreComponent
@@ -251,16 +238,17 @@ class RoomOptions extends StoreComponent
         {
           (isMaster) ?
             <Select
-              id={ 'room-options-kuruit-mode' }
-              className={ (dirtyOptions.gameMode !== options.gameMode) ? styles.selectDirty : styles.select }
-              classNamePrefix={ 'room-options-select-kuruit-mode' }
-              noOptionsMessage={ () => i18n('no-options') }
-              defaultValue={ { label: i18n(dirtyOptions.gameMode), value: dirtyOptions.gameMode } }
-              isRtl={ locale.direction === 'rtl' }
-              isSearchable={ false }
-              formatGroupLabel={ groupLabel }
+              id={ 'room-options-select-game-mode' }
+
+              className={ dirtyOptions.gameMode !== options.gameMode ? styles.selectDirty : styles.select }
+              menuClassName={ styles.selectMenu }
+              optionClassName={ `${styles.selectOption} room-options-game-mode` }
+          
+              defaultIndex={ 0 }
               options={ gameModes }
-              onChange={ (mode) => this.onGameModeChange(mode.value) }
+              formatLabel={ groupLabel }
+
+              onChange={ (mode) => this.onGameModeChange(mode) }
             /> :
             <div className={ styles.field }>{ i18n(dirtyOptions.gameMode) }</div>
         }
@@ -268,7 +256,7 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
-    const groupLabel = (data) => <div className={ styles.selectLabel }>{data.label}</div>;
+    const groupLabel = (label) => <div className={ styles.groupLabel }>{label}</div>;
 
     const KuruitWinMethod = () =>
     {
@@ -832,141 +820,35 @@ const styles = createStyle({
   },
 
   select: {
-    padding: '0 25px 8px 25px',
-
-    ' .room-options-select-kuruit-mode__menu': {
-      backgroundColor: colors.whiteBackground,
-
-      boxShadow: `0 0 25px -5px ${colors.greyText}`,
-      border: '1px solid',
-      borderColor: colors.greyText,
-      
-      width: 'calc(100% - 50px)'
-    },
-
-    ' .room-options-select-kuruit-mode__menu-list': {
-      '::-webkit-scrollbar':
-      {
-        width: '8px'
-      },
-  
-      '::-webkit-scrollbar-thumb':
-      {
-        borderRadius: '8px',
-        boxShadow: `inset 0 0 8px 8px ${colors.greyText}`
-      }
-    },
-
-    ' .room-options-select-kuruit-mode__option': {
-      cursor: 'pointer',
-
-      color: colors.blackText,
-      backgroundColor: colors.whiteBackground,
-
-      ':active': {
-        color: colors.blackText,
-        backgroundColor: colors.whiteBackground
-      }
-    },
-
-    ' .room-options-select-kuruit-mode__option--is-focused': {
-      color: colors.whiteText,
-      backgroundColor: colors.greyText,
-
-      ':active': {
-        color: colors.whiteText,
-        backgroundColor: colors.greyText
-      }
-    },
-
-    ' .room-options-select-kuruit-mode__option--is-selected': {
-      color: colors.blackText,
-      backgroundColor: colors.whiteBackground,
-
-      ':active': {
-        color: colors.blackText,
-        backgroundColor: colors.whiteBackground
-      }
-    },
-
-    ' .room-options-select-kuruit-mode__option--is-selected.room-options-select-kuruit-mode__option--is-focused': {
-      color: colors.whiteText,
-      backgroundColor: colors.greyText,
-
-      ':active': {
-        color: colors.whiteText,
-        backgroundColor: colors.greyText
-      }
-    },
-
-    ' .room-options-select-kuruit-mode__control': {
-      cursor: 'pointer',
-
-      color: colors.blackText,
-      background: 'none',
-
-      borderColor: colors.blackText,
-      outline: colors.blackText
-    },
-
-    ' .room-options-select-kuruit-mode__control:hover:not(.room-options-select-kuruit-mode__control--is-focused)': {
-      borderColor: colors.blackText,
-      outline: colors.blackText
-    },
-
-    ' .room-options-select-kuruit-mode__control--is-focused:hover': {
-      borderColor: colors.transparent,
-      outline: colors.transparent
-    },
-
-    ' .room-options-select-kuruit-mode__control:focus': {
-      borderColor: colors.transparent,
-      outline: colors.transparent
-    },
-
-    ' .room-options-select-kuruit-mode__control--is-focused': {
-      color: colors.whiteText,
-      background: colors.greyText,
-      
-      boxShadow: 'none',
-      borderColor: colors.transparent,
-      outline: colors.transparent
-    },
-
-    ' .room-options-select-kuruit-mode__single-value': {
-      color: 'inherit'
-    },
-
-    ' .room-options-select-kuruit-mode__indicator-separator': {
-      backgroundColor: colors.transparent
-    },
-
-    ' .room-options-select-kuruit-mode__indicator': {
-      color: 'inherit'
-    },
-
-    ' .room-options-select-kuruit-mode__indicator:hover': {
-      color: 'inherit'
-    }
+    margin: '0 25px 8px 25px'
   },
 
   selectDirty: {
     extend: 'select',
 
-    ' .room-options-select-kuruit-mode__single-value': {
+    '> div:first-child': {
       display: 'flex',
       alignItems: 'center',
       color: 'inherit',
       fontStyle: 'italic'
     },
 
-    ' .room-options-select-kuruit-mode__single-value:after': {
+    '> div:first-child:after': {
       display: 'block',
       content: '"*"'
     }
   },
 
-  selectLabel: {
+  selectMenu: {
+    borderColor: colors.greyText,
+    padding: '10px 0'
+  },
+
+  selectOption: {
+    height: '50px'
+  },
+
+  groupLabel: {
     color: colors.greyText,
 
     fontWeight: '400',

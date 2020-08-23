@@ -1,7 +1,7 @@
 {
   "short_name": "Airtegal",
   "name": "Airtegal",
-  "description": "A game for horrible people",
+  "description": "An app about comedy and stuff",
   "start_url": "/play",
   "display": "standalone",
   "orientation": "portrait",
