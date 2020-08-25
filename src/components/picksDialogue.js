@@ -191,7 +191,7 @@ class PicksDialogue extends StoreComponent
     return (
       <div className={ styles.wrapper } style={ { display: (this.state.picks.length > 0) ? '' : 'none' } }>
 
-        <div ref={ picksGridRef } className={ styles.container }>
+        <div ref={ picksGridRef } id={ 'kuruit-picks-dialogue' } className={ styles.container }>
           {
             this.state.hand.map((card, i) =>
             {
@@ -225,6 +225,7 @@ class PicksDialogue extends StoreComponent
 
         <div className={ styles.buttons }>
           <div
+            id={ 'kuruit-picks-dialogue-confirm' }
             className={ styles.button }
             allowed={ this.checkValidity().toString() }
             onClick={ this.confirmPick }
@@ -233,6 +234,7 @@ class PicksDialogue extends StoreComponent
           </div>
 
           <div
+            id={ 'kuruit-picks-dialogue-clear' }
             className={ styles.button }
             onClick={ this.clearPick }
           >

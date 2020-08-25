@@ -11,8 +11,14 @@ export const socket = {
   close: () => undefined
 };
 
-
 import { EventEmitter } from 'events';
+
+/**
+* @type { import('../../../Backend/src/matchmaking.js').Room }
+*/
+let room = {};
+
+let matchLogic;
 
 const emitter = new EventEmitter();
 
@@ -130,9 +136,20 @@ function emit(eventName, args)
   }
   else if (eventName === 'edit')
   {
-    roomData('options-edit', {
+    room.options = {
+      ...room.options,
       ...args.options
-    });
+    };
+    
+    roomData('options-edit');
+  }
+  else if (eventName === 'matchRequest')
+  {
+    startMatch();
+  }
+  else if (eventName === 'matchLogic')
+  {
+    matchLogic?.call(undefined, args);
   }
 
   // call done
@@ -145,20 +162,24 @@ function emit(eventName, args)
 * @param { string } reason
 * @param { import('../../../Backend/src/matchmaking.js').RoomOptions } opt
 */
-function roomData(reason, opt)
+function roomData(reason, opt, additional)
 {
   opt = opt ?? {};
 
-  const data = {
+  additional = additional ?? {};
+
+  room = {
     id: 'sskye',
     reason,
-    state: opt.state ?? 'lobby',
-    master: opt.master ?? 'skye',
-    players: opt.players ?? [ 'skye' ],
-    playerProperties: opt.playerProperties ?? {
+    state: opt.state ?? room.state ?? 'lobby',
+    master: opt.master ?? room.master ?? 'skye',
+    players: opt.players ?? room.players ?? [ 'skye' ],
+    playerProperties: opt.playerProperties ?? room.playerProperties ?? {
       'skye': { username: 'Skye' }
     },
-    options: {
+    playerSecretProperties: room.playerSecretProperties ?? {},
+    field: room.field ?? [],
+    options: room.options ?? {
       gameMode: opt.gameMode ?? 'judge',
       winMethod: opt.winMethod ??'points',
       match: opt.match ?? {
@@ -180,5 +201,81 @@ function roomData(reason, opt)
     }
   };
 
-  setTimeout(() => emitter.emit('roomData', data));
+  setTimeout(() => emitter.emit('roomData', { ...room, ...additional }));
+}
+
+function startMatch()
+{
+  room.state = 'match';
+
+  room.players = [ 'skye', 'mika' ];
+
+  room.playerProperties =
+  {
+    'skye': {
+      rando: false,
+      username: 'Skye',
+      state: 'waiting',
+      score: 0
+    },
+    'mika': {
+      rando: false,
+      username: 'Mika',
+      state: 'waiting',
+      score: 0
+    }
+  };
+
+  room.playerSecretProperties =
+  {
+    hand: [ { key: Math.random(), type: 'white', content: 'Skye\'s Card' } ]
+  };
+
+  // start round
+
+  room.field = [];
+
+  roomData('round-started', {
+
+  });
+
+  // black card phase
+
+  room.field.push({
+    key: Math.random(),
+    cards: [ {
+      key: Math.random(),
+      pick: 1,
+      type: 'black',
+      content: 'This is a Black Card'
+    } ]
+  });
+
+  roomData('black-card', {
+
+  });
+
+  room.playerProperties['skye'].state = 'picking';
+
+  // picking phase
+
+  roomData('picking-phase', undefined, {
+    judge: 'mika',
+    counter: 15000
+  });
+
+  matchLogic = (args) =>
+  {
+    room.playerProperties['skye'].state = 'waiting';
+
+    room.field.push({
+      key: Math.random(),
+      cards: args.picks.map((v) =>
+      {
+        return room.playerSecretProperties.hand.splice(v.index, 1)[0];
+      })
+    });
+
+    roomData('field-entry', undefined);
+  };
 }

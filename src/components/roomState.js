@@ -98,25 +98,27 @@ class RoomState extends StoreComponent
       {
         this.countdown = Date.now() + roomData.counter;
 
-        // set a 1s interval
-        this.countdownInterval = setInterval(() =>
-        {
-          const remaining = this.countdown - Date.now();
-
-          if (remaining >= 0)
+        // interval are disabled in end-to-end testing
+        if (process.env.NODE_ENV !== 'testing')
+          // set a 1s interval
+          this.countdownInterval = setInterval(() =>
           {
-            this.formatted = this.formatMs(remaining);
-          }
-          else
-          {
-            this.formatted = this.formatMs(0);
+            const remaining = this.countdown - Date.now();
 
-            clearInterval(this.countdownInterval);
-          }
+            if (remaining >= 0)
+            {
+              this.formatted = this.formatMs(remaining);
+            }
+            else
+            {
+              this.formatted = this.formatMs(0);
 
-          // re-render to show correct counter
-          this.forceUpdate();
-        }, 1000);
+              clearInterval(this.countdownInterval);
+            }
+
+            // re-render to show correct counter
+            this.forceUpdate();
+          }, 1000);
 
         // update the counter immediately since the first interval won't execute immediately
         this.formatted = this.formatMs(roomData.counter);

@@ -1,21 +1,20 @@
 Performance Issues and Bugs:
-  ☐ test if everything works correctly on heroku @high 
-
-  ☐ refactor anything that uses cards exclusivly to allow more fludility
-    ✔ refactor room options entirlly because each mode has its own sets of options @done(20-04-09 07:32)
-    
-    ✔ refactor looby's room tiles @done(20-04-10 06:22)
-        
-    ☐ refactor field to be more plugable and open to non-cards modes
-      ☐ refactor cards connecting lines
-      ☐ added a better fix for the card first resize
-    
-    ☐ refactor hand to be more plugable and open to non-cards modes
+  ☐ test if everything works correctly on heroku @high
+  
+  ☐ test countdowns on development mode @critical 
 
 Testing:
+  ☐ sharing overlay
+
+  ☐ blank cards
+  ☐ group connecting lines
+
+  ☐ democracy voting
+
+  ☐ match reports
 
 UI/UX:
-  ☐ card showcase: responsive desgin
+  ☐ card showcase: responsive design
 
   ☐ animations for cards appearing and disappearing from field
   

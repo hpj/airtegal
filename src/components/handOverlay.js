@@ -290,7 +290,7 @@ class HandOverlay extends StoreComponent
                   sendMessage={ this.props.sendMessage }
                 />
 
-                <div ref= { handGridRef } className={ styles.handContainer }>
+                <div ref= { handGridRef } id={ 'kuruit-hand-overlay' } className={ styles.handContainer }>
                   {
                     this.state.hand.map((card, i) =>
                     {

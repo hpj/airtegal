@@ -588,6 +588,7 @@ class RoomOptions extends StoreComponent
                 {/* Start Button */}
 
                 <div
+                  id={ 'room-options-start' }
                   className={ styles.button }
                   master={ isMaster.toString() }
                   allowed={ isAllowed.toString() }
