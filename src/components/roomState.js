@@ -99,7 +99,7 @@ class RoomState extends StoreComponent
         this.countdown = Date.now() + roomData.counter;
 
         // interval are disabled in end-to-end testing
-        if (process.env.NODE_ENV !== 'testing')
+        if (process.env.NODE_ENV !== 'test')
           // set a 1s interval
           this.countdownInterval = setInterval(() =>
           {
