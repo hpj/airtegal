@@ -153,9 +153,9 @@ class ShareOverlay extends React.Component
 
     return (
       <div enabled={ share.active.toString() } className={ styles.wrapper }>
-        <div className={ styles.holder }/>
+        <div enabled={ share.active.toString() } className={ styles.holder }/>
 
-        <div className={ styles.container }>
+        <div enabled={ share.active.toString() } className={ styles.container }>
           <img src={ share.img } className={ styles.image }/>
 
           <div className={ styles.url }>
@@ -213,7 +213,7 @@ const styles = createStyle({
     transition: 'opacity 0.25s',
     transitionTimingFunction: 'ease-in-out',
 
-    'div[enabled="false"] > %this': {
+    '[enabled="false"]': {
       opacity: 0
     }
   },
@@ -227,6 +227,7 @@ const styles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.shareBackground,
 
+    opacity: 1,
     borderRadius: '10px',
 
     maxWidth: '490px',
@@ -240,10 +241,11 @@ const styles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    transition: 'top 0.25s',
+    transition: 'top 0.25s, opacity 0.25s',
     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
 
-    'div[enabled="false"] > %this': {
+    '[enabled="false"]': {
+      opacity: 0,
       top: '100vh'
     }
   },

@@ -91,13 +91,10 @@ class OptionsOverlay extends React.Component
     // const isDirty = JSON.stringify(this.state.dirty) !== JSON.stringify(this.state.options);
   
     return (
-      <div
-        enabled={ options.active.toString() }
-        className={ styles.wrapper }
-      >
-        <div className={ styles.holder }/>
+      <div enabled={ options.active.toString() } className={ styles.wrapper }>
+        <div enabled={ options.active.toString() } className={ styles.holder }/>
 
-        <div className={ styles.container }>
+        <div enabled={ options.active.toString() } className={ styles.container }>
 
           <div className={ styles.options }>
 
@@ -169,10 +166,10 @@ const styles = createStyle({
     width: '100%',
     height: '100%',
 
-    transition: 'opacity 0.25s',
+    transition: 'opacity 0.15s',
     transitionTimingFunction: 'ease-in-out',
 
-    'div[enabled="false"] > %this': {
+    '[enabled="false"]': {
       opacity: 0
     }
   },
@@ -202,10 +199,10 @@ const styles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    transition: 'top 0.25s, opacity 0.5s',
+    transition: 'top 0.25s, opacity 0.25s',
     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
 
-    'div[enabled="false"] > %this': {
+    '[enabled="false"]': {
       opacity: 0,
       top: '100vh'
     }

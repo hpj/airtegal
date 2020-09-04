@@ -55,7 +55,7 @@ function connect()
     try
     {
       // mock socket.io client
-      if (process.env.NODE_ENV === 'testing')
+      if (process.env.NODE_ENV === 'test')
         socket = mocks.socket;
       else
         socket = io(process.env.API_ENDPOINT, { path: '/io' });
@@ -710,13 +710,17 @@ const roomsStyles = createStyle({
     border: `10px ${colors.blackText} solid`,
 
     animation: createAnimation({
-      keyframes: `
-      from { transform:rotate(0deg); }
-      to { transform:rotate(360deg); }
-      `,
       duration: '2s',
       timingFunction: 'linear',
-      iterationCount: 'infinite'
+      iterationCount: 'infinite',
+      keyframes: {
+        from: {
+          transform: 'rotate(0deg)'
+        },
+        to: {
+          transform: 'rotate(360deg)'
+        }
+      }
     })
   },
 

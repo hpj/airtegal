@@ -481,7 +481,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div className={ styles.inputSuffix }>{ '%' }</div>
+          <div suffix={ 'true' } className={ styles.inputSuffix }>{ '%' }</div>
           <div>{ i18n('blank-probability') }</div>
         </div>
 
@@ -613,11 +613,11 @@ RoomOptions.propTypes = {
 const styles = createStyle({
   wrapper: {
     position: 'absolute',
-    
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
-
+    
     userSelect: 'none',
+
     overflowX: 'hidden',
     overflowY: 'scroll',
 
@@ -682,13 +682,17 @@ const styles = createStyle({
     border: `10px ${colors.blackText} solid`,
 
     animation: createAnimation({
-      keyframes: `
-      from { transform:rotate(0deg); }
-      to { transform:rotate(360deg); }
-      `,
       duration: '2s',
       timingFunction: 'linear',
-      iterationCount: 'infinite'
+      iterationCount: 'infinite',
+      keyframes: {
+        from: {
+          transform: 'rotate(0deg)'
+        },
+        to: {
+          transform: 'rotate(360deg)'
+        }
+      }
     })
   },
 
@@ -935,6 +939,16 @@ const styles = createStyle({
       pointerEvents: 'none'
     },
 
+    ':not(:valid) + div[suffix]': {
+      color: colors.red,
+      borderColor: colors.red
+    },
+
+    '[master="false"] + div[suffix]':
+    {
+      borderBottom: 0
+    },
+
     '::-webkit-inner-spin-button': {
       WebkitAppearance: 'none',
       margin: 0
@@ -950,21 +964,7 @@ const styles = createStyle({
     margin: (locale.direction === 'ltr') ? '0 5px -2px -5px': '0 -5px -2px 5px',
 
     borderBottom: '2px solid',
-    borderColor: colors.blackText,
-
-    'input:placeholder-show ~ %this': {
-      color: colors.red,
-      borderColor: colors.red
-    },
-
-    'input:not(:valid) ~ %this': {
-      color: colors.red,
-      borderColor: colors.red
-    },
-
-    'input[master="false"] ~ %this': {
-      borderBottom: 0
-    }
+    borderColor: colors.blackText
   },
 
   packs: {

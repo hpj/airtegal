@@ -38,7 +38,7 @@ class CardShowcase extends React.Component
   componentDidMount()
   {
     // TODO test showcase
-    if (process.env.NODE_ENV === 'testing')
+    if (process.env.NODE_ENV === 'test')
       return;
 
     // request the data from server

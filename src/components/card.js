@@ -139,7 +139,7 @@ class Card extends React.Component
               </div>
           }
 
-          <div hide={ hidden.toString() } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((self === undefined && owner === undefined) || type === 'black').toString() } className={ styles.bottom }>
+          <div hide={ (hidden && type === 'white') ? 'true' : 'false' } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((self === undefined && owner === undefined) || type === 'black').toString() } className={ styles.bottom }>
             {
               (blank) ? i18n('airtegal-blank') : i18n('airtegal-cards')
             }
@@ -182,27 +182,25 @@ Card.propTypes = {
 };
 
 const hoverAnimation = createAnimation({
-  options: {
-    returnNameOnly: true
-  },
-  keyframes: `0% {
-    transform: translateY(-10px);
+  keyframes: {
+    from: {
+      transform: 'translateY(-10px)'
+    },
+    '50%': {
+      transform: 'translateY(-5px)'
+    },
+    to: {
+      transform: 'translateY(-10px)'
+    }
   }
-  50% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(-10px);
-  }`
 });
 
 const floatAnimation = createAnimation({
-  options: {
-    returnNameOnly: true
-  },
-  keyframes: `100% {
-    transform: translateY(-10px);
-  }`
+  keyframes: {
+    to: {
+      transform: 'translateY(-10px)'
+    }
+  }
 });
 
 const voteAnimation = createAnimation({
@@ -210,9 +208,11 @@ const voteAnimation = createAnimation({
   timingFunction: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)',
   fillMode: 'forwards',
   iterationCount: '1',
-  keyframes: `100% {
-    margin: 10px 10px 5px 10px
-  }`
+  keyframes: {
+    to: {
+      margin: '10px 10px 5px 10px'
+    }
+  }
 });
 
 const styles = createStyle({
@@ -417,7 +417,7 @@ const styles = createStyle({
     transition: 'padding 0.5s',
     transitionTimingFunction: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)',
 
-    '[type="white"] > %this[hide="true"]': {
+    '[hide="true"]': {
       color: colors.whiteCardBackground
     },
 

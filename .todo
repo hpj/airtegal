@@ -1,7 +1,9 @@
 Performance Issues and Bugs:
   ☐ test if everything works correctly on heroku @high
-  
+
   ☐ test countdowns on development mode @critical 
+  
+  ☐ fix some of the issues of on firefox
 
 Testing:
   ☐ sharing overlay
