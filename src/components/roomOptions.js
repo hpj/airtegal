@@ -26,8 +26,7 @@ const wrapperRef = createRef();
 
 const gameModes = [
   { group: i18n('free-for-all'), label: i18n('judge'), value: 'judge' },
-  { label: i18n('king'), value: 'king' },
-  { label: i18n('democracy'), value: 'democracy' }
+  { label: i18n('king'), value: 'king' }
 ];
 
 class RoomOptions extends StoreComponent
@@ -563,8 +562,7 @@ class RoomOptions extends StoreComponent
                 {
                   (
                     dirtyOptions.gameMode === 'judge' ||
-                    dirtyOptions.gameMode === 'king' ||
-                    dirtyOptions.gameMode === 'democracy'
+                    dirtyOptions.gameMode === 'king'
                   ) ?
                     KuruitOptions() : AirtegalOptions()
                 }

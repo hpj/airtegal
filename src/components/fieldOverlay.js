@@ -38,8 +38,7 @@ class FieldOverlay extends StoreComponent
     super({
       fieldHidden: true,
 
-      field: [],
-      votes: {}
+      field: []
     });
 
     this.panResponder = PanResponder.create({
@@ -92,12 +91,10 @@ class FieldOverlay extends StoreComponent
       changes?.roomData?.reason?.message ||
       changes?.roomData?.reason?.details ||
       changes?.roomData?.field ||
-      changes?.roomData?.votes ||
       changes?.field ||
       changes?.fieldHidden ||
       changes?.fieldVisible ||
-      changes?.winnerEntryIndex ||
-      changes?.votes)
+      changes?.winnerEntryIndex)
       return true;
   }
 
@@ -113,11 +110,6 @@ class FieldOverlay extends StoreComponent
       state.fieldVisible = true;
     else
       state.fieldVisible = false;
-
-    if (roomData.reason.message === 'vote')
-      state.votes = roomData.votes;
-    else if (roomData.reason.message !== 'round-ended')
-      state.votes = {};
 
     if (roomData.reason.message === 'round-ended')
       state.winnerEntryIndex = (typeof roomData.reason.details === 'number') ? roomData.reason.details : undefined;
@@ -271,8 +263,6 @@ class FieldOverlay extends StoreComponent
                       self={ (entry.id && entry.id === socket.id && entryIndex > 0) }
                       owner={ (entry.id && entryIndex > 0 && this.state.roomData?.playerProperties[entry.id]) ? this.state.roomData?.playerProperties[entry.id].username : undefined }
                       type={ card.type }
-                      // eslint-disable-next-line security/detect-object-injection
-                      votes={ this.state.votes[entryIndex] }
                       content={ card.content }
                       winner= { (entryIndex === this.state.winnerEntryIndex) }
                       hidden={ card.hidden }/>;

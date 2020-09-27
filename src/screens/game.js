@@ -432,7 +432,7 @@ const RoomHighlights = (room) =>
   const gameMode = room.options.gameMode;
 
   // cards based game modes
-  if (gameMode === 'judge' || gameMode === 'king' || gameMode === 'democracy')
+  if (gameMode === 'judge' || gameMode === 'king')
   {
     if (room.options.winMethod === 'points')
       highlights.push(`${i18n('first-to-points-1')} ${i18n('first-to-points-2', room.options.match.pointsToCollect, true)}.`);

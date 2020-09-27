@@ -55,18 +55,10 @@ class Card extends React.Component
     el.style.overflowY = 'auto';
   }
 
-  for(number)
-  {
-    if (number)
-      return Array(number).fill();
-    else
-      return [];
-  }
-
   render()
   {
     const {
-      self, votes, owner,
+      self, owner,
       content, style, blank,
       type, disabled, allowed, picked,
       onClick, onChange, shareEntry
@@ -97,12 +89,6 @@ class Card extends React.Component
           allowed={ allowed }
           winner={ winner.toString() }
         >
-
-          <div visible={ 'true' } className={ styles.votes }>
-            {
-              this.for(votes).map((v, i) => <div key={ i } className={ styles.vote }/>)
-            }
-          </div>
 
           <div line={ (line === 'right' || line === 'both') ? 'right' : 'false' } className={ styles.line }><div/></div>
           <div line={ (line === 'left' || line === 'both') ? 'left' : 'false' } className={ styles.line }><div/></div>
@@ -170,7 +156,6 @@ Card.propTypes = {
   self: PropTypes.bool,
   owner: PropTypes.string,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
-  votes: PropTypes.number,
   content: PropTypes.string,
   line: PropTypes.string,
   hidden: PropTypes.bool,
@@ -199,18 +184,6 @@ const floatAnimation = createAnimation({
   keyframes: {
     to: {
       transform: 'translateY(-10px)'
-    }
-  }
-});
-
-const voteAnimation = createAnimation({
-  duration: '0.5s',
-  timingFunction: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)',
-  fillMode: 'forwards',
-  iterationCount: '1',
-  keyframes: {
-    to: {
-      margin: '10px 10px 5px 10px'
     }
   }
 });
@@ -377,29 +350,6 @@ const styles = createStyle({
   content: {
     extend: 'input',
     pointerEvents: 'none'
-  },
-
-  votes: {
-    userSelect: 'none',
-
-    display: 'flex',
-    flexWrap: 'wrap',
-
-    '[visible="false"]': {
-      display: 'none'
-    }
-  },
-
-  vote: {
-    width: '10px',
-    height: '10px',
-
-    margin: '0',
-
-    animation: voteAnimation,
-
-    borderRadius: '5px',
-    backgroundColor: colors.vote
   },
 
   bottom: {

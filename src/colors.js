@@ -72,7 +72,6 @@ export default function()
     
     entryLine: '#000000',
 
-    vote: '#28a500',
     winner: '#d4af37',
 
     shareBackground: '#C4C4C4',

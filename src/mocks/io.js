@@ -82,21 +82,6 @@ function emit(eventName, args)
         }
       },
       {
-        id: 'mika',
-        players: 4,
-        options: {
-          gameMode: 'democracy',
-          winMethod: 'timer',
-          match: {
-            maxPlayers: 16,
-            maxTime: 15 * 60 * 1000,
-            blankProbability: 0,
-            startingHandAmount: 12,
-            randos: true
-          }
-        }
-      },
-      {
         id: 'mana',
         players: 4,
         options: {
