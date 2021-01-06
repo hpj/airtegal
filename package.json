@@ -15,7 +15,7 @@
     "animate-css-grid": "^1.4.3",
     "animated": "^0.2.2",
     "autosize-input": "^1.0.2",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "flcss": "^2.2.3-0",
     "mdi-react": "^7.3.0",
     "prevent-pull-refresh": "^1.0.5",
