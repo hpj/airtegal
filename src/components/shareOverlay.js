@@ -56,7 +56,7 @@ export function shareEntry(black, white)
   }
   else
   {
-    getStore('app').set({
+    getStore().set({
       share: { active: true, url: shareURL, img: pictureURL }
     });
   }
@@ -95,7 +95,7 @@ class ShareOverlay extends React.Component
 
     if (!(e instanceof KeyboardEvent))
       hide();
-    else if (e.keyCode === 27)
+    else if (e.key === 'Escape')
       hide();
   }
 

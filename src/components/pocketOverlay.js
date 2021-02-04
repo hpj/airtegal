@@ -165,7 +165,7 @@ class PocketOverlay extends StoreComponent
           </div>
 
           <div style={ { display: (this.state.pocketHidden) ? 'none' : '' } } className={ styles.container }>
-            <RoomTrackBar contained enabled='true'/>
+            <RoomTrackBar contained enabled={ 'true' }/>
           </div>
         </Interactable.View>
       </div>

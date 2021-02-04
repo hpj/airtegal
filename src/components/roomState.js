@@ -214,20 +214,20 @@ class RoomState extends StoreComponent
       <div className={ styles.wrapper }>
         {
           (isMatch) ?
-            <div match='true' className={ styles.container }>
-              <div match='true' className={ styles.state }>{ this.state.matchState }</div>
+            <div match={ 'true' } className={ styles.container }>
+              <div match={ 'true' } className={ styles.state }>{ this.state.matchState }</div>
 
               <div className={ styles.counter }>{ this.formatted }</div>
             </div>
             :
-            <div match='false' className={ styles.container }>
-              <div match='false' className={ styles.state }>{ this.formatted }</div>
+            <div match={ 'false' } className={ styles.container }>
+              <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
 
               {
               // share the room
-                (navigator.share) ? <ShareIcon icon='true' className={ styles.id } onClick={ this.shareRoomURL }/> :
+                (navigator.share) ? <ShareIcon icon={ 'true' } className={ styles.id } onClick={ this.shareRoomURL }/> :
                 // copy the room's id
-                  (navigator.clipboard) ? <CopyIcon icon='true' className={ styles.id } onClick={ this.copyRoomURL }/> :
+                  (navigator.clipboard) ? <CopyIcon icon={ 'true' } className={ styles.id } onClick={ this.copyRoomURL }/> :
                   // just show the room's id
                     <div className={ styles.id }>{ this.state.roomData?.id }</div>
               }

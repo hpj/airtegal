@@ -80,6 +80,16 @@ class RoomOverlay extends StoreComponent
 
     window.addEventListener('touchstart', this.handleTouchStart);
     window.addEventListener('touchend', this.handleTouchEnd);
+
+    const params = new URL(document.URL).searchParams;
+
+    // if testing and there's a match parameter then start a mockup match
+    if (process.env.NODE_ENV === 'test' && params?.has('match'))
+    {
+      this.createRoom();
+
+      setTimeout(() => optionsRef.current?.matchRequest(), 250);
+    }
   }
 
   componentWillUnmount()

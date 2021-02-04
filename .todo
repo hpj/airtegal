@@ -1,21 +1,21 @@
 Performance Issues and Bugs:
-  ☐ test if everything works correctly on heroku @high
-
-  ☐ test countdowns on development mode @critical 
+  ☐ test if everything works correctly @high 
   
   ☐ fix some of the issues of on firefox
 
 Testing:
-  ☐ sharing overlay
-  ☐ options overlay
-
-  ☐ blank cards
-  ☐ group connecting lines
+  ☐ group connecting lines @critical  
+  
+  ☐ blank cards @high 
 
   ☐ match reports
 
+  ☐ sharing overlay
+
+  ☐ options overlay
+
 UI/UX:
-  ☐ card showcase: responsive design
+  ☐ card showcase: responsive design @low 
 
   ☐ animations for cards appearing and disappearing from field
   
@@ -23,7 +23,7 @@ UI/UX:
 
   ☐ design the 404 page
 
-  ☐ handle 'online/offline' events
+  - handle 'online/offline' events
     ☐ design the Offline mini-game
 
 Homepage:

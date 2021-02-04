@@ -37,7 +37,6 @@ class FieldOverlay extends StoreComponent
   {
     super({
       fieldHidden: true,
-
       field: []
     });
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.0/workbox-sw.js');
 
 self.addEventListener('message', (event) =>
 {
@@ -18,7 +18,7 @@ workbox.routing.registerRoute(
 
 // Cache the ip check with a cache-first strategy for 1 day
 workbox.routing.registerRoute(
-  new RegExp('https://airtegal.herokuapp.com/check'),
+  new RegExp('https://api.airtegal.me/check'),
   new workbox.strategies.CacheFirst({
     cacheName: 'airtegal-cache',
     plugins: [

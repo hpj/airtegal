@@ -49,11 +49,14 @@ class Homepage extends React.Component
           </div>
   
           <div className={ headerStyles.container }>
-            <CardShowcase/>
+            
+            {/* TODO: Showcase is disabled to lower the server bandwidth */}
+            {/* And to simplify homepage design */}
+            {/* <CardShowcase/> */}
   
             <div className={ headerStyles.title }>
   
-              <a className={ headerStyles.hpj } href='https://herpproject.com'>
+              <a className={ headerStyles.hpj } href={ 'https://herpproject.com' }>
                 { i18n('hpj') }
               </a>
   
@@ -108,19 +111,19 @@ class Homepage extends React.Component
 
         <div className={ playStyles.wrapper }>
           <div className={ playStyles.container }>
-            <Link className={ playStyles.title } to='/play'> { i18n('play') } </Link>
+            <Link className={ playStyles.title } to={ '/play' }> { i18n('play') } </Link>
           </div>
         </div>
   
         <div className={ footerStyles.wrapper }>
           <div className={ footerStyles.container }>
-            <a className={ footerStyles.hpj } href='https://herpproject.com'>
+            <a className={ footerStyles.hpj } href={ 'https://herpproject.com' }>
               { i18n('herp-project') }
             </a>
             <div className={ footerStyles.sitemap }>
-              <a className={ footerStyles.privacy } href='https://herpproject.com/airtegal/privacy'>{ i18n('privacy-policy') }</a>
+              <a className={ footerStyles.privacy } href={ 'https://herpproject.com/airtegal/privacy' }>{ i18n('privacy-policy') }</a>
               _
-              <a className={ footerStyles.terms } href='https://herpproject.com/airtegal/terms'>{ i18n('terms-and-conditions') }</a>
+              <a className={ footerStyles.terms } href={ 'https://herpproject.com/airtegal/terms' }>{ i18n('terms-and-conditions') }</a>
             </div>
             <p className={ footerStyles.copyright }>
               { i18n('copyright-notice') }

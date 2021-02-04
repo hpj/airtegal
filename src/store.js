@@ -1,87 +1,46 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable security/detect-object-injection */
 
 import React from 'react';
 
-const stores = {};
+/**
+* @type { Store }
+*/
+let store;
 
 /**
-* @param { string } name
 * @param { {} } state
-* @returns { Store }
 */
-export function createStore(name, state)
+export function createStore(state)
 {
-  // eslint-disable-next-line security/detect-object-injection
-  return (stores[name] = new Store(state));
+  return (store = new Store(state));
 }
 
-/**
-* @param { string } name
-* @returns { Store }
-*/
-export function getStore(name)
+export function getStore()
 {
-  // eslint-disable-next-line security/detect-object-injection
-  return stores[name];
-}
-
-/**
-* @param { string } name
-*/
-export function deleteStore(name)
-{
-  // eslint-disable-next-line security/detect-object-injection
-  delete stores[name];
+  return store;
 }
 
 export class StoreComponent extends React.Component
 {
-  constructor(name, state)
+  constructor(state)
   {
     super();
 
-    if (typeof name === 'string')
-    {
-      this.store = getStore(name);
+    this.store = getStore();
 
-      this.state = {
-        ...state,
-        ...this.store.state
-      };
+    this.state = {
+      ...state,
+      ...this.store.state
+    };
 
-      this.store.state = {
-        ...state,
-        ...this.store.state
-      };
-    }
-    else if (typeof name === 'object')
-    {
-      this.store = getStore('app');
-
-      this.state = {
-        ...name,
-        ...this.store.state
-      };
-
-      this.store.state = {
-        ...name,
-        ...this.store.state
-      };
-    }
-    else
-    {
-      this.store = getStore('app');
-
-      this.state = {
-        ...state,
-        ...this.store.state
-      };
-
-      this.store.state = {
-        ...state,
-        ...this.store.state
-      };
-    }
+    // TODO/FIX this should be cleansed
+    // components should be allowed to have
+    // independent states from the store
+    this.store.state = {
+      ...state,
+      ...this.store.state
+    };
   }
 
   componentDidMount()
@@ -94,27 +53,25 @@ export class StoreComponent extends React.Component
     this.store.unsubscribe(this);
   }
 
+  /** Emits before the state changes,
+  * allows modification to the state before it's dispatched
+  * @param { {} } newState
+  * @returns { {} | void } modified new state
+  */
+  stateWillChange(newState)
+  {
+    //
+  }
+
   /** whitelist what changes all allowed to be dispatched to this component
   * refusing any dispatch improves app performance and is recommended (specially on large apps)
   * not overriding this function will allow the component to receive all dispatches
   * @param { {} } changes the changes made to this state dispatch
   * @returns { boolean }
   */
-  // eslint-disable-next-line no-unused-vars
   stateWhitelist(changes)
   {
     return true;
-  }
-
-  /** Emits before the state changes,
-  * allows modification to the state before it's dispatched
-  * @param { {} } newState
-  * @returns { {} } modified new state
-  */
-  // eslint-disable-next-line no-unused-vars
-  stateWillChange(newState)
-  {
-    //
   }
 
   /** Emits after a new state has been dispatched
@@ -122,7 +79,6 @@ export class StoreComponent extends React.Component
   * @param { {} } changes
   * @param { {} } old
   */
-  // eslint-disable-next-line no-unused-vars
   stateDidChange(state, changes, old)
   {
     //
@@ -137,7 +93,10 @@ export default class Store
   constructor(state)
   {
     this.subscriptions = [];
-    this.state = state || {};
+
+    this.state = state ?? {};
+
+    this.changes = {};
   }
 
   /**
@@ -157,7 +116,7 @@ export default class Store
   */
   subscribe(component)
   {
-    if (component && component.setState && this.subscriptions.indexOf(component) < 0)
+    if (component?.setState && this.subscriptions.indexOf(component) < 0)
     {
       this.subscriptions.push(component);
 
@@ -165,8 +124,6 @@ export default class Store
 
       return this;
     }
-
-    return false;
   }
 
   /**
@@ -183,8 +140,6 @@ export default class Store
 
       return true;
     }
-
-    return false;
   }
 
   /**
@@ -194,11 +149,9 @@ export default class Store
   */
   set(state, callback)
   {
-    // update state
-    this.state = {
-      ...this.state,
-      ...state
-    };
+    const keys = Object.keys(state);
+
+    keys.forEach((key) => this.changes[key] = this.state[key] = state[key]);
 
     // dispatch changes
     this.dispatch().then(callback);
@@ -206,104 +159,71 @@ export default class Store
     return this;
   }
 
-  /**
-  * @returns { Promise }
-  */
   dispatch()
   {
-    return new Promise((resolve) =>
+    /** transform all values of the new state to true
+    */
+    const booleanify = (obj) =>
     {
-      const promises = [];
+      const out = {};
 
-      // loop though all subscriptions to inform components that state will change
-      this.subscriptions.forEach((component) =>
+      const keys = Object.keys(obj);
+
+      // keys.forEach(key => out[key] = true);
+
+      keys.forEach((key) =>
       {
-        // callback to notify components when they state will change
-        if (component.stateWillChange)
-        {
-          // allow modifying of the new state
-          // order will matter so be careful about computability
-          // after all the callbacks are executed - the new new state
-          // will be dispatched to all components
-          const modified = component.stateWillChange.call(component, this.state);
-
-          this.state = {
-            ...this.state,
-            ...modified
-          };
-        }
+        if (!Array.isArray(obj[key]) && typeof obj[key] === 'object')
+          out[key] = booleanify(obj[key]);
+        else
+          out[key] = true;
       });
 
-      // deep filter changes objects to only dispatch real changes
-      const diff = (current, changes) =>
+      return out;
+    };
+
+    const promises = [];
+
+    const changesFingerprint = booleanify(this.changes);
+
+    // loop though all subscriptions to inform components that state will change
+    this.subscriptions.forEach((component) =>
+    {
+      const modified = component.stateWillChange?.call(component, this.state);
+
+      // callback to notify components when they state will change
+      if (modified)
       {
-        const out = { ...changes };
+        const keys = Object.keys(modified);
 
-        const changesKeys = Object.keys(changes);
-
-        changesKeys.forEach((key) =>
-        {
-          if (!Array.isArray(changes[key]) && typeof changes[key] === 'object')
-          {
-            if (!current[key])
-              return;
-            
-            out[key] = diff(current[key], changes[key]);
-
-            if (Object.keys(out[key]).length <= 0)
-              delete out[key];
-          }
-          else if (current[key] === changes[key])
-          {
-            delete out[key];
-          }
-        });
-
-        return out;
-      };
-
-      const heat = (obj) =>
-      {
-        const out = {};
-
-        const keys = Object.keys(obj);
-
-        keys.forEach((key) =>
-        {
-          if (!Array.isArray(obj[key]) && typeof obj[key] === 'object')
-            out[key] = heat(obj[key]);
-          else
-            out[key] = true;
-        });
-
-        return out;
-      };
-      
-      // loop though all subscriptions again to dispatch the new state
-      this.subscriptions.forEach((component) =>
-      {
-        const old = { ...component.state };
-        const changes = diff(component.state, this.state);
-
-        // filter dispatches
-        if (component?.setState && component?.stateWhitelist && component.stateWhitelist(heat(changes)))
-        {
-          promises.push(new Promise((resolve) =>
-          {
-            // dispatch new state to component
-            component.setState(this.state, () =>
-            {
-              resolve();
-
-              if (component.stateDidChange)
-                component.stateDidChange.call(component, this.state, changes, old);
-            });
-          }));
-        }
-      });
-
-      // new state dispatched to all subscriptions
-      Promise.all(promises).then(resolve);
+        keys.forEach(key => this.changes[key] = this.state[key] = modified[key]);
+      }
     });
+
+    this.subscriptions.forEach((component) =>
+    {
+      if (
+        typeof component.stateWhitelist === 'function' &&
+        component.stateWhitelist.call(component, changesFingerprint) !== true
+      )
+        return;
+      
+      const old = { ...component.state };
+
+      promises.push(new Promise((resolve) =>
+      {
+        component.setState(this.state, () =>
+        {
+          component.stateDidChange?.call(component, this.state, this.changes, old);
+          
+          resolve();
+        });
+      }));
+    });
+
+    this.changes = {};
+
+    // new state dispatched to all subscriptions
+    return Promise.all(promises);
   }
 }

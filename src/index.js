@@ -57,9 +57,9 @@ function loaded()
   const pages =
     <BrowserRouter>
       <Switch>
-        <Route path='/play' component={ Game }/>
+        <Route path={ '/play' } component={ Game }/>
       
-        <Route exact path='*' component={ Homepage }/>
+        <Route exact path={ '*' } component={ Homepage }/>
 
         {/* <Route component={ NotFound }/> */}
       </Switch>
@@ -105,7 +105,7 @@ export function hideLoadingScreen()
 registerServiceWorker();
 
 // create app-wide store
-createStore('app');
+createStore();
 
 // show a loading screen until the promises resolve
 ReactDOM.render(<Loading splash/>, placeholder);
@@ -118,7 +118,7 @@ if (process.env.NODE_ENV === 'development')
 // set the endpoint to the production server
 else if (process.env.NODE_ENV === 'production')
 {
-  process.env.API_ENDPOINT = 'https://airtegal.herokuapp.com';
+  process.env.API_ENDPOINT = 'https://api.airtegal.me';
 
   // sentry for error monitoring
   Sentry.init({

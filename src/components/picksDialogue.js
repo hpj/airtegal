@@ -202,7 +202,7 @@ class PicksDialogue extends StoreComponent
                 // TODO remove button
                 // onClick={ () => this.pickCard(i, true) }
                 disabled={ (order >= 0) ? false : true }
-                allowed='false'
+                allowed={ 'false' }
                 picked={ true }
                 type={ card.type }
                 style={ { order } }

@@ -276,11 +276,11 @@ class RoomOptions extends StoreComponent
 
           <AutoSizeInput
             required
-            type='number'
-            min='2'
-            max='7'
+            type={ 'number' }
+            min={ '2' }
+            max={ '7' }
             maxLength={ 1 }
-            id='room-options-input'
+            id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -311,11 +311,11 @@ class RoomOptions extends StoreComponent
 
           <AutoSizeInput
             required
-            type='number'
-            min='3'
-            max='30'
+            type={ 'number' }
+            min={ '3' }
+            max={ '30' }
             maxLength={ 2 }
-            id='room-options-input'
+            id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -346,12 +346,12 @@ class RoomOptions extends StoreComponent
 
           <AutoSizeInput
             required
-            type='number'
+            type={ 'number' }
             minutes={ true }
-            min='5'
-            max='30'
+            min={ '5' }
+            max={ '30' }
             maxLength={ 2 }
-            id='room-options-input'
+            id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -380,11 +380,11 @@ class RoomOptions extends StoreComponent
         <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
           <AutoSizeInput
             required
-            type='number'
-            min='3'
-            max='16'
+            type={ 'number' }
+            min={ '3' }
+            max={ '16' }
             maxLength={ 2 }
-            id='room-options-input'
+            id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -406,12 +406,12 @@ class RoomOptions extends StoreComponent
         <div className={ styles.field } dirty={ (dirtyOptions.round.maxTime !== options.round.maxTime).toString() }>
           <AutoSizeInput
             required
-            type='number'
+            type={ 'number' }
             minutes={ true }
-            min='1'
-            max='5'
+            min={ '1' }
+            max={ '5' }
             maxLength={ 1 }
-            id='room-options-input'
+            id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -433,11 +433,11 @@ class RoomOptions extends StoreComponent
         <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
           <AutoSizeInput
             required
-            type='number'
-            min='3'
-            max='12'
+            type={ 'number' }
+            min={ '3' }
+            max={ '12' }
             maxLength={ 2 }
-            id='room-options-input'
+            id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -460,11 +460,11 @@ class RoomOptions extends StoreComponent
 
           <AutoSizeInput
             required
-            type='number'
-            min='0'
-            max='25'
+            type={ 'number' }
+            min={ '0' }
+            max={ '25' }
             maxLength={ 2 }
-            id='room-options-input'
+            id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
@@ -480,7 +480,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div suffix={ 'true' } className={ styles.inputSuffix }>{ '%' }</div>
+          <div suffix={ 'true' } className={ styles.inputSuffix }>%</div>
           <div>{ i18n('blank-probability') }</div>
         </div>
 

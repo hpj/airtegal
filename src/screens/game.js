@@ -54,11 +54,9 @@ function connect()
   {
     try
     {
-      // mock socket.io client
-      if (process.env.NODE_ENV === 'test')
-        socket = mocks.socket;
-      else
-        socket = io(process.env.API_ENDPOINT, { path: '/io' });
+      socket = process.env.NODE_ENV === 'test' ?
+        mocks.socket :
+        io(process.env.API_ENDPOINT, { path: '/io' });
 
       socket.once('connect', resolve)
         .once('error', (e) =>
@@ -289,29 +287,31 @@ class Game extends React.Component
   {
     const Header = () =>
     {
-      return <div className={ headerStyles.container }>
-        <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
+      return (
+        <div className={ headerStyles.container }>
+          <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
 
-        <AutoSizeInput
-          id={ 'usrname-input' }
-          className={ headerStyles.usrname }
-          required
-          type='text'
-          maxLength={ 18 }
-          placeholder={ i18n('username-placeholder') }
-          value={ this.state.username }
-          onUpdate={ (value, resize, blur) =>
-          {
-            const trimmed = (blur) ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
+          <AutoSizeInput
+            id={ 'usrname-input' }
+            className={ headerStyles.usrname }
+            required
+            type={ 'text' }
+            maxLength={ 18 }
+            placeholder={ i18n('username-placeholder') }
+            value={ this.state.username }
+            onUpdate={ (value, resize, blur) =>
+            {
+              const trimmed = (blur) ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
 
-            localStorage.setItem('username', trimmed);
+              localStorage.setItem('username', trimmed);
 
-            this.setState({
-              username: trimmed
-            }, resize);
-          } }
-        />
-      </div>;
+              this.setState({
+                username: trimmed
+              }, resize);
+            } }
+          />
+        </div>
+      );
     };
 
     const Options = () =>
