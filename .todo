@@ -1,9 +1,10 @@
 Performance Issues and Bugs:
-  ☐ test if everything works correctly @high 
-  
   ☐ fix some of the issues of on firefox
 
 Testing:
+  ☐ test if everything works correctly 
+     - run app and server in production modes @high 
+
   ☐ group connecting lines @critical  
   
   ☐ blank cards @high 
