@@ -5,6 +5,12 @@ import PropTypes from 'prop-types';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
+// import ArrowUpIcon from 'mdi-react/ArrowUpIcon';
+// import ArrowDownIcon from 'mdi-react/ArrowDownIcon';
+
+// import ArrowLeftIcon from 'mdi-react/ArrowLeftIcon';
+// import ArrowRightIcon from 'mdi-react/ArrowRightIcon';
+
 import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
@@ -58,24 +64,18 @@ class Card extends React.Component
   render()
   {
     const {
-      self, owner,
+      self, owner, arrow,
       content, style, blank,
       type, disabled, allowed, picked,
       onClick, onChange, shareEntry
     } = this.props;
 
     let {
-      hidden, winner, line
+      hidden, winner
     } = this.props;
 
     hidden = hidden || false;
     winner = winner || false;
-
-    // reverse lines if direction is right-to-left
-    if (locale.direction === 'rtl' && line === 'right')
-      line = 'left';
-    else if (locale.direction === 'rtl' && line === 'left')
-      line = 'right';
 
     return (
       <div
@@ -89,12 +89,36 @@ class Card extends React.Component
           allowed={ allowed }
           winner={ winner.toString() }
         >
+          {/* {
+            (arrow?.includes('up')) ?
+              <div className={ styles.upArrow }>
+                <ArrowUpIcon className={ styles.arrowIcon }/>
+              </div> : undefined
+          } */}
 
-          <div line={ (line === 'right') ? 'right' : 'false' } className={ styles.line }><div/>
-          </div>
+          {
+            (arrow?.includes('down')) ?
+              <div className={ styles.downArrow }>
+                <div className={ styles.vLine }/>
+                {/* <ArrowDownIcon className={ styles.arrowIcon }/> */}
+              </div> : undefined
+          }
 
-          <div line={ (line === 'left') ? 'left' : 'false' } className={ styles.line }><div/>
-          </div>
+          {
+            (arrow?.includes('left')) ?
+              <div className={ styles.leftArrow }>
+                <div className={ styles.hLine }/>
+                {/* <ArrowLeftIcon className={ styles.arrowIcon }/> */}
+              </div> : undefined
+          }
+
+          {
+            (arrow?.includes('right')) ?
+              <div className={ styles.rightArrow }>
+                <div className={ styles.hLine }/>
+                {/* <ArrowRightIcon className={ styles.arrowIcon }/> */}
+              </div> : undefined
+          }
 
           {
             (hidden)
@@ -160,7 +184,7 @@ Card.propTypes = {
   owner: PropTypes.string,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
   content: PropTypes.string,
-  line: PropTypes.string,
+  arrow: PropTypes.string,
   hidden: PropTypes.bool,
   winner: PropTypes.bool,
   picked: PropTypes.bool,
@@ -244,35 +268,71 @@ const styles = createStyle({
     }
   },
 
-  line: {
-    pointerEvents: 'none',
+  arrowIcon: {
+    fill: colors.whiteCardBackground,
 
+    width: '18px',
+    height: '18px',
+
+    margin: '10px'
+  },
+
+  vLine: {
+    backgroundColor: colors.whiteCardBackground,
+
+    width: '1px',
+    height: '100%'
+  },
+
+  hLine: {
+    backgroundColor: colors.whiteCardBackground,
+
+    width: '100%',
+    height: '1px'
+  },
+
+  // upArrow: {
+  //   display: 'flex',
+  //   position: 'absolute',
+
+  //   justifyContent: 'center',
+
+  //   bottom: '100%',
+  //   width: '100%',
+  //   height: '100%'
+  // },
+
+  downArrow: {
+    display: 'flex',
+    position: 'absolute',
+
+    justifyContent: 'center',
+
+    top: '100%',
+    width: '100%',
+    height: '100%'
+  },
+
+  leftArrow: {
     display: 'flex',
     position: 'absolute',
 
     alignItems: 'center',
 
+    right: '100%',
     width: '100%',
-    height: '100%',
+    height: '100%'
+  },
 
-    '[line="false"]': {
-      display: 'none'
-    },
+  rightArrow: {
+    display: 'flex',
+    position: 'absolute',
 
-    '[line="left"]': {
-      left: '-100%'
-    },
+    alignItems: 'center',
 
-    '[line="right"]': {
-      left: '100%'
-    },
-
-    '> div': {
-      backgroundColor: colors.entryLine,
-        
-      width: '100%',
-      height: '12px'
-    }
+    left: '100%',
+    width: '100%',
+    height: '100%'
   },
 
   hidden: {

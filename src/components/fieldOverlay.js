@@ -167,6 +167,25 @@ class FieldOverlay extends StoreComponent
     const { size } = this.props;
 
     const playerState = this.state.roomData?.playerProperties[socket.id]?.state;
+    
+    const percent = (s, percent) => (s / 100) * percent;
+
+    // TODO this value will break every time field width changes
+    const lineWidth = (size.width < 1080) ? size.width : percent(size.width, 85);
+
+    // TODO this value will break every time card width changes
+    const cardWidth = 115 + 40 + percent(size.width, 2) + percent(size.height, 2);
+
+    let cardsPerLine = 1, cardNo = 0;
+
+    // count how many cards can fit in one line of the field
+    for (;;)
+    {
+      if (cardWidth * (cardsPerLine + 1) < lineWidth)
+        cardsPerLine = cardsPerLine + 1;
+      else
+        break;
+    }
 
     // on overlay position changes
     overlayAnimatedX.removeAllListeners();
@@ -222,9 +241,36 @@ class FieldOverlay extends StoreComponent
 
                   return entry.cards.map((card, i) =>
                   {
+                    let arrow, newLine = false;
+
+                    // using current cardNo and cardsPerLine
+                    // find out if the card starts a new line
+                    // if not increase the cardNo
+                    if (cardNo === cardsPerLine)
+                      cardNo = 1, newLine = true;
+                    else
+                      cardNo = cardNo + 1;
+
+                    // always true but if the card is
+                    // not the last in its entry only
+                    if (cardsPerLine === 1)
+                    {
+                      if (entry.cards.length > 1 && i !== entry.cards.length - 1)
+                        arrow = 'down';
+                    }
+
+                    else if (newLine && entry.cards.length > 1 && i === entry.cards.length - 1)
+                      arrow = 'right';
+    
+                    else if (newLine && entry.cards.length > 1 && i > 0)
+                      arrow = 'right-left';
+                    
+                    else if (entry.cards.length > 1 && i !== entry.cards.length  - 1)
+                      arrow = 'left';
+                    
                     return <Card
                       key={ card.key }
-                      line={ (entry.cards[i + 1]) ? 'right' : undefined }
+                      arrow={ arrow }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       shareEntry={ (entryIndex === this.state.winnerEntryIndex && i == 0) ? () => this.shareEntry(entryIndex) : undefined }
                       allowed={ isAllowed.toString() }
