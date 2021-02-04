@@ -438,6 +438,162 @@
           "value": 3
         }
       ]
+    },
+    {
+      "title": "Blank in Hand",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=blank"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "title": "Blank in Hand (Invalid)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=blank"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-hand-overlay > :first-child"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "title": "Blank No More",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=blank"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-hand-overlay > :first-child"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-picks-dialogue > div textarea"
+        },
+        {
+          "action": "type",
+          "value": "احا"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "title": "Play A Blank Card",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=blank"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-hand-overlay > :first-child"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-picks-dialogue > div textarea"
+        },
+        {
+          "action": "type",
+          "value": "احا"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-picks-dialogue-confirm"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        }
+      ]
     }
   ]
 }

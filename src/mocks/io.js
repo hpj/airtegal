@@ -215,7 +215,9 @@ function startMatch()
 
   room.playerSecretProperties =
   {
-    hand: [ { key: Math.random(), type: 'white', content: 'Skye\'s Card' } ]
+    hand: (params.get('mock') === 'blank') ?
+      [ { key: Math.random(), type: 'white', blank: true } ] :
+      [ { key: Math.random(), type: 'white', content: 'Skye\'s Card' } ]
   };
 
   // start round
@@ -242,7 +244,6 @@ function startMatch()
 
   });
 
-
   // picking phase
 
   // mock a field of 2 groups of 3 cards
@@ -251,12 +252,15 @@ function startMatch()
     room.field.push({
       key: Math.random(),
       cards: [ {
+        key: Math.random(),
         type: 'white',
         content: '1'
       }, {
+        key: Math.random(),
         type: 'white',
         content: '2'
       }, {
+        key: Math.random(),
         type: 'white',
         content: '3'
       } ]
@@ -265,12 +269,15 @@ function startMatch()
     room.field.push({
       key: Math.random(),
       cards: [ {
+        key: Math.random(),
         type: 'white',
         content: '1'
       }, {
+        key: Math.random(),
         type: 'white',
         content: '2'
       }, {
+        key: Math.random(),
         type: 'white',
         content: '3'
       } ]
@@ -294,12 +301,15 @@ function startMatch()
 
     room.field.push({
       key: Math.random(),
-      cards: args.picks.map((v) =>
+      cards: args.picks.map((card) =>
       {
-        return room.playerSecretProperties.hand.splice(v.index, 1)[0];
+        return {
+          ...card,
+          ...room.playerSecretProperties.hand.splice(card.index, 1)[0]
+        };
       })
     });
-
+    
     roomData('field-entry', undefined);
   };
 }
