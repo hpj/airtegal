@@ -90,8 +90,11 @@ class Card extends React.Component
           winner={ winner.toString() }
         >
 
-          <div line={ (line === 'right' || line === 'both') ? 'right' : 'false' } className={ styles.line }><div/></div>
-          <div line={ (line === 'left' || line === 'both') ? 'left' : 'false' } className={ styles.line }><div/></div>
+          <div line={ (line === 'right') ? 'right' : 'false' } className={ styles.line }><div/>
+          </div>
+
+          <div line={ (line === 'left') ? 'left' : 'false' } className={ styles.line }><div/>
+          </div>
 
           {
             (hidden)

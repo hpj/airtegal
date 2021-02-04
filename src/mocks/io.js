@@ -191,6 +191,8 @@ function roomData(reason, opt, additional)
 
 function startMatch()
 {
+  const params = new URL(document.URL).searchParams;
+
   room.state = 'match';
 
   room.players = [ 'skye', 'mika' ];
@@ -240,9 +242,46 @@ function startMatch()
 
   });
 
-  room.playerProperties['skye'].state = 'picking';
 
   // picking phase
+
+  // mock a field of 2 groups of 3 cards
+  if (params.get('mock') === 'group')
+  {
+    room.field.push({
+      key: Math.random(),
+      cards: [ {
+        type: 'white',
+        content: '1'
+      }, {
+        type: 'white',
+        content: '2'
+      }, {
+        type: 'white',
+        content: '3'
+      } ]
+    });
+
+    room.field.push({
+      key: Math.random(),
+      cards: [ {
+        type: 'white',
+        content: '1'
+      }, {
+        type: 'white',
+        content: '2'
+      }, {
+        type: 'white',
+        content: '3'
+      } ]
+    });
+
+    roomData('field-entry', undefined);
+
+    return;
+  }
+
+  room.playerProperties['skye'].state = 'picking';
 
   roomData('picking-phase', undefined, {
     judge: 'mika',

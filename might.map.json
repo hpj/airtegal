@@ -417,6 +417,27 @@
           "value": 3
         }
       ]
+    },
+    {
+      "title": "Groups of Cards",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=group"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        }
+      ]
     }
   ]
 }

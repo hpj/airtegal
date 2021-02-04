@@ -168,8 +168,6 @@ class FieldOverlay extends StoreComponent
 
     const playerState = this.state.roomData?.playerProperties[socket.id]?.state;
 
-    let totalLineWidth = 0;
-
     // on overlay position changes
     overlayAnimatedX.removeAllListeners();
 
@@ -218,44 +216,15 @@ class FieldOverlay extends StoreComponent
               {
                 this.state.field.map((entry, entryIndex) =>
                 {
-                  const percent = (s, percent) =>
-                  {
-                    const n = (s / 100) * percent;
-                  
-                    return n;
-                  };
-
                   const isAllowed =
                     (playerState === 'judging' || (playerState === 'voting' && entry.id !== socket.id))
                     && entryIndex > 0;
 
                   return entry.cards.map((card, i) =>
                   {
-                    const rowWidth = 115 + 40 + percent(size.width, 2) + percent(size.height, 2);
-
-                    let newLine = false;
-
-                    totalLineWidth = totalLineWidth + rowWidth;
-
-                    if (totalLineWidth > size.width)
-                    {
-                      totalLineWidth = rowWidth;
-                      newLine = true;
-                    }
-
-                    let line;
-
-                    if (entry.cards[i - 1] && entry.cards[i + 1] && newLine)
-                      line = 'both';
-                    else if (entry.cards[i - 1] && newLine)
-                      line = 'left';
-                    else if (entry.cards[i + 1])
-                      line = 'right';
-
                     return <Card
                       key={ card.key }
-                      line={ line }
-                      newLine={ newLine }
+                      line={ (entry.cards[i + 1]) ? 'right' : undefined }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
                       shareEntry={ (entryIndex === this.state.winnerEntryIndex && i == 0) ? () => this.shareEntry(entryIndex) : undefined }
                       allowed={ isAllowed.toString() }
