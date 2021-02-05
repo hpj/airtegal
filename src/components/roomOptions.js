@@ -963,60 +963,60 @@ const styles = createStyle({
 
     borderBottom: '2px solid',
     borderColor: colors.blackText
-  },
-
-  packs: {
-    display: 'grid',
-    
-    gridTemplateColumns: 'repeat(auto-fill, calc(80px + 1vw + 1vh))',
-    justifyContent: 'space-around',
-    
-    padding: '0 35px',
-    gridGap: '0 5px',
-
-    '> *': {
-      width: 'calc(80px + 1vw + 1vh)',
-      margin: '0 0 10px 0'
-    }
-  },
-
-  pack: {
-    position: 'relative',
-
-    display: 'flex',
-    justifyContent: 'center',
-
-    height: 'fit-content',
-
-    color: colors.whiteText,
-    backgroundColor: colors.blackBackground,
-
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-
-    borderRadius: '10px',
-
-    ':before': {
-      content: '""',
-      display: 'block',
-    
-      paddingBottom: '135%'
-    }
-  },
-
-  packName: {
-    position: 'absolute',
-
-    display: 'flex',
-    alignItems: 'center',
-    textAlign: 'center',
-
-    lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
-
-    width: 'min-content',
-    height: '100%'
   }
+
+  // packs: {
+  //   display: 'grid',
+    
+  //   gridTemplateColumns: 'repeat(auto-fill, calc(80px + 1vw + 1vh))',
+  //   justifyContent: 'space-around',
+    
+  //   padding: '0 35px',
+  //   gridGap: '0 5px',
+
+  //   '> *': {
+  //     width: 'calc(80px + 1vw + 1vh)',
+  //     margin: '0 0 10px 0'
+  //   }
+  // },
+
+  // pack: {
+  //   position: 'relative',
+
+  //   display: 'flex',
+  //   justifyContent: 'center',
+
+  //   height: 'fit-content',
+
+  //   color: colors.whiteText,
+  //   backgroundColor: colors.blackBackground,
+
+  //   backgroundSize: 'cover',
+  //   backgroundRepeat: 'no-repeat',
+  //   backgroundPosition: 'center',
+
+  //   borderRadius: '10px',
+
+  //   ':before': {
+  //     content: '""',
+  //     display: 'block',
+    
+  //     paddingBottom: '135%'
+  //   }
+  // },
+
+  // packName: {
+  //   position: 'absolute',
+
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   textAlign: 'center',
+
+  //   lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
+
+  //   width: 'min-content',
+  //   height: '100%'
+  // }
 });
 
 export default RoomOptions;

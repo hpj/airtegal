@@ -27,8 +27,6 @@ import RoomOptions from './roomOptions.js';
 import FieldOverlay from './fieldOverlay.js';
 import HandOverlay from './handOverlay.js';
 
-import PocketOverlay from './pocketOverlay.js';
-
 import ShareOverlay from './shareOverlay.js';
 
 import { isTouchScreen } from '../index.js';
@@ -486,19 +484,7 @@ class RoomOverlay extends StoreComponent
             <div className={ styles.content }>
               <FieldOverlay sendMessage={ sendMessage } addNotification={ this.addNotification } size={ size }/>
                 
-              {
-                (isTouchScreen) ? <PocketOverlay size={ size }/> : <div/>
-              }
-
-              {/* this instance of trackBar is only enabled on
-                touch screens in portrait mode  */}
-              <RoomOptions ref={ optionsRef } sendMessage={ sendMessage }>
-
-                <RoomTrackBar contained
-                  enabled={ (isTouchScreen && size.width < 1080).toString() }
-                />
-
-              </RoomOptions>
+              <RoomOptions ref={ optionsRef } sendMessage={ sendMessage }/>
             </div>
           </div>
 
