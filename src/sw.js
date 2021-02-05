@@ -22,7 +22,7 @@ workbox.routing.registerRoute(
   new workbox.strategies.CacheFirst({
     cacheName: 'airtegal-cache',
     plugins: [
-      new workbox.expiration.Plugin({
+      new workbox.expiration.ExpirationPlugin({
         maxAgeSeconds: 60 * 60 * 24 * 1
       })
     ]

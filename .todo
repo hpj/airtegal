@@ -2,9 +2,6 @@ Performance Issues and Bugs:
   ☐ fix some of the issues of on firefox
 
 Testing:
-  ☐ test if everything works correctly 
-     - run app and server in production modes @high 
-
   ☐ match reports
 
   ☐ sharing overlay
