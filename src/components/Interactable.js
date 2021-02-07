@@ -209,8 +209,11 @@ class Interactable extends React.Component
     };
 
     const r = {
-      x: Math.round(this.lastPoint.x + this.dragDiff.x),
-      y: Math.round(this.lastPoint.y + this.dragDiff.y)
+      // x: Math.round(this.lastPoint.x + this.dragDiff.x),
+      // y: Math.round(this.lastPoint.y + this.dragDiff.y)
+
+      x: Math.round(this.lastPoint.x),
+      y: Math.round(this.lastPoint.y)
     };
 
     let closetDistance, closetIndex;
@@ -262,7 +265,7 @@ class Interactable extends React.Component
     const yDuration = Math.abs((target.y - y) * (frame.every / frame.pixels));
     
     // longest duration
-    const duration = (xDuration >= yDuration) ? xDuration : yDuration;
+    let duration = (xDuration >= yDuration) ? xDuration : yDuration;
 
     // get pixels per frame based on the longest duration
     const xPerFrame = (target.x - x) / (duration / frame.every);
@@ -279,13 +282,11 @@ class Interactable extends React.Component
 
       if (counter >= duration)
       {
-        this.setState({
-          ...target
-        }, () =>
+        this.setState(target, () =>
         {
           this.lastPoint = this.animating = false;
 
-          this.props.onMovement?.({ x: this.state.x, y: this.state.y });
+          this.props.onMovement?.(target);
 
           this.props.onSnapEnd?.call(undefined, index);
         });
@@ -311,6 +312,9 @@ class Interactable extends React.Component
     this.lastSnapIndex = index;
 
     this.props.onSnapStart?.(index);
+
+    if (process.env.NODE_ENV === 'test')
+      counter = duration * 2;
 
     animate();
   }

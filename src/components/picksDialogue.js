@@ -96,10 +96,10 @@ class PicksDialogue extends StoreComponent
     return state;
   }
 
-  stateDidChange(state, changes)
+  stateDidChange(state, old)
   {
-    if (changes.picks)
-      this.animatedPicksGrid.forceGridAnimation();
+    if (state.picks.length !== old.picks?.length)
+      this.animatedPicksGrid?.forceGridAnimation();
   }
 
   pickCard(cardIndex, isAllowed)
@@ -189,7 +189,7 @@ class PicksDialogue extends StoreComponent
   render()
   {
     return (
-      <div className={ styles.wrapper } style={ { display: (this.state.picks.length > 0) ? '' : 'none' } }>
+      <div className={ styles.wrapper }>
 
         <div ref={ picksGridRef } id={ 'kuruit-picks-dialogue' } className={ styles.container }>
           {
@@ -223,7 +223,7 @@ class PicksDialogue extends StoreComponent
           }
         </div>
 
-        <div className={ styles.buttons }>
+        <div className={ styles.buttons } style={ { display: (this.state.picks.length > 0) ? '' : 'none' } }>
           <div
             id={ 'kuruit-picks-dialogue-confirm' }
             className={ styles.button }
@@ -242,7 +242,7 @@ class PicksDialogue extends StoreComponent
           </div>
         </div>
 
-        <div className={ styles.separator }/>
+        <div className={ styles.separator } style={ { display: (this.state.picks.length > 0) ? '' : 'none' } }/>
 
       </div>
     );

@@ -76,25 +76,24 @@ class RoomOptions extends StoreComponent
       return true;
   }
 
-  stateDidChange(state, changes, old)
+  stateDidChange(state, old)
   {
     // if the real room options were edited
     if (
-      changes.roomData && old.roomData &&
-      changes.roomData.reason?.message !== old.roomData.reason.message &&
-      changes.roomData.reason?.message === 'options-edit')
+      state.roomData?.reason?.message !== old.roomData?.reason?.message &&
+      state.roomData?.reason?.message === 'options-edit')
     {
       this.store.set({
         dirtyOptions: state.roomData.options
       });
     }
 
-    if (changes.dirtyOptions)
+    if (JSON.stringify(state.dirtyOptions) !== JSON.stringify(old.dirtyOptions))
     {
       // force all inputs to auto resize
       const inputs = document.querySelectorAll('#room-options-input');
 
-      inputs.forEach((elem) => autoSize(elem));
+      inputs.forEach(e => autoSize(e));
     }
   }
 

@@ -20,6 +20,9 @@ import { shareEntry } from './shareOverlay.js';
 
 const colors = getTheme();
 
+/**
+* @type { React.RefObject<Interactable> }
+*/
 const overlayRef = createRef();
 
 class FieldOverlay extends StoreComponent
@@ -73,10 +76,10 @@ class FieldOverlay extends StoreComponent
     return state;
   }
 
-  stateDidChange(state, changes)
+  stateDidChange(state, old)
   {
-    if (changes.fieldVisible !== undefined)
-      overlayRef.current.snapTo({ index: (changes.fieldVisible) ? 1 : 0 });
+    if (state.fieldVisible !== old.fieldVisible)
+      overlayRef.current.snapTo({ index: state.fieldVisible ? 1 : 0 });
   }
 
   /** send the card the judge judged to the server's match logic

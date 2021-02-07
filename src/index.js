@@ -147,7 +147,7 @@ const connectivityPromise = () =>
 {
   return new Promise((resolve, reject) =>
   {
-    if (navigator.onLine === false)
+    if (navigator.onLine === false && process.env.NODE_ENV === 'production')
     {
       ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
   

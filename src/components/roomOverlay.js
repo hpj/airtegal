@@ -32,7 +32,11 @@ import { isTouchScreen } from '../index.js';
 
 const colors = getTheme();
 
+/**
+* @type { React.RefObject<Interactable> }
+*/
 const overlayRef = createRef();
+
 const optionsRef = createRef();
 
 export let requestRoomData;
@@ -420,7 +424,7 @@ class RoomOverlay extends StoreComponent
         
         dragEnabled={ this.state.overlayHandlerVisible }
 
-        dragArea={ { width: { percent: 25, size: size.width } } }
+        dragArea={ isTouchScreen ? { width: { percent: 25, size: size.width } } : undefined }
         frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
         initialPosition={ { x: size.width } }

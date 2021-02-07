@@ -58,7 +58,6 @@ class HandOverlay extends StoreComponent
     this.onResize = this.onResize.bind(this);
     this.onScroll = this.onScroll.bind(this);
 
-    this.maximize = this.maximize.bind(this);
     this.maximizeMinimize = this.maximizeMinimize.bind(this);
   }
 
@@ -146,19 +145,13 @@ class HandOverlay extends StoreComponent
     return state;
   }
 
-  stateDidChange(state, changes)
+  stateDidChange(state, old)
   {
-    if (changes.handVisible !== undefined)
+    if (state.handVisible !== old.handVisible)
       overlayRef.current.snapTo({ index: 0 });
-      
-    if (changes.picks)
-      this.animatedHandGrid.forceGridAnimation();
-  }
 
-  maximize()
-  {
-    if (overlayRef.current.lastSnapIndex === 0 && this.state.handVisible)
-      overlayRef.current.snapTo({ index: 1 });
+    if (state.picks.length !== old.picks?.length)
+      this.animatedHandGrid?.forceGridAnimation();
   }
 
   maximizeMinimize()
@@ -188,9 +181,7 @@ class HandOverlay extends StoreComponent
   {
     const { size } = this.props;
 
-    let visibleSnapPoints;
-    
-    const hiddenSnapPoints = [ { y: size.height } ];
+    let snapPoints;
     
     const boundaries = {};
 
@@ -198,15 +189,15 @@ class HandOverlay extends StoreComponent
 
     if (isTouchScreen)
     {
-      visibleSnapPoints = [ { y: size.height - 38 }, { y: 0 } ];
+      snapPoints = [ { y: size.height - 38 }, { y: 0 } ];
       
-      boundaries.top = visibleSnapPoints[1].y;
+      boundaries.top = snapPoints[1].y;
     }
     else
     {
-      visibleSnapPoints = [ { y: percent(size.height, 50) }, { y: percent(size.height, 80) }, { y: percent(size.height, 15) } ];
+      snapPoints = [ { y: percent(size.height, 50) }, { y: percent(size.height, 80) }, { y: percent(size.height, 15) } ];
       
-      boundaries.top = visibleSnapPoints[2].y;
+      boundaries.top = snapPoints[2].y;
     }
 
     const isAllowed = playerState === 'picking';
@@ -239,7 +230,7 @@ class HandOverlay extends StoreComponent
 
           style={ {
             zIndex: 4,
-            display: (this.state.handHidden) ? 'none' : '',
+            display: (this.state.handHidden || !this.state.handVisible) ? 'none' : '',
 
             width: '100%'
           } }
@@ -254,7 +245,7 @@ class HandOverlay extends StoreComponent
           
           boundaries={ boundaries }
           
-          snapPoints={ (this.state.handVisible) ? visibleSnapPoints : hiddenSnapPoints }
+          snapPoints={ snapPoints }
           
           onMovement={ onMovement }
         >

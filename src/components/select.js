@@ -249,6 +249,8 @@ const styles = createStyle({
     flexGrow: 1,
     margin: 'auto 10px',
 
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+
     '> input': {
       color: colors.blackText,
 
@@ -344,6 +346,8 @@ const styles = createStyle({
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
+
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
 
     height: '40px',
 

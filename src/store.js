@@ -214,7 +214,7 @@ export default class Store
       {
         component.setState(this.state, () =>
         {
-          component.stateDidChange?.call(component, this.state, this.changes, old);
+          component.stateDidChange?.(this.state, old);
           
           resolve();
         });

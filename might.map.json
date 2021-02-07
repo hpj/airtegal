@@ -316,7 +316,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-hand-overlay > :first-child"
+          "value": "#kuruit-hand-overlay > div > div"
         },
         {
           "action": "click",
@@ -349,7 +349,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-hand-overlay > :first-child"
+          "value": "#kuruit-hand-overlay > div > div"
         },
         {
           "action": "click",
@@ -394,7 +394,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-hand-overlay > :first-child"
+          "value": "#kuruit-hand-overlay > div > div"
         },
         {
           "action": "click",
@@ -481,7 +481,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-hand-overlay > :first-child"
+          "value": "#kuruit-hand-overlay > div > div"
         },
         {
           "action": "click",
@@ -514,7 +514,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-hand-overlay > :first-child"
+          "value": "#kuruit-hand-overlay > div > div"
         },
         {
           "action": "click",
@@ -531,10 +531,6 @@
         {
           "action": "type",
           "value": "احا"
-        },
-        {
-          "action": "wait",
-          "value": 3
         }
       ]
     },
@@ -559,7 +555,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-hand-overlay > :first-child"
+          "value": "#kuruit-hand-overlay > div > div"
         },
         {
           "action": "click",
@@ -576,10 +572,6 @@
         {
           "action": "type",
           "value": "احا"
-        },
-        {
-          "action": "wait",
-          "value": 3
         },
         {
           "action": "select",
