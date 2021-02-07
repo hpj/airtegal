@@ -245,6 +245,7 @@ class Game extends React.Component
 
     // auto-size the username input-box on resize
     window.addEventListener('resize', this.resize);
+    window.addEventListener('dragstart', this.disableDrag);
 
     // process url parameters
 
@@ -261,6 +262,16 @@ class Game extends React.Component
   componentWillUnmount()
   {
     window.removeEventListener('resize', this.resize);
+    window.removeEventListener('dragstart', this.disableDrag);
+  }
+
+  /**
+  * @param { UIEvent } e
+  */
+  disableDrag(e)
+  {
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   resize()

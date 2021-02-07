@@ -19,7 +19,6 @@ import Error from './components/error.js';
 import Loading from './components/loading.js';
 
 import Offline from './screens/offline.js';
-// import NotFound from './screens/404.js';
 
 import Homepage from './screens/homepage.js';
 

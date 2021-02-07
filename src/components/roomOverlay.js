@@ -2,9 +2,6 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Value } from 'animated';
-import Interactable from 'react-interactable/noNative';
-
 import { StoreComponent } from '../store.js';
 
 import i18n, { locale } from '../i18n.js';
@@ -18,6 +15,8 @@ import { lastNames } from '../stupidNames.js';
 import { createStyle } from 'flcss';
 
 import Notifications from './notifications.js';
+
+import Interactable from './Interactable.js';
 
 import RoomTrackBar from './roomTrackBar.js';
 import RoomState from './roomState.js';
@@ -36,8 +35,6 @@ const colors = getTheme();
 const overlayRef = createRef();
 const optionsRef = createRef();
 
-const overlayAnimatedX = new Value(0);
-
 export let requestRoomData;
 
 class RoomOverlay extends StoreComponent
@@ -47,8 +44,6 @@ class RoomOverlay extends StoreComponent
     super({
       overlayLoadingHidden: true,
       overlayErrorMessage: '',
-
-      overlayBlockDragging: false,
 
       notificationsIncremental: 1,
       notifications: [],
@@ -61,10 +56,9 @@ class RoomOverlay extends StoreComponent
 
     // bind functions that are use as callbacks
 
-    this.onRoomData = this.onRoomData.bind(this);
+    this.onSnapEnd = this.onSnapEnd.bind(this);
 
-    this.handleTouchStart = this.handleTouchStart.bind(this);
-    this.handleTouchEnd = this.handleTouchEnd.bind(this);
+    this.onRoomData = this.onRoomData.bind(this);
 
     this.addNotification = this.addNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
@@ -75,9 +69,6 @@ class RoomOverlay extends StoreComponent
     super.componentDidMount();
 
     socket.on('roomData', this.onRoomData);
-
-    window.addEventListener('touchstart', this.handleTouchStart);
-    window.addEventListener('touchend', this.handleTouchEnd);
 
     const params = new URL(document.URL).searchParams;
 
@@ -95,10 +86,6 @@ class RoomOverlay extends StoreComponent
     super.componentWillUnmount();
 
     socket.off('roomData', this.onRoomData);
-    // socket.off('kicked', this.onKicked);
-    
-    window.removeEventListener('touchstart', this.handleTouchStart);
-    window.removeEventListener('touchend', this.handleTouchEnd);
 
     // make sure socket is closed before component unmount
     socket.close();
@@ -195,20 +182,6 @@ class RoomOverlay extends StoreComponent
     });
   }
 
-  handleTouchStart(e)
-  {
-    // block dragging if it started 25vw far from the left edge of the screen
-    this.store.set({
-      overlayBlockDragging: (e.touches[0].pageX > (this.props.size.width / 100) * 25) ? true: false
-    });
-  }
-
-  handleTouchEnd()
-  {
-    this.store.set({
-      overlayBlockDragging: false
-    });
-  }
 
   createRoom()
   {
@@ -372,7 +345,7 @@ class RoomOverlay extends StoreComponent
     this.notificationsTimeout = undefined;
   }
 
-  onSnap({ index })
+  onSnapEnd(index)
   {
     if (index === 1)
     {
@@ -388,20 +361,17 @@ class RoomOverlay extends StoreComponent
   {
     const { size, sendMessage } = this.props;
 
-    // on overlay position changes
-    overlayAnimatedX.removeAllListeners();
-
-    overlayAnimatedX.addListener(({ value }) =>
+    const onMovement = ({ x }) =>
     {
-      this.store.set({ overlayHolderOpacity: 0.5 - (Math.round(value) / (size.width * 2)) });
+      this.store.set({
+        overlayHolderOpacity: 0.5 - (x / (size.width * 2))
+      });
 
       // hide the overlay and overlay holder when they are off-screen
-      // (-5px is to make sure that the overlay is hidden even if tit ends up few pixels off from where it should of been)
-      if (Math.round(value) >= size.width)
-        this.store.set({ overlayHidden: true });
-      else
-        this.store.set({ overlayHidden: false });
-    });
+      this.store.set({
+        overlayHidden: x >= size.width ? true : false
+      });
+    };
 
     // if size is not calculated yet
     if (!size.width)
@@ -431,38 +401,39 @@ class RoomOverlay extends StoreComponent
         display: (this.state.overlayHidden) ? 'none' : '',
         opacity: this.state.overlayHolderOpacity || 0
       } } className={ styles.holder }/>
-    
-      <Interactable.View
+
+      <Interactable
         ref={ overlayRef }
 
         style={ {
           zIndex: 1,
+
           position: 'fixed',
           display: (this.state.overlayHidden) ? 'none' : '',
 
           backgroundColor: colors.whiteBackground,
           
-          top: 0,
-          width: (this.state.overlayHandlerVisible) ? '100vw' : 'calc(100vw + 18px)',
-          height: '100%',
-
-          paddingRight: '20vw'
+          width: (this.state.overlayHandlerVisible) ? '100vw' : 'calc(100vw + 18px)'
         } }
 
-        animatedValueX={ overlayAnimatedX }
-
-        dragEnabled={ this.state.overlayHandlerVisible && !this.state.overlayBlockDragging }
-          
         horizontalOnly={ true }
+        
+        dragEnabled={ this.state.overlayHandlerVisible }
+
+        dragArea={ { width: { percent: 25, size: size.width } } }
+        frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
+
         initialPosition={ { x: size.width } }
           
-        onSnap={ this.onSnap.bind(this) }
-        snapPoints={ [ { x: (this.state.overlayHandlerVisible) ? 0 : -18 }, { x: size.width } ] }
-
         boundaries={ {
           left: (this.state.overlayHandlerVisible) ? 0 : -18,
           right: size.width
         } }
+
+        snapPoints={ [ { x: (this.state.overlayHandlerVisible) ? 0 : -18 }, { x: size.width } ] }
+
+        onMovement={ onMovement }
+        onSnapEnd={ this.onSnapEnd }
       >
         <div className={ styles.wrapper }>
           <div className={ styles.handlerWrapper }>
@@ -489,7 +460,7 @@ class RoomOverlay extends StoreComponent
           </div>
 
         </div>
-      </Interactable.View>
+      </Interactable>
 
     </div>;
   }

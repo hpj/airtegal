@@ -2,14 +2,6 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { EventEmitter } from 'events';
-
-import { Value } from 'animated';
-
-import PanResponder from 'react-panresponder-web';
-
-import Interactable from 'react-interactable/noNative';
-
 import { StoreComponent } from '../store.js';
 
 import { socket } from '../screens/game.js';
@@ -20,6 +12,8 @@ import { locale } from '../i18n.js';
 
 import { createStyle } from 'flcss';
 
+import Interactable from './Interactable.js';
+
 import Card from './card.js';
 
 import { shareEntry } from './shareOverlay.js';
@@ -27,9 +21,6 @@ import { shareEntry } from './shareOverlay.js';
 const colors = getTheme();
 
 const overlayRef = createRef();
-const overlayAnimatedX = new Value(0);
-
-export const gestures = new EventEmitter();
 
 class FieldOverlay extends StoreComponent
 {
@@ -38,45 +29,6 @@ class FieldOverlay extends StoreComponent
     super({
       fieldHidden: true,
       field: []
-    });
-
-    this.panResponder = PanResponder.create({
-      onMoveShouldSetPanResponderCapture: () => true,
-      
-      onPanResponderMove: (evt, gesture) =>
-      {
-        if (typeof gesture !== 'object')
-          return;
-      
-        this.panResponderMove = {
-          x0: gesture.x0,
-          y0: gesture.y0,
-          moveX: gesture.moveX,
-          moveY: gesture.moveY
-        };
-      },
-    
-      onPanResponderRelease: () =>
-      {
-        if (typeof this.panResponderMove !== 'object')
-          return;
-        
-        const { x0, y0, moveX, moveY } = this.panResponderMove;
-
-        const [ deltaX, deltaY ] = [ x0 - moveX, y0 - moveY ];
-
-        if (deltaX > 150)
-          gestures.emit('left');
-
-        if (deltaX < -150)
-          gestures.emit('right');
-
-        if (deltaY > 100)
-          gestures.emit('up');
-
-        if (deltaY < -100)
-          gestures.emit('down');
-      }
     });
   }
 
@@ -187,21 +139,18 @@ class FieldOverlay extends StoreComponent
         break;
     }
 
-    // on overlay position changes
-    overlayAnimatedX.removeAllListeners();
-
-    overlayAnimatedX.addListener(({ value }) =>
+    const onMovement = ({ x }) =>
     {
       // hide the overlay and overlay holder when they are off-screen
-      if (Math.round(value) >= size.width)
+      if (Math.round(x) >= size.width)
         this.store.set({ fieldHidden: true });
       else if (!this.state.fieldHidden || this.state.fieldVisible)
         this.store.set({ fieldHidden: false });
-    });
+    };
 
     return (
       <div className={ styles.view }>
-        <Interactable.View
+        <Interactable
           ref={ overlayRef }
 
           style={ {
@@ -214,23 +163,24 @@ class FieldOverlay extends StoreComponent
             height: '100%'
           } }
 
-          animatedValueX={ overlayAnimatedX }
-
-          frictionAreas={ [ { damping: 0.6 } ] }
-
-          dragEnabled={ false }
-
           horizontalOnly={ true }
+          
+          dragEnabled={ false }
+  
+          frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
+
           initialPosition={ { x: size.width } }
-
-          snapPoints={ [ { x: size.width }, { x: 0 } ] }
-
+          
           boundaries={ {
             left: 0,
             right: size.width
           } }
+
+          snapPoints={ [ { x: size.width }, { x: 0 } ] }
+
+          onMovement={ onMovement }
         >
-          <div className={ styles.wrapper } { ...this.panResponder.panHandlers }>
+          <div className={ styles.wrapper }>
             <div className={ styles.container }>
               {
                 this.state.field.map((entry, entryIndex) =>
@@ -285,7 +235,7 @@ class FieldOverlay extends StoreComponent
               }
             </div>
           </div>
-        </Interactable.View>
+        </Interactable>
       </div>
     );
   }
