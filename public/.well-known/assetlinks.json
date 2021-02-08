@@ -1,5 +1,5 @@
 [{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target" : { "namespace": "android_app", "package_name": "com.herpproject.kuruit",
-               "sha256_cert_fingerprints": ["F4:4B:AF:02:BE:E2:7E:BD:9B:58:F0:87:6A:1A:37:72:CE:1B:ED:25:CB:90:E8:74:2B:DD:69:06:4B:65:FA:2B"] }
-}]
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "me.hpj.airtegal",
+                   "sha256_cert_fingerprints": ["52:70:2E:DD:9B:A7:D2:10:DE:2E:F8:52:EC:E5:86:97:3A:4D:1F:C9:8F:8D:22:9A:E3:FA:F1:93:D9:1F:CF:EA"] }
+    }]
