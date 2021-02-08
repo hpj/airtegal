@@ -7,7 +7,7 @@
   },
   "titleBasedScreenshots": true,
   "parallelTests": 3,
-  "retryTests": 3,
+  "retryTests": 1,
   "defaultTimeout": 60000,
   "tolerance": 2.3,
   "antialiasingTolerance": 5,

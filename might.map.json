@@ -94,7 +94,7 @@
       ]
     },
     {
-      "title": "Room Overlay (Random)",
+      "title": "Room Overlay (Join)",
       "steps": [
         {
           "action": "goto",
@@ -291,7 +291,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         }
       ]
     },
@@ -312,7 +312,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -324,7 +324,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         }
       ]
     },
@@ -345,7 +345,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -357,7 +357,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -369,7 +369,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         }
       ]
     },
@@ -390,7 +390,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -402,7 +402,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -414,7 +414,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         }
       ]
     },
@@ -456,7 +456,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         }
       ]
     },
@@ -477,7 +477,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -489,7 +489,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         }
       ]
     },
@@ -510,7 +510,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -522,7 +522,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -551,7 +551,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -563,7 +563,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         },
         {
           "action": "select",
@@ -583,7 +583,113 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Room Overlay (Leave)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&list"
+        },
+        {
+          "action": "wait",
+          "value": "#random-room"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "drag",
+          "value": [
+            "80v",
+            "0"
+          ]
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Maximize Hand Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-hand-handler"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Minimize Hand Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-hand-handler"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
         }
       ]
     }

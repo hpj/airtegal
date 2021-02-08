@@ -252,7 +252,7 @@ class HandOverlay extends StoreComponent
           <div className={ styles.overlayWrapper }>
             <div style={ { height: (isTouchScreen) ? '100vh' : '85vh' } } ref={ overlayContainerRef } className={ styles.overlayContainer }>
               <div style={ { margin: (isTouchScreen) ? '15px 0 15px 0' : '10px 0 5px 0' } } className={ styles.handlerWrapper }>
-                <div className={ styles.handler } onClick={ this.maximizeMinimize }/>
+                <div id={ 'kuruit-hand-handler' } className={ styles.handler } onClick={ this.maximizeMinimize }/>
               </div>
 
               <div ref={ wrapperRef } style={ { height: this.state.handViewableArea } } className={ styles.wrapper } onScroll={ this.onScroll }>
