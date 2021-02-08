@@ -1,4 +1,6 @@
 Performance Issues and Bugs:
+  ☐ test if disableDrag() on <Game/> is effective or redundant
+
   ☐ fix some of the issues of on firefox
 
 Testing:
