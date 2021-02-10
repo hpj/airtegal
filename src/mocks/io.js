@@ -220,6 +220,13 @@ function startMatch()
       [ { key: Math.random(), type: 'white', content: 'Skye\'s Card' } ]
   };
 
+  // for (let index = 0; index < 20; index++)
+  // {
+  //   room.playerSecretProperties.hand.push({
+  //     key: Math.random(), type: 'white', content: 'Skye\'s Card'
+  //   });
+  // }
+
   // start round
 
   room.field = [];
