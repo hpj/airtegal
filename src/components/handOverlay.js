@@ -29,8 +29,9 @@ const colors = getTheme();
 */
 const overlayRef = createRef();
 
-const overlayContainerRef = createRef();
-
+/**
+* @type { React.RefObject<HTMLDivElement> }
+*/
 const wrapperRef = createRef();
 
 const picksDialogueRef = createRef();
@@ -93,6 +94,13 @@ class HandOverlay extends StoreComponent
   {
     if (!isTouchScreen || !wrapperRef.current)
       return;
+
+    // TODO there got be a better way to do
+    // this now that we have control over
+    // Interactable
+
+    // blocks the Interactable from moving if the
+    // user is scrolling through their cards
     
     const y = wrapperRef.current.scrollTop;
 
@@ -115,6 +123,7 @@ class HandOverlay extends StoreComponent
       changes?.handBlockDragging ||
       changes?.handViewableArea ||
       changes?.hand ||
+      changes?.pick ||
       changes?.picks)
       return true;
   }
@@ -148,10 +157,23 @@ class HandOverlay extends StoreComponent
   stateDidChange(state, old)
   {
     if (state.handVisible !== old.handVisible)
-      overlayRef.current.snapTo({ index: 0 });
+      overlayRef.current?.snapTo({ index: 0 });
+
+    if (state.size?.width !== old.size?.width)
+      overlayRef.current?.snapTo({ index: overlayRef.current.lastSnapIndex });
 
     if (state.picks.length !== old.picks?.length)
+    {
       this.animatedHandGrid?.forceGridAnimation();
+      
+      // if there's enough cards to submit
+      // scroll the wrapper to focus on the picks overlay
+      if (state.pick > 0 && state.picks.length === state.pick)
+        wrapperRef.current?.scrollTo({
+          behavior: 'smooth',
+          top: 0
+        });
+    }
   }
 
   maximizeMinimize()
@@ -187,9 +209,9 @@ class HandOverlay extends StoreComponent
 
     const playerState = this.state.roomData?.playerProperties[socket.id]?.state;
 
-    if (isTouchScreen)
+    if (isTouchScreen && size.height >= size.width && size.width < 700)
     {
-      snapPoints = [ { y: size.height - 38 }, { y: 0 } ];
+      snapPoints = [ { y: percent(size.height, 75) }, { y: 0 }, { y: size.height - 38 } ];
       
       boundaries.top = snapPoints[1].y;
     }
@@ -250,9 +272,9 @@ class HandOverlay extends StoreComponent
           onMovement={ onMovement }
         >
           <div className={ styles.overlayWrapper }>
-            <div style={ { height: (isTouchScreen) ? '100vh' : '85vh' } } ref={ overlayContainerRef } className={ styles.overlayContainer }>
-              <div style={ { margin: (isTouchScreen) ? '15px 0 15px 0' : '10px 0 5px 0' } } className={ styles.handlerWrapper }>
-                <div id={ 'kuruit-hand-handler' } className={ styles.handler } onClick={ this.maximizeMinimize }/>
+            <div style={ { height: (isTouchScreen) ? '100vh' : '85vh' } } className={ styles.overlayContainer }>
+              <div style={ { margin: (isTouchScreen) ? '15px 0 15px 0' : '10px 0 5px 0' } } className={ styles.handlerWrapper } onClick={ this.maximizeMinimize }>
+                <div id={ 'kuruit-hand-handler' } className={ styles.handler }/>
               </div>
 
               <div ref={ wrapperRef } style={ { height: this.state.handViewableArea } } className={ styles.wrapper } onScroll={ this.onScroll }>
