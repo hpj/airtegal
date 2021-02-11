@@ -579,6 +579,9 @@ const styles = createStyle({
     width: '8px',
     height: 'calc(5px + 5vh)',
 
+    minHeight: '32px',
+    maxHeight: '64px',
+
     borderRadius: '8px'
   },
 

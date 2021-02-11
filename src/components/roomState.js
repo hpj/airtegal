@@ -85,7 +85,7 @@ class RoomState extends StoreComponent
       // re-render to show correct counter
       this.forceUpdate();
     }
-    else if (roomData.counter !== this.current)
+    else if (roomData.counter && roomData.counter !== this.current)
     {
       this.current = roomData.counter;
 
