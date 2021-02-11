@@ -124,7 +124,7 @@ class Card extends React.Component
             (hidden)
               ?
               <div className={ styles.hidden } type={ type }>
-                <div>{ i18n('airtegal') }</div>
+                <div>{ i18n('airtegal-cards') }</div>
               </div>
               :
               <div
@@ -424,8 +424,10 @@ const styles = createStyle({
 
     fontSize: 'calc(5px + 0.4vw + 0.4vh)',
 
+    height: 0,
+
     margin: 0,
-    padding: '0 10px 10px 10px',
+    padding: '10px 10px 20px 10px',
 
     transition: 'padding 0.5s',
     transitionTimingFunction: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)',
