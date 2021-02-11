@@ -8,7 +8,19 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="/assets/body.css">
+    <style>
+      body
+      {
+        margin: 0;
+      }
+
+      #placeholder,
+      #app
+      {
+        overflow: hidden;
+        font-size: calc(6px + 0.4vw + 0.4vh);
+      }
+    </style>
 
     <title>Airtegal</title>
     <meta name="title" content="Airtegal">
@@ -36,6 +48,45 @@
     <link rel="apple-touch-startup-image" href="/splash/1536x2048.png" media="(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="/splash/1668x2224.png" media="(min-device-width: 834px) and (max-device-width: 834px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="/splash/2048x2732.png" media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
+
+    <style>
+      @font-face
+      {
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: normal;
+
+        src: url("../fonts/Montserrat-Regular.ttf") format("truetype");
+      }
+
+      @font-face
+      {
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: bold;
+
+        src: url("../fonts/Montserrat-Bold.ttf") format("truetype");
+      }
+
+      @font-face
+      {
+        font-family: "Noto Arabic";
+        font-style: normal;
+        font-weight: normal;
+
+        src: url("../fonts/NotoSansArabic-Regular.ttf") format("truetype");
+      }
+
+      @font-face
+      {
+        font-family: "Noto Arabic";
+        font-style: normal;
+        font-weight: bold;
+
+        src: url("../fonts/NotoSansArabic-Bold.ttf") format("truetype");
+      }
+    </style>
+
   </head>
   <body>
     <div id="placeholder"></div>

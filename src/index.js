@@ -135,9 +135,11 @@ const webFontPromise = () =>
     WebFont.load({
       active: resolve,
       inactive: resolve,
+
+      classes: false,
+
       custom: {
-        families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ],
-        urls: [ '/assets/fonts.css' ]
+        families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ]
       }
     });
   });
