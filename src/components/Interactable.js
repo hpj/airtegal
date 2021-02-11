@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 *
 * @property { { x: number, y: number } } initialPosition
 * @property { { left: number, right: number, top: number, bottom: number } } boundaries
-* @property { { x: number, y: number }[] } snapPoints
+* @property { { x: number, y: number, draggable: boolean }[] } snapPoints
 *
 * @property { ({ x: number, y: number }) => void } onMovement
 * @property { (index: number) => void } onSnapStart
@@ -221,12 +221,15 @@ class Interactable extends React.Component
     // find the closest point to the last known drag location (using distance)
     values.forEach((point, i) =>
     {
+      if (point.draggable === false)
+        return;
+      
       const d = distance({
         x: Math.abs(r.x - point.x),
         y: Math.abs(r.y - point.y)
       });
 
-      if (i <= 0 || d < closetDistance)
+      if (closetIndex === undefined || d < closetDistance)
       {
         closetIndex = i;
         closetDistance = d;
@@ -265,7 +268,7 @@ class Interactable extends React.Component
     const yDuration = Math.abs((target.y - y) * (frame.every / frame.pixels));
     
     // longest duration
-    let duration = (xDuration >= yDuration) ? xDuration : yDuration;
+    const duration = (xDuration >= yDuration) ? xDuration : yDuration;
 
     // get pixels per frame based on the longest duration
     const xPerFrame = (target.x - x) / (duration / frame.every);

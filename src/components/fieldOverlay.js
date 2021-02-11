@@ -56,14 +56,14 @@ class FieldOverlay extends StoreComponent
   {
     const state = {};
 
-    if (!roomData)
-      return;
-
     // if in match
-    if (roomData.state === 'match')
+    if (roomData?.state === 'match')
       state.fieldVisible = true;
     else
       state.fieldVisible = false;
+
+    if (!roomData)
+      return;
 
     if (roomData.reason.message === 'round-ended')
       state.winnerEntryIndex = (typeof roomData.reason.details === 'number') ? roomData.reason.details : undefined;
@@ -76,10 +76,12 @@ class FieldOverlay extends StoreComponent
     return state;
   }
 
-  stateDidChange(state, old)
+  stateDidChange(state)
   {
-    if (state.fieldVisible !== old.fieldVisible)
-      overlayRef.current.snapTo({ index: state.fieldVisible ? 1 : 0 });
+    if (state.fieldVisible && overlayRef.current?.lastSnapIndex === 0)
+      overlayRef.current.snapTo({ index: 1 });
+    else if (!state.fieldVisible && overlayRef.current?.lastSnapIndex >= 1)
+      overlayRef.current.snapTo({ index: 0 });
   }
 
   /** send the card the judge judged to the server's match logic
@@ -145,7 +147,7 @@ class FieldOverlay extends StoreComponent
     const onMovement = ({ x }) =>
     {
       // hide the overlay and overlay holder when they are off-screen
-      if (Math.round(x) >= size.width)
+      if (x >= size.width)
         this.store.set({ fieldHidden: true });
       else if (!this.state.fieldHidden || this.state.fieldVisible)
         this.store.set({ fieldHidden: false });

@@ -200,8 +200,10 @@ class RoomOverlay extends StoreComponent
       // hide the loading indictor
       this.loadingVisibility(false);
 
-      // request a screen wake lock.
-      navigator.wakeLock?.request('screen').then(wakeLock => this.wakeLock = wakeLock);
+      // request a screen wake lock
+      navigator.wakeLock?.request('screen')
+        .then(wakeLock => this.wakeLock = wakeLock)
+        .catch(e => e);
 
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });

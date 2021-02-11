@@ -85,7 +85,7 @@ class HandOverlay extends StoreComponent
     
     // it needs to be updated manually on every resize
     // or else it can go off-screen
-    overlayRef.current.snapTo({ index: overlayRef.current.lastSnapIndex });
+    overlayRef.current?.snapTo({ index: overlayRef.current.lastSnapIndex });
 
     this.refreshViewableArea();
   }
@@ -132,21 +132,21 @@ class HandOverlay extends StoreComponent
   {
     const state = {};
 
+    // if in match and and has to pick a card
+    if (
+      roomData?.state === 'match' &&
+      roomData?.playerProperties[socket.id]?.state === 'picking'
+    )
+      state.handVisible = true;
+    else
+      state.handVisible = false;
+
     if (!roomData)
       return;
     
     // if lobby clear hand and picks
     if (roomData.state === 'lobby')
       state.hand = [];
-
-    // if in match and and has to pick a card
-    if (
-      roomData.state === 'match' &&
-      roomData.playerProperties[socket.id].state === 'picking'
-    )
-      state.handVisible = true;
-    else
-      state.handVisible = false;
 
     if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
       state.hand = roomData.playerSecretProperties.hand;
@@ -156,11 +156,10 @@ class HandOverlay extends StoreComponent
 
   stateDidChange(state, old)
   {
-    if (state.handVisible !== old.handVisible)
-      overlayRef.current?.snapTo({ index: 0 });
-
-    if (state.size?.width !== old.size?.width)
-      overlayRef.current?.snapTo({ index: overlayRef.current.lastSnapIndex });
+    if (state.handVisible && overlayRef.current?.lastSnapIndex === 0)
+      overlayRef.current.snapTo({ index: 1 });
+    else if (!state.handVisible && overlayRef.current?.lastSnapIndex >= 1)
+      overlayRef.current.snapTo({ index: 0 });
 
     if (state.picks.length !== old.picks?.length)
     {
@@ -178,10 +177,10 @@ class HandOverlay extends StoreComponent
 
   maximizeMinimize()
   {
-    if (overlayRef.current.lastSnapIndex <= 0)
-      overlayRef.current.snapTo({ index: (isTouchScreen) ? 1 : 2 });
+    if (overlayRef.current.lastSnapIndex <= 1)
+      overlayRef.current.snapTo({ index: (isTouchScreen) ? 2 : 3 });
     else
-      overlayRef.current.snapTo({ index: 0 });
+      overlayRef.current.snapTo({ index: 1 });
   }
 
   refreshViewableArea()
@@ -211,15 +210,25 @@ class HandOverlay extends StoreComponent
 
     if (isTouchScreen && size.height >= size.width && size.width < 700)
     {
-      snapPoints = [ { y: percent(size.height, 75) }, { y: 0 }, { y: size.height - 38 } ];
+      snapPoints = [
+        { y: size.height, draggable: false },
+        { y: percent(size.height, 75) },
+        { y: 0 },
+        { y: size.height - 38 }
+      ];
       
-      boundaries.top = snapPoints[1].y;
+      boundaries.top = snapPoints[2].y;
     }
     else
     {
-      snapPoints = [ { y: percent(size.height, 50) }, { y: percent(size.height, 80) }, { y: percent(size.height, 15) } ];
+      snapPoints = [
+        { y: size.height, draggable: false },
+        { y: percent(size.height, 50) },
+        { y: percent(size.height, 80) },
+        { y: percent(size.height, 15) }
+      ];
       
-      boundaries.top = snapPoints[2].y;
+      boundaries.top = snapPoints[3].y;
     }
 
     const isAllowed = playerState === 'picking';
@@ -240,10 +249,6 @@ class HandOverlay extends StoreComponent
         this.store.set({ handHidden: false });
     };
 
-    // if size is not calculated yet
-    // if (!size.height)
-    //   return <div/>;
-
     return (
       <div className={ styles.view }>
 
@@ -252,7 +257,7 @@ class HandOverlay extends StoreComponent
 
           style={ {
             zIndex: 4,
-            display: (this.state.handHidden || !this.state.handVisible) ? 'none' : '',
+            display: (this.state.handHidden) ? 'none' : '',
 
             width: '100%'
           } }
