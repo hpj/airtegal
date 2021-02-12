@@ -121,6 +121,7 @@ class Game extends React.Component
     // bind functions that are use as callbacks
 
     this.resize = this.resize.bind(this);
+    this.visibilityChange = this.visibilityChange.bind(this);
 
     this.requestRooms = this.requestRooms.bind(this);
 
@@ -245,7 +246,12 @@ class Game extends React.Component
 
     // auto-size the username input-box on resize
     window.addEventListener('resize', this.resize);
+
+    // disable any dragging functionality in the app
     window.addEventListener('dragstart', this.disableDrag);
+
+    // detect when the app goes in and out of focus
+    document.addEventListener('visibilitychange', this.visibilityChange);
 
     // process url parameters
 
@@ -282,6 +288,19 @@ class Game extends React.Component
         height: window.innerHeight
       }
     });
+  }
+
+  visibilityChange()
+  {
+    if (!socket)
+      return;
+
+    // reload the page if we lost connection while
+    // the app was in the background
+    if (!document.hidden && socket.hidden && socket.disconnected)
+      window.location.reload();
+    
+    socket.hidden = document.hidden;
   }
 
   showErrorMessage(err)

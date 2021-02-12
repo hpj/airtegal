@@ -1,14 +1,18 @@
 Performance Issues and Bugs:
-  ☐ test if disableDrag() on <Game/> is effective or redundant
-
   ☐ fix some of the issues of on firefox
 
+  ☐ hands grid animations freezes if if triggered while the page is blurred
+  
 Testing:
-  ☐ match reports
+  ☐ test if disableDrag() on <Game/> is effective or redundant
 
-  ☐ sharing overlay
+  ☐ test if the app reloads automatically if it lost connection while in the background
+    - an issue that's more common on mobile devices
 
-  ☐ options overlay
+  Might:
+    ☐ match reports
+    ☐ sharing overlay
+    ☐ options overlay
 
 UI/UX:
   ☐ card showcase: responsive design @low 
