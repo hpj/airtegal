@@ -1,6 +1,7 @@
 {
 	"startCommand": "npm run start:testing",
 	"url": "http://localhost:8080",
+  "targets": [ "chromium", "firefox" ],
   "viewport": {
     "width": null,
     "height": null
@@ -8,9 +9,9 @@
   "titleBasedScreenshots": true,
   "parallelTests": 3,
   "retryTests": 1,
-  "defaultTimeout": 60000,
+  "defaultTimeout": 15000,
   "tolerance": 2.3,
-  "antialiasingTolerance": 5,
+  "antialiasingTolerance": 3.5,
   "coverageExclude": [
     "**/*.css",
     "/node_modules/**",
