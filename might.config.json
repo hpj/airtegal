@@ -1,54 +1,24 @@
 {
 	"startCommand": "npm run start:testing",
 	"url": "http://localhost:8080",
-  "targets": [ "chromium", "firefox" ],
+  "targets": [
+    "chromium",
+    "firefox"
+  ],
   "viewport": {
     "width": null,
     "height": null
   },
   "titleBasedScreenshots": true,
-  "parallelTests": 3,
-  "retryTests": 1,
-  "defaultTimeout": 15000,
-  "tolerance": 2.3,
-  "antialiasingTolerance": 5,
+  "parallelTests": 5,
+  "defaultTimeout": 25000,
+  "tolerance": 2.5,
+  "antialiasingTolerance": 3.5,
   "coverageExclude": [
-    "**/*.css",
     "/node_modules/**",
     "/webpack/**",
     "/ws '('ignored')'",
     "/'('webpack')'/**",
     "/'('webpack')'-dev-server/**"
-  ],
-  "coverageIgnoreLines": {
-    "equal": [
-      "",
-      "{",
-      "}",
-      "};",
-      "})",
-      "});",
-      "}));",
-      "]",
-      "];",
-      "else",
-      "*/"
-    ],
-    "startsWith": [
-      "//",
-      "*",
-      "/**"
-    ],
-    "endsWith": [],
-    "startsEndsWith": [
-      [
-        "</",
-        ">"
-      ],
-      [
-        "</",
-        ">;"
-      ]
-    ]
-  }
+  ]
 }
