@@ -11,7 +11,7 @@
   "retryTests": 1,
   "defaultTimeout": 15000,
   "tolerance": 2.3,
-  "antialiasingTolerance": 4.25,
+  "antialiasingTolerance": 5,
   "coverageExclude": [
     "**/*.css",
     "/node_modules/**",
