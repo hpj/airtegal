@@ -809,7 +809,6 @@ const roomsStyles = createStyle({
   coverBackground: {
     position: 'absolute',
 
-    color: colors.whiteText,
     backgroundColor: colors.blackBackground,
 
     left: 0,
@@ -838,15 +837,17 @@ const roomsStyles = createStyle({
     
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
 
+    color: colors.whiteText,
     lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
 
     left: 0,
-    width: 'calc(100% - 20px)',
+    width: 'calc(80% - 20px)',
     height: 'calc(100% - 30px)',
 
-    fontSize: 'calc(8px + 0.15vw + 0.15vh)',
-    margin: '15px'
+    fontSize: 'calc(10px + 0.2vw + 0.2vh)',
+    margin: '15px calc(10% + 15px)'
   }
 });
 
