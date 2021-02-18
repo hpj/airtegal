@@ -13,7 +13,7 @@
   "parallelTests": 5,
   "defaultTimeout": 25000,
   "tolerance": 2.5,
-  "antialiasingTolerance": 3.5,
+  "antialiasingTolerance": 5,
   "coverageExclude": [
     "/node_modules/**",
     "/webpack/**",

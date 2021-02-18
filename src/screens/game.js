@@ -365,7 +365,6 @@ class Game extends React.Component
     const Rooms = () =>
     {
       return <div className={ roomsStyles.container }>
-
         <div className={ roomsStyles.roomsWrapper }>
           <div style={ {
             display: (this.state.loadingHidden) ? 'none' : ''
@@ -405,11 +404,10 @@ class Game extends React.Component
 
                     <div className={ roomsStyles.cover }>
                       <div className={ roomsStyles.coverShadow }/>
-
-                      <div className={ roomsStyles.coverBackground }>
-                        <div className={ roomsStyles.coverTitle }>
-                          { title }
-                        </div>
+                      <div className={ roomsStyles.coverBackground }/>
+    
+                      <div className={ roomsStyles.coverTitle }>
+                        { title }
                       </div>
                     </div>
                   </div>;
@@ -665,7 +663,6 @@ const optionsStyles = createStyle({
 
 const roomsStyles = createStyle({
   container: {
-    gridArea: 'rooms',
     overflow: 'hidden',
 
     fontSize: 'calc(8px + 0.2vw + 0.2vh)',
@@ -673,7 +670,6 @@ const roomsStyles = createStyle({
   },
 
   roomsWrapper: {
-    gridArea: 'rooms',
     position: 'relative',
     
     overflowX: 'hidden',
@@ -837,17 +833,20 @@ const roomsStyles = createStyle({
   },
 
   coverTitle: {
+    position: 'absolute',
     display: 'flex',
     
     alignItems: 'center',
-    textAlign: 'center',
+    justifyContent: 'center',
 
     lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
 
-    width: 'min-content',
-    height: '100%',
+    left: 0,
+    width: 'calc(100% - 20px)',
+    height: 'calc(100% - 30px)',
 
-    margin: 'auto'
+    fontSize: 'calc(8px + 0.15vw + 0.15vh)',
+    margin: '15px'
   }
 });
 
