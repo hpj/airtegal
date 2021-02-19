@@ -2,8 +2,7 @@
 	"startCommand": "npm run start:testing",
 	"url": "http://localhost:8080",
   "targets": [
-    "chromium",
-    "firefox"
+    "chromium"
   ],
   "viewport": {
     "width": null,
