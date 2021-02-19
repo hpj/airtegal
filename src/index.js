@@ -23,6 +23,7 @@ import Offline from './screens/offline.js';
 import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
+import { setStyle } from 'flcss';
 
 export let country = '';
 
@@ -66,6 +67,10 @@ function loaded()
 
   ReactDOM.render(pages, app, () =>
   {
+    setStyle('*', {
+      fontSize: 'calc(6px + 0.4vw + 0.4vh)'
+    });
+
     if (!keepLoading)
       hideLoadingScreen();
   });
