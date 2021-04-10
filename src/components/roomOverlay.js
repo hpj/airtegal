@@ -169,7 +169,6 @@ class RoomOverlay extends StoreComponent
     });
   }
 
-
   createRoom()
   {
     const { username, sendMessage } = this.props;

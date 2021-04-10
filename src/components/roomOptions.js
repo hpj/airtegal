@@ -220,8 +220,7 @@ class RoomOptions extends StoreComponent
     const isAllowed =
       process.env.NODE_ENV !== 'production' ||
       (
-        this.state.roomData?.players &&
-        this.state.roomData?.players.length >= 3 &&
+        ((this.state.roomData?.players?.length >= 3) || (this.state.roomData?.options.randos && this.state.roomData?.players?.length >= 1)) &&
         this.state.roomData?.state !== 'match'
       );
 
