@@ -97,23 +97,6 @@ class RoomOverlay extends StoreComponent
 
   onRoomData(roomData)
   {
-    // process randos usernames
-    let randoIndex = -1;
-
-    Object.values(roomData.playerProperties).forEach((player) =>
-    {
-      if (player.rando && !player.username)
-      {
-        randoIndex = randoIndex + 1;
-
-        if (randoIndex >= lastNames.length)
-          randoIndex = 0;
-
-        // eslint-disable-next-line security/detect-object-injection
-        player.username = `${i18n('rando')} ${lastNames[randoIndex]}`;
-      }
-    });
-
     // handler is only visible if user is on the match's lobby screen
     this.handlerVisibility((roomData.state === 'lobby') ? true : false);
 
