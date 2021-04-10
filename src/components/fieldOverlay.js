@@ -191,7 +191,7 @@ class FieldOverlay extends StoreComponent
                 this.state.field.map((entry, entryIndex) =>
                 {
                   const isAllowed =
-                    (playerState === 'judging' || (playerState === 'voting' && entry.id !== socket.id))
+                    (playerState === 'judging')
                     && entryIndex > 0;
 
                   return entry.cards.map((card, i) =>

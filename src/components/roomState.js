@@ -155,10 +155,6 @@ class RoomState extends StoreComponent
       else
         state.matchState = i18n('wait-until-judge-judges', roomData.playerProperties[roomData.judge].username);
     }
-    else if (roomData.reason.message === 'voting-phase')
-    {
-      state.matchState = i18n('voting-phase');
-    }
     else if (roomData.reason.message === 'round-ended' && typeof roomData.reason.details === 'number')
     {
       const winnerEntry = roomData.field[roomData.reason.details];
