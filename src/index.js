@@ -36,20 +36,6 @@ const placeholder = document.body.querySelector('#placeholder');
 // detect touch screen
 export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
 
-function registerServiceWorker()
-{
-  // if the browser supports service workers
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator)
-  {
-    navigator.serviceWorker.register('sw.js')
-      .catch((err) =>
-      {
-        // failed registration, service worker won’t be installed
-        console.error('Service worker registration failed:', err);
-      });
-  }
-}
-
 /** when all required assets are loaded
 */
 function loaded()
@@ -104,9 +90,6 @@ export function hideLoadingScreen()
 
   visibleLoading = false;
 }
-
-// register the service worker
-registerServiceWorker();
 
 // create app-wide store
 createStore();

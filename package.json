@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "workbox": "workbox injectManifest workbox-config.js",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.js --mode development",
     "start:testing": "NODE_ENV=test webpack-dev-server --config webpack.config.dev.js --mode development",
     "build": "webpack --config webpack.config.prod.js --mode production",
@@ -46,7 +45,6 @@
     "might-ui": "^1.1.6",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.2",
-    "workbox-cli": "^6.1.0"
+    "webpack-dev-server": "^3.11.2"
   }
 }
