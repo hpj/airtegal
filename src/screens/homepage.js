@@ -9,7 +9,6 @@ import Select from '../components/select.js';
 import getTheme from '../colors.js';
 
 import Warning from '../components/warning.js';
-import CardShowcase from '../components/cardShowcase.js';
 
 import i18n, { locales, locale, setLocale } from '../i18n.js';
 
@@ -50,10 +49,6 @@ class Homepage extends React.Component
   
           <div className={ headerStyles.container }>
             
-            {/* TODO: Showcase is disabled to lower the server bandwidth */}
-            {/* And to simplify homepage design */}
-            {/* <CardShowcase/> */}
-  
             <div className={ headerStyles.title }>
   
               <a className={ headerStyles.hpj } href={ 'https://herpproject.com' }>
