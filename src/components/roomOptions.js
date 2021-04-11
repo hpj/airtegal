@@ -217,12 +217,14 @@ class RoomOptions extends StoreComponent
 
     const isDirty = JSON.stringify(dirtyOptions) !== JSON.stringify(options);
     
-    const isAllowed =
-      process.env.NODE_ENV !== 'production' ||
-      (
-        ((this.state.roomData?.players?.length >= 3) || (this.state.roomData?.options.randos && this.state.roomData?.players?.length >= 1)) &&
-        this.state.roomData?.state !== 'match'
-      );
+    let isAllowed = false;
+
+    if (process.env.NODE_ENV !== 'production')
+      isAllowed = true;
+    if (this.state.roomData?.players?.length >= 3 && this.state.roomData?.state !== 'match')
+      isAllowed = true;
+    else if (options?.match.randos && this.state.roomData?.state !== 'match')
+      isAllowed = true;
 
     if (!dirtyOptions)
       return <div/>;
