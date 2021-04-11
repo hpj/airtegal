@@ -56,6 +56,9 @@ export default function i18n(key, ...args)
   // eslint-disable-next-line security/detect-object-injection
   let value = locale.json[key];
 
+  if (!value)
+    return key;
+
   // handle plurals
   if (value.includes('~'))
   {
