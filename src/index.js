@@ -18,8 +18,6 @@ import { createStore } from './store.js';
 import Error from './components/error.js';
 import Loading from './components/loading.js';
 
-import Offline from './screens/offline.js';
-
 import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
@@ -138,15 +136,9 @@ const connectivityPromise = () =>
   return new Promise((resolve, reject) =>
   {
     if (navigator.onLine === false && process.env.NODE_ENV === 'production')
-    {
-      ReactDOM.render(<Offline/>, app, () => hideLoadingScreen());
-  
-      reject('offline');
-    }
+      reject('You Are Offline');
     else
-    {
       resolve();
-    }
   });
 };
 
@@ -202,8 +194,5 @@ Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
   .then(loaded)
   .catch((e) =>
   {
-    if (e === 'offline')
-      return;
-    
     ReactDOM.render(<Error error={ e }/>, placeholder);
   });
