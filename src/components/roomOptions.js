@@ -146,7 +146,7 @@ class RoomOptions extends StoreComponent
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('matchRequest')
+    sendMessage('matchRequest', undefined, 60000)
       .then(() =>
       {
         // hide the loading indictor (after 2.5s to allow animations to end)

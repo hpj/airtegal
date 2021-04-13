@@ -176,8 +176,7 @@ class RoomOverlay extends StoreComponent
     // show a loading indictor
     this.loadingVisibility(true);
 
-    // timeout is 1 minute
-    sendMessage('create', { username, region: locale.value }, 30000).then(() =>
+    sendMessage('create', { username, region: locale.value }).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
