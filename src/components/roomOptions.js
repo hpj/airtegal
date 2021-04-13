@@ -493,38 +493,12 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
-    const KuruitCardPacks = () =>
-    {
-      return <div>
-        {/* <div className={ styles.title }>{ i18n('card-packs') }</div>
-
-        <div className={ styles.packs }>
-          {
-            options.match.availablePacks.map((pack) =>
-            {
-              return <div key={ pack.id } style={ {
-                color: pack.foreground_color,
-                backgroundImage: `url(${pack.background_url})`,
-                backgroundColor: pack.background_url
-              } } className={ styles.pack }>
-                <div className={ styles.packName }>
-                  { pack.display_name }
-                </div>
-              </div>;
-            })
-          }
-        </div> */}
-      </div>;
-    };
-
     const KuruitOptions = () =>
     {
       return <div>
         { KuruitWinMethod() }
 
         { KuruitMatchOptions(dirtyOptions.gameMode) }
-
-        { KuruitCardPacks() }
       </div>;
     };
 

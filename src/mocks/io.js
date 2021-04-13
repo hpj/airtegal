@@ -174,9 +174,7 @@ function roomData(reason, opt, additional)
         pointsToCollect: 3,
         blankProbability: 0,
         startingHandAmount: 7,
-        randos: false,
-        availablePacks: [],
-        selectedPacks: []
+        randos: false
       },
       round: opt.round ?? {
         maxTime: 2 * 60 * 1000,

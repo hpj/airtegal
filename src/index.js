@@ -89,6 +89,10 @@ export function hideLoadingScreen()
   visibleLoading = false;
 }
 
+// register the service worker
+navigator.serviceWorker?.register('sw.js')
+  .catch((err) => console.error('Service worker registration failed:', err));
+
 // create app-wide store
 createStore();
 
