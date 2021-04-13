@@ -162,16 +162,16 @@
   
   // match state
 
-  "wait-until-judge-picks": "انتظر اختيار %0.",
+  "wait-until-judge-picks": "استني %0 يلعب.",
 
-  "picking-phase": "اختر كرتاً من يدك.",
-  "you-are-the-judge-wait": "انت القاضي - انتظر دورك",
+  "picking-phase": "اختر كرت مناسب من ايدك.",
+  "you-are-the-judge-wait": "انت القاضي - استني دورك",
 
-  "judging-phase": "اختر الكرت الفائز بهذة الجولة.",
-  "wait-until-judge-judges": "انتظر حكم %0.",
+  "judging-phase": "اختر اكثر كرت خلاك تتضحك.",
+  "wait-until-judge-judges": "استني حكم %0.",
 
-  "you-won-the-round": "لقد فزت بهذة الجولة.",
-  "won-this-round": "لقد فاز %0 بهذة الجولة.",
+  "you-won-the-round": "انت كسبت الجولة.",
+  "won-this-round": "%0 كسب الجولة.",
 
   "round-canceled": "تم الغاء الجولة.",
 
@@ -191,8 +191,8 @@
   "limited:match-ended": "انتهت الجولات! %0",
   "timer:match-ended": "انتهي الوقت! %0",
 
-  "judge:you": "لقد فزت بالمبارة.",
-  "judge:other": "لقد فاز %0 بالمبارة.",
+  "judge:you": "انت الي كسبت المبارة.",
+  "judge:other": "%0 هو الي كسب المبارة.",
 
   "king:you": "مبروك، انت ملك العشوئيات.",
   "king:other": "%0 هو ملك العشوئيات.",

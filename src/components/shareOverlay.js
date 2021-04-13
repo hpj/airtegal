@@ -104,7 +104,7 @@ class ShareOverlay extends React.Component
     const { share, addNotification } = this.props;
 
     navigator.clipboard.writeText(share.url);
-  
+    
     addNotification(i18n('share-copied-to-clipboard'));
   }
 
