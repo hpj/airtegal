@@ -82,7 +82,7 @@ class PicksDialogue extends StoreComponent
     if (roomData.options.gameMode === 'king' &&
       roomData.reason.message === 'black-card')
     {
-      state.pick = roomData.field[0].cards[0].pick ?? 1;
+      state.pick = 1;
     }
     else if (
       roomData.field && roomData.field.length > 0 &&
