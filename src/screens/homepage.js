@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { createStyle } from 'flcss';
 
+import { ErrorBoundary } from '@sentry/react';
+
 import Select from '../components/select.js';
 
 import getTheme from '../colors.js';
@@ -25,7 +27,7 @@ class Homepage extends React.Component
 
   render()
   {
-    return (
+    return <ErrorBoundary fallback={ 'An error has occurred' }>
       <div id={ 'homepage' }>
         <Warning
           storageKey={ 'airtegal-adults-warning' }
@@ -126,7 +128,7 @@ class Homepage extends React.Component
           </div>
         </div>
       </div>
-    );
+    </ErrorBoundary>;
   }
 }
 

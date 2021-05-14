@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/react';
+import * as Tracing from '@sentry/tracing';
 
 import i18n, { setLocale } from './i18n.js';
 
@@ -28,6 +30,8 @@ export let country = '';
 let visibleLoading = true;
 let keepLoading = false;
 
+const history = createBrowserHistory();
+
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
@@ -39,13 +43,10 @@ export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPo
 function loaded()
 {
   const pages =
-    <BrowserRouter>
+    <BrowserRouter history={ history }>
       <Switch>
         <Route path={ '/play' } component={ Game }/>
-      
         <Route exact path={ '*' } component={ Homepage }/>
-
-        {/* <Route component={ NotFound }/> */}
       </Switch>
     </BrowserRouter>;
 
@@ -112,7 +113,15 @@ else if (process.env.NODE_ENV === 'production')
   // sentry for error monitoring
   Sentry.init({
     release: process.env.RELEASE,
-    dsn: 'https://48c0df63377d4467823a29295dbc3c5f@sentry.io/1521991'
+    dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
+
+    integrations: [
+      new Tracing.Integrations.BrowserTracing({
+        routingInstrumentation: Sentry.reactRouterV5Instrumentation(history)
+      })
+    ],
+
+    tracesSampleRate: 0.35
   });
 }
 

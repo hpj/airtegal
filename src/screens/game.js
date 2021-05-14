@@ -6,6 +6,8 @@ import OptionsIcon from 'mdi-react/CogIcon';
 
 import io from 'socket.io-client';
 
+import { ErrorBoundary } from '@sentry/react';
+
 import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
 import getTheme from '../colors.js';
@@ -418,7 +420,7 @@ class Game extends React.Component
       </div>;
     };
 
-    return (
+    return <ErrorBoundary fallback={ 'An error has occurred' }>
       <div id={ 'game' } className={ mainStyles.wrapper }>
 
         <Warning
@@ -449,7 +451,7 @@ class Game extends React.Component
           username={ this.state.username }
         />
       </div>
-    );
+    </ErrorBoundary>;
   }
 }
 

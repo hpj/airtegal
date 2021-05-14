@@ -1,14 +1,14 @@
-const { resolve } = require('path');
+// const { resolve } = require('path');
 
 const { DefinePlugin } = require('webpack');
 
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 
-const SentryWebpackPlugin = require('@sentry/webpack-plugin');
+// const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 const CompressionPlugin = require('compression-webpack-plugin');
 
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 
@@ -36,13 +36,13 @@ module.exports = {
     new DefinePlugin({
       'process.env.RELEASE': `"${gitRevisionPlugin.commithash()}"`
     }),
-    new SentryWebpackPlugin({
-      include: './public',
-      release: gitRevisionPlugin.commithash(),
-      configFile: resolve(__dirname, '.sentryclirc'),
-      ignoreFile: resolve(__dirname, '.sentrycliignore'),
-      ignore: [ 'node_modules' ]
-    }),
+    // new SentryWebpackPlugin({
+    //   include: './public',
+    //   release: gitRevisionPlugin.commithash(),
+    //   configFile: resolve(__dirname, '.sentryclirc'),
+    //   ignoreFile: resolve(__dirname, '.sentrycliignore'),
+    //   ignore: [ 'node_modules' ]
+    // }),
     new CompressionPlugin({
       filename: '[path].gz[query]',
       algorithm: 'gzip',
@@ -57,11 +57,11 @@ module.exports = {
       compressionOptions: { level: 11 },
       threshold: 10240,
       minRatio: 0.8
-    }),
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [],
-      cleanAfterEveryBuildPatterns: [ __dirname + '/public/bundle.js.map' ]
     })
+    // new CleanWebpackPlugin({
+    //   cleanOnceBeforeBuildPatterns: [],
+    //   cleanAfterEveryBuildPatterns: [ __dirname + '/public/bundle.js.map' ]
+    // })
   ],
   output: {
     path: __dirname + '/public',
