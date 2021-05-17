@@ -121,7 +121,7 @@ else if (process.env.NODE_ENV === 'production')
       })
     ],
 
-    tracesSampleRate: 0.35
+    tracesSampleRate: 0.65
   });
 }
 
