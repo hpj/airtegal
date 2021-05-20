@@ -176,24 +176,22 @@ const ipCheckPromise = () =>
       {
         if (response.status !== 200)
         {
-          country = undefined;
-          
           reject(i18n(response.data) || response.data);
+        }
+        else if (response.data.version !== 1)
+        {
+          reject(i18n('server-mismatch'));
         }
         else
         {
-          country = response.data.country;
-  
           // try to set the locale as the country
-          setLocale(country);
+          setLocale(country = response.data.country);
   
           resolve();
         }
       })
       .catch((e) =>
       {
-        country = undefined;
-  
         if (e.response)
           reject(i18n(e.response.data.message) || e.response.data.message);
         else
