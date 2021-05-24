@@ -1,6 +1,4 @@
 Performance Issues and Bugs:
-  ☐ update server's encoded version @critical 
-
   ☐ fix some of the issues of on firefox
 
   ☐ hands grid animations freezes if if triggered while the page is blurred
@@ -15,7 +13,7 @@ Testing:
 
   Might:
     ☐ sharing overlay
-    
+
     ☐ options overlay
 
 UI/UX:

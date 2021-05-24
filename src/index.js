@@ -179,7 +179,7 @@ const ipCheckPromise = () =>
         {
           reject(i18n(response.data) || response.data);
         }
-        else if (response.data.version !== 1)
+        else if (response.data.version !== 2)
         {
           reject(i18n('server-mismatch'));
         }
