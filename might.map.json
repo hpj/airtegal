@@ -767,6 +767,19 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Match Report",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&report=Test,Test|Test,Test,Test|Test,Test,Test"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }

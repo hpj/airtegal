@@ -29,6 +29,23 @@ class MatchReport extends StoreComponent
     this.clearEntries = this.clearEntries.bind(this);
   }
 
+  componentDidMount()
+  {
+    const params = new URL(document.URL).searchParams;
+    
+    if (process.env.NODE_ENV === 'test' && params.has('report'))
+    {
+      const entries = params
+        .get('report')
+        .split('|')
+        .map(cards => cards
+          .split(',')
+          .map((content, i) => ({ type: i === 0 ? 'black' : 'white', content })));
+
+      this.setState({ entries });
+    }
+  }
+
   stateWhitelist(changes)
   {
     if (changes?.entries)
