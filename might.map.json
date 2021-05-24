@@ -181,7 +181,7 @@
         },
         {
           "action": "select",
-          "value": "#room-options-kuruit-limited"
+          "value": "#room-options-kuruit-timer"
         },
         {
           "action": "click",
@@ -234,7 +234,7 @@
         },
         {
           "action": "select",
-          "value": "#room-options-kuruit-limited"
+          "value": "#room-options-kuruit-timer"
         },
         {
           "action": "click",
@@ -275,7 +275,7 @@
       ]
     },
     {
-      "title": "First Round of Judge Mode",
+      "title": "Picking Phase",
       "steps": [
         {
           "action": "goto",
@@ -407,6 +407,27 @@
         {
           "action": "select",
           "value": "#kuruit-picks-dialogue-confirm"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Hidden Cards",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=hidden"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
         },
         {
           "action": "click",
@@ -682,6 +703,60 @@
         {
           "action": "wait",
           "value": 2
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Judging Phase",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=judge"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Wining Entry",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=judge"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-field-overlay > div:nth-child(2) > div"
         },
         {
           "action": "click",

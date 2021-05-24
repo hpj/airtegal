@@ -72,7 +72,7 @@ class MatchReport extends StoreComponent
                     return <Card
                       key={ i }
                       shareEntry={ (entry.length - 1 === i) ? () => this.shareEntry(entry) : undefined }
-                      owner={ (card.type === 'white') ? i18n('airtegal') : undefined }
+                      owner={ (card.type === 'white') ? i18n('airtegal-cards') : undefined }
                       type={ card.type }
                       content={ card.content }/>;
                   })

@@ -29,6 +29,11 @@ const gameModes = [
   { label: i18n('king'), value: 'king' }
 ];
 
+/**
+* @typedef { object } State
+* @prop { import('./roomOverlay').RoomData } roomData
+* @extends {React.Component<{}, State>}
+*/
 class RoomOptions extends StoreComponent
 {
   constructor()
@@ -46,6 +51,23 @@ class RoomOptions extends StoreComponent
     this.matchRequest = this.matchRequest.bind(this);
   }
 
+  /**
+  * @param { { roomData: import('./roomOverlay').RoomData } } changes
+  */
+  stateWhitelist(changes)
+  {
+    if (
+      changes?.roomData ||
+      changes?.optionsLoadingHidden ||
+      changes?.optionsErrorMessage ||
+      changes?.dirtyOptions
+    )
+      return true;
+  }
+
+  /**
+  * @param { { roomData: import('./roomOverlay').RoomData } } param0
+  */
   stateWillChange({ roomData })
   {
     const state = {};
@@ -61,33 +83,11 @@ class RoomOptions extends StoreComponent
   }
 
   /**
-  * @param { string[] } changes
+  * @param { { roomData: import('./roomOverlay').RoomData } } state
+  * @param { { roomData: import('./roomOverlay').RoomData } } old
   */
-  stateWhitelist(changes)
-  {
-    if (
-      changes?.roomData?.reason?.message ||
-      changes?.roomData?.options ||
-      changes?.roomData?.master ||
-      changes?.roomData?.players ||
-      changes?.optionsLoadingHidden ||
-      changes?.optionsErrorMessage ||
-      changes?.dirtyOptions)
-      return true;
-  }
-
   stateDidChange(state, old)
   {
-    // if the real room options were edited
-    if (
-      state.roomData?.reason?.message !== old.roomData?.reason?.message &&
-      state.roomData?.reason?.message === 'options-edit')
-    {
-      this.store.set({
-        dirtyOptions: state.roomData.options
-      });
-    }
-
     if (JSON.stringify(state.dirtyOptions) !== JSON.stringify(old.dirtyOptions))
     {
       // force all inputs to auto resize
@@ -183,12 +183,12 @@ class RoomOptions extends StoreComponent
     });
   }
 
-  onWinMethodChange(value)
+  onEndCondChange(value)
   {
     this.store.set({
       dirtyOptions: {
         ...this.state.dirtyOptions,
-        winMethod: value
+        endCondition: value
       }
     });
   }
@@ -258,53 +258,17 @@ class RoomOptions extends StoreComponent
 
     const groupLabel = (label) => <div className={ styles.groupLabel }>{label}</div>;
 
-    const KuruitWinMethod = () =>
+    const KuruitOptions = (gameMode) =>
     {
       return <div>
+        <div className={ styles.title }>{ i18n('match-options') }</div>
 
-        <div className={ styles.title }>{ i18n('win-method') }</div>
-
-        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'points' && (dirtyOptions.winMethod !== options.winMethod || options.match.pointsToCollect !== dirtyOptions.match.pointsToCollect)).toString() }>
-          <div
-            id={ 'room-options-kuruit-points' }
-            className={ styles.checkbox }
-            ticked={ (dirtyOptions.winMethod === 'points').toString() }
-            onClick={ () => this.onWinMethodChange('points') }
-          />
-
-          <div>{ i18n('first-to-points-1') }</div>
-
-          <AutoSizeInput
-            required
-            type={ 'number' }
-            min={ '2' }
-            max={ '7' }
-            maxLength={ 1 }
-            id={ 'room-options-input' }
-            master={ isMaster.toString() }
-            className={ styles.input }
-            placeholder={ i18n('options-placeholder') }
-            value={ dirtyOptions.match.pointsToCollect }
-            onUpdate={ (value, resize) => this.store.set({
-              dirtyOptions: {
-                ...dirtyOptions,
-                match: {
-                  ...dirtyOptions.match,
-                  pointsToCollect: value
-                }
-              }
-            }, resize) }
-          />
-
-          <div>{ i18n('first-to-points-2', dirtyOptions.match.pointsToCollect) }</div>
-        </div>
-
-        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'limited' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxRounds !== dirtyOptions.match.maxRounds)).toString() }>
+        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.match.maxRounds !== dirtyOptions.match.maxRounds)).toString() }>
           <div
             id={ 'room-options-kuruit-limited' }
             className={ styles.checkbox }
-            ticked={ (dirtyOptions.winMethod === 'limited').toString() }
-            onClick={ () => this.onWinMethodChange('limited') }
+            ticked={ (dirtyOptions.endCondition === 'limited').toString() }
+            onClick={ () => this.onEndCondChange('limited') }
           />
 
           <div>{ i18n('max-rounds-1') }</div>
@@ -334,12 +298,12 @@ class RoomOptions extends StoreComponent
           <div>{ i18n('max-rounds-2', dirtyOptions.match.maxRounds) }</div>
         </div>
 
-        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.winMethod === 'timer' && (dirtyOptions.winMethod !== options.winMethod || options.match.maxTime !== dirtyOptions.match.maxTime)).toString() }>
+        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.match.maxTime !== dirtyOptions.match.maxTime)).toString() }>
           <div
             id={ 'room-options-kuruit-timer' }
             className={ styles.checkbox }
-            ticked={ (dirtyOptions.winMethod === 'timer').toString() }
-            onClick={ () => this.onWinMethodChange('timer') }
+            ticked={ (dirtyOptions.endCondition === 'timer').toString() }
+            onClick={ () => this.onEndCondChange('timer') }
           />
 
           <div>{ i18n('max-time-1') }</div>
@@ -369,136 +333,122 @@ class RoomOptions extends StoreComponent
 
           <div>{ i18n('max-time-2', dirtyOptions.match.maxTime / 60 / 1000) }</div>
         </div>
-      </div>;
-    };
 
-    const KuruitMatchOptions = (gameMode) =>
-    {
-      return <div>
-        <div className={ styles.title }>{ i18n('match-options') }</div>
-
-        <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
-          <AutoSizeInput
-            required
-            type={ 'number' }
-            min={ '3' }
-            max={ '16' }
-            maxLength={ 2 }
-            id={ 'room-options-input' }
-            master={ isMaster.toString() }
-            className={ styles.input }
-            placeholder={ i18n('options-placeholder') }
-            value={ dirtyOptions.match.maxPlayers }
-            onUpdate={ (value, resize) => this.store.set({
-              dirtyOptions: {
-                ...dirtyOptions,
-                match: {
-                  ...dirtyOptions.match,
-                  maxPlayers: value
+        <div style={ { margin: '5px -5px 5px 0px' } }>
+          <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
+            <AutoSizeInput
+              required
+              type={ 'number' }
+              min={ '3' }
+              max={ '16' }
+              maxLength={ 2 }
+              id={ 'room-options-input' }
+              master={ isMaster.toString() }
+              className={ styles.input }
+              placeholder={ i18n('options-placeholder') }
+              value={ dirtyOptions.match.maxPlayers }
+              onUpdate={ (value, resize) => this.store.set({
+                dirtyOptions: {
+                  ...dirtyOptions,
+                  match: {
+                    ...dirtyOptions.match,
+                    maxPlayers: value
+                  }
                 }
-              }
-            }, resize) }
-          />
+              }, resize) }
+            />
 
-          <div>{ i18n('max-players') }</div>
-        </div>
+            <div>{ i18n('max-players') }</div>
+          </div>
 
-        <div className={ styles.field } dirty={ (dirtyOptions.round.maxTime !== options.round.maxTime).toString() }>
-          <AutoSizeInput
-            required
-            type={ 'number' }
-            minutes={ true }
-            min={ '1' }
-            max={ '5' }
-            maxLength={ 1 }
-            id={ 'room-options-input' }
-            master={ isMaster.toString() }
-            className={ styles.input }
-            placeholder={ i18n('options-placeholder') }
-            value={ dirtyOptions.round.maxTime }
-            onUpdate={ (value, resize) => this.store.set({
-              dirtyOptions: {
-                ...dirtyOptions,
-                round: {
-                  ...dirtyOptions.round,
-                  maxTime: value
+          <div className={ styles.field } dirty={ (dirtyOptions.round.maxTime !== options.round.maxTime).toString() }>
+            <AutoSizeInput
+              required
+              type={ 'number' }
+              minutes={ true }
+              min={ '1' }
+              max={ '5' }
+              maxLength={ 1 }
+              id={ 'room-options-input' }
+              master={ isMaster.toString() }
+              className={ styles.input }
+              placeholder={ i18n('options-placeholder') }
+              value={ dirtyOptions.round.maxTime }
+              onUpdate={ (value, resize) => this.store.set({
+                dirtyOptions: {
+                  ...dirtyOptions,
+                  round: {
+                    ...dirtyOptions.round,
+                    maxTime: value
+                  }
                 }
-              }
-            }, resize) }
-          />
+              }, resize) }
+            />
 
-          <div>{ i18n('round-countdown') }</div>
-        </div>
+            <div>{ i18n('round-countdown') }</div>
+          </div>
 
-        <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
-          <AutoSizeInput
-            required
-            type={ 'number' }
-            min={ '3' }
-            max={ '12' }
-            maxLength={ 2 }
-            id={ 'room-options-input' }
-            master={ isMaster.toString() }
-            className={ styles.input }
-            placeholder={ i18n('options-placeholder') }
-            value={ dirtyOptions.match.startingHandAmount }
-            onUpdate={ (value, resize) => this.store.set({
-              dirtyOptions: {
-                ...dirtyOptions,
-                match: {
-                  ...dirtyOptions.match,
-                  startingHandAmount: value
+          <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
+            <AutoSizeInput
+              required
+              type={ 'number' }
+              min={ '3' }
+              max={ '12' }
+              maxLength={ 2 }
+              id={ 'room-options-input' }
+              master={ isMaster.toString() }
+              className={ styles.input }
+              placeholder={ i18n('options-placeholder') }
+              value={ dirtyOptions.match.startingHandAmount }
+              onUpdate={ (value, resize) => this.store.set({
+                dirtyOptions: {
+                  ...dirtyOptions,
+                  match: {
+                    ...dirtyOptions.match,
+                    startingHandAmount: value
+                  }
                 }
-              }
-            }, resize) }
-          />
+              }, resize) }
+            />
 
-          <div>{ i18n('hand-cap') }</div>
-        </div>
+            <div>{ i18n('hand-cap') }</div>
+          </div>
 
-        <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
+          <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
 
-          <AutoSizeInput
-            required
-            type={ 'number' }
-            min={ '0' }
-            max={ '25' }
-            maxLength={ 2 }
-            id={ 'room-options-input' }
-            master={ isMaster.toString() }
-            className={ styles.input }
-            placeholder={ i18n('options-placeholder') }
-            value={ dirtyOptions.match.blankProbability }
-            onUpdate={ (value, resize) => this.store.set({
-              dirtyOptions: {
-                ...dirtyOptions,
-                match: {
-                  ...dirtyOptions.match,
-                  blankProbability: value
+            <AutoSizeInput
+              required
+              type={ 'number' }
+              min={ '0' }
+              max={ '25' }
+              maxLength={ 2 }
+              id={ 'room-options-input' }
+              master={ isMaster.toString() }
+              className={ styles.input }
+              placeholder={ i18n('options-placeholder') }
+              value={ dirtyOptions.match.blankProbability }
+              onUpdate={ (value, resize) => this.store.set({
+                dirtyOptions: {
+                  ...dirtyOptions,
+                  match: {
+                    ...dirtyOptions.match,
+                    blankProbability: value
+                  }
                 }
-              }
-            }, resize) }
-          />
+              }, resize) }
+            />
 
-          <div suffix={ 'true' } className={ styles.inputSuffix }>%</div>
-          <div>{ i18n('blank-probability') }</div>
+            <div suffix={ 'true' } className={ styles.inputSuffix }>%</div>
+            <div>{ i18n('blank-probability') }</div>
+          </div>
         </div>
 
         <div className={ styles.field } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
-          <div style={ { margin: '0 5px' } }>{ i18n('randos') }</div>
+          <div>{ i18n('randos') }</div>
 
           <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
           <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
         </div>
-      </div>;
-    };
-
-    const KuruitOptions = () =>
-    {
-      return <div>
-        { KuruitWinMethod() }
-
-        { KuruitMatchOptions(dirtyOptions.gameMode) }
       </div>;
     };
 
@@ -538,7 +488,7 @@ class RoomOptions extends StoreComponent
                     dirtyOptions.gameMode === 'judge' ||
                     dirtyOptions.gameMode === 'king'
                   ) ?
-                    KuruitOptions() : AirtegalOptions()
+                    KuruitOptions(dirtyOptions.gameMode) : AirtegalOptions()
                 }
 
                 {/* Dirty Changes Notice */}
@@ -838,7 +788,7 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px 8px 25px',
+    padding: '0 calc(25px + 24px + 20px) 8px 25px',
 
     '[dirty="true"]': {
       fontStyle: 'italic',
@@ -933,64 +883,8 @@ const styles = createStyle({
   },
 
   inputSuffix: {
-    margin: (locale.direction === 'ltr') ? '0 5px -2px -5px': '0 -5px -2px 5px',
-
-    borderBottom: '2px solid',
-    borderColor: colors.blackText
+    margin: (locale.direction === 'ltr') ? '0 5px -2px -5px': '0 -5px -2px 5px'
   }
-
-  // packs: {
-  //   display: 'grid',
-    
-  //   gridTemplateColumns: 'repeat(auto-fill, calc(80px + 1vw + 1vh))',
-  //   justifyContent: 'space-around',
-    
-  //   padding: '0 35px',
-  //   gridGap: '0 5px',
-
-  //   '> *': {
-  //     width: 'calc(80px + 1vw + 1vh)',
-  //     margin: '0 0 10px 0'
-  //   }
-  // },
-
-  // pack: {
-  //   position: 'relative',
-
-  //   display: 'flex',
-  //   justifyContent: 'center',
-
-  //   height: 'fit-content',
-
-  //   color: colors.whiteText,
-  //   backgroundColor: colors.blackBackground,
-
-  //   backgroundSize: 'cover',
-  //   backgroundRepeat: 'no-repeat',
-  //   backgroundPosition: 'center',
-
-  //   borderRadius: '10px',
-
-  //   ':before': {
-  //     content: '""',
-  //     display: 'block',
-    
-  //     paddingBottom: '135%'
-  //   }
-  // },
-
-  // packName: {
-  //   position: 'absolute',
-
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   textAlign: 'center',
-
-  //   lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
-
-  //   width: 'min-content',
-  //   height: '100%'
-  // }
 });
 
 export default RoomOptions;

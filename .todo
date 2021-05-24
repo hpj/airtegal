@@ -1,8 +1,12 @@
 Performance Issues and Bugs:
+  ☐ update server's encoded version @critical 
+
   ☐ fix some of the issues of on firefox
 
   ☐ hands grid animations freezes if if triggered while the page is blurred
-  
+
+  ☐ re-add notification when options change in lobby
+
 Testing:
   ☐ test if disableDrag() on <Game/> is effective or redundant
 
@@ -15,6 +19,8 @@ Testing:
     ☐ options overlay
 
 UI/UX:
+  ☐ redesign the homepage
+
   ☐ animations for cards appearing and disappearing from field
   
   ☐ design the mockups for the proposal and vote screens

@@ -25,53 +25,55 @@ const colors = getTheme();
 */
 const overlayRef = createRef();
 
+/**
+* @typedef { object } State
+* @prop { import('./roomOverlay').RoomData } roomData
+* @extends {React.Component<{}, State>}
+*/
 class FieldOverlay extends StoreComponent
 {
   constructor()
   {
     super({
-      fieldHidden: true,
-      field: []
+      field: [],
+      fieldHidden: true
     });
   }
 
   /**
-  * @param { string[] } changes
+  * @param { { roomData: import('./roomOverlay').RoomData } } changes
   */
   stateWhitelist(changes)
   {
     if (
-      changes?.roomData?.state ||
-      changes?.roomData?.reason?.message ||
-      changes?.roomData?.reason?.details ||
-      changes?.roomData?.field ||
+      changes?.roomData ||
       changes?.field ||
       changes?.fieldHidden ||
       changes?.fieldVisible ||
-      changes?.winnerEntryIndex)
+      changes?.winnerEntryIndex
+    )
       return true;
   }
 
+  /**
+  * @param { { roomData: import('./roomOverlay').RoomData } } param0
+  */
   stateWillChange({ roomData })
   {
     const state = {};
 
     // if in match
-    if (roomData?.state === 'match')
-      state.fieldVisible = true;
-    else
-      state.fieldVisible = false;
+    state.fieldVisible = roomData?.state === 'match' ? true : false;
 
     if (!roomData)
       return;
 
-    if (roomData.reason.message === 'round-ended')
-      state.winnerEntryIndex = (typeof roomData.reason.details === 'number') ? roomData.reason.details : undefined;
-    else if (roomData.reason.message === 'round-started')
+    if (roomData.phase === 'transaction')
+      state.winnerEntryIndex = roomData.field.findIndex((e) => e.highlighted);
+    else
       state.winnerEntryIndex = undefined;
 
-    if (roomData.field)
-      state.field = roomData.field;
+    state.field = roomData.field;
 
     return state;
   }
@@ -85,15 +87,15 @@ class FieldOverlay extends StoreComponent
   }
 
   /** send the card the judge judged to the server's match logic
-  * @param { number } entryIndex
+  * @param { number } index
   * @param { boolean } isAllowed if the card can be picked
   */
-  judgeCard(entryIndex, isAllowed)
+  judgeCard(index, isAllowed)
   {
     const { sendMessage } = this.props;
 
     if (isAllowed)
-      sendMessage('matchLogic', { entryIndex }).then(() =>
+      sendMessage('matchLogic', { picks: [ { index } ] }).then(() =>
       {
         // send the entry to match report
 
@@ -102,7 +104,7 @@ class FieldOverlay extends StoreComponent
         entries.push([
           this.state.field[0].cards[0],
           // eslint-disable-next-line security/detect-object-injection
-          ...this.state.field[entryIndex].cards
+          ...this.state.field[index].cards
         ]);
   
         this.store.set({
@@ -111,12 +113,15 @@ class FieldOverlay extends StoreComponent
       });
   }
 
-  shareEntry(entryIndex)
+  /**
+  * @param { number } index
+  */
+  shareEntry(index)
   {
     shareEntry(
       this.state.field[0].cards[0].content,
       // eslint-disable-next-line security/detect-object-injection
-      this.state.field[entryIndex].cards.map((card) => card.content));
+      this.state.field[index].cards.map((card) => card.content));
   }
 
   render()
@@ -186,7 +191,7 @@ class FieldOverlay extends StoreComponent
           onMovement={ onMovement }
         >
           <div className={ styles.wrapper }>
-            <div className={ styles.container }>
+            <div id={ 'kuruit-field-overlay' } className={ styles.container }>
               {
                 this.state.field.map((entry, entryIndex) =>
                 {

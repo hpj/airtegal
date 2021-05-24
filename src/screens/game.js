@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import RefreshIcon from 'mdi-react/RefreshIcon';
 import OptionsIcon from 'mdi-react/CogIcon';
 
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 import { ErrorBoundary } from '@sentry/react';
 
@@ -35,7 +35,8 @@ const colors = getTheme();
 
 const overlayRef = createRef();
 
-/** @type { import('socket.io').Socket }
+/**
+* @type { import('socket.io').Socket }
 */
 export let socket;
 
@@ -48,7 +49,7 @@ function errorScreen(error)
   ReactDOM.unmountComponentAtNode(app);
 }
 
-/** connect the socket.io client to the socket.io server
+/** connect the client to the socket io server
 */
 function connect()
 {
@@ -136,7 +137,7 @@ class Game extends React.Component
     // fix the scroll position
     window.scrollTo(0, 0);
 
-    // connect to the socket.io server
+    // connect to the socket io server
     connect()
       // if app connected successfully
       // hide the loading screen
@@ -464,11 +465,9 @@ const RoomHighlights = (room) =>
   // cards based game modes
   if (gameMode === 'judge' || gameMode === 'king')
   {
-    if (room.options.winMethod === 'points')
-      highlights.push(`${i18n('first-to-points-1')} ${i18n('first-to-points-2', room.options.match.pointsToCollect, true)}.`);
-    else if (room.options.winMethod === 'limited')
+    if (room.options.endCondition === 'limited')
       highlights.push(`${i18n('max-rounds-1')} ${i18n('max-rounds-2', room.options.match.maxRounds, true)}.`);
-    else if (room.options.winMethod === 'timer')
+    else if (room.options.endCondition === 'timer')
       highlights.push(`${i18n('max-time-1')} ${i18n('max-time-2', room.options.match.maxTime / 60 / 1000, true)}.`);
 
     if (gameMode === 'king')
@@ -478,9 +477,6 @@ const RoomHighlights = (room) =>
     else
     {
       highlights.push(`${i18n('hand-cap-lobby', room.options.match.startingHandAmount, true)}.`);
-
-      if (room.options.match.blankProbability)
-        highlights.push(`%${room.options.match.blankProbability} ${i18n('blank-probability:cover')}.`);
     }
   }
 

@@ -22,6 +22,11 @@ const colors = getTheme();
 
 const picksGridRef = createRef();
 
+/**
+* @typedef { object } State
+* @prop { import('./roomOverlay').RoomData } roomData
+* @extends {React.Component<{}, State>}
+*/
 class PicksDialogue extends StoreComponent
 {
   constructor()
@@ -49,7 +54,7 @@ class PicksDialogue extends StoreComponent
   }
 
   /**
-  * @param { string[] } changes
+  * @param { { roomData: import('./roomOverlay').RoomData } } changes
   */
   stateWhitelist(changes)
   {
@@ -61,6 +66,9 @@ class PicksDialogue extends StoreComponent
       return true;
   }
 
+  /**
+  * @param { { roomData: import('./roomOverlay').RoomData } } param0
+  */
   stateWillChange({ roomData })
   {
     const state = {};
@@ -79,12 +87,13 @@ class PicksDialogue extends StoreComponent
       state.blanks = [];
     }
 
-    if (roomData.options.gameMode === 'king' &&
-      roomData.reason.message === 'black-card')
-    {
-      state.pick = 1;
-    }
-    else if (
+    // if (roomData.options.gameMode === 'king' &&
+    //   roomData.reason.message === 'black-card')
+    // {
+    //   state.pick = 1;
+    // }
+    // else
+    if (
       roomData.field && roomData.field.length > 0 &&
       this.state.pick !== roomData.field[0].cards[0].pick)
     {
@@ -95,6 +104,10 @@ class PicksDialogue extends StoreComponent
     return state;
   }
 
+  /**
+  * @param { { roomData: import('./roomOverlay').RoomData } } state
+  * @param { { roomData: import('./roomOverlay').RoomData } } old
+  */
   stateDidChange(state, old)
   {
     if (state.picks.length !== old.picks?.length)

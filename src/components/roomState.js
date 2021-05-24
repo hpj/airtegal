@@ -17,13 +17,17 @@ import { createStyle } from 'flcss';
 
 const colors = getTheme();
 
+/**
+* @typedef { object } State
+* @prop { import('./roomOverlay').RoomData } roomData
+* @extends {React.Component<{}, State>}
+*/
 class RoomState extends StoreComponent
 {
   constructor()
   {
     super();
 
-    this.current = '';
     this.formatted = '';
 
     this.countdown = undefined;
@@ -44,24 +48,20 @@ class RoomState extends StoreComponent
   }
 
   /**
-  * @param { string[] } changes
+  * @param { { roomData: import('./roomOverlay').RoomData } } changes
   */
   stateWhitelist(changes)
   {
     if (
-      changes?.roomData?.state ||
-      changes?.roomData?.counter ||
-      changes?.roomData?.judge ||
-      changes?.roomData?.options?.gameMode ||
-      changes?.roomData?.options?.match?.maxPlayers ||
-      changes?.roomData?.players ||
-      changes?.roomData?.playerProperties ||
-      changes?.roomData?.reason?.message ||
-      changes?.roomData?.reason?.details ||
-      changes?.matchState)
+      changes?.roomData ||
+      changes?.displayMessage
+    )
       return true;
   }
 
+  /**
+  * @param { { roomData: import('./roomOverlay').RoomData } } param0
+  */
   stateWillChange({ roomData })
   {
     const state = {};
@@ -69,13 +69,10 @@ class RoomState extends StoreComponent
     if (!roomData)
       return;
 
-    // if not display it as is
     if (roomData.state === 'lobby')
     {
-      // clear the pervious countdown
-      if (this.countdownInterval)
-        clearInterval(this.countdownInterval);
-      
+      clearInterval(this.countdownInterval);
+
       // set state as players count
       if (locale.direction === 'ltr')
         this.formatted = `${roomData.players.length}/${roomData.options.match.maxPlayers}`;
@@ -85,88 +82,87 @@ class RoomState extends StoreComponent
       // re-render to show correct counter
       this.forceUpdate();
     }
-    else if (roomData.counter && roomData.counter !== this.current)
+    else if (this.state.roomData.phase !== roomData.phase)
     {
-      this.current = roomData.counter;
+      clearInterval(this.countdownInterval);
 
-      // clear the pervious countdown
-      if (this.countdownInterval)
-        clearInterval(this.countdownInterval);
-
-      // if counter is number then it's a countdown
-      if (typeof roomData.counter === 'number')
+      if (roomData.phase === 'black' || roomData.phase === 'picking' || roomData.phase === 'judging')
       {
-        this.countdown = Date.now() + roomData.counter;
-
+        const time = roomData.options.round.maxTime;
+  
+        this.formatted = this.formatMs(time);
+        
+        this.countdown = Date.now() + time;
+  
         // interval are disabled in end-to-end testing
+        // istanbul ignore next
+  
         if (process.env.NODE_ENV !== 'test')
+        {
           // set a 1s interval
           this.countdownInterval = setInterval(() =>
           {
             const remaining = this.countdown - Date.now();
-
+  
             if (remaining >= 0)
             {
               this.formatted = this.formatMs(remaining);
             }
             else
             {
-              this.formatted = this.formatMs(0);
-
               clearInterval(this.countdownInterval);
+              
+              this.formatted = this.formatMs(0);
             }
-
+  
             // re-render to show correct counter
             this.forceUpdate();
           }, 1000);
-
-        // update the counter immediately since the first interval won't execute immediately
-        this.formatted = this.formatMs(roomData.counter);
-
+        }
+  
         // re-render to show correct counter
         this.forceUpdate();
+      }
+      else
+      {
+        this.formatted = '';
       }
     }
 
     // if lobby clear match state
     if (roomData.state === 'lobby')
-    {
-      state.matchState = undefined;
-    }
+      state.displayMessage = undefined;
     
-    if (roomData.options.gameMode === 'king' && roomData.reason.message === 'black-card')
+    if (roomData.phase === 'black')
     {
-      if (roomData.judge === socket.id)
-        state.matchState = i18n('picking-phase');
+      if (roomData.playerProperties[socket.id].state === 'picking')
+        state.displayMessage = i18n('picking-phase');
       else
-        state.matchState = i18n('wait-until-judge-picks', roomData.playerProperties[roomData.judge].username);
+        state.displayMessage = i18n('wait-until-judge-picks');
     }
-    else if (roomData.reason.message === 'picking-phase')
+    else if (roomData.phase === 'picking')
     {
-      if (roomData.judge === socket.id)
-        state.matchState = i18n('you-are-the-judge-wait');
+      if (roomData.playerProperties[socket.id].state === 'picking')
+        state.displayMessage = i18n('picking-phase');
       else
-        state.matchState = i18n('picking-phase');
+        state.displayMessage = i18n('you-are-the-judge-wait');
     }
-    else if (roomData.reason.message === 'judging-phase')
+    else if (roomData.phase === 'judging')
     {
-      if (roomData.judge === socket.id)
-        state.matchState = i18n('judging-phase');
+      if (roomData.playerProperties[socket.id].state === 'judging')
+        state.displayMessage = i18n('judging-phase');
       else
-        state.matchState = i18n('wait-until-judge-judges', roomData.playerProperties[roomData.judge].username);
+        state.displayMessage = i18n('wait-until-judge-judges');
     }
-    else if (roomData.reason.message === 'round-ended' && typeof roomData.reason.details === 'number')
+    else if (roomData.phase === 'transaction')
     {
-      const winnerEntry = roomData.field[roomData.reason.details];
+      const { id } = roomData.field.find((e) => e.highlighted);
 
-      if (winnerEntry.id === socket.id)
-        state.matchState = i18n('you-won-the-round');
+      if (id === socket.id)
+        state.displayMessage = i18n('you-won-the-round');
       else
-        state.matchState = i18n('won-this-round', roomData.playerProperties[winnerEntry.id].username);
-    }
-    else if (roomData.reason.message === 'round-ended')
-    {
-      state.matchState = i18n('round-canceled');
+        // eslint-disable-next-line security/detect-object-injection
+        state.displayMessage = i18n('won-this-round', roomData.playerProperties[id].username);
     }
 
     return state;
@@ -211,7 +207,7 @@ class RoomState extends StoreComponent
         {
           (isMatch) ?
             <div match={ 'true' } className={ styles.container }>
-              <div match={ 'true' } className={ styles.state }>{ this.state.matchState }</div>
+              <div match={ 'true' } className={ styles.state }>{ this.state.displayMessage }</div>
 
               <div className={ styles.counter }>{ this.formatted }</div>
             </div>

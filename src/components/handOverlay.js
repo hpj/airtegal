@@ -40,6 +40,11 @@ const handGridRef = createRef();
 
 const percent = (height, percent) => (height / 100) * percent;
 
+/**
+* @typedef { object } State
+* @prop { import('./roomOverlay').RoomData } roomData
+* @extends {React.Component<{}, State>}
+*/
 class HandOverlay extends StoreComponent
 {
   constructor()
@@ -105,38 +110,38 @@ class HandOverlay extends StoreComponent
     const y = wrapperRef.current.scrollTop;
 
     this.store.set({
-      handBlockDragging: (y > 0) ? true : false
+      handBlockDragging: y > 0 ? true : false
     });
   }
 
   /**
-  * @param { string[] } changes
+  * @param { { roomData: import('./roomOverlay').RoomData } } changes
   */
   stateWhitelist(changes)
   {
     if (
-      changes?.roomData?.state ||
-      changes?.roomData?.playerProperties ||
-      changes?.roomData?.playerSecretProperties ||
+      changes?.roomData ||
       changes?.handVisible ||
       changes?.handHidden ||
       changes?.handBlockDragging ||
       changes?.handViewableArea ||
       changes?.hand ||
       changes?.pick ||
-      changes?.picks)
+      changes?.picks
+    )
       return true;
   }
 
+  /**
+  * @param { { roomData: import('./roomOverlay').RoomData } } param0
+  */
   stateWillChange({ roomData })
   {
     const state = {};
 
     // if in match and and has to pick a card
-    if (
-      roomData?.state === 'match' &&
-      roomData?.playerProperties[socket.id]?.state === 'picking'
-    )
+    if (roomData?.state === 'match' &&
+      roomData?.playerProperties[socket.id]?.state === 'picking')
       state.handVisible = true;
     else
       state.handVisible = false;
@@ -145,11 +150,7 @@ class HandOverlay extends StoreComponent
       return;
     
     // if lobby clear hand and picks
-    if (roomData.state === 'lobby')
-      state.hand = [];
-
-    if (roomData.playerSecretProperties && roomData.playerSecretProperties.hand)
-      state.hand = roomData.playerSecretProperties.hand;
+    state.hand = roomData.playerSecretProperties.hand;
 
     return state;
   }

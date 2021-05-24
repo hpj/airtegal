@@ -14,18 +14,19 @@ import { createStyle } from 'flcss';
 
 const colors = getTheme();
 
+/**
+* @typedef { object } State
+* @prop { import('./roomOverlay').RoomData } roomData
+* @extends {React.Component<{}, State>}
+*/
 class RoomTrackBar extends StoreComponent
 {
   /**
-  * @param { string[] } changes
+  * @param { { roomData: import('./roomOverlay').RoomData } } changes
   */
   stateWhitelist(changes)
   {
-    if (
-      changes?.roomData?.state ||
-      changes?.roomData?.master ||
-      changes?.roomData?.players ||
-      changes?.roomData?.playerProperties)
+    if (changes?.roomData)
       return true;
   }
 
@@ -52,14 +53,10 @@ class RoomTrackBar extends StoreComponent
                 const isTurn = player.state === 'judging' || player.state === 'picking';
 
                 return <div className={ styles.player } key={ playerId }>
-
-                  <div className={ styles.score } enabled={ (isMatch && typeof player.score === 'number').toString() }>{ player.score }</div>
-
                   <div className={ styles.name }>{ player.username }</div>
 
                   <div className={ styles.clientLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
                   <div className={ styles.stateLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
-
                 </div>;
               })
             }
@@ -150,8 +147,8 @@ const styles = createStyle({
 
     alignItems: 'center',
     
-    gridTemplateColumns: 'auto auto 1fr auto',
-    gridTemplateAreas: '"clientLed stateLed username score"',
+    gridTemplateColumns: 'auto auto 1fr',
+    gridTemplateAreas: '"clientLed stateLed username"',
 
     direction: locale.direction,
     
@@ -210,14 +207,6 @@ const styles = createStyle({
     padding: '5px 0',
     
     fontSize: 'calc(6px + 0.35vw + 0.35vh)'
-  },
-
-  score: {
-    gridArea: 'score',
-
-    '[enabled="false"]': {
-      display: 'none'
-    }
   }
 });
 

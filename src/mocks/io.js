@@ -7,18 +7,51 @@ export const socket = {
   off,
   
   connected: true,
-
   close: () => undefined
 };
 
 import { EventEmitter } from 'events';
 
 /**
-* @type { import('../../../Backend/src/matchmaking.js').Room }
+* @type { import('../components/roomOverlay').RoomData }
 */
-let room = {};
+const defaultRoom = {
+  id: 'sskye',
+  region: 'egypt',
+  master: 'skye',
 
-let matchLogic;
+  state: 'lobby',
+  phase: '',
+
+  players: [ 'skye' ],
+  playerProperties: {
+    'skye': { username: 'Skye' }
+  },
+  playerSecretProperties: {
+    hand: []
+  },
+
+  field: [],
+  options: {
+    gameMode: 'judge',
+    endCondition: 'limited',
+    match: {
+      maxPlayers: 8,
+      maxRounds: 5,
+      maxTime: 10 * 60 * 1000,
+      blankProbability: 0,
+      startingHandAmount: 7,
+      randos: false
+    },
+    round: {
+      delay: 2000,
+      maxDelay: 10000,
+      maxTime: 2 * 60 * 1000
+    }
+  }
+};
+
+let matchLogic = () => undefined;
 
 const emitter = new EventEmitter();
 
@@ -36,25 +69,15 @@ function off(event, listener)
   return socket;
 }
 
-/**
-* @param { string } event
-* @param  { (...args) => void } listener
-*/
 function once(event, listener)
 {
   // mock connecting to the server
   if (event === 'connect')
-  {
     listener();
-  }
 
   return socket;
 }
 
-/**
-* @param { string } eventName
-* @param  { any[] } args
-*/
 function emit(eventName, args)
 {
   const { nonce } = args;
@@ -71,13 +94,17 @@ function emit(eventName, args)
         players: 4,
         options: {
           gameMode: 'judge',
-          winMethod: 'points',
+          endCondition: 'limited',
           match: {
             maxPlayers: 8,
-            pointsToCollect: 7,
+            maxRounds: 10,
+            maxTime: 10 * 60 * 1000,
             blankProbability: 2,
             startingHandAmount: 7,
             randos: false
+          },
+          round: {
+            maxTime: 2 * 60 * 1000
           }
         }
       },
@@ -86,10 +113,12 @@ function emit(eventName, args)
         players: 4,
         options: {
           gameMode: 'king',
-          winMethod: 'limited',
+          endCondition: 'timer',
           match: {
             maxPlayers: 4,
             maxRounds: 5,
+            maxTime: 10 * 60 * 1000,
+            blankProbability: 0,
             startingHandAmount: 7,
             randos: true
           },
@@ -106,11 +135,11 @@ function emit(eventName, args)
   }
   else if (eventName === 'create')
   {
-    roomData('player-joined');
+    matchBroadcast();
   }
   else if (eventName === 'join')
   {
-    roomData('player-joined', {
+    matchBroadcast({
       master: 'mika',
       players: [ 'skye', 'mika' ],
       playerProperties: {
@@ -121,21 +150,17 @@ function emit(eventName, args)
   }
   else if (eventName === 'edit')
   {
-    room.options = {
-      ...room.options,
-      ...args.options
-    };
-    
-    roomData('options-edit');
+    matchBroadcast({
+      options: {
+        ...defaultRoom.options,
+        ...args.options
+      }
+    });
   }
   else if (eventName === 'matchRequest')
-  {
     startMatch();
-  }
   else if (eventName === 'matchLogic')
-  {
-    matchLogic?.call(undefined, args);
-  }
+    matchLogic.call(undefined, args);
 
   // call done
   setTimeout(() => emitter.emit('done', nonce, returnValue), 100);
@@ -143,53 +168,22 @@ function emit(eventName, args)
   return true;
 }
 
-/**
-* @param { string } reason
-* @param { import('../../../Backend/src/matchmaking.js').RoomOptions } opt
-*/
-function roomData(reason, opt, additional)
+function matchBroadcast(data)
 {
-  opt = opt ?? {};
-
-  additional = additional ?? {};
-
-  room = {
-    id: 'sskye',
-    reason,
-    state: opt.state ?? room.state ?? 'lobby',
-    master: opt.master ?? room.master ?? 'skye',
-    players: opt.players ?? room.players ?? [ 'skye' ],
-    playerProperties: opt.playerProperties ?? room.playerProperties ?? {
-      'skye': { username: 'Skye' }
-    },
-    playerSecretProperties: room.playerSecretProperties ?? {},
-    field: room.field ?? [],
-    options: room.options ?? {
-      gameMode: opt.gameMode ?? 'judge',
-      winMethod: opt.winMethod ??'points',
-      match: opt.match ?? {
-        maxPlayers: 8,
-        maxRounds: 5,
-        maxTime: 10 * 60 * 1000,
-        pointsToCollect: 3,
-        blankProbability: 0,
-        startingHandAmount: 7,
-        randos: false
-      },
-      round: opt.round ?? {
-        maxTime: 2 * 60 * 1000,
-        delay: 2000,
-        maxDelay: 10000
-      }
-    }
-  };
-
-  setTimeout(() => emitter.emit('roomData', { ...room, ...additional }));
+  setTimeout(() => emitter.emit('roomData', {
+    ...defaultRoom,
+    ...data
+  }));
 }
 
 function startMatch()
 {
   const params = new URL(document.URL).searchParams;
+
+  /**
+  * @type { import('../components/roomOverlay').RoomData }
+  */
+  const room = {};
 
   room.state = 'match';
 
@@ -200,14 +194,12 @@ function startMatch()
     'skye': {
       rando: false,
       username: 'Skye',
-      state: 'waiting',
-      score: 0
+      state: 'waiting'
     },
     'mika': {
       rando: false,
       username: 'Mika',
-      state: 'waiting',
-      score: 0
+      state: 'waiting'
     }
   };
 
@@ -218,23 +210,9 @@ function startMatch()
       [ { key: Math.random(), type: 'white', content: 'Skye\'s Card' } ]
   };
 
-  // for (let index = 0; index < 20; index++)
-  // {
-  //   room.playerSecretProperties.hand.push({
-  //     key: Math.random(), type: 'white', content: 'Skye\'s Card'
-  //   });
-  // }
-
-  // start round
-
   room.field = [];
 
-  roomData('round-started', {
-
-  });
-
-  // black card phase
-
+  // black card
   room.field.push({
     key: Math.random(),
     cards: [ {
@@ -245,76 +223,132 @@ function startMatch()
     } ]
   });
 
-  roomData('black-card', {
-
-  });
-
-  // picking phase
-
-  // mock a field of 2 groups of 3 cards
-  if (params.get('mock') === 'group')
+  if (params.get('mock') === 'hidden')
   {
+    room.phase = 'picking';
+    room.playerProperties['skye'].state = 'judging';
+
     room.field.push({
       key: Math.random(),
       cards: [ {
+        hidden: true,
         key: Math.random(),
-        type: 'white',
-        content: '1'
-      }, {
-        key: Math.random(),
-        type: 'white',
-        content: '2'
-      }, {
-        key: Math.random(),
-        type: 'white',
-        content: '3'
+        type: 'white'
       } ]
     });
 
     room.field.push({
       key: Math.random(),
       cards: [ {
+        hidden: true,
         key: Math.random(),
-        type: 'white',
-        content: '1'
-      }, {
-        key: Math.random(),
-        type: 'white',
-        content: '2'
-      }, {
-        key: Math.random(),
-        type: 'white',
-        content: '3'
+        type: 'white'
       } ]
     });
 
-    roomData('field-entry', undefined);
-
-    return;
+    matchBroadcast(room);
   }
-
-  room.playerProperties['skye'].state = 'picking';
-
-  roomData('picking-phase', undefined, {
-    judge: 'mika',
-    counter: 15000
-  });
-
-  matchLogic = (args) =>
+  else if (params.get('mock') === 'group')
   {
-    room.playerProperties['skye'].state = 'waiting';
+    room.phase = 'judging';
+    room.playerProperties['skye'].state = 'judging';
 
     room.field.push({
       key: Math.random(),
-      cards: args.picks.map((card) =>
-      {
-        return {
-          ...card,
-          ...room.playerSecretProperties.hand.splice(card.index, 1)[0]
-        };
-      })
+      cards: [ {
+        key: Math.random(),
+        type: 'white',
+        content: '1'
+      }, {
+        key: Math.random(),
+        type: 'white',
+        content: '2'
+      }, {
+        key: Math.random(),
+        type: 'white',
+        content: '3'
+      } ]
     });
-    
-    roomData('field-entry', undefined);
-  };
+
+    room.field.push({
+      key: Math.random(),
+      cards: [ {
+        key: Math.random(),
+        type: 'white',
+        content: '1'
+      }, {
+        key: Math.random(),
+        type: 'white',
+        content: '2'
+      }, {
+        key: Math.random(),
+        type: 'white',
+        content: '3'
+      } ]
+    });
+
+    matchBroadcast(room);
+  }
+  else if (params.get('mock') === 'judge')
+  {
+    room.phase = 'judging';
+    room.playerProperties['skye'].state = 'judging';
+
+    room.field.push({
+      id: 'mika',
+      key: Math.random(),
+      cards: [ {
+        key: Math.random(),
+        type: 'white',
+        content: 'Option 1'
+      } ]
+    });
+
+    room.field.push({
+      id: 'skye',
+      key: Math.random(),
+      cards: [ {
+        key: Math.random(),
+        type: 'white',
+        content: 'Option 2'
+      } ]
+    });
+  
+    matchBroadcast(room);
+  
+    matchLogic = (args) =>
+    {
+      room.phase = 'transaction';
+      room.playerProperties['skye'].state = 'waiting';
+
+      room.field[args.picks[0].index].highlighted = true;
+      
+      matchBroadcast(room);
+    };
+  }
+  else
+  {
+    room.phase = 'picking';
+    room.playerProperties['skye'].state = 'picking';
+  
+    matchBroadcast(room);
+  
+    matchLogic = (args) =>
+    {
+      room.playerProperties['skye'].state = 'waiting';
+  
+      room.field.push({
+        key: Math.random(),
+        cards: args.picks.map((card) =>
+        {
+          return {
+            ...card,
+            ...room.playerSecretProperties.hand.splice(card.index, 1)[0]
+          };
+        })
+      });
+      
+      matchBroadcast(room);
+    };
+  }
 }

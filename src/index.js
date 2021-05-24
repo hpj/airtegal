@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
+
 import { createBrowserHistory } from 'history';
 
 import * as Sentry from '@sentry/react';
@@ -43,12 +44,12 @@ export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPo
 function loaded()
 {
   const pages =
-    <BrowserRouter history={ history }>
+    <Router history={ history }>
       <Switch>
         <Route path={ '/play' } component={ Game }/>
         <Route exact path={ '*' } component={ Homepage }/>
       </Switch>
-    </BrowserRouter>;
+    </Router>;
 
   ReactDOM.render(pages, app, () =>
   {

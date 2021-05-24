@@ -27,6 +27,7 @@ export class StoreComponent extends React.Component
   {
     super();
 
+    // get store
     this.store = getStore();
 
     this.state = {
@@ -34,9 +35,6 @@ export class StoreComponent extends React.Component
       ...this.store.state
     };
 
-    // TODO/FIX this should be cleansed
-    // components should be allowed to have
-    // independent states from the store
     this.store.state = {
       ...state,
       ...this.store.state
@@ -169,15 +167,15 @@ export default class Store
 
       const keys = Object.keys(obj);
 
-      // keys.forEach(key => out[key] = true);
+      keys.forEach(key => out[key] = true);
 
-      keys.forEach((key) =>
-      {
-        if (!Array.isArray(obj[key]) && typeof obj[key] === 'object')
-          out[key] = booleanify(obj[key]);
-        else
-          out[key] = true;
-      });
+      // keys.forEach((key) =>
+      // {
+      //   if (!Array.isArray(obj[key]) && typeof obj[key] === 'object')
+      //     out[key] = booleanify(obj[key]);
+      //   else
+      //     out[key] = true;
+      // });
 
       return out;
     };

@@ -10,8 +10,6 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import { lastNames } from '../stupidNames.js';
-
 import { createStyle } from 'flcss';
 
 import Notifications from './notifications.js';
@@ -41,6 +39,63 @@ const optionsRef = createRef();
 
 export let requestRoomData;
 
+/**
+* @typedef { Object } Card
+* @property { string } id
+* @property { string } key
+* @property { number } pick
+* @property { boolean } blank
+* @property { string } content
+* @property { boolean } hidden
+* @property { 'white' | 'black' } type
+*/
+
+/**
+* @typedef { Object } PlayerProperties
+* @property { 'waiting' | 'picking' | 'judging' | 'left' } state
+* @property { boolean } rando
+* @property { string } username
+*/
+
+/**
+* @typedef { Object } RoomOptionsT
+* @property { 'king' | 'judge' } gameMode
+* @property { 'limited' | 'timer' } endCondition
+* @property { {
+*    maxPlayers: number,
+*    maxRounds: number,
+*    maxTime: number,
+*    blankProbability: number,
+*    startingHandAmount: number,
+*    randos: boolean
+* } } match
+* @property { {
+*    delay: number,
+*    maxDelay: number,
+*    maxTime: number
+* } } round
+*/
+
+/**
+* @typedef { Object } RoomData
+* @property { string } region
+* @property { string } master
+* @property { 'lobby' | 'match' } state
+* @property { 'black' | 'picking' | 'judging' | 'transaction' |
+*          'judge-left' | 'judge-timeout' | 'picking-timeout' |
+*          'not-enough-players' | 'unhandled' } phase
+* @property { string[] } players
+* @property { Object<string, PlayerProperties> } playerProperties
+* @property { { hand: Card[] } } playerSecretProperties
+* @property { RoomOptionsT } options
+* @property { { id: string, key: string, highlighted: boolean, cards: Card[] }[] } field
+*/
+
+/**
+* @typedef { object } State
+* @prop { RoomData } roomData
+* @extends {React.Component<{}, State>}
+*/
 class RoomOverlay extends StoreComponent
 {
   constructor()
@@ -95,10 +150,13 @@ class RoomOverlay extends StoreComponent
     socket.close();
   }
 
+  /**
+  * @param { RoomData } roomData
+  */
   onRoomData(roomData)
   {
     // handler is only visible if user is on the match's lobby screen
-    this.handlerVisibility((roomData.state === 'lobby') ? true : false);
+    this.handlerVisibility(roomData.state === 'lobby' ? true : false);
 
     if (roomData.state === 'lobby')
     {
@@ -122,46 +180,9 @@ class RoomOverlay extends StoreComponent
     }
     
     // show that the round ended
-    if (roomData.reason.message === 'round-ended')
+    if (roomData.phase && roomData.phase !== 'black' && roomData.phase !== 'picking' && roomData.phase !== 'judging'&& roomData.phase !== 'transaction')
     {
-      if (typeof roomData.reason.details === 'string')
-        this.addNotification(i18n(roomData.reason.details) || roomData.reason.details);
-    }
-    // show that the match ended
-    else if (roomData.reason.message === 'match-ended')
-    {
-      // draw
-      if (Array.isArray(roomData.reason.id))
-      {
-        this.addNotification(
-          i18n(`${roomData.reason.details}:match-ended`,
-            i18n('no-one-wins')));
-      }
-      // this client won
-      else if (roomData.reason.id === socket.id)
-      {
-        this.addNotification(
-          i18n(`${roomData.reason.details}:match-ended`,
-            i18n(`${roomData.options.gameMode}:you`)));
-      }
-      // a different client won
-      else if (roomData.playerProperties[roomData.reason.id])
-      {
-        this.addNotification(
-          i18n(`${roomData.reason.details}:match-ended`,
-            i18n(`${roomData.options.gameMode}:other`,
-              roomData.playerProperties[roomData.reason.id].username)));
-      }
-      else
-      {
-        this.addNotification(i18n(roomData.reason.details) || roomData.reason.details);
-      }
-    }
-    // room's options were changed
-    else if (roomData.reason.message === 'options-edit')
-    {
-      if (roomData.master !== socket.id)
-        this.addNotification(i18n('room-edited'));
+      this.addNotification(i18n(roomData.phase));
     }
 
     this.store.set({
@@ -407,7 +428,7 @@ class RoomOverlay extends StoreComponent
         
         dragEnabled={ this.state.overlayHandlerVisible }
 
-        dragArea={ isTouchScreen ? { width: { percent: 25, size: size.width } } : undefined }
+        dragArea={ { width: { percent: 25, size: size.width } } }
         frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
         initialPosition={ { x: size.width } }
