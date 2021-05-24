@@ -152,15 +152,15 @@ class Card extends React.Component
               </div>
           }
 
-          <div hide={ (hidden && type === 'white') ? 'true' : 'false' } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((self === undefined && owner === undefined) || type === 'black').toString() } className={ styles.bottom }>
+          <div hide={ (hidden && type === 'white') ? 'true' : 'false' } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((!self && !owner) || type === 'black').toString() } className={ styles.bottom }>
             {
               (blank) ? i18n('airtegal-blank') : i18n('airtegal-cards')
             }
           </div>
 
-          <div enabled={ ((self !== undefined || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
+          <div enabled={ ((self === true || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
             {
-              (self) ? i18n('this-card-is-yours') : owner
+              self ? i18n('this-card-is-yours') : owner
             }
 
             {

@@ -128,7 +128,9 @@ class FieldOverlay extends StoreComponent
   {
     const { size } = this.props;
 
-    const playerState = this.state.roomData?.playerProperties[socket.id]?.state;
+    const { roomData, winnerEntryIndex } = this.state;
+
+    const playerState = roomData?.playerProperties[socket.id]?.state;
     
     const percent = (s, percent) => (s / 100) * percent;
 
@@ -211,6 +213,9 @@ class FieldOverlay extends StoreComponent
                     else
                       cardNo = cardNo + 1;
 
+                    console.log(roomData?.phase === 'transaction' && entry.id === socket.id && entryIndex > 0);
+                    console.log((roomData?.phase === 'transaction' && entryIndex > 0) ? roomData?.playerProperties[entry.id]?.username : undefined);
+
                     // always true but if the card is
                     // not the last in its entry only
                     if (cardsPerLine === 1)
@@ -232,13 +237,13 @@ class FieldOverlay extends StoreComponent
                       key={ card.key }
                       arrow={ arrow }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
-                      shareEntry={ (entryIndex === this.state.winnerEntryIndex && i == 0) ? () => this.shareEntry(entryIndex) : undefined }
+                      shareEntry={ (entryIndex === this.state.winnerEntryIndex && i === 0) ? () => this.shareEntry(entryIndex) : undefined }
                       allowed={ isAllowed.toString() }
-                      self={ (entry.id && entry.id === socket.id && entryIndex > 0) }
-                      owner={ (entry.id && entryIndex > 0 && this.state.roomData?.playerProperties[entry.id]) ? this.state.roomData?.playerProperties[entry.id].username : undefined }
+                      self={ roomData?.phase === 'transaction' && entry.id === socket.id && entryIndex > 0 }
+                      owner={ (roomData?.phase === 'transaction' && entryIndex > 0) ? roomData?.playerProperties[entry.id]?.username : undefined }
                       type={ card.type }
                       content={ card.content }
-                      winner= { (entryIndex === this.state.winnerEntryIndex) }
+                      winner= { entryIndex === this.state.winnerEntryIndex }
                       hidden={ card.hidden }/>;
                   });
                 })
