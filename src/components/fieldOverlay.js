@@ -68,10 +68,9 @@ class FieldOverlay extends StoreComponent
     if (!roomData)
       return;
 
-    if (roomData.phase === 'transaction')
-      state.winnerEntryIndex = roomData.field.findIndex((e) => e.highlighted);
-    else
-      state.winnerEntryIndex = undefined;
+    state.winnerEntryIndex = roomData.phase === 'transaction' ?
+      roomData.field.findIndex((e) => e.highlight) :
+      undefined;
 
     state.field = roomData.field;
 
@@ -212,9 +211,6 @@ class FieldOverlay extends StoreComponent
                       cardNo = 1, newLine = true;
                     else
                       cardNo = cardNo + 1;
-
-                    console.log(roomData?.phase === 'transaction' && entry.id === socket.id && entryIndex > 0);
-                    console.log((roomData?.phase === 'transaction' && entryIndex > 0) ? roomData?.playerProperties[entry.id]?.username : undefined);
 
                     // always true but if the card is
                     // not the last in its entry only

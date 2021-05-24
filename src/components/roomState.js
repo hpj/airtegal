@@ -156,13 +156,13 @@ class RoomState extends StoreComponent
     }
     else if (roomData.phase === 'transaction')
     {
-      const { id } = roomData.field.find((e) => e.highlighted);
+      const { id } = roomData.field.find((e) => e.highlight);
 
       if (id === socket.id)
         state.displayMessage = i18n('you-won-the-round');
       else
         // eslint-disable-next-line security/detect-object-injection
-        state.displayMessage = i18n('won-this-round', roomData.playerProperties[id].username);
+        state.displayMessage = i18n('won-this-round', roomData.playerProperties[id]?.username);
     }
 
     return state;

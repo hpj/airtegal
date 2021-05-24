@@ -321,7 +321,7 @@ function startMatch()
       room.phase = 'transaction';
       room.playerProperties['skye'].state = 'waiting';
 
-      room.field[args.picks[0].index].highlighted = true;
+      room.field[args.picks[0].index].highlight = true;
       
       matchBroadcast(room);
     };
