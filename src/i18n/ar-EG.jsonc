@@ -24,7 +24,7 @@
 
   "app-country-block": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
   "app-country-taboo": "ثم حذر هذا التطبيق في بلدك لانه حرام",
-  "server-mismatch": "نسخة الموقع غير متوافقة مع السيرفر",
+  "server-mismatch": "السيرفر تحت الصيانة",
 
   // warning
 
@@ -102,6 +102,7 @@
   "new-master": "اصبح هو سيد هذة الغرفة.",
 
   // room options
+  
   "changes-not-applied": "*في تغييرات لم يتم تطبيقها",
 
   "room-edited": "تم تعديل اعدادت الغرفة.",
@@ -115,20 +116,17 @@
   "judge:cover": "القاضي",
   "king:cover": "ملك العشوئيات!",
 
-  "win-method": "طريقة الفوز:",
+  "match-options": "اعدادات المباراة:",
+  
+  "end-condition": "النهاية:",
   
   "options-placeholder": "0",
 
-  "first-to-points-1": "أول حد يوصل",
-  "first-to-points-2": "نقاط~نقطة",
-  
   "max-rounds-1": "بعد مرور",
   "max-rounds-2": "جولات~جولة",
 
   "max-time-1": "بعد مرور",
   "max-time-2": "دقائق~دقيقة",
-
-  "match-options": "اعدادات المباراة:",
 
   "max-players": "عدد اللاعبين",
   "round-countdown": "دقيقه لكل جولة",
@@ -146,8 +144,6 @@
   "yes": "نعم",
   "no": "لأ",
 
-  "card-packs": "مجموعات الكروت:",
-
   "apply": "طبق",
   "start": "ابدا",
 
@@ -163,13 +159,13 @@
   
   // match state
 
-  "wait-until-judge-picks": "استني %0 يلعب.",
+  "wait-until-judge-picks": "استني القاضي يلعب.",
 
   "picking-phase": "اختر كرت مناسب من ايدك.",
   "you-are-the-judge-wait": "انت القاضي - استني دورك",
 
   "judging-phase": "اختر اكثر كرت خلاك تتضحك.",
-  "wait-until-judge-judges": "استني حكم %0.",
+  "wait-until-judge-judges": "استني حكم القاضي.",
 
   "you-won-the-round": "انت كسبت الجولة.",
   "won-this-round": "%0 كسب الجولة.",
@@ -178,7 +174,7 @@
 
   // share overlay
   
-  "hashtag-airtegal": "#ارتجال_فشيخة #ارتجال_هتسيطر_علي_العالم",
+  "hashtag-airtegal": "#ارتجال_هتسيطر_علي_العالم",
 
   "share-copied-to-clipboard": "تم نسخ الرابط لجهازك!",
 
@@ -188,15 +184,8 @@
 
   "no-one-wins": "لم ينجح احد.",
 
-  "points:match-ended": "%0",
   "limited:match-ended": "انتهت الجولات! %0",
   "timer:match-ended": "انتهي الوقت! %0",
-
-  "judge:you": "انت الي كسبت المبارة.",
-  "judge:other": "%0 هو الي كسب المبارة.",
-
-  "king:you": "مبروك، انت ملك العشوئيات.",
-  "king:other": "%0 هو ملك العشوئيات.",
 
   // homepage
 
