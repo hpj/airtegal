@@ -80,7 +80,7 @@ class PicksDialogue extends StoreComponent
     // or not picking
     if (
       (roomData.state !== 'match' && this.state.picks.length > 0) ||
-      (roomData.playerProperties[socket.id].state !== 'picking')
+      (roomData.playerProperties[socket.id]?.state !== 'picking')
     )
     {
       state.picks = [];

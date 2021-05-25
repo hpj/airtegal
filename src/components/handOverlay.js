@@ -150,7 +150,7 @@ class HandOverlay extends StoreComponent
       return;
     
     // if lobby clear hand and picks
-    state.hand = roomData.playerSecretProperties.hand;
+    state.hand = roomData.playerSecretProperties?.hand ?? [];
 
     return state;
   }

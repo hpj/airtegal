@@ -168,18 +168,15 @@ class RoomOverlay extends StoreComponent
         if (roomData.master === socket.id)
           this.addNotification(i18n('you-are-now-master'));
         else
-          this.addNotification(`${roomData.playerProperties[roomData.master].username} ${i18n('new-master')}`);
+          this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${i18n('new-master')}`);
       }
     }
 
     // if client was in a match
     // and is about to return to room lobby
+    // then reset room options scroll
     if (this.state.roomData?.state !== roomData.state && this.state.roomData?.state === 'match')
-    {
-      // reset room options scroll
-      if (optionsRef.current)
-        optionsRef.current.scrollTo({ top: 0 });
-    }
+      optionsRef.current?.scrollTo({ top: 0 });
     
     // show that the round ended
     if (roomData.phase && roomData.phase !== 'black' && roomData.phase !== 'picking' && roomData.phase !== 'judging'&& roomData.phase !== 'transaction')
@@ -270,6 +267,9 @@ class RoomOverlay extends StoreComponent
     this.wakeLock?.release();
 
     this.wakeLock = undefined;
+
+    // reset room options scroll
+    optionsRef.current?.scrollTo({ top: 0 });
 
     // after leaving the room
     this.store.set({
@@ -363,13 +363,7 @@ class RoomOverlay extends StoreComponent
   onSnapEnd(index)
   {
     if (index === 1)
-    {
       this.leaveRoom();
-      
-      // reset room options scroll
-      if (optionsRef.current)
-        optionsRef.current.scrollTo({ top: 0 });
-    }
   }
 
   render()

@@ -780,6 +780,40 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Spectating (Lobby)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&join&mock=spectator"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Spectating (Match)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&mock=spectator"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-start"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }

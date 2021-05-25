@@ -139,14 +139,28 @@ function emit(eventName, args)
   }
   else if (eventName === 'join')
   {
-    matchBroadcast({
-      master: 'mika',
-      players: [ 'skye', 'mika' ],
-      playerProperties: {
-        'skye': { username: 'Skye' },
-        'mika': { username: 'Mika' }
-      }
-    });
+    if (params.get('mock') === 'spectator')
+    {
+      matchBroadcast({
+        master: 'mana',
+        players: [ 'mana', 'mika' ],
+        playerProperties: {
+          'mana': { username: 'Mana' },
+          'mika': { username: 'Mika' }
+        }
+      });
+    }
+    else
+    {
+      matchBroadcast({
+        master: 'mika',
+        players: [ 'skye', 'mika' ],
+        playerProperties: {
+          'skye': { username: 'Skye' },
+          'mika': { username: 'Mika' }
+        }
+      });
+    }
   }
   else if (eventName === 'edit')
   {
@@ -192,12 +206,10 @@ function startMatch()
   room.playerProperties =
   {
     'skye': {
-      rando: false,
       username: 'Skye',
       state: 'waiting'
     },
     'mika': {
-      rando: false,
       username: 'Mika',
       state: 'waiting'
     }
@@ -325,6 +337,46 @@ function startMatch()
       
       matchBroadcast(room);
     };
+  }
+  if (params.get('mock') === 'spectator')
+  {
+    room.master = '';
+    room.phase = 'judging';
+
+    room.players = [ 'mana', 'mika' ];
+    
+    room.playerProperties = {
+      'mana': {
+        username: 'Mana',
+        state: 'judging'
+      },
+      'mika': {
+        username: 'Mika',
+        state: 'waiting'
+      }
+    };
+
+    room.playerSecretProperties = {};
+
+    room.field.push({
+      key: Math.random(),
+      cards: [ {
+        key: Math.random(),
+        type: 'white',
+        content: 'Test'
+      } ]
+    });
+
+    room.field.push({
+      key: Math.random(),
+      cards: [ {
+        key: Math.random(),
+        type: 'white',
+        content: 'Test'
+      } ]
+    });
+
+    matchBroadcast(room);
   }
   else
   {

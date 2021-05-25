@@ -135,21 +135,21 @@ class RoomState extends StoreComponent
     
     if (roomData.phase === 'black')
     {
-      if (roomData.playerProperties[socket.id].state === 'picking')
+      if (roomData.playerProperties[socket.id]?.state === 'picking')
         state.displayMessage = i18n('picking-phase');
       else
         state.displayMessage = i18n('wait-until-judge-picks');
     }
     else if (roomData.phase === 'picking')
     {
-      if (roomData.playerProperties[socket.id].state === 'picking')
+      if (roomData.playerProperties[socket.id]?.state === 'picking')
         state.displayMessage = i18n('picking-phase');
       else
         state.displayMessage = i18n('you-are-the-judge-wait');
     }
     else if (roomData.phase === 'judging')
     {
-      if (roomData.playerProperties[socket.id].state === 'judging')
+      if (roomData.playerProperties[socket.id]?.state === 'judging')
         state.displayMessage = i18n('judging-phase');
       else
         state.displayMessage = i18n('wait-until-judge-judges');
