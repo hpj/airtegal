@@ -427,7 +427,7 @@
         },
         {
           "action": "wait",
-          "value": 5
+          "value": 3
         }
       ]
     },

@@ -281,16 +281,19 @@ const styles = createStyle({
     userSelect: 'all',
 
     textTransform: 'uppercase',
-    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
+    fontSize: 'calc(5px + 0.35vw + 0.35vh)',
 
+    padding: '5px',
     margin: 'auto 0',
+    borderBottom: '2px solid',
 
     '[icon="true"]': {
       cursor: 'pointer',
       fill: colors.blackText,
-
+      
       width: 'calc(14px + 0.4vw + 0.4vh)',
-      height: 'calc(14px + 0.4vw + 0.4vh)'
+      height: 'calc(14px + 0.4vw + 0.4vh)',
+      borderBottom: '0'
     }
   },
 
@@ -306,8 +309,8 @@ const styles = createStyle({
 
     maxHeight: '150px',
 
-    overflowX: 'hidden',
-    overflowY: 'auto',
+    overflow: 'hidden auto',
+    margin: 'auto 0',
     
     '[match="false"]': {
       fontSize: 'calc(8px + 0.5vw + 0.5vh)'

@@ -146,7 +146,6 @@ class RoomOverlay extends StoreComponent
       {
         this.addNotification('Test 1');
         this.addNotification('Test 2');
-        this.addNotification('Test 3');
       }
     }
   }
