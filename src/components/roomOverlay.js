@@ -389,6 +389,7 @@ class RoomOverlay extends StoreComponent
       <Notifications notifications={ this.state.notifications }/>
 
       <ShareOverlay
+        clipboard={ this.state.clipboard }
         addNotification={ this.addNotification }
         share={ this.state.share }
         hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>

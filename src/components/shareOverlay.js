@@ -103,9 +103,9 @@ class ShareOverlay extends React.Component
   {
     const { share, addNotification } = this.props;
 
-    navigator.clipboard.writeText(share.url);
-    
-    addNotification(i18n('share-copied-to-clipboard'));
+    navigator.clipboard.writeText(share.url)
+      .then(() => addNotification(i18n('share-copied-to-clipboard')))
+      .catch(console.warn);
   }
 
   shareOnFacebook()
@@ -160,7 +160,10 @@ class ShareOverlay extends React.Component
 
           <div className={ styles.url }>
             <div className={ styles.urlText }>{ share.url }</div>
-            <CopyIcon className={ styles.urlCopy } onClick={ this.copyURL }/>
+            {
+              this.props.clipboard ? <CopyIcon className={ styles.urlCopy } onClick={ this.copyURL }/> :
+                undefined
+            }
           </div>
 
           <div className={ styles.buttons }>
@@ -179,6 +182,7 @@ class ShareOverlay extends React.Component
 }
 
 ShareOverlay.propTypes = {
+  clipboard: PropTypes.bool,
   addNotification: PropTypes.func.isRequired,
   share: PropTypes.object,
   hide: PropTypes.func

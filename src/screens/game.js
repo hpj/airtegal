@@ -28,6 +28,8 @@ import OptionsOverlay from '../components/optionsOverlay.js';
 
 import i18n, { locale } from '../i18n.js';
 
+import { getStore } from '../store.js';
+
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
@@ -266,6 +268,17 @@ class Game extends React.Component
     // create room
     else if (params?.has('create'))
       overlayRef.current.createRoom();
+
+    navigator.permissions?.query({ name: 'clipboard-write' })
+      .then(({ state }) =>
+      {
+        if (state !== 'granted' || !navigator.clipboard)
+          return;
+        
+        getStore().set({
+          clipboard: true
+        });
+      });
   }
 
   componentWillUnmount()

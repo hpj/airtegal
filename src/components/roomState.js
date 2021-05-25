@@ -54,6 +54,7 @@ class RoomState extends StoreComponent
   {
     if (
       changes?.roomData ||
+      changes?.clipboard ||
       changes?.displayMessage
     )
       return true;
@@ -184,9 +185,9 @@ class RoomState extends StoreComponent
   {
     const { addNotification } = this.props;
 
-    navigator.clipboard.writeText(`${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`);
-
-    addNotification(i18n('room-copied-to-clipboard'));
+    navigator.clipboard.writeText(`${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`)
+      .then(() => addNotification(i18n('room-copied-to-clipboard')))
+      .catch(console.warn);
   }
 
   formatMs(milliseconds)
@@ -216,10 +217,8 @@ class RoomState extends StoreComponent
               <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
 
               {
-              // share the room
-                (navigator.share) ? <ShareIcon icon={ 'true' } className={ styles.id } onClick={ this.shareRoomURL }/> :
-                // copy the room's id
-                  (navigator.clipboard) ? <CopyIcon icon={ 'true' } className={ styles.id } onClick={ this.copyRoomURL }/> :
+                navigator.share ? <ShareIcon icon={ 'true' } className={ styles.id } onClick={ this.shareRoomURL }/> :
+                  this.state.clipboard ? <CopyIcon icon={ 'true' } className={ styles.id } onClick={ this.copyRoomURL }/> :
                   // just show the room's id
                     <div className={ styles.id }>{ this.state.roomData?.id }</div>
               }
