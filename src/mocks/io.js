@@ -338,7 +338,7 @@ function startMatch()
       matchBroadcast(room);
     };
   }
-  if (params.get('mock') === 'spectator')
+  else if (params.get('mock') === 'spectator')
   {
     room.master = '';
     room.phase = 'judging';

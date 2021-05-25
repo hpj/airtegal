@@ -1,11 +1,11 @@
 Performance Issues and Bugs:
-  ☐ allow spectators to leave matches using the room overlay handler
-  
   ☐ fix some of the issues of on firefox
 
   ☐ hands grid animations freezes if if triggered while the page is blurred
 
   ☐ re-add notification when options change in lobby
+
+  ☐ get rid to react spring
 
 Testing:
   ☐ test if disableDrag() on <Game/> is effective or redundant
