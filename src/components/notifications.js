@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { createStyle } from 'flcss';
+import { createStyle, createAnimation } from 'flcss';
 
 import { locale } from '../i18n.js';
 
@@ -32,14 +32,28 @@ Notifications.propTypes = {
   notifications: PropTypes.array.isRequired
 };
 
+const enterAnimation = createAnimation({
+  keyframes: {
+    from: {
+      opacity: '0.35'
+    },
+    to: {
+      opacity: '1'
+    }
+  },
+  duration: '0.25s',
+  timingFunction: 'cubic-bezier(0.46, 0.03, 0.52, 0.96)',
+  iterationCount: '1'
+});
+
 const styles = createStyle({
   notifications: {
     zIndex: 10,
     position: 'absolute',
 
     direction: locale.direction,
-    userSelect: 'none',
 
+    userSelect: 'none',
     pointerEvents: 'none',
 
     top: 0,
@@ -61,6 +75,8 @@ const styles = createStyle({
   notification: {
     backgroundColor: colors.whiteBackground,
     color: colors.blackText,
+
+    animation: enterAnimation,
 
     overflow: 'hidden',
     pointerEvents: 'auto',
