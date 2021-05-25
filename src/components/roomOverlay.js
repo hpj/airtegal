@@ -117,6 +117,7 @@ class RoomOverlay extends StoreComponent
 
     this.onSnapEnd = this.onSnapEnd.bind(this);
 
+    this.closeOverlay = this.closeOverlay.bind(this);
     this.onRoomData = this.onRoomData.bind(this);
 
     this.addNotification = this.addNotification.bind(this);
@@ -127,6 +128,7 @@ class RoomOverlay extends StoreComponent
   {
     super.componentDidMount();
 
+    socket.on('kicked', this.closeOverlay);
     socket.on('roomData', this.onRoomData);
 
     const params = new URL(document.URL).searchParams;
@@ -204,7 +206,7 @@ class RoomOverlay extends StoreComponent
 
       // request a screen wake lock
       navigator.wakeLock?.request('screen')
-        .then(wakeLock => this.wakeLock = wakeLock)
+        .then(wl => this.wakeLock = wl)
         .catch(e => e);
 
       // show the room overlay
@@ -235,8 +237,10 @@ class RoomOverlay extends StoreComponent
       this.loadingVisibility(false);
 
       // request a screen wake lock.
-      navigator.wakeLock?.request('screen').then(wakeLock => this.wakeLock = wakeLock);
-
+      navigator.wakeLock?.request('screen')
+        .then(wl => this.wakeLock = wl)
+        .catch(e => e);
+      
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
@@ -253,30 +257,33 @@ class RoomOverlay extends StoreComponent
   {
     const { sendMessage } = this.props;
 
-    sendMessage('leave').then(() =>
-    {
-      // refresh rooms list
-      this.props.requestRooms();
+    sendMessage('leave').then(this.closeOverlay)
+      .catch(console.error);
+  }
 
-      // release screen wake lock
-      this.wakeLock?.release();
+  closeOverlay()
+  {
+    // refresh rooms list
+    this.props.requestRooms();
 
-      this.wakeLock = undefined;
-    
-      // after leaving the room
-      this.store.set({
-        field: [],
-        hand: [],
-        picks: [],
-        blanks: [],
-        
-        entries: [],
+    // release screen wake lock
+    this.wakeLock?.release();
 
-        matchState: undefined,
-        dirtyOptions: undefined,
-        roomData: undefined
-      });
-    }).catch(console.warn);
+    this.wakeLock = undefined;
+
+    // after leaving the room
+    this.store.set({
+      field: [],
+      hand: [],
+      picks: [],
+      blanks: [],
+      
+      entries: [],
+
+      matchState: undefined,
+      dirtyOptions: undefined,
+      roomData: undefined
+    });
   }
 
   showErrorMessage(err)

@@ -30,4 +30,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./__coverage__/
-          fail_ci_if_error: true
+          fail_ci_if_error: false

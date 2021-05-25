@@ -1,4 +1,6 @@
 Performance Issues and Bugs:
+  ☐ allow spectators to leave matches @critical 
+  
   ☐ fix some of the issues of on firefox
 
   ☐ hands grid animations freezes if if triggered while the page is blurred
@@ -13,11 +15,10 @@ Testing:
 
   Might:
     ☐ sharing overlay
-
     ☐ options overlay
 
 UI/UX:
-  ☐ redesign the homepage
+  ☐ redesign the homepage @high
 
   ☐ animations for cards appearing and disappearing from field
   
