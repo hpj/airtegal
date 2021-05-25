@@ -419,6 +419,19 @@
       ]
     },
     {
+      "title": "Notifications",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&join&notifications"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
       "title": "Hidden Cards",
       "steps": [
         {

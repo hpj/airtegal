@@ -2,8 +2,6 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { animated, useTransition } from 'react-spring';
-
 import { createStyle } from 'flcss';
 
 import { locale } from '../i18n.js';
@@ -14,25 +12,28 @@ const colors = getTheme();
 
 const Notifications = ({ notifications }) =>
 {
-  const transitions = useTransition(notifications, (item) => item.key, {
-    from: { opacity: 0 },
-    enter: { opacity: 1, delay: 250 },
-    leave: { opacity: 0 },
-    config: { duration: 250 }
-  });
+  const params = new URL(document.URL).searchParams;
+
+  if (process.env.NODE_ENV === 'test' && params.has('notifications'))
+  {
+    notifications = [
+      { content: 'Test 1' },
+      { content: 'Test 2' },
+      { content: 'Test 3' }
+    ];
+  }
 
   return <div className={ styles.notifications }>
     {
-      transitions.map(({ item, key, props }) =>
+      notifications?.map((item, i) =>
       {
-        return <animated.div
-          key={ key }
-          style={ props }
+        return <div
+          key={ i }
           className={ styles.notification }
           onClick={ item.remove }
         >
           { item.content }
-        </animated.div>;
+        </div>;
       })
     }
   </div>;

@@ -104,7 +104,6 @@ class RoomOverlay extends StoreComponent
       overlayLoadingHidden: true,
       overlayErrorMessage: '',
 
-      notificationsIncremental: 1,
       notifications: [],
 
       overlayHolderOpacity: 0,
@@ -324,18 +323,8 @@ class RoomOverlay extends StoreComponent
       }
     }
 
-    const key = this.state.notificationsIncremental;
-
-    // increase
-    this.store.set({
-      // set 99 as the limit
-      // if it is reached then set as 0
-      notificationsIncremental: (key >= 99) ? 0 : key + 1
-    });
-   
     const item = {
-      key: key,
-      content: content,
+      content,
       timestamp: Date.now(),
       remove: this.removeNotification
     };
