@@ -9,6 +9,7 @@ const gitRevisionPlugin = new GitRevisionPlugin();
 module.exports = {
   devtool: 'source-map',
   entry: './src/index.js',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -28,7 +29,7 @@ module.exports = {
   },
   plugins: [
     new DefinePlugin({
-      'process.env.RELEASE': `"${gitRevisionPlugin.commithash()}"`
+      'process.env.RELEASE': JSON.stringify(gitRevisionPlugin.commithash())
     }),
     new CompressionPlugin({
       filename: '[path].gz[query]',

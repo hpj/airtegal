@@ -12,17 +12,6 @@ const colors = getTheme();
 
 const Notifications = ({ notifications }) =>
 {
-  const params = new URL(document.URL).searchParams;
-
-  if (process.env.NODE_ENV === 'test' && params.has('notifications'))
-  {
-    notifications = [
-      { content: 'Test 1' },
-      { content: 'Test 2' },
-      { content: 'Test 3' }
-    ];
-  }
-
   return <div className={ styles.notifications }>
     {
       notifications?.map((item, i) =>

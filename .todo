@@ -5,8 +5,6 @@ Performance Issues and Bugs:
 
   ☐ re-add notification when options change in lobby
 
-  ☐ get rid to react spring
-
 Testing:
   ☐ test if disableDrag() on <Game/> is effective or redundant
 

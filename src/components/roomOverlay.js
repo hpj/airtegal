@@ -133,11 +133,21 @@ class RoomOverlay extends StoreComponent
     const params = new URL(document.URL).searchParams;
 
     // if testing and there's a match parameter then start a mockup match
-    if (process.env.NODE_ENV === 'test' && params?.has('match'))
+    if (process.env.NODE_ENV === 'test')
     {
-      this.createRoom();
+      if (params.has('match'))
+      {
+        this.createRoom();
+  
+        setTimeout(() => optionsRef.current?.matchRequest(), 250);
+      }
 
-      setTimeout(() => optionsRef.current?.matchRequest(), 250);
+      if (params.has('notifications'))
+      {
+        this.addNotification('Test 1');
+        this.addNotification('Test 2');
+        this.addNotification('Test 3');
+      }
     }
   }
 
