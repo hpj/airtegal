@@ -28,9 +28,9 @@
   "username-prefix": "أنا",
   "username-placeholder": "حط اسمك هنا",
   
-  "create-room": "اصنع غرفتك",
-  "random-room": "غرفة عشؤئية",
-  "available-rooms": "الغرف المتاحة",
+  "create-room": "اعمل روم",
+  "random-room": "روم عشؤئية",
+  "available-rooms": "الرومات المتاحة",
 
   // app options
 
@@ -67,37 +67,35 @@
 
   // matchmaking errors
 
-  "room-does-not-exists": "هذة الغرفة غير متوفرة",
-  "no-rooms-available": "لا يوجد غرف متاحة",
-  "room-is-full": "هذة الغرفة كاملة العدد",
-  "room-is-busy": "هذة الغرفة مشغولة",
+  "no-rooms-available": "مفيش رومات",
+  "room-does-not-exists": "الروم دي مش موجودة",
   
   "request-has-wrong-parameters": "حطيت اسمك هناك؟",
   
-  "user-does-not-have-permission": "لا تمتلك الصلاحية لتكمل هذة العملية",
-  "minimal-number-of-players-required": "لا يوجد عدد كافي من اللاعبين",
+  "user-does-not-have-permission": "معندكش صلاحية تكمل العمليه دي",
+  "minimal-number-of-players-required": "مفيش عدد كفاية من اللعيبة",
 
   // endpoint errors
 
   "forbidden": "تم رفض الطلب",
-  "internal-server-error": "نعتذر لقد حدث خطئ من السيرفر الخاص بنا",
+  "internal-server-error": "اسفيين حصل خطئ من السيرفر بتاعنا",
 
   // room id sharing
 
-  "room-copied-to-clipboard": "تم نسخ رابط الغرفة لجهازك!",
+  "room-copied-to-clipboard": "تم نسخ رابط الروم!",
   "join-me": "يسطي افتح نلعب ارتجال",
 
   // room master changes
 
-  "you-are-now-master": "انت الان سيد هذة الغرفة.",
-  "new-master": "اصبح هو سيد هذة الغرفة.",
+  "you-are-now-master": "انت دلوقتي صاحب الروم.",
+  "new-master": "هو دلوقتي صاحب الروم.",
 
   // room options
   
-  "changes-not-applied": "*في تغييرات لم يتم تطبيقها",
+  "changes-not-applied": "*في تغييرات لسه متطبقتش",
 
-  "room-edited": "تم تعديل اعدادت الغرفة.",
-  "game-mode": "نمط اللعب:",
+  // "room-edited": "تم تعديل اعدادت الروم.",
+  "game-mode": "الجيم مود",
   
   "free-for-all": "كروت",
 
@@ -107,28 +105,28 @@
   "judge:cover": "القاضي",
   "king:cover": "ملك العشوئيات!",
 
-  "match-options": "اعدادات المباراة:",
+  "match-options": "اعدادات الماتش",
   
   "end-condition": "النهاية:",
   
   "options-placeholder": "0",
 
-  "max-rounds-1": "بعد مرور",
+  "max-rounds-1": "بعد",
   "max-rounds-2": "جولات~جولة",
 
-  "max-time-1": "بعد مرور",
+  "max-time-1": "بعد",
   "max-time-2": "دقائق~دقيقة",
 
-  "max-players": "عدد اللاعبين",
+  "max-players": "عدد اللعيبة",
   "round-countdown": "دقيقه لكل جولة",
 
-  "hand-cap": "عدد الكروت بيد كل لاعب",
+  "hand-cap": "رقم الكروت في ايد كل لعيب",
   "hand-cap-lobby": "كروت~كرت",
 
   "blank-probability": "نسبة سحب كرت فاضي",
   "blank-probability:cover": "كرت فاضي",
 
-  "room-options": "اعدادات الغرفة:",
+  "room-options": "اعدادات الروم:",
 
   "randos": "غريبي الاطوار",
 
@@ -136,44 +134,42 @@
   "no": "لأ",
 
   "apply": "طبق",
-  "start": "ابدا",
+  "start": "أبدا",
 
   // match logic
 
-  "not-enough-cards": "تم الغاء الجولة لعدم وجود عدد كافي من الكروت علي الساحة",
-  "not-enough-players": "تم الغاء المبارة لعدم وجود عدد كافي من اللاعبين.",
+  "this-card-is-yours": "انت",
 
-  "judge-timeout": "تم الغاء الجولة لنفاذ الوقت",
-  "judge-left": "تم الغاء الجولة لنسحاب القاضي من المباراة",
-
-  "this-card-is-yours": "(كرتك)",
+  "not-enough-players": "الماتش اتلغي علشان مفيش لعيبة كفاية.",
+  
+  "not-enough-cards": "الجولة أتلغت علشان مفيش كروت كفاية علي الارض",
+  "judge-left": "الجولة أتلغت علشان القاضي خرج من الماتش.",
+  "judge-timeout": "الجولة أتلغت علشان الوقت خلص.",
   
   // match state
 
-  "wait-until-judge-picks": "استني القاضي يلعب.",
+  "wait-until-judge-picks": "أستني القاضي.",
 
-  "picking-phase": "اختر كرت مناسب من ايدك.",
-  "you-are-the-judge-wait": "انت القاضي - استني دورك",
+  "picking-phase": "اختر كرت من ايدك.",
+  "you-are-the-judge-wait": "أستني دورك.",
 
   "judging-phase": "اختر اكثر كرت خلاك تتضحك.",
-  "wait-until-judge-judges": "استني حكم القاضي.",
+  "wait-until-judge-judges": "أستني حكم القاضي.",
 
-  "you-won-the-round": "انت كسبت الجولة.",
+  "you-won-the-round": "انت الي كسبت الجولة.",
   "won-this-round": "%0 كسب الجولة.",
 
-  "round-canceled": "تم الغاء الجولة.",
+  "round-canceled": "الجولة أتلغت",
 
   // share overlay
   
   "hashtag-airtegal": "#ارتجال_هتسيطر_علي_العالم",
 
-  "share-copied-to-clipboard": "تم نسخ الرابط لجهازك!",
+  "share-copied-to-clipboard": "تم نسخ اللينك لجهازك!",
 
   "close": "الغاء",
 
   // match reports
-
-  "no-one-wins": "لم ينجح احد.",
 
   "limited:match-ended": "انتهت الجولات! %0",
   "timer:match-ended": "انتهي الوقت! %0",
@@ -181,7 +177,7 @@
   // warning
 
   "ok": "تمام",
-  "airtegal-adults-warning": "اللعبه دي معموله للكبار بس... لو انت تحت سن ال16 فاحنا لازم نقولك تمشي من هنا.",
+  "airtegal-adults-warning": "اللعبه دي معموله للكبار بس... لو انت تحت الي 16 فاحنا لازم نقولك تمشي من هنا.",
 
   // homepage
 

@@ -1,12 +1,8 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import { StoreComponent } from '../store.js';
 
 import { locale } from '../i18n.js';
-
-import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
@@ -32,31 +28,22 @@ class RoomTrackBar extends StoreComponent
 
   render()
   {
-    const isContained = (this.props.contained !== undefined);
-    const isEnabled = this.props.enabled;
-
-    const isMatch = this.state.roomData?.state === 'match';
-
     return (
-      <div className={ styles.wrapper } contained={ isContained.toString() } enabled={ isEnabled }>
+      <div className={ styles.wrapper }>
         <div className={ styles.container }>
-          <div className={ styles.players } contained={ isContained.toString() }>
+          <div className={ styles.players }>
             {
               this.state.roomData?.players.map((playerId) =>
               {
-                const isMaster = playerId === this.state.roomData?.master;
-                const isClient = playerId === socket.id;
-
+                const match = this.state.roomData?.state === 'match';
                 // eslint-disable-next-line security/detect-object-injection
                 const player = this.state.roomData?.playerProperties[playerId];
                 
-                const isTurn = player?.state === 'judging' || player?.state === 'picking';
+                const turn = player?.state === 'judging' || player?.state === 'picking';
 
                 return <div className={ styles.player } key={ playerId }>
+                  <div className={ styles.state } style={ { display: !match ? 'none' : undefined } } turn={ turn.toString() }/>
                   <div className={ styles.name }>{ player?.username }</div>
-
-                  <div className={ styles.clientLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
-                  <div className={ styles.stateLed } client={ isClient.toString() } match={ isMatch.toString() } master={ isMaster.toString() } turn={ isTurn.toString() }/>
                 </div>;
               })
             }
@@ -67,46 +54,28 @@ class RoomTrackBar extends StoreComponent
   }
 }
 
-RoomTrackBar.propTypes = {
-  contained: PropTypes.bool,
-  enabled: PropTypes.string
-};
-
 const styles = createStyle({
   wrapper: {
     zIndex: 3,
     gridArea: 'trackBar',
 
+    overflow: 'hidden',
     backgroundColor: colors.trackBarBackground,
     
-    overflow: 'hidden',
-
-    '[enabled="false"]': {
+    '@media screen and (max-width: 1080px)': {
       display: 'none'
-    },
-
-    '[contained="true"]': {
-      height: '100%'
     }
   },
 
   container: {
     position: 'relative',
     userSelect: 'none',
-
-    color: colors.blackText,
     
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     width: '100%',
-    height: '100%',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      padding: '0 15px',
-      width: 'calc(100% - 30px)'
-    }
+    height: '100%'
   },
 
   players: {
@@ -118,16 +87,6 @@ const styles = createStyle({
 
     overflowX: 'hidden',
     overflowY: 'auto',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      display: 'flex',
-      flexWrap: 'wrap',
-
-      '[contained="false"]': {
-        maxHeight: '15vh'
-      }
-    },
 
     '::-webkit-scrollbar':
     {
@@ -142,71 +101,30 @@ const styles = createStyle({
   },
 
   player: {
-    display: 'grid',
-    gridGap: '5px',
-
+    display: 'flex',
     alignItems: 'center',
-    
-    gridTemplateColumns: 'auto auto 1fr',
-    gridTemplateAreas: '"clientLed stateLed username"',
-
     direction: locale.direction,
-    
-    padding: '0 10px 0 10px',
 
-    '@media screen and (max-width: 1080px)': {
-      flexBasis: '100%'
-    }
+    color: colors.blackText,
+
+    padding: '0 10px 0 10px'
   },
 
-  stateLed: {
-    gridArea: 'stateLed',
-
-    width: '10px',
-    height: '10px',
-    borderRadius: '10px',
-
-    '[match="false"][master="true"][client="true"]': {
-      backgroundColor: colors.master
-    },
-
-    '[match="true"][turn="true"][client="true"]': {
-      background: colors.turn
-    }
-  },
-
-  clientLed: {
-    gridArea: 'clientLed',
+  state: {
+    width: '22px',
+    height: '6px',
+    margin: '0 0 0 12px',
     
-    width: '10px',
-    height: '10px',
-    borderRadius: '10px',
-
-    '[client="true"]': {
-      backgroundColor: colors.client
-    },
-
-    '[match="false"][master="true"][client="false"]': {
-      backgroundColor: colors.master
-    },
-
-    '[match="true"][turn="true"][client="false"]': {
-      background: colors.turn
+    '[turn="true"]': {
+      backgroundColor: colors.blackText
     }
   },
 
   name: {
-    gridArea: 'username',
-    textAlign: 'center',
-
-    width: 'calc(100% - 10px)',
-    
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-
-    padding: '5px 0',
-    
-    fontSize: 'calc(6px + 0.35vw + 0.35vh)'
+    fontSize: 'calc(6px + 0.35vw + 0.35vh)',
+    padding: '5px 0'
   }
 });
 

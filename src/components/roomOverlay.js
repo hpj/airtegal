@@ -26,8 +26,6 @@ import HandOverlay from './handOverlay.js';
 
 import ShareOverlay from './shareOverlay.js';
 
-import { isTouchScreen } from '../index.js';
-
 const colors = getTheme();
 
 /**
@@ -454,9 +452,7 @@ class RoomOverlay extends StoreComponent
 
             {/* this instance of trackBar is always enabled on
               non-touch screens or on touch screens in landscape mode */}
-            <RoomTrackBar
-              enabled={ (!isTouchScreen || size.width >= 1080).toString() }
-            />
+            <RoomTrackBar enabled={ (size.width >= 1080).toString() }/>
 
             <HandOverlay sendMessage={ sendMessage } size={ size } />
 
