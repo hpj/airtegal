@@ -4,18 +4,16 @@ import PropTypes from 'prop-types';
 
 import { createStyle } from 'flcss';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import { locale } from '../i18n.js';
 
 const colors = getTheme();
 
-const Warning = ({ fullScreen, storageKey, text, button }) =>
+const Warning = ({ storageKey, text, button }) =>
 {
   // starts hidden, so it won't appear and disappear again if the user turned it off
   const [ visible, changeVisibility ] = useState(false);
-
-  fullScreen = fullScreen || false;
 
   const onClick = () =>
   {
@@ -44,23 +42,19 @@ const Warning = ({ fullScreen, storageKey, text, button }) =>
   }, []);
 
   // if the waring is visible
-  if (visible)
-    return (
-      <div fullscreen={ fullScreen.toString() } className={ styles.wrapper }>
-        <div className={ styles.container }>
-          {text}
-          <div id={ 'warning-button' } className={ styles.button } onClick={ onClick }>
-            {button}
-          </div>
+  return visible ?
+    <div className={ styles.wrapper }>
+      <div className={ styles.container }>
+        {text}
+        <div id={ 'warning-button' } className={ styles.button } onClick={ onClick }>
+          {button}
         </div>
       </div>
-    );
-  else
-    return <div/>;
+    </div>
+    : <div/>;
 };
 
 Warning.propTypes = {
-  fullScreen: PropTypes.bool,
   storageKey: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   button: PropTypes.string.isRequired
@@ -69,47 +63,26 @@ Warning.propTypes = {
 const styles = createStyle({
   wrapper: {
     zIndex: 20,
+    display: 'flex',
     position: 'fixed',
-    backgroundColor: colors.pinnedBackground,
 
     userSelect: 'none',
+    backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
     fontSize: 'calc(6px + 0.5vw + 0.5vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     
-    top: 0,
-    width: '90vw',
-    padding: '12vh 5vw',
-
-    '[fullscreen="true"]': {
-      backgroundColor: colors.whiteBackground,
-
-      display: 'flex',
-      height: '76vh'
-    },
-
-    '[fullscreen="true"] > div': {
-      color: colors.blackText
-    },
-
-    '[fullscreen="true"] > div > div': {
-      borderColor: colors.blackText
-    },
-
-    '[fullscreen="true"] > div > div:hover': {
-      color: colors.whiteBackground,
-      backgroundColor: colors.blackText
-    }
+    width: '100vw',
+    height: '100vh'
   },
 
   container: {
-    color: colors.whiteText,
-
+    color: colors.blackText,
     direction: locale.direction,
+
     maxWidth: '850px',
     height: 'min-content',
-
     margin: 'auto'
   },
 
@@ -117,16 +90,22 @@ const styles = createStyle({
     width: 'min-content',
 
     cursor: 'pointer',
+    textAlign: 'center',
     
-    border: '2px solid',
-    borderColor: colors.whiteText,
+    border: '3px solid',
+    boxShadow: '4px 4px 0px -2px',
 
-    margin: '10px 0 0 0',
+    color: colors.blackText,
+    backgroundColor: colors.whiteBackground,
+    borderColor: colors.blackText,
+
     padding: '2px 18px',
+    margin: '10px 0 0 0',
 
     ':hover': {
-      color: colors.pinnedBackground,
-      backgroundColor: colors.whiteText
+      color: colors.whiteBackground,
+      backgroundColor: colors.blackText,
+      borderColor: colors.whiteBackground
     }
   }
 });

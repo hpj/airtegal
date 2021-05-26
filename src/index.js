@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { createBrowserHistory } from 'history';
 
@@ -21,6 +21,7 @@ import { createStore } from './store.js';
 import Error from './components/error.js';
 import Loading from './components/loading.js';
 
+import NotFound from './screens/404.js';
 import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
@@ -46,8 +47,17 @@ function loaded()
   const pages =
     <Router history={ history }>
       <Switch>
-        <Route path={ '/play' } component={ Game }/>
-        <Route exact path={ '*' } component={ Homepage }/>
+        <Route exact path={ '/' }>
+          <Homepage/>
+        </Route>
+
+        <Route path={ '/play' }>
+          <Game/>
+        </Route>
+
+        <Route path={ '*' }>
+          <NotFound/>
+        </Route>
       </Switch>
     </Router>;
 

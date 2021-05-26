@@ -6,8 +6,6 @@ Performance Issues and Bugs:
   ☐ re-add notification when options change in lobby
 
 Testing:
-  ☐ test if disableDrag() on <Game/> is effective or redundant
-
   ☐ test if the app reloads automatically if it lost connection while in the background
     - an issue that's more common on mobile devices
 
@@ -16,14 +14,9 @@ Testing:
     ☐ options overlay
 
 UI/UX:
-  ☐ redesign the homepage @high
-
   ☐ animations for cards appearing and disappearing from field
   
   ☐ design the mockups for the proposal and vote screens
-
-  ☐ design the 404 page
-
 Homepage:
 
 Lobby:

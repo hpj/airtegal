@@ -166,6 +166,8 @@ class Game extends React.Component
   {
     return new Promise((resolve, reject) =>
     {
+      let timeoutRef;
+
       // nonce is a bunch of random numbers
       const nonce = [
         Math.random() * 32,
@@ -176,6 +178,8 @@ class Game extends React.Component
       {
         if (n !== nonce)
           return;
+
+        clearTimeout(timeoutRef);
 
         socket.off('done', doneListen);
         socket.off('err', errListen);
@@ -188,6 +192,8 @@ class Game extends React.Component
         if (n !== nonce)
           return;
 
+        clearTimeout(timeoutRef);
+
         socket.off('done', doneListen);
         socket.off('err', errListen);
 
@@ -197,20 +203,16 @@ class Game extends React.Component
       // emit the message
       socket.emit(eventName, { nonce, ...args });
 
-      // set a default timeout if 5 seconds
-      if (typeof timeout !== 'number')
-        timeout = 5000;
-
       // setup the timeout
       if (typeof timeout === 'number' && timeout > 0)
       {
-        setTimeout(() =>
+        timeoutRef = setTimeout(() =>
         {
           socket.off('done', doneListen);
           socket.off('err', errListen);
 
           errListen(nonce, i18n('timeout'));
-        }, timeout);
+        }, timeout ?? 15000);
       }
 
       // assign the callbacks
@@ -438,7 +440,6 @@ class Game extends React.Component
       <div id={ 'game' } className={ mainStyles.wrapper }>
 
         <Warning
-          fullScreen={ true }
           storageKey={ 'airtegal-adults-warning' }
           text={ i18n('airtegal-adults-warning') }
           button={ i18n('ok') }

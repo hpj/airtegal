@@ -1,15 +1,15 @@
-// /**
-// * @param { string } color
-// * @param { number } opacity
-// */
-// export function opacity(color, opacity)
-// {
-//   const r = parseInt(color.slice(1, 3), 16);
-//   const g = parseInt(color.slice(3, 5), 16);
-//   const b = parseInt(color.slice(5, 7), 16);
+/**
+* @param { string } color
+* @param { number } opacity
+*/
+export function opacity(color, opacity)
+{
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
 
-//   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-// }
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
 
 export default function()
 {
@@ -48,8 +48,6 @@ export default function()
    
     handBackground: '#C4C4C4',
     handScrollbar: '#949393',
-   
-    pinnedBackground: '#00aeff',
    
     headerGradient: [ '#F05F57', '#360940' ],
    

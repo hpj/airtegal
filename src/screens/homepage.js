@@ -2,17 +2,17 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { createStyle } from 'flcss';
+import { createStyle, createAnimation } from 'flcss';
 
 import { ErrorBoundary } from '@sentry/react';
 
-import Select from '../components/select.js';
+import ArrowUpIcon from 'mdi-react/ArrowUpIcon';
 
 import getTheme from '../colors.js';
 
 import Warning from '../components/warning.js';
 
-import i18n, { locales, locale, setLocale } from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -22,11 +22,89 @@ class Homepage extends React.Component
   {
     super();
     
+    this.state = {
+      index: -1,
+      data: []
+    };
+
+    this.interval = undefined;
+
     window.scrollTo(0, 0);
+
+    this.updateIndex = this.updateIndex.bind(this);
+  }
+
+  componentDidMount()
+  {
+    // disable any dragging functionality in the app
+    window.addEventListener('dragstart', this.disableDrag);
+
+    // /**
+    // * @type { { card: { content: string }, combos: { content: string }[] }[] }
+    // */
+    // const data = i18n('combos');
+
+    i18n('combos').forEach(({ card, combos }) =>
+    {
+      let i = 0;
+
+      let text = card.content
+        .replace(/_.+?(?=[^_]|$)/g, () => `\n${combos[i++].content}\n`);
+
+      if (text === card.content)
+        text = `${text} \n${combos.map(c => c.content).join(' ')}\n.`;
+
+      this.state.data.push(text.replace(' .', '.'));
+    });
+
+    const index = this.randomIndex(this.state.data.length, -1);
+    
+    this.setState({ data: this.state.data, index },
+      () => this.interval = setInterval(this.updateIndex, 6500));
+  }
+
+  componentWillUnmount()
+  {
+    clearInterval(this.interval);
+
+    window.removeEventListener('dragstart', this.disableDrag);
+  }
+
+  disableDrag(e)
+  {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  randomIndex(length, lastIndex)
+  {
+    const index = Math.floor(((window.crypto.getRandomValues(new Uint32Array(1))[0]) / 2**32) * length);
+
+    // istanbul ignore else
+    if (process.env.NODE_ENV === 'test')
+      return 0;
+    else if (index === lastIndex)
+      return this.randomIndex(length, lastIndex);
+    else
+      return index;
+  }
+
+  updateIndex()
+  {
+    const { data, index } = this.state;
+
+    this.setState({
+      index: this.randomIndex(data.length, index)
+    });
   }
 
   render()
   {
+    /**
+    * @type { { data: string[] } }
+    */
+    const { data } = this.state;
+
     return <ErrorBoundary fallback={ 'An error has occurred' }>
       <div id={ 'homepage' }>
         <Warning
@@ -34,97 +112,31 @@ class Homepage extends React.Component
           text={ i18n('airtegal-adults-warning') }
           button={ i18n('ok') }
         />
-  
-        <div className={ headerStyles.wrapper }>
-  
-          <div className={ headerStyles.regionalOptions }>
-            <Select
-              className={ headerStyles.select }
-              menuClassName={ headerStyles.selectMenu }
-          
-              defaultValue={ locales.indexOf(locale) }
-              options={ locales }
 
-              onChange={ (locale) => setLocale(locale.value) }
-            />
+        <div className={ styles.container }>
+          <div className={ styles.header }>
+            <div className={ styles.airtegal }>{ i18n('airtegal') }</div>
+            <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ i18n('terms-and-conditions') }</a>
+            <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ i18n('privacy-policy') }</a>
           </div>
-  
-          <div className={ headerStyles.container }>
-            
-            <div className={ headerStyles.title }>
-  
-              <a className={ headerStyles.hpj } href={ 'https://herpproject.com' }>
-                { i18n('hpj') }
-              </a>
-  
-              <div className={ headerStyles.airtegal }>{ i18n('this-is-airtegal') }
-                <div className={ headerStyles.beta }>({ i18n('beta') })</div>
-              </div>
-            
-            </div>
-          </div>
-        </div>
-  
-        <div className={ qaStyles.wrapper }>
-          <div className={ qaStyles.container }>
-            <p className={ qaStyles.question }>
-              { i18n('what-is-airtegal') }
-            </p>
-  
-            <p className={ qaStyles.answer }>
-              { i18n('that-is-airtegal') }
-            </p>
-  
-            <p className={ qaStyles.question }>
-              { i18n('who-is-hpj') }
-            </p>
-  
-            <p className={ qaStyles.answer }>
-              { i18n('this-is-hpj') }
-            </p>
-  
-            <p className={ qaStyles.question }>
-              { i18n('why-is-game-raciest') }
-            </p>
-  
-            <p className={ qaStyles.answer }>
-  
-              { i18n('freedom-of-speech-1') }
-              <br/>
-  
-              { i18n('freedom-of-speech-2') }
-            </p>
-  
-            <p className={ qaStyles.question }>
-              { i18n('how-to-suggest-cards') }
-            </p>
-  
-            <p className={ qaStyles.answer }>
-              { i18n('suggesting-cards') }
-            </p>
-  
-          </div>
-        </div>
 
-        <div className={ playStyles.wrapper }>
-          <div className={ playStyles.container }>
-            <Link className={ playStyles.title } to={ '/play' }> { i18n('play') } </Link>
-          </div>
-        </div>
-  
-        <div className={ footerStyles.wrapper }>
-          <div className={ footerStyles.container }>
-            <a className={ footerStyles.hpj } href={ 'https://herpproject.com' }>
-              { i18n('herp-project') }
-            </a>
-            <div className={ footerStyles.sitemap }>
-              <a className={ footerStyles.privacy } href={ 'https://herpproject.com/airtegal/privacy' }>{ i18n('privacy-policy') }</a>
-              _
-              <a className={ footerStyles.terms } href={ 'https://herpproject.com/airtegal/terms' }>{ i18n('terms-and-conditions') }</a>
-            </div>
-            <p className={ footerStyles.copyright }>
-              { i18n('copyright-notice') }
-            </p>
+          <span className={ styles.main } key={ +new Date() }>
+            {
+              data?.[this.state.index]?.split('\n').map((t, i) =>
+              {
+                return <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
+                  { t }
+                </span>;
+              })
+            }
+          </span>
+
+          <div className={ styles.footer }>
+            <Link className={ styles.play } to={ 'play' }>
+              <ArrowUpIcon className={ styles.playIcon }/>
+              { i18n('play') }
+            </Link>
+            <a className={ styles.hpj } href={ 'https://herpproject.com' }>{ i18n('hpj') }</a>
           </div>
         </div>
       </div>
@@ -132,240 +144,152 @@ class Homepage extends React.Component
   }
 }
 
-const headerStyles = createStyle({
-  wrapper: {
-    background: `linear-gradient( 135deg, ${colors.headerGradient[0]} 10%, ${colors.headerGradient[1]} 100%);`,
-    padding: '0 5vw'
+const backgroundAnimation = createAnimation({
+  keyframes: {
+    '0%': {
+      backgroundPosition: '0% 50%'
+    },
+    '100%': {
+      backgroundPosition: '100% 50%'
+    }
   },
+  duration: '7.5s',
+  direction: 'alternate',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite'
+});
 
+const enterAnimation = createAnimation({
+  keyframes: {
+    from: {
+      opacity: '0.05'
+    },
+    to: {
+      opacity: '1'
+    }
+  },
+  duration: '0.85s',
+  timingFunction: 'ease-in-out',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 1
+});
+
+const playAnimation = createAnimation({
+  keyframes: {
+    from: {
+      bottom: '-50%'
+    },
+    to: {
+      bottom: '-25%'
+    }
+  },
+  duration: '0.8s',
+  direction: 'alternate',
+  timingFunction: 'ease-in-out',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite'
+});
+
+const styles = createStyle({
   container: {
-    display: 'flex',
-    minHeight: '450px',
+    display: 'grid',
+    
+    gridTemplateColumns: '100%',
+    gridTemplateRows: 'min-content 1fr min-content',
+    gridTemplateAreas: '"." "." "."',
+
+    userSelect: 'none',
+
+    animation: backgroundAnimation,
+    background: 'linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)',
+    backgroundSize: '400% 400%',
+
+    width: '100wh',
+    height: '100vh',
 
     fontWeight: 700,
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
-  regionalOptions: {
-    width: 'auto',
-
-    fontWeight: 700,
-    fontFamily: 'Noto Arabic',
-    fontSize: 'calc(12px + 0.2vw + 0.2vh)',
-
-    padding: '10px 0 0 0'
-  },
-
-  select: {
-    direction: locale.direction,
-
-    color: colors.whiteText,
-    backgroundColor: colors.transparent,
-    borderColor: colors.transparent,
-
-    '[shown="true"]': {
-      color: colors.blackText,
-      backgroundColor: colors.whiteBackground
-    }
-  },
-
-  selectMenu: {
-    borderColor: colors.greyText
-  },
-
-  title: {
-    display: 'grid',
-
-    direction: locale.direction,
-    userSelect: 'none',
-
-    minWidth: 'fit-content',
-    overflow: 'hidden',
-    
-    padding: '5vh 0',
-    margin: 'auto'
-  },
-
-  hpj: {
-    cursor: 'pointer',
-    margin: 'auto',
-    
-    fontSize: 'calc(12px + 0.5vw + 0.5vh)',
-
-    color: colors.whiteText,
-    textDecoration: 'none',
-
-    ':hover': { color: colors.accentColor }
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    direction: locale.direction
   },
 
   airtegal: {
-    margin: 'auto',
-    fontSize: 'calc(35px + 1.5vw + 1.5vh)',
-
-    lineHeight: '135%',
     color: colors.whiteText,
-
-    padding: '10px 0'
+    fontSize: 'calc(25px + 0.5vw + 0.5vh)',
+    padding: '15px 5vw'
   },
 
-  beta: {
-    margin: ' 15px 0 0 auto',
-    fontSize: '12px',
-
-    color: colors.whiteText,
-    lineHeight: '100%'
-  }
-});
-
-const qaStyles = createStyle({
-  wrapper: {
-    backgroundColor: colors.whiteBackground
-  },
-
-  container: {
-    maxWidth: '850px',
-
-    color: colors.blackText,
-
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    direction: locale.direction,
-  
-    padding: '5vh 5vw',
-    margin: 'auto'
-  },
-
-  question: {
-    fontWeight: 700,
-
-    margin: '0 0 3px 0'
-  },
-
-  answer: {
-    margin: 0,
-
-    '+ p': {
-      margin: '20px 0 3px 0'
-    }
-  }
-});
-
-const playStyles = createStyle({
-  wrapper: {
-    background: `linear-gradient(0deg, ${colors.playBackgroundGradient[0]} 0%, ${colors.playBackgroundGradient[1]} 100%)`
-  },
-
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-
-    justifyContent: 'center',
-    
-    maxWidth: '850px',
-
-    fontWeight: 700,
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-  
-    padding: '2vh 5vw 5vh 5vw',
-    margin: 'auto'
-  },
-
-  title: {
-    color: colors.whiteText,
+  button: {
     cursor: 'pointer',
+    color: colors.whiteText,
     
-    border: `3px solid ${ colors.whiteText }`,
-
-    userSelect: 'none',
-
-    fontSize: 'calc(12px + 0.65vw + 0.65vh)',
+    fontSize: 'calc(8px + 0.25vw + 0.25vh)',
+    padding: '0 5vw',
 
     textDecoration: 'none',
 
-    padding: '5% 12%',
-    margin: '2vh 0',
-
     ':hover': {
-      background: `linear-gradient(to right, ${colors.playButtonGradient[0]}, ${colors.playButtonGradient[1]})`,
-      
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-
-      borderImage: `linear-gradient(to right, ${colors.playButtonGradient[0]}, ${colors.playButtonGradient[1]})`,
-      borderImageSlice: 1
-    },
-
-    ':active': {
-      transform: 'scale(0.9)'
+      color: colors.accentColor
     }
-  }
-});
-
-const footerStyles = createStyle({
-  wrapper: {
-    backgroundColor: colors.blackBackground
   },
 
-  container: {
-    display: 'grid',
-
-    gridTemplateAreas: '"hpj" "sitemap" "copyright"',
-  
-    gridRowGap: '10px',
-    
-    maxWidth: '850px',
-
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    fontWeight: 700,
-  
+  main: {
+    textAlign: 'center',
+    animation: enterAnimation,
     direction: locale.direction,
-    padding: '5vh 5vw',
-    margin: 'auto'
+    margin: 'auto 20vw'
+  },
+
+  content: {
+    color: colors.whiteText,
+    paddingBottom: '15px',
+    fontSize: 'calc(22px + 0.4vw + 0.4vh)'
+  },
+  
+  underline: {
+    extend: 'content',
+    borderBottom: '4px solid'
+  },
+
+  footer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    direction: locale.direction
+  },
+
+  playIcon: {
+    pointerEvents: 'none',
+    position: 'absolute',
+
+    color: colors.whiteText,
+    animation: playAnimation,
+    
+    right: '25%',
+    bottom: '-50%',
+    width: 'calc(11px + 0.25vw + 0.25vh)',
+    height: 'calc(11px + 0.25vw + 0.25vh)'
+  },
+  
+  play: {
+    extend: 'button',
+    position: 'relative',
+    fontSize: 'calc(16px + 0.25vw + 0.25vh)',
+
+    padding: '0',
+    margin: '0 auto 5vh auto'
   },
 
   hpj: {
-    gridArea: 'hpj',
-    cursor: 'pointer',
-    
-    width: 'fit-content',
-    padding: '0 5px',
+    extend: 'button',
+    flexBasis: '100%',
 
-    userSelect: 'none',
-    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-
-    color: colors.whiteText,
-    textDecoration: 'none',
-
-    ':hover': { color: colors.accentColor }
-  },
-
-  sitemap: {
-    gridArea: 'sitemap',
     display: 'flex',
+    flexDirection: 'row-reverse',
 
-    userSelect: 'none',
-    color: colors.whiteText
-  },
-
-  privacy: {
-    cursor: 'pointer',
-    padding: '0 5px',
-
-    color: colors.whiteText,
-    textDecoration: 'none',
-
-    ':hover': { color: colors.accentColor }
-  },
-
-  terms: { extend: 'privacy' },
-
-  copyright: {
-    gridArea: 'copyright',
-    
-    margin: '0',
-    padding: '0 5px',
-
-    color: colors.greyText,
-    userSelect: 'none'
+    fontSize: 'calc(18px + 0.35vw + 0.35vh)',
+    padding: '18px 20px'
   }
 });
 
