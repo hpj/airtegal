@@ -10,8 +10,6 @@ import * as Tracing from '@sentry/tracing';
 
 import i18n, { setLocale } from './i18n.js';
 
-import 'prevent-pull-refresh';
-
 import WebFont from 'webfontloader';
 
 import axios from 'axios';
