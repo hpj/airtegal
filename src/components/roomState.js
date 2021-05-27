@@ -169,6 +169,7 @@ class RoomState extends StoreComponent
     return state;
   }
 
+  // istanbul ignore next
   shareRoomURL()
   {
     navigator.share({
@@ -181,6 +182,7 @@ class RoomState extends StoreComponent
     });
   }
 
+  // istanbul ignore next
   copyRoomURL()
   {
     const { addNotification } = this.props;

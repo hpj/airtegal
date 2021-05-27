@@ -315,7 +315,7 @@ class RoomOverlay extends StoreComponent
   addNotification(content)
   {
     // add delay between notifications
-    if (this.state.notifications.length > 0)
+    if (this.state.notifications.length > 0 && process.env.NODE_ENV !== 'test')
     {
       // delta time of when the last notification appeared
       const delta = Date.now() - this.state.notifications[this.state.notifications.length - 1].timestamp;

@@ -2,8 +2,6 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import CopyIcon from 'mdi-react/ContentCopyIcon';
-
 import RedditIcon from 'mdi-react/RedditIcon';
 import FacebookIcon from 'mdi-react/FacebookIcon';
 import TwitterIcon from 'mdi-react/TwitterIcon';
@@ -96,15 +94,20 @@ class ShareOverlay extends React.Component
       hide();
   }
 
+  // istanbul ignore next
   copyURL()
   {
-    const { share, addNotification } = this.props;
+    const { clipboard, share, addNotification } = this.props;
 
+    if (!clipboard)
+      return;
+    
     navigator.clipboard.writeText(share.url)
       .then(() => addNotification(i18n('share-copied-to-clipboard')))
       .catch(console.warn);
   }
 
+  // istanbul ignore next
   shareOnFacebook()
   {
     const { share } = this.props;
@@ -117,6 +120,7 @@ class ShareOverlay extends React.Component
     window.open(url, 'Share', options);
   }
 
+  // istanbul ignore next
   shareOnTwitter()
   {
     const { share } = this.props;
@@ -129,6 +133,7 @@ class ShareOverlay extends React.Component
     window.open(url, 'Share', options);
   }
 
+  // istanbul ignore next
   shareOnReddit()
   {
     const { share } = this.props;
@@ -155,12 +160,8 @@ class ShareOverlay extends React.Component
         <div enabled={ share.active.toString() } className={ styles.container }>
           <img src={ share.img } className={ styles.image }/>
 
-          <div className={ styles.url }>
-            <div className={ styles.urlText }>{ share.url }</div>
-            {
-              this.props.clipboard ? <CopyIcon className={ styles.urlCopy } onClick={ this.copyURL }/> :
-                undefined
-            }
+          <div className={ styles.url } onClick={ this.copyURL }>
+            { share.url }
           </div>
 
           <div className={ styles.buttons }>
@@ -223,7 +224,7 @@ const styles = createStyle({
     position: 'absolute',
     display: 'grid',
 
-    gridTemplateRows: '60% 1fr auto 1fr',
+    gridTemplateRows: '60% auto 1fr 2fr',
 
     color: colors.blackText,
     backgroundColor: colors.shareBackground,
@@ -264,47 +265,24 @@ const styles = createStyle({
   },
 
   url: {
-    display: 'flex',
-    alignItems: 'center',
-
-    backgroundColor: colors.whiteBackground,
-
-    overflow: 'hidden',
-
-    borderRadius: '5px',
-    margin: '5px 15px'
-  },
-
-  urlText: {
-    display: 'flex',
-    alignItems: 'center',
-
-    userSelect: 'all',
-
     color: colors.blackText,
     backgroundColor: colors.shareUrlBackground,
 
-    height: '100%',
-
+    width: 'calc(100% - 60px)',
+    
+    userSelect: 'all',
     overflow: 'hidden',
-    padding: '0 0 0 10px'
-  },
-
-  urlCopy: {
-    cursor: 'pointer',
-
-    width: '24px',
-    height: '100%',
-
-    padding: '0 10px',
-
-    ':active': {
-      transform: 'scale(0.85)'
-    }
+    textOverflow: 'ellipsis',
+    
+    padding: '15px',
+    margin: '0 auto',
+    borderRadius: '5px'
   },
 
   buttons: {
     display: 'flex',
+    alignItems: 'center',
+
     margin: '5px 15px'
   },
 

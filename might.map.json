@@ -432,7 +432,7 @@
         },
         {
           "action": "wait",
-          "value": 3
+          "value": 2
         }
       ]
     },
@@ -791,7 +791,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&report=Test,Test|Test,Test,Test|Test,Test,Test"
+          "value": "/play?quiet&create&share&report=Test,Test|Test,Test,Test|Test,Test,Test"
         },
         {
           "action": "wait",
@@ -826,6 +826,23 @@
         {
           "action": "click",
           "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Share Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&share&report=Test,Test|Test,Test,Test|Test,Test,Test"
+        },
+        {
+          "action": "wait",
+          "value": 2
         },
         {
           "action": "wait",

@@ -40,7 +40,11 @@ class MatchReport extends StoreComponent
           .split(',')
           .map((content, i) => ({ type: i === 0 ? 'black' : 'white', content })));
 
-      this.setState({ entries });
+      this.setState({ entries }, () =>
+      {
+        if (params.has('share'))
+          setTimeout(() => this.shareEntry(entries[0]), 3000);
+      });
     }
   }
 
