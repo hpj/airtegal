@@ -611,7 +611,7 @@ const styles = createStyle({
 
     animation: createAnimation({
       duration: '2s',
-      timingFunction: 'linear',
+      timingFunction: 'ease',
       iterationCount: 'infinite',
       keyframes: {
         from: {

@@ -23,6 +23,10 @@ const NotFound = () =>
 };
 
 const noiseAnimation = createAnimation({
+  duration: '1s',
+  fillMode: 'both',
+  timingFunction: 'steps(8)',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
   keyframes: {
     '0%': {
       transform: 'translateX(0px,0px)'
@@ -57,11 +61,7 @@ const noiseAnimation = createAnimation({
     '100%': {
       transform: 'translate(-100px, 100px)'
     }
-  },
-  duration: '1s',
-  fillMode: 'both',
-  timingFunction: 'steps(8)',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite'
+  }
 });
 
 const styles = createStyle({

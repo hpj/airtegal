@@ -145,6 +145,10 @@ class Homepage extends React.Component
 }
 
 const backgroundAnimation = createAnimation({
+  duration: '7.5s',
+  direction: 'alternate',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
   keyframes: {
     '0%': {
       backgroundPosition: '0% 50%'
@@ -152,14 +156,13 @@ const backgroundAnimation = createAnimation({
     '100%': {
       backgroundPosition: '100% 50%'
     }
-  },
-  duration: '7.5s',
-  direction: 'alternate',
-  timingFunction: 'ease',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite'
+  }
 });
 
 const enterAnimation = createAnimation({
+  duration: '0.85s',
+  timingFunction: 'ease-in-out',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 1,
   keyframes: {
     from: {
       opacity: '0.05'
@@ -167,13 +170,14 @@ const enterAnimation = createAnimation({
     to: {
       opacity: '1'
     }
-  },
-  duration: '0.85s',
-  timingFunction: 'ease-in-out',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 1
+  }
 });
 
 const playAnimation = createAnimation({
+  duration: '0.8s',
+  direction: 'alternate',
+  timingFunction: 'ease-in-out',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
       bottom: '-50%'
@@ -181,11 +185,7 @@ const playAnimation = createAnimation({
     to: {
       bottom: '-25%'
     }
-  },
-  duration: '0.8s',
-  direction: 'alternate',
-  timingFunction: 'ease-in-out',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite'
+  }
 });
 
 const styles = createStyle({

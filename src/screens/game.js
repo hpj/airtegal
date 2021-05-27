@@ -750,7 +750,7 @@ const roomsStyles = createStyle({
     animation: createAnimation({
       duration: '2s',
       timingFunction: 'linear',
-      iterationCount: 'infinite',
+      iterationCount: 'ease',
       keyframes: {
         from: {
           transform: 'rotate(0deg)'

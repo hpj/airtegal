@@ -1,12 +1,15 @@
 import React from 'react';
 
+import CheckIcon from 'mdi-react/CheckIcon';
+import WaitingIcon from 'mdi-react/LoadingIcon';
+
 import { StoreComponent } from '../store.js';
 
 import { locale } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from 'flcss';
+import { createStyle, createAnimation } from 'flcss';
 
 const colors = getTheme();
 
@@ -42,7 +45,10 @@ class RoomTrackBar extends StoreComponent
                 const turn = player?.state === 'judging' || player?.state === 'picking';
 
                 return <div className={ styles.player } key={ playerId }>
-                  <div className={ styles.state } style={ { display: !match ? 'none' : undefined } } turn={ turn.toString() }/>
+                  {
+                    turn ? <WaitingIcon className={ styles.waiting } style={ { display: !match ? 'none' : undefined } }/> :
+                      <CheckIcon className={ styles.played } style={ { display: !match ? 'none' : undefined } }/>
+                  }
                   <div className={ styles.name }>{ player?.username }</div>
                 </div>;
               })
@@ -53,6 +59,20 @@ class RoomTrackBar extends StoreComponent
     );
   }
 }
+
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   wrapper: {
@@ -104,20 +124,9 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
     direction: locale.direction,
-
     color: colors.blackText,
 
-    padding: '0 10px 0 10px'
-  },
-
-  state: {
-    width: '22px',
-    height: '6px',
-    margin: '0 0 0 12px',
-    
-    '[turn="true"]': {
-      backgroundColor: colors.blackText
-    }
+    padding: '0 10px'
   },
 
   name: {
@@ -125,6 +134,19 @@ const styles = createStyle({
     textOverflow: 'ellipsis',
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
     padding: '5px 0'
+  },
+
+  played: {
+    width: 'calc(7px + 0.25vw + 0.25vh)',
+    height: 'calc(7px + 0.25vw + 0.25vh)',
+    
+    color: colors.blackText,
+    padding: '0 15px'
+  },
+
+  waiting: {
+    extend: 'played',
+    animation: waitingAnimation
   }
 });
 
