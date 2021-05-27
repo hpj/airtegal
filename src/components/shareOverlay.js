@@ -49,10 +49,7 @@ export function shareEntry(black, white)
       title: 'Airtegal',
       text: i18n('hashtag-airtegal'),
       url: shareURL
-    }).catch(() =>
-    {
-      //
-    });
+    }).catch(e => e);
   }
   else
   {

@@ -20,7 +20,7 @@
   "you-were-disconnected": "انقطع اتصالك بالسيرفر",
 
   "app-country-block": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
-  "app-country-taboo": "ثم حذر هذا التطبيق في بلدك لانه حرام",
+  "app-country-taboo": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
   "server-mismatch": "السيرفر تحت الصيانة",
 
   // lobby
@@ -190,7 +190,7 @@
     {"card":{"content":"البنات بتحبني لما ________ .","type":"black"},"combos":[{"type":"white","content":"اقفلة وافتحة"}]},{"card":{"content":"من يتحكم في ______ يتحكم في العالم.","type":"black"},"combos":[{"type":"white","content":"طيز محمد رمضان"}]},{"card":{"content":"متخفيش، ده مش عفريت، ده ________.","type":"black"},"combos":[{"type":"white","content":"صحبة اختي القرعة"}]},{"card":{"content":"في الحملة الجديدة لتشجيع السياحة، مصر بتدعي انها تخلصت من ______.","type":"black"},"combos":[{"type":"white","content":"بيحلب بقرة ببقه"}]},{"card":{"content":"ايوة يا بابا، انا نمت مع ______.","type":"black"},"combos":[{"type":"white","content":"ست عجوزة من غير هدوم"}]},
     {"card":{"content":"ايوة يا بابا، انا نمت مع ______.","type":"black"},"combos":[{"type":"white","content":"ست عجوزة من غير هدوم"}]},{"card":{"content":"مصر ام الدنيا. مصر جملية. مصر ______.","type":"black"},"combos":[{"type":"white","content":"زب زنجي كبير"}]},{"card":{"content":"مرتضي منصور بيفكر في اية دلوقتي؟","type":"black"},"combos":[{"type":"white","content":"مخالفة ابسط قوانين حقوق الانسان"}]},{"card":{"content":"ده مش كوكب المريخ، ده كوكب ______.","type":"black"},"combos":[{"type":"white","content":"الشراميط"}]},{"card":{"content":"قبل ما اقتلك لازم اوريك _______ .","type":"black"},"combos":[{"type":"white","content":"بضان مدحت شلبي"}]},
     {"card":{"content":"مفيش عزومه غذاء رومانسية تكتمل من غير _________ .","type":"black"},"combos":[{"type":"white","content":"صور لبزاز بنات"}]},{"card":{"content":"يمكن هي اتولدت بية او يمكن ______ .","type":"black"},"combos":[{"type":"white","content":"بسكلتة"}]},{"card":{"content":"_______ مان.","type":"black"},"combos":[{"type":"white","content":"لحمه من عربية في الشارع"}]},{"card":{"content":"ابويا اضايق لما فتح موبيلي ولقي _______.","type":"black"},"combos":[{"type":"white","content":"كائنات فضائية شواذ"}]},{"card":{"content":"بشتغل وبفشخ نفسي كل يوم علشانك واما ارجع البيت القي ______؟!","type":"black"},"combos":[{"type":"white","content":"اشهر ممثلة زنجية"}]},
-    {"card":{"content":"_________ + _________ = _________","type":"black"},"combos":[{"type":"white","content":"الجنس مع واحد زنجي"},{"type":"white","content":"الشواذ"},{"type":"white","content":"الحسهم لحد ما يبقوا بتوعك"}]},{"card":{"content":"اديني _______ وانا ابقي اسعد بنت في الدنيا.","type":"black"},"combos":[{"type":"white","content":"زب صغير"}]},{"card":{"content":"ساعدوني, ابني _______ .","type":"black"},"combos":[{"type":"white","content":"مسك عيل وضربة لحد ما فسي"}]},{"card":{"content":"تحيا مصر، ام ______.","type":"black"},"combos":[{"type":"white","content":"شنطة جلد مليانة جثث كتاكيت"}]},{"card":{"content":"وفجاة ________.","type":"black"},"combos":[{"type":"white","content":"مسك عيل وضربة لحد ما فسي"}]}
+    {"card":{"content":"ساعدوني, ابني _______ .","type":"black"},"combos":[{"type":"white","content":"مسك عيل وضربة لحد ما فسي"}]},{"card":{"content":"تحيا مصر، ام ______.","type":"black"},"combos":[{"type":"white","content":"شنطة جلد مليانة جثث كتاكيت"}]},{"card":{"content":"وفجاة ________.","type":"black"},"combos":[{"type":"white","content":"مسك عيل وضربة لحد ما فسي"}]}
   ],
 
   "play": "العب",

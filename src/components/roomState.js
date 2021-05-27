@@ -96,8 +96,8 @@ class RoomState extends StoreComponent
         this.countdown = Date.now() + time;
   
         // interval are disabled in end-to-end testing
-        // istanbul ignore next
-  
+        
+        // istanbul ignore if
         if (process.env.NODE_ENV !== 'test')
         {
           // set a 1s interval

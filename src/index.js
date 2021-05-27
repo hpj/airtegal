@@ -105,13 +105,9 @@ createStore();
 // show a loading screen until the promises resolve
 ReactDOM.render(<Loading splash/>, placeholder);
 
-// set the endpoint to the development server
-if (process.env.NODE_ENV === 'development')
-{
-  process.env.API_ENDPOINT = 'http://localhost:3000';
-}
 // set the endpoint to the production server
-else if (process.env.NODE_ENV === 'production')
+// istanbul ignore if
+if (process.env.NODE_ENV === 'production')
 {
   process.env.API_ENDPOINT = 'https://api.airtegal.me';
 

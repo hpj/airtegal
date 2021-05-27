@@ -1,7 +1,5 @@
 import React from 'react';
 
-import CloseIcon from 'mdi-react/CloseThickIcon';
-
 import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
@@ -76,28 +74,24 @@ class MatchReport extends StoreComponent
     
     return (
       <div className={ styles.container }>
-        <CloseIcon className={ styles.close } onClick={ this.clearEntries }/>
-
-        <div className={ styles.entries }>
+        {
+          this.state.entries.slice(0, 2).map((entry, i) =>
           {
-            this.state.entries.map((entry, i) =>
-            {
-              return <div key={ i } className={ styles.entry }>
+            return <div key={ i } className={ styles.entry }>
+              {
+                entry.map((card, i) =>
                 {
-                  entry.map((card, i) =>
-                  {
-                    return <Card
-                      key={ i }
-                      shareEntry={ (entry.length - 1 === i) ? () => this.shareEntry(entry) : undefined }
-                      owner={ (card.type === 'white') ? i18n('airtegal-cards') : undefined }
-                      type={ card.type }
-                      content={ card.content }/>;
-                  })
-                }
-              </div>;
-            })
-          }
-        </div>
+                  return <Card
+                    key={ i }
+                    shareEntry={ (entry.length - 1 === i) ? () => this.shareEntry(entry) : undefined }
+                    owner={ (card.type === 'white') ? i18n('airtegal-cards') : undefined }
+                    type={ card.type }
+                    content={ card.content }/>;
+                })
+              }
+            </div>;
+          })
+        }
       </div>
     );
   }
@@ -105,48 +99,41 @@ class MatchReport extends StoreComponent
 
 const styles = createStyle({
   container: {
-    backgroundColor: colors.handBackground,
-    
-    margin: '20px 25px',
-    padding: '5px 0',
-    borderRadius: '5px',
-
-    boxShadow: `5px 5px 0px ${colors.greyText}`
-  },
-
-  close: {
-    cursor: 'pointer',
-    fill: colors.greyText,
-    
-    width: 'calc(22px + 0.25vw + 0.25vh)',
-    height: 'calc(22px + 0.25vw + 0.25vh)',
-    
-    margin: '5px 10px'
-  },
-
-  entries: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    
-    overflow: 'hidden',
-    margin: '0 5px -15px 5px'
+    height: 'auto',
+    maxHeight: '50vh',
+    margin: '5vh 0'
   },
 
   entry: {
+    flexBasis: '100%',
+
     display: 'flex',
     flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
 
     direction: locale.direction,
-    margin: '0px 30px',
+    margin: '0px 5vw',
 
-    '> *': {
-      zIndex: 0,
-      margin: '0 -10px 25px -10px'
+    ':not(:last-child)': {
+      margin: '0px 5vw 10vh'
+    },
+
+    '> * > [type="black"]': {
+      transform: 'rotate(15deg) translate(0, 10px)'
+    },
+
+    '> * > [type="white"]': {
+      transform: 'rotate(-10deg) translate(15px, 0px)'
+    },
+
+    '> *:nth-child(3) > [type="white"]': {
+      transform: 'rotate(5deg) translate(20px, 10px)'
     },
 
     '> * > [type]': {
-      boxShadow: `0px 0px 6px 0px ${colors.greyText}`,
-      overflow: 'hidden'
+      overflow: 'hidden',
+      boxShadow: `0px 0px 6px 0px ${colors.greyText}`
     },
 
     '> * > [type] > *': {
