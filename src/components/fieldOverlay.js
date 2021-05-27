@@ -233,13 +233,13 @@ class FieldOverlay extends StoreComponent
                       key={ card.key }
                       arrow={ arrow }
                       onClick={ () => this.judgeCard(entryIndex, isAllowed) }
-                      shareEntry={ (entryIndex === this.state.winnerEntryIndex && i === 0) ? () => this.shareEntry(entryIndex) : undefined }
+                      shareEntry={ (entryIndex === winnerEntryIndex && i === 0) ? () => this.shareEntry(entryIndex) : undefined }
                       allowed={ isAllowed.toString() }
                       self={ roomData?.phase === 'transaction' && entry.id === socket.id && entryIndex > 0 }
                       owner={ (roomData?.phase === 'transaction' && entryIndex > 0) ? roomData?.playerProperties[entry.id]?.username : undefined }
                       type={ card.type }
                       content={ card.content }
-                      winner= { entryIndex === this.state.winnerEntryIndex }
+                      winner= { entryIndex === winnerEntryIndex }
                       hidden={ card.hidden }/>;
                   });
                 })
@@ -273,13 +273,19 @@ const styles = createStyle({
     position: 'relative',
     backgroundColor: colors.fieldBackground,
 
+    left: '10px',
     height: '100%',
 
     margin: '0',
+    borderTopLeftRadius: '10px',
+    borderBottomLeftRadius: '10px',
+    borderRadius: 'calc(10px + 1.5vw) 0 0 calc(10px + 1.5vw)',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      width: '100%'
+      left: '0',
+      width: '100%',
+      borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0'
     },
 
     '::-webkit-scrollbar':
