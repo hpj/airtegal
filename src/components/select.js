@@ -234,9 +234,7 @@ const styles = createStyle({
     transition: 'all 0.15s',
     
     userSelect: 'none',
-
-    border: `${colors.blackText} 1px solid`,
-    borderRadius: '4px',
+    borderRadius: '5px',
 
     '[shown="true"]': {
       color: colors.whiteText,
@@ -305,8 +303,8 @@ const styles = createStyle({
     width: '100%',
     height: 'auto',
 
-    border: `${colors.blackText} 1px solid`,
-    borderRadius: '4px',
+    border: `${colors.blackText} 2px solid`,
+    borderRadius: '5px',
 
     margin: '8px 0',
     padding: '8px 0',

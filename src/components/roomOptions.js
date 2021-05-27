@@ -2,6 +2,8 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import CheckIcon from 'mdi-react/CheckIcon';
+
 import autoSize from 'autosize-input';
 
 import { StoreComponent } from '../store.js';
@@ -16,7 +18,7 @@ import AutoSizeInput from '../components/autoSizeInput.js';
 
 import MatchReport from './matchReport.js';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
@@ -269,7 +271,9 @@ class RoomOptions extends StoreComponent
             className={ styles.checkbox }
             ticked={ (dirtyOptions.endCondition === 'limited').toString() }
             onClick={ () => this.onEndCondChange('limited') }
-          />
+          >
+            <CheckIcon className={ styles.mark }/>
+          </div>
 
           <div>{ i18n('max-rounds-1') }</div>
 
@@ -304,7 +308,9 @@ class RoomOptions extends StoreComponent
             className={ styles.checkbox }
             ticked={ (dirtyOptions.endCondition === 'timer').toString() }
             onClick={ () => this.onEndCondChange('timer') }
-          />
+          >
+            <CheckIcon className={ styles.mark }/>
+          </div>
 
           <div>{ i18n('max-time-1') }</div>
 
@@ -646,7 +652,6 @@ const styles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
     
-    border: `1px ${colors.blackText} solid`,
     borderRadius: '5px',
 
     ':hover': {
@@ -660,20 +665,14 @@ const styles = createStyle({
 
     '[allowed="false"]': {
       pointerEvents: 'none',
-
       color: colors.greyText,
-      backgroundColor: colors.whiteBackground,
-      
-      border: `1px ${colors.greyText} solid`
+      backgroundColor: colors.whiteBackground
     },
 
     '[allowed="true"][valid="false"]': {
       pointerEvents: 'none',
-
       color: colors.whiteText,
-      backgroundColor: colors.red,
-      
-      border: `1px ${colors.red} solid`
+      backgroundColor: colors.red
     }
   },
 
@@ -717,34 +716,27 @@ const styles = createStyle({
 
   checkbox: {
     display: 'flex',
-
     alignItems: 'center',
     justifyContent: 'center',
+
+    backgroundColor: opacity(colors.greyText, 0.25),
 
     width: '20px',
     height: '20px',
 
-    borderRadius: '5px',
-    border: `2px solid ${colors.blackText}`,
-
+    borderRadius: '3px',
     margin: '0 10px',
 
-    ':after':
+    '[ticked="false"] > svg':
     {
-      display: 'block',
-      content: '""',
-
-      width: '10px',
-      height: '10px',
-
-      backgroundColor: colors.blackText,
-      borderRadius: '10px'
-    },
-
-    '[ticked="false"]:after':
-    {
-      display: 'none'
+      opacity: 0
     }
+  },
+
+  mark: {
+    width: '16px',
+    height: '16px',
+    color: colors.blackText
   },
 
   select: {

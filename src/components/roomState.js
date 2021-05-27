@@ -217,8 +217,8 @@ class RoomState extends StoreComponent
               <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
 
               {
-                navigator.share ? <ShareIcon icon={ 'true' } className={ styles.id } onClick={ this.shareRoomURL }/> :
-                  this.state.clipboard ? <CopyIcon icon={ 'true' } className={ styles.id } onClick={ this.copyRoomURL }/> :
+                navigator.share ? <ShareIcon className={ styles.icon } onClick={ this.shareRoomURL }/> :
+                  this.state.clipboard ? <CopyIcon className={ styles.icon } onClick={ this.copyRoomURL }/> :
                   // just show the room's id
                     <div className={ styles.id }>{ this.state.roomData?.id }</div>
               }
@@ -291,10 +291,20 @@ const styles = createStyle({
       cursor: 'pointer',
       fill: colors.blackText,
       
-      width: 'calc(14px + 0.4vw + 0.4vh)',
-      height: 'calc(14px + 0.4vw + 0.4vh)',
+      width: 'calc(12px + 0.35vw + 0.35vh)',
+      height: 'calc(12px + 0.35vw + 0.35vh)',
       borderBottom: '0'
     }
+  },
+
+  icon: {
+    extend: 'id',
+    cursor: 'pointer',
+    fill: colors.blackText,
+    
+    width: 'calc(12px + 0.35vw + 0.35vh)',
+    height: 'calc(12px + 0.35vw + 0.35vh)',
+    borderBottom: '0'
   },
 
   counter: {
