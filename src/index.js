@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import { createBrowserHistory } from 'history';
-
 import * as Sentry from '@sentry/react';
 import * as Tracing from '@sentry/tracing';
 
@@ -30,8 +28,6 @@ export let country = '';
 let visibleLoading = true;
 let keepLoading = false;
 
-const history = createBrowserHistory();
-
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
@@ -43,7 +39,7 @@ export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPo
 function loaded()
 {
   const pages =
-    <Router history={ history }>
+    <Router>
       <Switch>
         <Route exact path={ '/' }>
           <Homepage/>
@@ -125,7 +121,7 @@ else if (process.env.NODE_ENV === 'production')
     dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
     integrations: [
       new Tracing.Integrations.BrowserTracing({
-        routingInstrumentation: Sentry.reactRouterV5Instrumentation(history)
+        routingInstrumentation: Sentry.reactRouterV5Instrumentation()
       })
     ],
     tracesSampleRate: 0.65
