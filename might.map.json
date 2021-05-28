@@ -787,11 +787,11 @@
       ]
     },
     {
-      "title": "Match Report",
+      "title": "Match Highlights",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&share&report=Test,Test|Test,Test,Test|Test,Test,Test"
+          "value": "/play?quiet&create&share&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
         },
         {
           "action": "wait",
@@ -838,7 +838,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&share&report=Test,Test|Test,Test,Test|Test,Test,Test"
+          "value": "/play?quiet&create&share&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
         },
         {
           "action": "wait",
@@ -846,7 +846,7 @@
         },
         {
           "action": "wait",
-          "value": 2
+          "value": 3
         }
       ]
     }

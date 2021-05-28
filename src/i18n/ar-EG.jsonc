@@ -92,6 +92,7 @@
 
   // room options
   
+  "match-highlights": "مقتطفات",
   "changes-not-applied": "*في تغييرات لسه متطبقتش",
 
   // "room-edited": "تم تعديل اعدادت الروم.",
@@ -168,8 +169,6 @@
   "share-copied-to-clipboard": "تم نسخ اللينك لجهازك!",
 
   "close": "الغاء",
-
-  // match reports
 
   "limited:match-ended": "انتهت الجولات! %0",
   "timer:match-ended": "انتهي الوقت! %0",

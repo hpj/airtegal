@@ -16,7 +16,7 @@ import Select from './select.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
-import MatchReport from './matchReport.js';
+import MatchHighlight from './matchHighlights';
 
 import getTheme, { opacity } from '../colors.js';
 
@@ -480,7 +480,7 @@ class RoomOptions extends StoreComponent
             this.props.children
           }
 
-          <MatchReport/>
+          <MatchHighlight/>
 
           {
             (!options) ? <div/> :
@@ -679,7 +679,6 @@ const styles = createStyle({
   dirty: {
     textAlign: 'center',
     fontStyle: 'italic',
-    
     padding: '10px'
   },
 
@@ -704,21 +703,16 @@ const styles = createStyle({
 
     '[master="false"] > div': {
       pointerEvents: 'none'
-    },
-
-    '[master="false"] > div:after': {
-      width: '20px',
-      height: '20px',
-
-      borderRadius: 0
     }
   },
 
   checkbox: {
     display: 'flex',
+    cursor: 'pointer',
     alignItems: 'center',
     justifyContent: 'center',
 
+    color: colors.blackText,
     backgroundColor: opacity(colors.greyText, 0.25),
 
     width: '20px',
@@ -726,6 +720,15 @@ const styles = createStyle({
 
     borderRadius: '3px',
     margin: '0 10px',
+
+    ':hover':
+    {
+      backgroundColor: colors.blackBackground,
+
+      '> svg': {
+        color: colors.whiteText
+      }
+    },
 
     '[ticked="false"] > svg':
     {

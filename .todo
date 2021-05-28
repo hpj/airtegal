@@ -1,20 +1,28 @@
 Performance Issues and Bugs:
   ☐ re-add notification when options change in lobby
   
-  ☐ hands grid animations freezes if if triggered while the page is blurred
-  
   ☐ fix some of the issues of on firefox
 
 Testing:
   ☐ test if the app reloads automatically if it lost connection while in the background
     - an issue that's more common on mobile devices
 
+  ☐ options overlay
+
   Might:
-    ☐ options overlay
+    ☐ using -t alone open a interactive dropdown menu to target a lonely test to run
+
+    ☐ read the console for any error before comparing the screenshots
 
 UI/UX:
   ☐ add a discord popup when detects discord for the first time
+
+  ☐ new hand overlay - get rid of the 3rd party css grid animation library
+    ☐ landscape
+    ☐ portrait
+  
   ☐ animations for cards appearing and disappearing from field
+    - without the css grid
 
 Homepage:
 

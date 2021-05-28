@@ -47,7 +47,7 @@ export function shareEntry(black, white)
       title: 'Airtegal',
       text: i18n('hashtag-airtegal'),
       url: shareURL
-    }).catch(e => e);
+    }).catch(console.warn);
   }
   else
   {

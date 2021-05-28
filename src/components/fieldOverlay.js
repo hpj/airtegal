@@ -2,6 +2,8 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import { createStyle } from 'flcss';
+
 import { StoreComponent } from '../store.js';
 
 import { socket } from '../screens/game.js';
@@ -10,7 +12,7 @@ import getTheme from '../colors.js';
 
 import { locale } from '../i18n.js';
 
-import { createStyle } from 'flcss';
+import { fillTheBlanks } from '../utils.js';
 
 import Interactable from './Interactable.js';
 
@@ -98,13 +100,13 @@ class FieldOverlay extends StoreComponent
       {
         // send the entry to match report
 
-        const entries = [ ...this.state.entries ];
+        const { entries } = this.state.entries;
 
-        entries.push([
-          this.state.field[0].cards[0],
+        entries.push(fillTheBlanks(
+          this.state.field[0].cards[0].content,
           // eslint-disable-next-line security/detect-object-injection
-          ...this.state.field[index].cards
-        ]);
+          this.state.field[index].cards.map(c => c.content)
+        ));
   
         this.store.set({
           entries

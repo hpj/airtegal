@@ -176,10 +176,7 @@ class RoomState extends StoreComponent
       title: 'Share Room URL',
       text: i18n('join-me'),
       url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`
-    }).catch(() =>
-    {
-      //
-    });
+    }).catch(console.warn);
   }
 
   // istanbul ignore next

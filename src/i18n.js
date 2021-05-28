@@ -5,7 +5,7 @@ export const locales = [
     language: 'ar',
     locale: 'ar-EG',
     direction: 'rtl',
-    blank: /[^\u0621-\u064A0-9 /؟_\-.]/g,
+    blank: /[^\u0621-\u064A0-9 /!؟_\-.]/g,
     json: require('./i18n/ar-EG.jsonc').default
   }
 ];

@@ -14,6 +14,8 @@ import Warning from '../components/warning.js';
 
 import i18n, { locale } from '../i18n.js';
 
+import { fillTheBlanks } from '../utils.js';
+
 const colors = getTheme();
 
 class Homepage extends React.Component
@@ -39,23 +41,9 @@ class Homepage extends React.Component
     // disable any dragging functionality in the app
     window.addEventListener('dragstart', this.disableDrag);
 
-    // /**
-    // * @type { { card: { content: string }, combos: { content: string }[] }[] }
-    // */
-    // const data = i18n('combos');
-
-    i18n('combos').forEach(({ card, combos }) =>
-    {
-      let i = 0;
-
-      let text = card.content
-        .replace(/_.+?(?=[^_]|$)/g, () => `\n${combos[i++].content}\n`);
-
-      if (text === card.content)
-        text = `${text} \n${combos.map(c => c.content).join(' ')}\n.`;
-
-      this.state.data.push(text.replace(' .', '.'));
-    });
+    i18n('combos')
+      .forEach(({ card, combos }) =>
+        this.state.data.push(fillTheBlanks(card.content, combos.map(c => c.content))));
 
     const index = this.randomIndex(this.state.data.length, -1);
     
@@ -93,9 +81,9 @@ class Homepage extends React.Component
   {
     const { data, index } = this.state;
 
-    this.setState({
-      index: this.randomIndex(data.length, index)
-    });
+    // this.setState({
+    //   index: this.randomIndex(data.length, index)
+    // });
   }
 
   render()
@@ -122,12 +110,10 @@ class Homepage extends React.Component
 
           <span className={ styles.main } key={ +new Date() }>
             {
-              data?.[this.state.index]?.split('\n').map((t, i) =>
-              {
-                return <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
+              data?.[this.state.index]?.split('\n')
+                .map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
                   { t }
-                </span>;
-              })
+                </span>)
             }
           </span>
 
@@ -200,6 +186,8 @@ const styles = createStyle({
 
     animation: backgroundAnimation,
     background: 'linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)',
+
+    backgroundPosition: '0% 50%',
     backgroundSize: '400% 400%',
 
     width: '100wh',
@@ -266,7 +254,7 @@ const styles = createStyle({
     color: colors.whiteText,
     animation: playAnimation,
     
-    right: '25%',
+    right: '26.5%',
     bottom: '-50%',
     width: 'calc(11px + 0.25vw + 0.25vh)',
     height: 'calc(11px + 0.25vw + 0.25vh)'
@@ -278,7 +266,7 @@ const styles = createStyle({
     fontSize: 'calc(16px + 0.25vw + 0.25vh)',
 
     padding: '0',
-    margin: '0 auto 5vh auto'
+    margin: '3.5vh auto 2.5vh auto'
   },
 
   hpj: {
