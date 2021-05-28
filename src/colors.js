@@ -18,6 +18,7 @@ export default function()
   const lightTheme = {
     theme: 'light',
     
+    error: '#ad1818',
     holder: '#000000',
 
     whiteText: '#ffffff',
@@ -56,10 +57,6 @@ export default function()
    
     playButtonGradient: [ '#ff71e7', '#ff092d' ],
    
-    client: '#000000',
-    master: '#f200f5',
-    turn: '#00aeff',
-
     blackCardBackground: '#000000',
     blackCardForeground: '#ffffff',
     blackCardHover: '#484848',
@@ -69,14 +66,12 @@ export default function()
     whiteCardHover: '#000000',
     
     entryLine: '#000000',
-
     winner: '#d4af37',
 
     shareBackground: '#C4C4C4',
     shareUrlBackground: '#dcdcdc',
 
     red: 'red',
-    error: '#ad1818',
     transparent: 'transparent'
   };
 

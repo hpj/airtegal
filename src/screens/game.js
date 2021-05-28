@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
 import OptionsIcon from 'mdi-react/CogIcon';
+import DiscordIcon from 'mdi-react/DiscordIcon';
 
 import { io } from 'socket.io-client';
 
@@ -27,6 +28,8 @@ import RoomOverlay from '../components/roomOverlay.js';
 import OptionsOverlay from '../components/optionsOverlay.js';
 
 import i18n, { locale } from '../i18n.js';
+
+import { detectDiscord } from '../utils.js';
 
 import { getStore } from '../store.js';
 
@@ -116,6 +119,8 @@ class Game extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
+      detectDiscord: false,
+
       // load user preference or use default
       username: localStorage.getItem('username') || stupidNames(),
 
@@ -146,8 +151,12 @@ class Game extends React.Component
       .then(() =>
       {
         this.requestRooms();
-
+        
         hideLoadingScreen();
+        
+        detectDiscord(() => this.setState({
+          detectDiscord: true
+        }));
       })
       .catch((err) =>
       {
@@ -155,6 +164,52 @@ class Game extends React.Component
 
         console.error(err);
       });
+  }
+
+  componentDidMount()
+  {
+    // auto-size the username input-box
+    this.resize();
+
+    // auto-size the username input-box on resize
+    window.addEventListener('resize', this.resize);
+
+    // disable any dragging functionality in the app
+    window.addEventListener('dragstart', this.disableDrag);
+
+    // detect when the app goes in and out of focus
+    document.addEventListener('visibilitychange', this.visibilityChange);
+
+    // process url parameters
+
+    const params = new URL(document.URL).searchParams;
+    
+    // join room
+    if (params?.has('join'))
+      overlayRef.current.joinRoom(params.get('join'));
+    // create room
+    else if (params?.has('create'))
+      overlayRef.current.createRoom();
+
+    if (params?.has('discord'))
+      this.setState({ detectDiscord: true });
+
+    navigator.permissions?.query({ name: 'clipboard-write' })
+      .then(({ state }) =>
+      {
+        if (state !== 'granted' || !navigator.clipboard)
+          return;
+        
+        getStore().set({
+          clipboard: true
+        });
+      });
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener('resize', this.resize);
+    window.removeEventListener('dragstart', this.disableDrag);
   }
 
   /**
@@ -246,49 +301,6 @@ class Game extends React.Component
       });
   }
 
-  componentDidMount()
-  {
-    // auto-size the username input-box
-    this.resize();
-
-    // auto-size the username input-box on resize
-    window.addEventListener('resize', this.resize);
-
-    // disable any dragging functionality in the app
-    window.addEventListener('dragstart', this.disableDrag);
-
-    // detect when the app goes in and out of focus
-    document.addEventListener('visibilitychange', this.visibilityChange);
-
-    // process url parameters
-
-    const params = new URL(document.URL).searchParams;
-    
-    // join room
-    if (params?.has('join'))
-      overlayRef.current.joinRoom(params.get('join'));
-    // create room
-    else if (params?.has('create'))
-      overlayRef.current.createRoom();
-
-    navigator.permissions?.query({ name: 'clipboard-write' })
-      .then(({ state }) =>
-      {
-        if (state !== 'granted' || !navigator.clipboard)
-          return;
-        
-        getStore().set({
-          clipboard: true
-        });
-      });
-  }
-
-  componentWillUnmount()
-  {
-    window.removeEventListener('resize', this.resize);
-    window.removeEventListener('dragstart', this.disableDrag);
-  }
-
   /**
   * @param { UIEvent } e
   */
@@ -369,6 +381,14 @@ class Game extends React.Component
         <div className={ optionsStyles.buttons }>
           <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
           <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
+
+          {
+            this.state.detectDiscord ?
+              <a id={ 'discord-button' } className={ optionsStyles.discord } href={ 'https://herpproject.com/discord' }>
+                { i18n('discord-button') }
+                <DiscordIcon className={ optionsStyles.discordIcon }/>
+              </a> : undefined
+          }
         </div>
 
         <div className={ optionsStyles.title }> { i18n('available-rooms') }</div>
@@ -376,7 +396,6 @@ class Game extends React.Component
         <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
 
         <OptionsIcon className={ optionsStyles.icon } onClick={ () => this.setState({ options: { active: true } }) }/>
-
       </div>;
     };
 
@@ -599,10 +618,8 @@ const optionsStyles = createStyle({
 
   buttons: {
     gridArea: 'buttons',
-    display: 'grid',
-
-    gridTemplateAreas: '". ."',
-    gridColumnGap: '15px'
+    display: 'flex',
+    flexWrap: 'wrap'
   },
 
   button: {
@@ -624,6 +641,16 @@ const optionsStyles = createStyle({
     transform: 'scale(1)',
     transition: 'transform 0.15s, background-color 0.25s, color 0.25s',
 
+    ':nth-child(1)':
+    {
+      margin: '0 0 0 7px'
+    },
+
+    ':nth-child(2)':
+    {
+      margin: '0 7px 0 0'
+    },
+
     ':hover': {
       color: colors.whiteText,
       backgroundColor: colors.blackBackground
@@ -632,6 +659,28 @@ const optionsStyles = createStyle({
     ':active': {
       transform: 'scale(0.95)'
     }
+  },
+
+  discord: {
+    extend: 'button',
+    
+    flexBasis: '100%',
+    textDecoration: 'none',
+
+    margin: '12px 0 0 0',
+
+    ':hover> svg': {
+      color: colors.whiteText
+    }
+  },
+
+  discordIcon: {
+    width: 'calc(12px + 0.35vw + 0.35vh)',
+    height: 'calc(12px + 0.35vw + 0.35vh)',
+    
+    padding: '0 10px',
+    color: colors.blackText,
+    transition: 'color 0.25s'
   },
 
   title: {

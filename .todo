@@ -15,8 +15,6 @@ Testing:
     ☐ read the console for any error before comparing the screenshots
 
 UI/UX:
-  ☐ add a discord popup when detects discord for the first time
-
   ☐ new hand overlay - get rid of the 3rd party css grid animation library
     ☐ landscape
     ☐ portrait

@@ -78,6 +78,19 @@
       ]
     },
     {
+      "title": "Empty Lobby (Discord)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&discord"
+        },
+        {
+          "action": "wait",
+          "value": "#discord-button"
+        }
+      ]
+    },
+    {
       "title": "Room Overlay (Created)",
       "steps": [
         {
