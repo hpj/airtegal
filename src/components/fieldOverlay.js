@@ -100,13 +100,13 @@ class FieldOverlay extends StoreComponent
       {
         // send the entry to match report
 
-        const { entries } = this.state.entries;
+        const { entries } = this.state;
 
-        entries.push(fillTheBlanks(
+        entries.push([
           this.state.field[0].cards[0].content,
           // eslint-disable-next-line security/detect-object-injection
-          this.state.field[index].cards.map(c => c.content)
-        ));
+          ...this.state.field[index].cards.map(c => c.content)
+        ]);
   
         this.store.set({
           entries

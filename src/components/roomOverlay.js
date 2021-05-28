@@ -283,7 +283,6 @@ class RoomOverlay extends StoreComponent
       hand: [],
       picks: [],
       blanks: [],
-      
       entries: [],
 
       matchState: undefined,

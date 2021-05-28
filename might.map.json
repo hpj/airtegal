@@ -87,6 +87,10 @@
         {
           "action": "wait",
           "value": "#discord-button"
+        },
+        {
+          "action": "wait",
+          "value": 2
         }
       ]
     },

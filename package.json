@@ -38,9 +38,9 @@
     "eslint-plugin-security": "^1.4.0",
     "git-revision-webpack-plugin": "^5.0.0",
     "json5-loader": "^4.0.1",
-    "might-cli": "^2.0.1",
-    "might-ui": "^1.1.6",
-    "webpack": "^5.37.1",
+    "might-cli": "^2.1.2",
+    "might-ui": "^1.1.7",
+    "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2"
   }

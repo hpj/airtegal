@@ -9,11 +9,6 @@ Testing:
 
   ☐ options overlay
 
-  Might:
-    ☐ using -t alone open a interactive dropdown menu to target a lonely test to run
-
-    ☐ read the console for any error before comparing the screenshots
-
 UI/UX:
   ☐ new hand overlay - get rid of the 3rd party css grid animation library
     ☐ landscape

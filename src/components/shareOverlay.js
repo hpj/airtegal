@@ -153,6 +153,9 @@ class ShareOverlay extends React.Component
     if (!share)
       share = { active: false };
 
+    if (process.env.NODE_ENV === 'test')
+      share.img = '/assets/card.png';
+
     return (
       <div enabled={ share.active.toString() } className={ styles.wrapper }>
         <div enabled={ share.active.toString() } className={ styles.holder }/>
