@@ -694,7 +694,7 @@ const optionsStyles = createStyle({
     width: 'calc(12px + 0.55vw + 0.55vh)',
     height: 'calc(12px + 0.55vw + 0.55vh)',
 
-    fill: colors.blackText,
+    color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
     cursor: 'pointer',
@@ -702,15 +702,15 @@ const optionsStyles = createStyle({
     borderRadius: '50%',
 
     transform: 'rotateZ(0deg) scale(1)',
-    transition: 'transform 0.25s, background-color 0.25s, fill 0.25s',
+    transition: 'transform 0.25s, background-color 0.25s, color 0.25s',
 
     '[allowed="false"]': {
       pointerEvents: 'none',
-      fill: colors.greyText
+      color: colors.greyText
     },
 
     ':hover': {
-      fill: colors.whiteText,
+      color: colors.whiteText,
       backgroundColor: colors.blackBackground,
 
       transform: 'rotateZ(22deg)'

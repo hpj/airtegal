@@ -1,6 +1,4 @@
 Performance Issues and Bugs:
-  ☐ re-add notification when options change in lobby
-  
   ☐ fix some of the issues of on firefox
 
 Testing:
@@ -10,12 +8,13 @@ Testing:
   ☐ options overlay
 
 UI/UX:
-  ☐ new hand overlay - get rid of the 3rd party css grid animation library
-    ☐ landscape
-    ☐ portrait
+  ☐ new hand overlay
+    - cards are send to the server individually to allow more a fluid style gameplay
+
+    ☐ landscape (uno like stacking)
+    ☐ portrait (expanded in a grid - not a real grid) (double tab to confirm)
   
-  ☐ animations for cards appearing and disappearing from field
-    - without the css grid
+  ☐  get rid of the field css grid
 
 Homepage:
 

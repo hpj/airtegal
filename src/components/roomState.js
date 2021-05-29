@@ -11,7 +11,7 @@ import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import { createStyle } from 'flcss';
 
@@ -288,7 +288,7 @@ const styles = createStyle({
 
     '[icon="true"]': {
       cursor: 'pointer',
-      fill: colors.blackText,
+      color: colors.blackText,
       
       width: 'calc(12px + 0.35vw + 0.35vh)',
       height: 'calc(12px + 0.35vw + 0.35vh)',
@@ -299,11 +299,24 @@ const styles = createStyle({
   icon: {
     extend: 'id',
     cursor: 'pointer',
-    fill: colors.blackText,
+
+    overflow: 'visible',
+    color: colors.blackText,
     
     width: 'calc(12px + 0.35vw + 0.35vh)',
     height: 'calc(12px + 0.35vw + 0.35vh)',
-    borderBottom: '0'
+
+    padding: '8px',
+    borderBottom: '0',
+    borderRadius: '100%',
+
+    ':hover': {
+      backgroundColor: opacity(colors.greyText, 0.25)
+    },
+
+    ':active': {
+      transform: 'scale(0.9)'
+    }
   },
 
   counter: {

@@ -12,8 +12,6 @@ import getTheme from '../colors.js';
 
 import { locale } from '../i18n.js';
 
-import { fillTheBlanks } from '../utils.js';
-
 import Interactable from './Interactable.js';
 
 import Card from './card.js';
@@ -256,7 +254,6 @@ class FieldOverlay extends StoreComponent
 
 FieldOverlay.propTypes = {
   sendMessage: PropTypes.func.isRequired,
-  addNotification: PropTypes.func.isRequired,
   size: PropTypes.object
 };
 

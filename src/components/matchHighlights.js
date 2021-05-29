@@ -130,7 +130,7 @@ const styles = createStyle({
     opacity: 0,
     position: 'relative',
     color: colors.whiteText,
-    background: opacity(colors.greyText, 0.25),
+    backgroundColor: opacity(colors.greyText, 0.25),
 
     top: '10px',
     left: '-10px',

@@ -446,25 +446,19 @@ class RoomOverlay extends StoreComponent
           </div>
 
           <div className={ styles.container }>
-
             <RoomState addNotification={ this.addNotification }/>
+            <RoomTrackBar/>
 
-            {/* this instance of trackBar is always enabled on
-              non-touch screens or on touch screens in landscape mode */}
-            <RoomTrackBar enabled={ (size.width >= 1080).toString() }/>
-
-            <HandOverlay sendMessage={ sendMessage } size={ size } />
+            <HandOverlay sendMessage={ sendMessage } size={ size }/>
 
             <div className={ styles.content }>
-              <FieldOverlay sendMessage={ sendMessage } addNotification={ this.addNotification } size={ size }/>
-                
-              <RoomOptions ref={ optionsRef } sendMessage={ sendMessage }/>
+              <FieldOverlay sendMessage={ sendMessage } size={ size }/>
+              <RoomOptions ref={ optionsRef } sendMessage={ sendMessage } addNotification={ this.addNotification }/>
             </div>
           </div>
 
         </div>
       </Interactable>
-
     </div>;
   }
 }

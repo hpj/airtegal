@@ -258,8 +258,7 @@ class HandOverlay extends StoreComponent
 
           style={ {
             zIndex: 4,
-            display: (this.state.handHidden) ? 'none' : '',
-
+            display: this.state.handHidden ? 'none' : '',
             width: '100%'
           } }
 

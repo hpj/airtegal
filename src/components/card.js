@@ -5,12 +5,6 @@ import PropTypes from 'prop-types';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
-// import ArrowUpIcon from 'mdi-react/ArrowUpIcon';
-// import ArrowDownIcon from 'mdi-react/ArrowDownIcon';
-
-// import ArrowLeftIcon from 'mdi-react/ArrowLeftIcon';
-// import ArrowRightIcon from 'mdi-react/ArrowRightIcon';
-
 import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
@@ -89,18 +83,10 @@ class Card extends React.Component
           allowed={ allowed }
           winner={ winner.toString() }
         >
-          {/* {
-            (arrow?.includes('up')) ?
-              <div className={ styles.upArrow }>
-                <ArrowUpIcon className={ styles.arrowIcon }/>
-              </div> : undefined
-          } */}
-
           {
             (arrow?.includes('down')) ?
               <div className={ styles.downArrow }>
                 <div className={ styles.vLine }/>
-                {/* <ArrowDownIcon className={ styles.arrowIcon }/> */}
               </div> : undefined
           }
 
@@ -108,7 +94,6 @@ class Card extends React.Component
             (arrow?.includes('left')) ?
               <div className={ styles.leftArrow }>
                 <div className={ styles.hLine }/>
-                {/* <ArrowLeftIcon className={ styles.arrowIcon }/> */}
               </div> : undefined
           }
 
@@ -116,7 +101,6 @@ class Card extends React.Component
             (arrow?.includes('right')) ?
               <div className={ styles.rightArrow }>
                 <div className={ styles.hLine }/>
-                {/* <ArrowRightIcon className={ styles.arrowIcon }/> */}
               </div> : undefined
           }
 
@@ -266,15 +250,6 @@ const styles = createStyle({
       color: colors.whiteCardForeground,
       backgroundColor: colors.whiteCardBackground
     }
-  },
-
-  arrowIcon: {
-    fill: colors.whiteCardBackground,
-
-    width: '18px',
-    height: '18px',
-
-    margin: '10px'
   },
 
   vLine: {
@@ -447,7 +422,7 @@ const styles = createStyle({
 
   share: {
     cursor: 'pointer',
-    fill: colors.whiteCardForeground,
+    color: colors.whiteCardForeground,
 
     width: 'calc(14px + 0.3vw + 0.3vh)',
     height: 'calc(14px + 0.3vw + 0.3vh)',

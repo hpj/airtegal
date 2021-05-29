@@ -77,8 +77,13 @@ class RoomOptions extends StoreComponent
     if (!roomData)
       return;
 
+    const master = roomData.master === socket.id;
+
     // if dirty options is undefined
-    if (!this.state.dirtyOptions)
+    if (master && !this.state.dirtyOptions)
+      state.dirtyOptions = roomData.options;
+      
+    if (!master)
       state.dirtyOptions = roomData.options;
 
     return state;
@@ -90,12 +95,17 @@ class RoomOptions extends StoreComponent
   */
   stateDidChange(state, old)
   {
+    const master = state.roomData.master === socket.id;
+
     if (JSON.stringify(state.dirtyOptions) !== JSON.stringify(old.dirtyOptions))
     {
       // force all inputs to auto resize
       const inputs = document.querySelectorAll('#room-options-input');
 
       inputs.forEach(e => autoSize(e));
+
+      if (!master && state.dirtyOptions && old.dirtyOptions)
+        this.props.addNotification?.(i18n('room-edited'));
     }
   }
 
@@ -237,7 +247,7 @@ class RoomOptions extends StoreComponent
         <div className={ styles.title }>{ i18n('game-mode') }</div>
 
         {
-          (isMaster) ?
+          isMaster ?
             <Select
               id={ 'room-options-select-game-mode' }
 
@@ -252,7 +262,7 @@ class RoomOptions extends StoreComponent
 
               onChange={ (mode) => this.onGameModeChange(mode) }
             /> :
-            <div className={ styles.field }>{ i18n(dirtyOptions.gameMode) }</div>
+            <div className={ styles.gameMode }>{ i18n(dirtyOptions.gameMode) }</div>
         }
         
       </div>;
@@ -535,7 +545,8 @@ RoomOptions.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node ]),
-  sendMessage: PropTypes.func.isRequired
+  sendMessage: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired
 };
 
 const styles = createStyle({
@@ -743,7 +754,7 @@ const styles = createStyle({
   },
 
   select: {
-    margin: '0 25px 8px 25px'
+    margin: '0 15px 8px'
   },
 
   selectDirty: {
@@ -797,6 +808,11 @@ const styles = createStyle({
     '[visible="false"]': {
       display: 'none'
     }
+  },
+
+  gameMode: {
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+    margin: '0 25px 8px 25px'
   },
 
   choice: {
