@@ -311,7 +311,8 @@ const styles = createStyle({
     borderRadius: '100%',
 
     ':hover': {
-      backgroundColor: opacity(colors.greyText, 0.25)
+      color: colors.whiteText,
+      backgroundColor: colors.blackBackground
     },
 
     ':active': {

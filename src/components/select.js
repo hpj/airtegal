@@ -237,8 +237,10 @@ const styles = createStyle({
     borderRadius: '5px',
 
     '[shown="true"]': {
+      // color: colors.whiteText,
+      // backgroundColor: colors.greyText,
       color: colors.whiteText,
-      backgroundColor: colors.greyText,
+      backgroundColor: colors.blackBackground,
       border: 0
     }
   },
