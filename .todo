@@ -2,19 +2,14 @@ Performance Issues and Bugs:
   ☐ fix some of the issues of on firefox
 
 Testing:
-  ☐ test if the app reloads automatically if it lost connection while in the background
-    - an issue that's more common on mobile devices
+  - test if the app reloads automatically if it lost connection while in the background
+  - an issue that's more common on mobile devices
 
   ☐ options overlay
 
 UI/UX:
-  ☐ new hand overlay
-    - cards are send to the server individually to allow more a fluid style gameplay
-
-    ☐ landscape (uno like stacking)
-    ☐ portrait (expanded in a grid - not a real grid) (double tab to confirm)
-  
-  ☐  get rid of the field css grid
+  ☐ hover colors are inconsistent in room options
+  - also the lobby buttons are inconsistent with the room options buttons
 
 Homepage:
 

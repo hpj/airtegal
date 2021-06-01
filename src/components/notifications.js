@@ -18,7 +18,7 @@ const Notifications = ({ notifications }) =>
       {
         return <div
           key={ i }
-          className={ styles.notification }
+          className={ `${styles.notification } game-notification` }
           onClick={ item.remove }
         >
           { item.content }

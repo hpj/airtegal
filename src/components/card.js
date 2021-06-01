@@ -19,19 +19,26 @@ class Card extends React.Component
   {
     super();
 
+    this.focused = false;
+
+    this.state = {
+      content: undefined
+    };
+
+    /**
+    * @type { React.RefObject<HTMLTextAreaElement>}
+    */
     this.textareaRef = createRef();
   }
+
   componentDidMount()
   {
-    // workaround: text area not resizing when card first appears on field
-
-    setTimeout(() => this.resize(), 10);
-    setTimeout(() => this.resize(), 250);
-    setTimeout(() => this.resize(), 500);
-
-    // bind functions that are use as callbacks
-
     this.resize = this.resize.bind(this);
+        
+    // workaround: text area not resizing when card first appears on field
+    setTimeout(this.resize, 10);
+    setTimeout(this.resize, 250);
+    setTimeout(this.resize, 500);
 
     window.addEventListener('resize', this.resize);
   }
@@ -43,149 +50,132 @@ class Card extends React.Component
 
   resize()
   {
-    const el = this.textareaRef.current;
+    const textarea = this.textareaRef.current;
 
-    if (!el)
+    if (!textarea)
       return;
-                  
-    el.style.height = '0';
-    el.style.overflowY = 'hidden';
 
-    el.style.height = `${el.scrollHeight}px`;
-    el.style.overflowY = 'auto';
+    textarea.style.height = '0';
+    textarea.style.overflowY = 'hidden';
+
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.style.overflowY = 'auto';
+  }
+
+  onChange(e)
+  {
+    this.setState({
+      content: e.target.value.replace(locale.blank, '').replace(/\s+/g, ' ')
+    }, () => this.resize());
   }
 
   render()
   {
     const {
-      self, owner, arrow,
-      content, style, blank,
-      type, disabled, allowed, picked,
-      onClick, onChange, shareEntry
+      content,
+      style, self,
+      owner, blank,
+      type, allowed,
+      share, onClick
     } = this.props;
 
-    let {
-      hidden, winner
-    } = this.props;
+    const input = this.state.content;
 
-    hidden = hidden || false;
-    winner = winner || false;
+    let { hidden, winner  } = this.props;
 
-    return (
+    hidden = hidden ?? false;
+    winner = winner ?? false;
+
+    return <div className={ styles.wrapper } style={ style }>
       <div
-        className={ styles.wrapper }
-        style={ { ...style, display: (disabled) ? 'none' : '' } }
+        type={ type }
+        allowed={ (allowed && !hidden)?.toString() ?? 'false' }
+        winner={ winner.toString() }
+        className={ styles.container }
+        onClick={ e =>
+        {
+          e.preventDefault();
+          e.stopPropagation();
+
+          onClick(this);
+        } }
       >
-        <div
-          className={ styles.container }
-          type={ type }
-          onClick={ onClick }
-          allowed={ allowed }
-          winner={ winner.toString() }
-        >
-          {
-            (arrow?.includes('down')) ?
-              <div className={ styles.downArrow }>
-                <div className={ styles.vLine }/>
-              </div> : undefined
-          }
+        {
+          hidden ? <div className={ styles.hidden } type={ type }>
+            <div>{ i18n('airtegal-cards') }</div>
+          </div> : undefined
+        }
 
-          {
-            (arrow?.includes('left')) ?
-              <div className={ styles.leftArrow }>
-                <div className={ styles.hLine }/>
-              </div> : undefined
-          }
+        {
+          !hidden ? <div className={ styles.card } type={ type }>
+            <textarea
+              ref={ this.textareaRef }
+              className={ blank ? styles.input : styles.content }
 
-          {
-            (arrow?.includes('right')) ?
-              <div className={ styles.rightArrow }>
-                <div className={ styles.hLine }/>
-              </div> : undefined
-          }
+              value={ input ?? content }
 
-          {
-            (hidden)
-              ?
-              <div className={ styles.hidden } type={ type }>
-                <div>{ i18n('airtegal-cards') }</div>
-              </div>
-              :
-              <div
-                className={ styles.card }
-                type={ type }
-              >
-                <textarea
-                  ref={ this.textareaRef }
-                  disabled={ (!blank || !picked) }
-                  className={ (blank && picked) ? styles.input : styles.content }
+              maxLength={ 105 }
+              placeholder={ blank ? i18n('blank') : undefined }
 
-                  maxLength={ 105 }
+              onClick={ e =>
+              {
+                e.preventDefault();
+                e.stopPropagation();
 
-                  value={ content }
-                  placeholder={ (blank) ? i18n('blank') : undefined }
-                  onChange={ (e) =>
-                  {
-                    this.resize();
+                onClick(this);
+                
+                this.focused = true;
+              } }
 
-                    if (onChange)
-                      onChange(e);
-                  } }
-                />
-    
-              </div>
-          }
+              onFocus={ () => this.focused = true }
+              onBlur={ () => this.focused = false }
 
-          <div hide={ (hidden && type === 'white') ? 'true' : 'false' } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((!self && !owner) || type === 'black').toString() } className={ styles.bottom }>
-            {
-              (blank) ? i18n('airtegal-blank') : i18n('airtegal-cards')
-            }
-          </div>
+              onChange={ e =>
+              {
+                this.resize();
+                this.onChange(e);
+              } }
+            />
+          </div> : undefined
+        }
 
-          <div enabled={ ((self === true || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
-            {
-              self ? i18n('this-card-is-yours') : owner
-            }
+        <div hide={ (hidden && type === 'white') ? 'true' : 'false' } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((!self && !owner) || type === 'black').toString() } className={ styles.bottom }>
+          { blank ? i18n('airtegal-blank') : i18n('airtegal-cards') }
+        </div>
 
-            {
-              (shareEntry) ?
-                <ShareIcon className={ styles.share } onClick={ shareEntry }/> :
-                <div/>
-            }
-          </div>
+        <div enabled={ ((self === true || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
+          { self ? i18n('this-card-is-yours') : owner }
+          { share ? <ShareIcon className={ styles.share }/> : undefined }
         </div>
       </div>
-    );
+    </div>;
   }
 }
 
 Card.propTypes = {
+  style: PropTypes.object,
   onClick: PropTypes.func,
-  onChange: PropTypes.func,
-  shareEntry: PropTypes.func,
-  allowed: PropTypes.string,
   self: PropTypes.bool,
   owner: PropTypes.string,
   type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
-  content: PropTypes.string,
-  arrow: PropTypes.string,
   hidden: PropTypes.bool,
+  allowed: PropTypes.bool,
+  blank: PropTypes.bool,
+  content: PropTypes.string,
   winner: PropTypes.bool,
-  picked: PropTypes.bool,
   disabled: PropTypes.bool,
-  style: PropTypes.object,
-  blank: PropTypes.bool
+  share: PropTypes.bool
 };
 
 const hoverAnimation = createAnimation({
   keyframes: {
-    from: {
+    '0%': {
       transform: 'translateY(-10px)'
     },
     '50%': {
       transform: 'translateY(-5px)'
     },
-    to: {
+    '100%': {
       transform: 'translateY(-10px)'
     }
   }
@@ -203,16 +193,20 @@ const styles = createStyle({
   wrapper: {
     zIndex: 2,
     position: 'relative',
-
-    height: 'fit-content'
+    flex: '0 0 calc(115px + 2vw + 2vh)',
+    width: 'calc(115px + 2vw + 2vh)'
   },
 
   container: {
     borderRadius: '10px',
 
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: 700,
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    boxShadow: '0 0 0 0',
+
+    transition: 'box-shadow 0.25s ease',
 
     '[allowed="true"]': {
       cursor: 'pointer'
@@ -220,7 +214,6 @@ const styles = createStyle({
 
     '[allowed="true"]:hover': {
       animationName: `${floatAnimation}, ${hoverAnimation}`,
-
       animationDuration: '.3s, 1.5s',
       animationDelay: '0s, .3s',
       animationTimingFunction: 'ease-out, ease-in-out',
@@ -234,10 +227,12 @@ const styles = createStyle({
     },
 
     '[type="black"][allowed="true"]:hover': {
+      border: `1px solid ${colors.blackCardHover}`,
       boxShadow: `5px 5px 0px 0px ${colors.blackCardHover}`
     },
 
     '[type="white"][allowed="true"]:hover': {
+      border: `1px solid ${colors.whiteCardHover}`,
       boxShadow: `5px 5px 0px 0px ${colors.whiteCardHover}`
     },
 
@@ -252,85 +247,21 @@ const styles = createStyle({
     }
   },
 
-  vLine: {
-    backgroundColor: colors.whiteCardBackground,
-
-    width: '1px',
-    height: '100%'
-  },
-
-  hLine: {
-    backgroundColor: colors.whiteCardBackground,
-
-    width: '100%',
-    height: '1px'
-  },
-
-  // upArrow: {
-  //   display: 'flex',
-  //   position: 'absolute',
-
-  //   justifyContent: 'center',
-
-  //   bottom: '100%',
-  //   width: '100%',
-  //   height: '100%'
-  // },
-
-  downArrow: {
-    display: 'flex',
-    position: 'absolute',
-
-    justifyContent: 'center',
-
-    top: '100%',
-    width: '100%',
-    height: '100%'
-  },
-
-  leftArrow: {
-    display: 'flex',
-    position: 'absolute',
-
-    alignItems: 'center',
-
-    right: '100%',
-    width: '100%',
-    height: '100%'
-  },
-
-  rightArrow: {
-    display: 'flex',
-    position: 'absolute',
-
-    alignItems: 'center',
-
-    left: '100%',
-    width: '100%',
-    height: '100%'
-  },
-
   hidden: {
     display: 'flex',
-
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
 
+    userSelect: 'none',
     fontSize: 'calc(8px + 0.4vw + 0.4vh)',
     direction: locale.direction,
     
     width: '100%',
-    height: '100%',
-
-    userSelect: 'none',
+    minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
+    height: 'auto',
 
     '> div': {
-      position: 'relative',
-
-      top: '15px',
-      width: 'min-content',
-
-      lineHeight: '135%'
+      margin: '25px 0 0 0'
     }
   },
 
@@ -340,12 +271,12 @@ const styles = createStyle({
     gridTemplateColumns: '100%',
     gridTemplateAreas: '"content"',
 
+    userSelect: 'none',
     direction: locale.direction,
   
     width: '100%',
-    height: '100%',
-  
-    userSelect: 'none',
+    minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
+    height: 'auto',
 
     '[type="black"]> textarea': {
       color: colors.blackCardForeground,
@@ -359,16 +290,15 @@ const styles = createStyle({
   },
 
   input: {
-    textAlign: (locale.direction === 'ltr') ? 'left' : 'right',
+    cursor: 'pointer',
+    textAlign: locale.direction === 'ltr' ? 'left' : 'right',
 
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: 700,
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     resize: 'none',
-
-    overflowX: 'hidden',
-    overflowY: 'auto',
+    overflow: 'hidden auto',
 
     margin: '10px',
     minHeight: 'calc(100% - 20px)',
@@ -404,8 +334,7 @@ const styles = createStyle({
     margin: 0,
     padding: '10px 10px 20px 10px',
 
-    transition: 'padding 0.5s',
-    transitionTimingFunction: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)',
+    transition: 'padding 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28)',
 
     '[hide="true"]': {
       color: colors.whiteCardBackground
@@ -421,12 +350,9 @@ const styles = createStyle({
   },
 
   share: {
-    cursor: 'pointer',
     color: colors.whiteCardForeground,
-
     width: 'calc(14px + 0.3vw + 0.3vh)',
     height: 'calc(14px + 0.3vw + 0.3vh)',
-
     margin: '0 auto 0 0'
   }
 });

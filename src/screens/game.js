@@ -188,7 +188,7 @@ class Game extends React.Component
     if (params?.has('join'))
       overlayRef.current.joinRoom(params.get('join'));
     // create room
-    else if (params?.has('create'))
+    else if (params?.has('create') || params?.has('match'))
       overlayRef.current.createRoom();
 
     if (params?.has('discord'))

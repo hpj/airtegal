@@ -95,7 +95,7 @@ class RoomOptions extends StoreComponent
   */
   stateDidChange(state, old)
   {
-    const master = state.roomData.master === socket.id;
+    const master = state.roomData?.master === socket.id;
 
     if (JSON.stringify(state.dirtyOptions) !== JSON.stringify(old.dirtyOptions))
     {

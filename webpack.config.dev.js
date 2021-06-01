@@ -7,19 +7,19 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: [ 'babel-loader' ]
+        test: /\.js$/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'jsx',
+          target: [ 'chrome88', 'firefox86' ]
+        }
       },
       {
-        test: /\.(json|jsonc|json5)$/,
+        test: /\.jsonc$/,
         use: 'json5-loader',
         type: 'javascript/auto'
       }
     ]
-  },
-  resolve: {
-    extensions: [ '*', '.js', '.jsx' ]
   },
   plugins: [
     new DefinePlugin({

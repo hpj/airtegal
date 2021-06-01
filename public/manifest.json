@@ -1,7 +1,7 @@
 {
   "short_name": "Airtegal",
   "name": "Airtegal",
-  "description": "An app about comedy.. I think?..",
+  "description": "An app about comedy or something...",
   "start_url": "/play",
   "display": "standalone",
   "orientation": "portrait",

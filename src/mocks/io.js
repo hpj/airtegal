@@ -219,7 +219,15 @@ function startMatch()
   {
     hand: (params.get('mock') === 'blank') ?
       [ { key: Math.random(), type: 'white', blank: true } ] :
-      [ { key: Math.random(), type: 'white', content: 'Skye\'s Card' } ]
+      [
+        { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
+        { key: Math.random(), type: 'white', blank: true },
+        { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
+        { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
+        { key: Math.random(), type: 'white', blank: true },
+        { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
+        { key: Math.random(), type: 'white', content: 'Skye\'s Card' }
+      ]
   };
 
   room.field = [];
@@ -328,12 +336,13 @@ function startMatch()
   
     matchBroadcast(room);
   
-    matchLogic = (args) =>
+    matchLogic = ({ index }) =>
     {
       room.phase = 'transaction';
       room.playerProperties['skye'].state = 'waiting';
 
-      room.field[args.picks[0].index].highlight = true;
+      // eslint-disable-next-line security/detect-object-injection
+      room.field[index].highlight = true;
       
       matchBroadcast(room);
     };
@@ -385,19 +394,19 @@ function startMatch()
   
     matchBroadcast(room);
   
-    matchLogic = (args) =>
+    matchLogic = ({ index, content }) =>
     {
       room.playerProperties['skye'].state = 'waiting';
+
+      const card = room.playerSecretProperties.hand.splice(index, 1)[0];
+
+      if (card.blank)
+        card.content = content;
   
       room.field.push({
+        id: 'skye',
         key: Math.random(),
-        cards: args.picks.map((card) =>
-        {
-          return {
-            ...card,
-            ...room.playerSecretProperties.hand.splice(card.index, 1)[0]
-          };
-        })
+        cards: [ card ]
       });
       
       matchBroadcast(room);

@@ -131,20 +131,10 @@ class RoomOverlay extends StoreComponent
     const params = new URL(document.URL).searchParams;
 
     // if testing and there's a match parameter then start a mockup match
-    if (process.env.NODE_ENV === 'test')
+    if (process.env.NODE_ENV === 'test' && params.has('notifications'))
     {
-      if (params.has('match'))
-      {
-        this.createRoom();
-  
-        setTimeout(() => optionsRef.current?.matchRequest(), 250);
-      }
-
-      if (params.has('notifications'))
-      {
-        this.addNotification('Test 1');
-        this.addNotification('Test 2');
-      }
+      this.addNotification('Test 1');
+      this.addNotification('Test 2');
     }
   }
 
@@ -164,7 +154,7 @@ class RoomOverlay extends StoreComponent
   onRoomData(roomData)
   {
     // handler is only visible if user is on the match's lobby screen
-    this.handlerVisibility(roomData.state === 'lobby' ? true : false);
+    setTimeout(() => this.handlerVisibility(roomData.state === 'lobby'));
 
     if (roomData.state === 'lobby')
     {
@@ -199,6 +189,8 @@ class RoomOverlay extends StoreComponent
   {
     const { username, sendMessage } = this.props;
 
+    const params = new URL(document.URL).searchParams;
+
     // show a loading indictor
     this.loadingVisibility(true);
 
@@ -206,6 +198,9 @@ class RoomOverlay extends StoreComponent
     {
       // hide the loading indictor
       this.loadingVisibility(false);
+
+      if (params.has('match'))
+        setTimeout(() => optionsRef.current?.matchRequest(), 1500);
 
       // request a screen wake lock
       navigator.wakeLock?.request('screen')

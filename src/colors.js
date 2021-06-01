@@ -65,7 +65,7 @@ export default function()
     whiteCardForeground: '#000000',
     whiteCardHover: '#000000',
     
-    entryLine: '#000000',
+    entryLine: '#ffffff',
     winner: '#d4af37',
 
     shareBackground: '#C4C4C4',
@@ -115,20 +115,17 @@ export default function()
 
     blackCardBackground: '#3c3c3c',
     blackCardForeground: '#e2e1e1',
-    blackCardHover: '#615f5f',
+    blackCardHover: '#060606',
 
     whiteCardBackground: '#989898',
     whiteCardForeground: '#040404',
-    whiteCardHover: '#040404',
+    whiteCardHover: '#696060',
 
     client: '#ffffff',
-
     error: '#710c0c',
-
-    entryLine: '#696060',
-
     red: '#9c0202',
     
+    entryLine: '#696060',
     shareBackground: '#292929',
     shareUrlBackground: '#171717'
   };

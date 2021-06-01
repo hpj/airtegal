@@ -40,11 +40,7 @@ class MatchHighlights extends StoreComponent
         .split('|')
         .map(c => c.split('~'));
 
-      this.setState({ entries }, () =>
-      {
-        if (params.has('share'))
-          setTimeout(() => this.shareEntry(entries[0]), 4000);
-      });
+      this.setState({ entries });
     }
   }
 
@@ -75,7 +71,7 @@ class MatchHighlights extends StoreComponent
       return <div/>;
     
     return (
-      <div className={ styles.container }>
+      <div id={ 'match-highlights' } className={ styles.container }>
         <div className={ styles.title }>{ i18n('match-highlights') }</div>
         {
           this.state.entries.slice(0, 3)

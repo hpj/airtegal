@@ -1,6 +1,8 @@
+const zlib = require('zlib');
+
 const { DefinePlugin } = require('webpack');
 
-const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
 
 const CompressionPlugin = require('compression-webpack-plugin');
 
@@ -13,37 +15,42 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: [ 'babel-loader' ]
+        test: /\.js$/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'jsx',
+          target: [ 'chrome88', 'firefox86' ]
+        }
       },
       {
-        test: /\.(json|jsonc|json5)$/,
+        test: /\.jsonc$/,
         use: 'json5-loader',
         type: 'javascript/auto'
       }
     ]
-  },
-  resolve: {
-    extensions: [ '*', '.js', '.jsx' ]
   },
   plugins: [
     new DefinePlugin({
       'process.env.RELEASE': JSON.stringify(gitRevisionPlugin.commithash())
     }),
     new CompressionPlugin({
-      filename: '[path].gz[query]',
+      filename: '[path][base].gz',
       algorithm: 'gzip',
-      test: /\.js$|\.css$|\.html$/,
+      test: /\.js$/,
       threshold: 10240,
       minRatio: 0.8
     }),
     new CompressionPlugin({
-      filename: '[path].br[query]',
+      filename: '[path][base].br',
       algorithm: 'brotliCompress',
-      test: /\.(js|css|html|svg)$/,
-      compressionOptions: { level: 11 },
+      test: /\.js$/,
+      compressionOptions: {
+        params: {
+          [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+        }
+      },
       threshold: 10240,
+      deleteOriginalAssets: false,
       minRatio: 0.8
     })
   ],

@@ -6,6 +6,7 @@ export const locales = [
     locale: 'ar-EG',
     direction: 'rtl',
     blank: /[^\u0621-\u064A0-9 /!؟_\-.]/g,
+    // eslint-disable-next-line no-undef
     json: require('./i18n/ar-EG.jsonc').default
   }
 ];

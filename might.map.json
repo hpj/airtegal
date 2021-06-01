@@ -8,7 +8,7 @@
           "value": "#homepage"
         },
         {
-          "action": "select",
+          "action": "wait",
           "value": "#warning-button"
         },
         {
@@ -297,313 +297,11 @@
       ]
     },
     {
-      "title": "Picking Phase",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Pick A White Card",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-overlay > div > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Clear Picks",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-overlay > div > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-picks-dialogue-clear"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Confirm Picks",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-overlay > div > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-picks-dialogue-confirm"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Notifications",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&join&notifications"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Hidden Cards",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create&mock=hidden"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Groups of Cards",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create&mock=group"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 3
-        }
-      ]
-    },
-    {
-      "title": "Blank in Hand",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create&mock=blank"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Blank in Hand (Invalid)",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create&mock=blank"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-overlay > div > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Blank No More",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create&mock=blank"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-overlay > div > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-picks-dialogue > div textarea"
-        },
-        {
-          "action": "type",
-          "value": "احا"
-        }
-      ]
-    },
-    {
       "title": "Play A Blank Card",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&mock=blank"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
+          "value": "/play?quiet&match&mock=blank"
         },
         {
           "action": "wait",
@@ -611,19 +309,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-hand-overlay > div > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-picks-dialogue > div textarea"
+          "value": "#kuruit-hand-overlay > div > div > div > textarea"
         },
         {
           "action": "type",
@@ -631,7 +317,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-picks-dialogue-confirm"
+          "value": "#kuruit-hand-overlay > div > div"
         },
         {
           "action": "click",
@@ -676,93 +362,11 @@
       ]
     },
     {
-      "title": "Maximize Hand Overlay",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-handler"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Minimize Hand Overlay",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-handler"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
       "title": "Judging Phase",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&mock=judge"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
+          "value": "/play?quiet&match&mock=judge"
         },
         {
           "action": "wait",
@@ -775,15 +379,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&mock=judge"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-start"
-        },
-        {
-          "action": "click",
-          "value": "left"
+          "value": "/play?quiet&match&mock=judge"
         },
         {
           "action": "wait",
@@ -791,7 +387,7 @@
         },
         {
           "action": "select",
-          "value": "#kuruit-field-overlay > div:nth-child(2) > div"
+          "value": "#kuruit-field-overlay > :nth-child(2) > div"
         },
         {
           "action": "click",
@@ -804,11 +400,87 @@
       ]
     },
     {
-      "title": "Match Highlights",
+      "title": "Share Overlay",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&share&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
+          "value": "/play?quiet&create&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#match-highlights > :nth-child(2)"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Blank No More",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&mock=blank"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-hand-overlay > div > div > div > textarea"
+        },
+        {
+          "action": "type",
+          "value": "احا"
+        }
+      ]
+    },
+    {
+      "title": "Blank in Hand",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&mock=blank"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-hand-overlay > div > div > div > textarea"
+        }
+      ]
+    },
+    {
+      "title": "Groups of Cards",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&mock=group"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Spectating (Match)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&mock=spectator"
         },
         {
           "action": "wait",
@@ -830,11 +502,24 @@
       ]
     },
     {
-      "title": "Spectating (Match)",
+      "title": "Hidden Cards",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&mock=spectator"
+          "value": "/play?quiet&match&mock=hidden"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Picking Phase",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
         },
         {
           "action": "wait",
@@ -851,19 +536,53 @@
       ]
     },
     {
-      "title": "Share Overlay",
+      "title": "Pick A White Card",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&share&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
+          "value": "/play?quiet&match"
         },
         {
           "action": "wait",
           "value": 2
         },
         {
+          "action": "select",
+          "value": "#kuruit-hand-overlay > div > div > div"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        }
+      ]
+    },
+    {
+      "title": "Notifications",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&join&notifications"
+        },
+        {
           "action": "wait",
-          "value": 3
+          "value": ".game-notification"
+        },
+        {
+          "action": "wait",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "title": "Match Highlights",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
+        },
+        {
+          "action": "wait",
+          "value": 2
         }
       ]
     }

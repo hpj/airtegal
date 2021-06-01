@@ -215,8 +215,7 @@ const styles = createStyle({
     width: '100%',
     height: '100%',
 
-    transition: 'opacity 0.25s',
-    transitionTimingFunction: 'ease-in-out',
+    transition: 'opacity 0.25s ease-in-out',
 
     '[enabled="false"]': {
       opacity: 0

@@ -37,6 +37,16 @@ class Interactable extends React.Component
       y: props.initialPosition?.y ?? 0
     };
 
+    this.animating = false;
+    
+    this.lastSnapIndex = 0;
+    
+    this.isMouseDown = false;
+    this.isBeingDragged = false;
+    
+    this.dragDiff = { x: 0, y: 0 };
+    this.lastPoint = { x: 0, y: 0 };
+
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
@@ -58,12 +68,6 @@ class Interactable extends React.Component
     window.removeEventListener('mousemove', this.onMouseMove);
   }
   
-  // the mouse events
-  // only mimic the onTouchStart, onTouchMove and onTouchEnd
-  // and call the dragging events with mocked events
-
-  isMouseDown = false;
-
   /**
   * @param { React.MouseEvent<HTMLDivElement, MouseEvent> } e
   */
@@ -115,16 +119,6 @@ class Interactable extends React.Component
       this.isMouseDown = false;
     }
   }
-
-  // handle snapping and coordinates
-
-  animating = false;
-  
-  isBeingDragged = false;
-
-  dragDiff = { x: 0, y: 0 }
-  
-  lastPoint = { x: 0, y: 0 }
 
   /**
   * @param { React.TouchEvent<HTMLDivElement } e
@@ -240,8 +234,6 @@ class Interactable extends React.Component
     this.snapTo({ index: closetIndex });
   }
 
-  lastSnapIndex = 0;
-
   /**
   * @param { { index: number, point: { x: number, y: number }} } param0
   */
@@ -249,6 +241,7 @@ class Interactable extends React.Component
   {
     const { snapPoints } = this.props;
     
+    // eslint-disable-next-line security/detect-object-injection
     if ((!snapPoints?.[index] && !point) || this.animating)
       return;
     

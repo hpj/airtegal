@@ -87,40 +87,44 @@ class FieldOverlay extends StoreComponent
 
   /** send the card the judge judged to the server's match logic
   * @param { number } index
-  * @param { boolean } isAllowed if the card can be picked
+  * @param { boolean } allowed if the card can be picked
   */
-  judgeCard(index, isAllowed)
+  judgeCard(index, allowed)
   {
+    if (!allowed)
+      return;
+      
     const { sendMessage } = this.props;
+    
+    sendMessage('matchLogic', { index }).then(() =>
+    {
+      // store the entry for the match highlights
 
-    if (isAllowed)
-      sendMessage('matchLogic', { picks: [ { index } ] }).then(() =>
-      {
-        // send the entry to match report
+      const { entries } = this.state;
 
-        const { entries } = this.state;
+      entries.push([
+        this.state.field[0].cards[0].content,
+        // eslint-disable-next-line security/detect-object-injection
+        ...this.state.field[index].cards.map(c => c.content)
+      ]);
 
-        entries.push([
-          this.state.field[0].cards[0].content,
-          // eslint-disable-next-line security/detect-object-injection
-          ...this.state.field[index].cards.map(c => c.content)
-        ]);
-  
-        this.store.set({
-          entries
-        });
-      });
+      this.store.set({ entries });
+    });
   }
 
   /**
   * @param { number } index
+  * @param { boolean } allowed
   */
-  shareEntry(index)
+  shareEntry(index, allowed)
   {
+    if (!allowed)
+      return;
+    
     shareEntry(
       this.state.field[0].cards[0].content,
       // eslint-disable-next-line security/detect-object-injection
-      this.state.field[index].cards.map((card) => card.content));
+      this.state.field[index].cards.map(c => c.content));
   }
 
   render()
@@ -131,25 +135,6 @@ class FieldOverlay extends StoreComponent
 
     const playerState = roomData?.playerProperties[socket.id]?.state;
     
-    const percent = (s, percent) => (s / 100) * percent;
-
-    // TODO this value will break every time field width changes
-    const lineWidth = (size.width < 1080) ? size.width : percent(size.width, 85);
-
-    // TODO this value will break every time card width changes
-    const cardWidth = 115 + 40 + percent(size.width, 2) + percent(size.height, 2);
-
-    let cardsPerLine = 1, cardNo = 0;
-
-    // count how many cards can fit in one line of the field
-    for (;;)
-    {
-      if (cardWidth * (cardsPerLine + 1) < lineWidth)
-        cardsPerLine = cardsPerLine + 1;
-      else
-        break;
-    }
-
     const onMovement = ({ x }) =>
     {
       // hide the overlay and overlay holder when they are off-screen
@@ -166,82 +151,54 @@ class FieldOverlay extends StoreComponent
 
           style={ {
             zIndex: 2,
-            display: (this.state.fieldHidden) ? 'none' : '',
-
             overflow: 'hidden',
+
+            display: this.state.fieldHidden ? 'none' : undefined,
 
             width: '100%',
             height: '100%'
           } }
 
-          horizontalOnly={ true }
-          
           dragEnabled={ false }
+          horizontalOnly={ true }
   
+          onMovement={ onMovement }
           frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
-          initialPosition={ { x: size.width } }
-          
           boundaries={ {
             left: 0,
             right: size.width
           } }
-
           snapPoints={ [ { x: size.width }, { x: 0 } ] }
-
-          onMovement={ onMovement }
+          initialPosition={ { x: size.width } }
         >
           <div className={ styles.wrapper }>
             <div id={ 'kuruit-field-overlay' } className={ styles.container }>
               {
                 this.state.field.map((entry, entryIndex) =>
                 {
-                  const isAllowed =
-                    (playerState === 'judging')
-                    && entryIndex > 0;
+                  const winner = entryIndex === winnerEntryIndex;
+                  const allowed = playerState === 'judging' && entryIndex > 0;
 
-                  return entry.cards.map((card, i) =>
-                  {
-                    let arrow, newLine = false;
-
-                    // using current cardNo and cardsPerLine
-                    // find out if the card starts a new line
-                    // if not increase the cardNo
-                    if (cardNo === cardsPerLine)
-                      cardNo = 1, newLine = true;
-                    else
-                      cardNo = cardNo + 1;
-
-                    // always true but if the card is
-                    // not the last in its entry only
-                    if (cardsPerLine === 1)
+                  return <div className={ styles.entry } key={ entry.key } onClick={ () => this.shareEntry(entryIndex, winner) }>
                     {
-                      if (entry.cards.length > 1 && i !== entry.cards.length - 1)
-                        arrow = 'down';
+                      entry.cards.map((card, cardIndex) =>
+                      {
+                        return <Card
+                          key={ card.key }
+                          type={ card.type }
+                          hidden={ card.hidden }
+                          content={ card.content }
+                          allowed={ allowed }
+                          self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
+                          owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
+                          winner= { winner }
+                          share={ winner && cardIndex === 0 }
+                          onClick={ () => this.judgeCard(entryIndex, allowed) }
+                        />;
+                      })
                     }
-
-                    else if (newLine && entry.cards.length > 1 && i === entry.cards.length - 1)
-                      arrow = 'right';
-    
-                    else if (newLine && entry.cards.length > 1 && i > 0)
-                      arrow = 'right-left';
-                    
-                    else if (entry.cards.length > 1 && i !== entry.cards.length  - 1)
-                      arrow = 'left';
-                    
-                    return <Card
-                      key={ card.key }
-                      arrow={ arrow }
-                      onClick={ () => this.judgeCard(entryIndex, isAllowed) }
-                      shareEntry={ (entryIndex === winnerEntryIndex && i === 0) ? () => this.shareEntry(entryIndex) : undefined }
-                      allowed={ isAllowed.toString() }
-                      self={ roomData?.phase === 'transaction' && entry.id === socket.id && entryIndex > 0 }
-                      owner={ (roomData?.phase === 'transaction' && entryIndex > 0) ? roomData?.playerProperties[entry.id]?.username : undefined }
-                      type={ card.type }
-                      content={ card.content }
-                      winner= { entryIndex === winnerEntryIndex }
-                      hidden={ card.hidden }/>;
-                  });
+                  </div>;
                 })
               }
             </div>
@@ -260,14 +217,12 @@ FieldOverlay.propTypes = {
 const styles = createStyle({
   view: {
     position: 'absolute',
-
     height: '100%',
     width: '100%'
   },
 
   wrapper: {
-    overflowX: 'hidden',
-    overflowY: 'overlay',
+    overflow: 'hidden overlay',
 
     position: 'relative',
     backgroundColor: colors.fieldBackground,
@@ -275,7 +230,6 @@ const styles = createStyle({
     left: '10px',
     height: '100%',
 
-    margin: '0',
     borderTopLeftRadius: '10px',
     borderBottomLeftRadius: '10px',
     borderRadius: 'calc(10px + 1.5vw) 0 0 calc(10px + 1.5vw)',
@@ -289,33 +243,39 @@ const styles = createStyle({
 
     '::-webkit-scrollbar':
     {
-      width: '8px'
+      width: '6px'
     },
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '8px',
-      boxShadow: `inset 0 0 8px 8px ${colors.fieldScrollbar}`
+      borderRadius: '6px',
+      boxShadow: `inset 0 0 6px 6px ${colors.fieldScrollbar}`
     }
   },
 
   container: {
-    display: 'grid',
-
+    display: 'flex',
+    flexWrap: 'wrap',
     direction: locale.direction,
-    
-    gridTemplateColumns: 'repeat(auto-fill, calc(115px + 40px + 2vw + 2vh))',
-    justifyContent: 'space-around',
+    justifyContent: 'center'
+  },
 
-    '> *': {
-      margin: '20px'
+  entry: {
+    position: 'relative',
+    display: 'flex',
+
+    '> div': {
+      margin: '20px 2.5vw'
     },
 
-    '> * > * > [type]': {
-      width: 'calc(115px + 2vw + 2vh)',
-
-      minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
-      height: 'auto'
+    ':after': {
+      content: '""',
+      position: 'absolute',
+      backgroundColor: colors.entryLine,
+      left: '2.5vw',
+      top: 'calc(50% - 1px)',
+      width: 'calc(100% - 5vw)',
+      height: '2px'
     }
   }
 });
