@@ -227,12 +227,10 @@ const styles = createStyle({
     },
 
     '[type="black"][allowed="true"]:hover': {
-      border: `1px solid ${colors.blackCardHover}`,
       boxShadow: `5px 5px 0px 0px ${colors.blackCardHover}`
     },
 
-    '[type="white"][allowed="true"]:hover': {
-      border: `1px solid ${colors.whiteCardHover}`,
+    '[type="white"][allowed="true"][winner="false"]:hover': {
       boxShadow: `5px 5px 0px 0px ${colors.whiteCardHover}`
     },
 

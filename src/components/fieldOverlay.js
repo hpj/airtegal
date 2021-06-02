@@ -114,13 +114,9 @@ class FieldOverlay extends StoreComponent
 
   /**
   * @param { number } index
-  * @param { boolean } allowed
   */
-  shareEntry(index, allowed)
+  shareEntry(index)
   {
-    if (!allowed)
-      return;
-    
     shareEntry(
       this.state.field[0].cards[0].content,
       // eslint-disable-next-line security/detect-object-injection
@@ -180,7 +176,7 @@ class FieldOverlay extends StoreComponent
                   const winner = entryIndex === winnerEntryIndex;
                   const allowed = playerState === 'judging' && entryIndex > 0;
 
-                  return <div className={ styles.entry } key={ entry.key } onClick={ () => this.shareEntry(entryIndex, winner) }>
+                  return <div className={ styles.entry } key={ entry.key }>
                     {
                       entry.cards.map((card, cardIndex) =>
                       {
@@ -189,12 +185,18 @@ class FieldOverlay extends StoreComponent
                           type={ card.type }
                           hidden={ card.hidden }
                           content={ card.content }
-                          allowed={ allowed }
+                          allowed={ allowed || winner }
                           self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
                           winner= { winner }
                           share={ winner && cardIndex === 0 }
-                          onClick={ () => this.judgeCard(entryIndex, allowed) }
+                          onClick={ () =>
+                          {
+                            if (winner)
+                              this.shareEntry(entryIndex);
+                            else
+                              this.judgeCard(entryIndex, allowed);
+                          } }
                         />;
                       })
                     }
