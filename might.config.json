@@ -11,8 +11,8 @@
   "titleBasedScreenshots": true,
   "parallelTests": 5,
   "defaultTimeout": 25000,
-  "tolerance": 2.6,
-  "antialiasingTolerance": 4.8,
+  "tolerance": 2.8,
+  "antialiasingTolerance": 5,
   "coverageExclude": [
     "/node_modules/**",
     "/webpack/**",
