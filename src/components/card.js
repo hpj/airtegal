@@ -102,7 +102,7 @@ class Card extends React.Component
       >
         {
           hidden ? <div className={ styles.hidden } type={ type }>
-            <div>{ i18n('airtegal-cards') }</div>
+            <div>{ i18n('kuruit') }</div>
           </div> : undefined
         }
 
@@ -140,7 +140,7 @@ class Card extends React.Component
         }
 
         <div hide={ (hidden && type === 'white') ? 'true' : 'false' } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((!self && !owner) || type === 'black').toString() } className={ styles.bottom }>
-          { blank ? i18n('airtegal-blank') : i18n('airtegal-cards') }
+          { blank ? i18n('blank') : i18n('kuruit') }
         </div>
 
         <div enabled={ ((self === true || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>

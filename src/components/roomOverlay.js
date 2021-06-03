@@ -57,7 +57,7 @@ export let requestRoomData;
 
 /**
 * @typedef { Object } RoomOptionsT
-* @property { 'king' | 'judge' } gameMode
+* @property { 'kuruit' } gameMode
 * @property { 'limited' | 'timer' } endCondition
 * @property { {
 *    maxPlayers: number,

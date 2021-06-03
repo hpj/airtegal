@@ -2,13 +2,11 @@
   // brands
 
   "airtegal": "ارتجال",
-  "airtegal-cards": "كروت",
   "hpj": "HP.J",
 
   // hand
 
   "blank": "____",
-  "airtegal-blank": "____",
 
   "confirm": "تاكيد",
   "clear": "الغاء",
@@ -101,13 +99,8 @@
   "room-edited": "تم تعديل اعدادت الروم.",
   "game-mode": "الجيم مود",
   
-  "free-for-all": "كروت",
-
-  "judge": "القاضي",
-  "king": "ملك العشوئيات",
-
-  "judge:cover": "القاضي",
-  "king:cover": "ملك العشوئيات!",
+  "kuruit": "كروت",
+  "kuruit:cover": "كروت",
 
   "match-options": "اعدادات الماتش",
   

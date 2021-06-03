@@ -210,22 +210,6 @@
           "value": "left"
         },
         {
-          "action": "select",
-          "value": "#room-options-select-game-mode"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-game-mode-2"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
           "action": "wait",
           "value": 2
         }
@@ -257,22 +241,6 @@
         {
           "action": "select",
           "value": "#room-options-kuruit-timer"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-select-game-mode"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-game-mode-2"
         },
         {
           "action": "click",
@@ -349,9 +317,11 @@
           "value": 2
         },
         {
-          "action": "drag",
+          "action": "swipe",
           "value": [
-            "80v",
+            "0",
+            "0",
+            "85v",
             "0"
           ]
         },

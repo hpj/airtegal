@@ -27,8 +27,7 @@ const colors = getTheme();
 const wrapperRef = createRef();
 
 const gameModes = [
-  { group: i18n('free-for-all'), label: i18n('judge'), value: 'judge' },
-  { label: i18n('king'), value: 'king' }
+  { label: i18n('kuruit'), value: 'kuruit' }
 ];
 
 /**
@@ -270,7 +269,7 @@ class RoomOptions extends StoreComponent
 
     const groupLabel = (label) => <div className={ styles.groupLabel }>{label}</div>;
 
-    const KuruitOptions = (gameMode) =>
+    const KuruitOptions = () =>
     {
       return <div>
         <div className={ styles.title }>{ i18n('match-options') }</div>
@@ -404,7 +403,7 @@ class RoomOptions extends StoreComponent
             <div>{ i18n('round-countdown') }</div>
           </div>
 
-          <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
+          <div className={ styles.field } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
             <AutoSizeInput
               required
               type={ 'number' }
@@ -430,7 +429,7 @@ class RoomOptions extends StoreComponent
             <div>{ i18n('hand-cap') }</div>
           </div>
 
-          <div className={ styles.field } visible={ (gameMode !== 'king').toString() } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
+          <div className={ styles.field } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
 
             <AutoSizeInput
               required
@@ -468,76 +467,66 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
-    const AirtegalOptions = () =>
-    {
-      return <div/>;
-    };
+    return <div ref={ wrapperRef } className={ styles.wrapper }>
 
-    return (
-      <div ref={ wrapperRef } className={ styles.wrapper }>
-
-        <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
-          <div className={ styles.loadingSpinner }></div>
-        </div>
-
-        <div className={ styles.error } style={ { display: (this.state.optionsErrorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
-          <div>{ this.state.optionsErrorMessage }</div>
-        </div>
-
-        <div className={ styles.container } style={ { display: (this.state.optionsLoadingHidden && !this.state.optionsErrorMessage) ? '' : 'none' } }>
-
-          {
-            this.props.children
-          }
-
-          <MatchHighlight/>
-
-          {
-            (!options) ? <div/> :
-              <div>
- 
-                {/* Game Mode Selector */}
-                { GameModes() }
-                
-                {
-                  (
-                    dirtyOptions.gameMode === 'judge' ||
-                    dirtyOptions.gameMode === 'king'
-                  ) ?
-                    KuruitOptions(dirtyOptions.gameMode) : AirtegalOptions()
-                }
-
-                {/* Dirty Changes Notice */}
-
-                <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
-
-                {/* Apply Button */}
-
-                <div
-                  id={ 'room-options-apply' }
-                  className={ styles.button }
-                  master={ isMaster.toString() }
-                  valid={ isValid.toString() }
-                  allowed={ isDirty.toString() }
-                  onClick={ this.editRequest }>
-                  { i18n('apply') }
-                </div>
-
-                {/* Start Button */}
-
-                <div
-                  id={ 'room-options-start' }
-                  className={ styles.button }
-                  master={ isMaster.toString() }
-                  allowed={ isAllowed.toString() }
-                  onClick={ this.matchRequest }>
-                  { i18n('start') }
-                </div>
-              </div>
-          }
-        </div>
+      <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
+        <div className={ styles.loadingSpinner }></div>
       </div>
-    );
+
+      <div className={ styles.error } style={ { display: (this.state.optionsErrorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
+        <div>{ this.state.optionsErrorMessage }</div>
+      </div>
+
+      <div className={ styles.container } style={ { display: (this.state.optionsLoadingHidden && !this.state.optionsErrorMessage) ? '' : 'none' } }>
+
+        {
+          this.props.children
+        }
+
+        <MatchHighlight/>
+
+        {
+          (!options) ? <div/> :
+            <div>
+ 
+              {/* Game Mode Selector */}
+              { GameModes() }
+                
+              {
+                (dirtyOptions.gameMode === 'kuruit') ?
+                  KuruitOptions(dirtyOptions.gameMode) : undefined
+              }
+
+              {/* Dirty Changes Notice */}
+
+              <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
+
+              {/* Apply Button */}
+
+              <div
+                id={ 'room-options-apply' }
+                className={ styles.button }
+                master={ isMaster.toString() }
+                valid={ isValid.toString() }
+                allowed={ isDirty.toString() }
+                onClick={ this.editRequest }>
+                { i18n('apply') }
+              </div>
+
+              {/* Start Button */}
+
+              <div
+                id={ 'room-options-start' }
+                className={ styles.button }
+                master={ isMaster.toString() }
+                allowed={ isAllowed.toString() }
+                onClick={ this.matchRequest }>
+                { i18n('start') }
+              </div>
+            </div>
+        }
+      </div>
+    </div>;
   }
 }
 
@@ -803,10 +792,6 @@ const styles = createStyle({
         display: 'block',
         content: '"*"'
       }
-    },
-
-    '[visible="false"]': {
-      display: 'none'
     }
   },
 

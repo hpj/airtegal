@@ -33,7 +33,7 @@ const defaultRoom = {
 
   field: [],
   options: {
-    gameMode: 'judge',
+    gameMode: 'kuruit',
     endCondition: 'limited',
     match: {
       maxPlayers: 8,
@@ -93,7 +93,7 @@ function emit(eventName, args)
         id: 'skye',
         players: 4,
         options: {
-          gameMode: 'judge',
+          gameMode: 'kuruit',
           endCondition: 'limited',
           match: {
             maxPlayers: 8,
@@ -112,7 +112,7 @@ function emit(eventName, args)
         id: 'mana',
         players: 4,
         options: {
-          gameMode: 'king',
+          gameMode: 'kuruit',
           endCondition: 'timer',
           match: {
             maxPlayers: 4,

@@ -496,29 +496,19 @@ const RoomHighlights = (room) =>
   const gameMode = room.options.gameMode;
 
   // cards based game modes
-  if (gameMode === 'judge' || gameMode === 'king')
+  if (gameMode === 'kuruit')
   {
     if (room.options.endCondition === 'limited')
       highlights.push(`${i18n('max-rounds-1')} ${i18n('max-rounds-2', room.options.match.maxRounds, true)}.`);
     else if (room.options.endCondition === 'timer')
       highlights.push(`${i18n('max-time-1')} ${i18n('max-time-2', room.options.match.maxTime / 60 / 1000, true)}.`);
 
-    if (gameMode === 'king')
-    {
-      highlights.push(`${room.options.round.maxTime / 60 / 1000} ${i18n('round-countdown')}.`);
-    }
-    else
-    {
-      highlights.push(`${i18n('hand-cap-lobby', room.options.match.startingHandAmount, true)}.`);
-    }
+    highlights.push(`${i18n('hand-cap-lobby', room.options.match.startingHandAmount, true)}.`);
   }
 
   return <div>
     {
-      highlights.map((s, i) =>
-      {
-        return <div key={ i }>{ s }</div>;
-      })
+      highlights.map((s, i) => <div key={ i }>{ s }</div>)
     }
   </div>;
 };
