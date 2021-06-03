@@ -9,10 +9,10 @@
     "height": null
   },
   "titleBasedScreenshots": true,
-  "parallelTests": 5,
+  "parallelTests": 8,
   "defaultTimeout": 25000,
-  "tolerance": 2.8,
-  "antialiasingTolerance": 5,
+  "tolerance": 2.3,
+  "antialiasingTolerance": 3.5,
   "coverageExclude": [
     "/node_modules/**",
     "/webpack/**",

@@ -220,10 +220,11 @@ function startMatch()
     hand: (params.get('mock') === 'blank') ?
       [ { key: Math.random(), type: 'white', blank: true } ] :
       [
-        { key: Math.random(), type: 'white', blank: true },
         { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
         { key: Math.random(), type: 'white', blank: true },
         { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
+        { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
+        { key: Math.random(), type: 'white', blank: true },
         { key: Math.random(), type: 'white', content: 'Skye\'s Card' }
       ]
   };
