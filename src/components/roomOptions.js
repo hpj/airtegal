@@ -27,7 +27,8 @@ const colors = getTheme();
 const wrapperRef = createRef();
 
 const gameModes = [
-  { label: i18n('kuruit'), value: 'kuruit' }
+  { label: i18n('kuruit'), value: 'kuruit' },
+  { label: i18n('qassa'), value: 'qassa' }
 ];
 
 /**
@@ -257,7 +258,6 @@ class RoomOptions extends StoreComponent
           
               defaultIndex={ 0 }
               options={ gameModes }
-              formatLabel={ groupLabel }
 
               onChange={ (mode) => this.onGameModeChange(mode) }
             /> :
@@ -266,8 +266,6 @@ class RoomOptions extends StoreComponent
         
       </div>;
     };
-
-    const groupLabel = (label) => <div className={ styles.groupLabel }>{label}</div>;
 
     const KuruitOptions = () =>
     {
@@ -467,6 +465,34 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
+    const QassaOptions = () =>
+    {
+      const players = this.state.roomData?.players;
+      const playerProperties = this.state.roomData?.playerProperties;
+      
+      const split = Math.round(players?.length / 3);
+
+      const groups = [
+        players.slice(0, split),
+        players.slice(split, split * 2),
+        players.slice(split * 2)
+      ];
+      
+      return <div>
+        {
+          groups.map((group, y) => <div className={ styles.group } key={ y }>
+            <div className={ styles.groupName }>{ `${i18n('group')} ${y + 1}` }</div>
+            {
+              group.map((playerId, x) => <div className={ styles.member } key={ x }>
+                {/* eslint-disable-next-line security/detect-object-injection */}
+                { playerProperties[playerId]?.username }
+              </div>)
+            }
+          </div>)
+        }
+      </div>;
+    };
+
     return <div ref={ wrapperRef } className={ styles.wrapper }>
 
       <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
@@ -490,11 +516,14 @@ class RoomOptions extends StoreComponent
             <div>
  
               {/* Game Mode Selector */}
+
               { GameModes() }
+
+              { /* Game Mode Options */ }
                 
               {
-                (dirtyOptions.gameMode === 'kuruit') ?
-                  KuruitOptions(dirtyOptions.gameMode) : undefined
+                dirtyOptions.gameMode === 'kuruit' ?
+                  KuruitOptions() : QassaOptions()
               }
 
               {/* Dirty Changes Notice */}
@@ -686,6 +715,29 @@ const styles = createStyle({
     padding: '20px 25px'
   },
 
+  group: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: '20px 25px'
+  },
+
+  groupName: {
+    flexBasis: '100%',
+    padding: '0 0 15px',
+    fontSize: 'calc(8px + 0.35vw + 0.35vh)'
+  },
+
+  member: {
+    color: colors.whiteText,
+    backgroundColor: colors.blackBackground,
+    padding: '10px',
+    borderRadius: '5px',
+
+    ':not(:nth-child(2))': {
+      margin: '0 10px'
+    }
+  },
+
   pick: {
     display: 'flex',
     alignItems: 'center',
@@ -769,14 +821,6 @@ const styles = createStyle({
 
   selectOption: {
     height: '50px'
-  },
-
-  groupLabel: {
-    color: colors.greyText,
-
-    fontWeight: '400',
-    fontSize: 'calc(8px + 0.2vw + 0.2vh)',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   field: {

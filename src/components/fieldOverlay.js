@@ -183,8 +183,8 @@ class FieldOverlay extends StoreComponent
                         return <Card
                           key={ card.key }
                           type={ card.type }
-                          hidden={ card.hidden }
                           content={ card.content }
+                          hidden={ !card.content }
                           allowed={ allowed || winner }
                           self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }

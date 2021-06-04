@@ -1,13 +1,23 @@
 Performance Issues and Bugs:
   ☐ fix some of the issues of on firefox
 
+  @critical 
+  ☐ 2.1 backend now avoid hidden on cards and rather just sends no content on the card
+
 Testing:
+  @critical
+  ☐ playing a game of kuruit after we disabled card packs on the backend
+
+  @critical
+  ☐ changing the mode to qassa in might tests
+
   - test if the app reloads automatically if it lost connection while in the background
   - an issue that's more common on mobile devices
 
   ☐ options overlay
 
 UI/UX:
+  ☐ writing content in Qassa
 
 Homepage:
 

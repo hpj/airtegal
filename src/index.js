@@ -21,7 +21,6 @@ import NotFound from './screens/404.js';
 import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
-import { setStyle } from 'flcss';
 
 export let country = '';
 
@@ -57,10 +56,6 @@ function loaded()
 
   ReactDOM.render(pages, app, () =>
   {
-    setStyle('*', {
-      fontSize: 'calc(6px + 0.4vw + 0.4vh)'
-    });
-
     if (!keepLoading)
       hideLoadingScreen();
   });
@@ -69,15 +64,9 @@ function loaded()
 export function holdLoadingScreen()
 {
   if (visibleLoading)
-  {
-    keepLoading = true;
-
-    return true;
-  }
+    return keepLoading = true;
   else
-  {
     return false;
-  }
 }
 
 export function remountLoadingScreen()
@@ -131,10 +120,9 @@ const webFontPromise = () =>
   return new Promise((resolve) =>
   {
     WebFont.load({
+      classes: false,
       active: resolve,
       inactive: resolve,
-
-      classes: false,
 
       custom: {
         families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ]
@@ -169,7 +157,7 @@ const ipCheckPromise = () =>
     }
   
     axios.get(`${process.env.API_ENDPOINT}/check`, {
-      timeout: 20000
+      timeout: 15000
     })
       .then((response) =>
       {
@@ -202,7 +190,5 @@ const ipCheckPromise = () =>
 // remove the loading screen if all the promises resolve
 Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
   .then(loaded)
-  .catch((e) =>
-  {
-    ReactDOM.render(<Error error={ e }/>, placeholder);
-  });
+  // eslint-disable-next-line react/no-render-return-value
+  .catch((e) => ReactDOM.render(<Error error={ e }/>, placeholder));

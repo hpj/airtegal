@@ -12,6 +12,8 @@ export const socket = {
 
 import { EventEmitter } from 'events';
 
+const params = new URL(document.URL).searchParams;
+
 /**
 * @type { import('../components/roomOverlay').RoomData }
 */
@@ -23,9 +25,12 @@ const defaultRoom = {
   state: 'lobby',
   phase: '',
 
-  players: [ 'skye' ],
+  players: [ 'skye', 'mika', 'aqua', 'aire' ],
   playerProperties: {
-    'skye': { username: 'Skye' }
+    'skye': { username: 'Skye' },
+    'mika': { username: 'Mika' },
+    'aqua': { username: 'Aqua' },
+    'aire': { username: 'Aire' }
   },
   playerSecretProperties: {
     hand: []
@@ -33,7 +38,7 @@ const defaultRoom = {
 
   field: [],
   options: {
-    gameMode: 'kuruit',
+    gameMode: params.get('gameMode') ?? 'kuruit',
     endCondition: 'limited',
     match: {
       maxPlayers: 8,
@@ -81,8 +86,6 @@ function once(event, listener)
 function emit(eventName, args)
 {
   const { nonce } = args;
-
-  const params = new URL(document.URL).searchParams;
 
   let returnValue;
 
@@ -192,8 +195,6 @@ function matchBroadcast(data)
 
 function startMatch()
 {
-  const params = new URL(document.URL).searchParams;
-
   /**
   * @type { import('../components/roomOverlay').RoomData }
   */
@@ -250,7 +251,6 @@ function startMatch()
     room.field.push({
       key: Math.random(),
       cards: [ {
-        hidden: true,
         key: Math.random(),
         type: 'white'
       } ]
@@ -259,7 +259,6 @@ function startMatch()
     room.field.push({
       key: Math.random(),
       cards: [ {
-        hidden: true,
         key: Math.random(),
         type: 'white'
       } ]

@@ -44,7 +44,6 @@ export let requestRoomData;
 * @property { number } pick
 * @property { boolean } blank
 * @property { string } content
-* @property { boolean } hidden
 * @property { 'white' | 'black' } type
 */
 
@@ -340,7 +339,8 @@ class RoomOverlay extends StoreComponent
       clearTimeout(this.notificationsTimeout);
     
     // automatically remove the notification after 2.5 seconds
-    this.notificationsTimeout = setTimeout(this.removeNotification, 2500);
+    if (process.env.NODE_ENV !== 'test')
+      this.notificationsTimeout = setTimeout(this.removeNotification, 2500);
   }
 
   removeNotification()

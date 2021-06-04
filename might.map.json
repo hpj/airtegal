@@ -555,6 +555,63 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Room Options (Qassa)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-input"
+        },
+        {
+          "action": "type",
+          "value": "5"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-rando-yes"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-kuruit-timer"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#room-options-select-game-mode"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-game-mode-2"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }
