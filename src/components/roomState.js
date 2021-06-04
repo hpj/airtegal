@@ -11,7 +11,7 @@ import i18n, { locale } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
-import getTheme, { opacity } from '../colors.js';
+import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
 
@@ -33,15 +33,29 @@ class RoomState extends StoreComponent
     this.countdown = undefined;
     this.countdownInterval = undefined;
 
-    // bind functions that are use as callbacks
+    this.music = new Audio();
+    this.audio = new Audio();
 
     this.shareRoomURL = this.shareRoomURL.bind(this);
     this.copyRoomURL = this.copyRoomURL.bind(this);
   }
 
+  componentDidMount()
+  {
+    super.componentDidMount();
+
+    this.music.loop = true;
+    this.music.volume = 0.35;
+
+    this.audio.volume = 0.95;
+  }
+
   componentWillUnmount()
   {
     super.componentWillUnmount();
+
+    this.music.pause();
+    this.audio.pause();
     
     if (this.countdownInterval)
       clearInterval(this.countdownInterval);
@@ -79,6 +93,13 @@ class RoomState extends StoreComponent
         this.formatted = `${roomData.players.length}/${roomData.options.match.maxPlayers}`;
       else
         this.formatted = `${roomData.options.match.maxPlayers}/${roomData.players.length}`;
+
+      // stop music & audio
+
+      this.music.pause();
+      this.audio.pause();
+
+      this.music.currentTime = this.audio.currentTime = 0;
 
       // re-render to show correct counter
       this.forceUpdate();
@@ -128,11 +149,36 @@ class RoomState extends StoreComponent
       {
         this.formatted = '';
       }
+
+      if (roomData.phase === 'transaction' && roomData.options.gameMode === 'qassa')
+      {
+        const { composed } = roomData.field[0].story;
+
+        try
+        {
+          const musicBlob = new Blob([ composed.music ], { 'type': 'audio/mp3' });
+          const audioBlob = new Blob([ composed.audio ], { 'type': 'audio/mp3' });
+
+          this.music.src = window.URL.createObjectURL(musicBlob);
+          this.audio.src = window.URL.createObjectURL(audioBlob);
+
+          // play audio 1.5s after music starts
+          this.music.onplaying = () => setTimeout(() => this.audio.play(), 1500);
+
+          // end music 1s after audio ends
+          this.audio.onended = () => setTimeout(() => this.music.pause(), 1000);
+          
+          this.music.play();
+        }
+        catch (e)
+        {
+          console.error(e);
+        }
+      }
     }
 
     // if lobby clear match state
-    if (roomData.state === 'lobby')
-      state.displayMessage = undefined;
+    state.displayMessage = undefined;
     
     if (!roomData.playerProperties[socket.id])
     {
@@ -159,9 +205,13 @@ class RoomState extends StoreComponent
       else
         state.displayMessage = i18n('wait-for-your-turn');
     }
+    else if (roomData.phase === 'transaction' && roomData.options.gameMode === 'qassa')
+    {
+      state.displayMessage = roomData.field[0].story.name;
+    }
     else if (roomData.phase === 'transaction')
     {
-      const { id } = roomData.field.find((e) => e.highlight);
+      const { id } = roomData.field.find(e => e.highlight);
 
       if (id === socket.id)
         state.displayMessage = i18n('you-won-the-round');
@@ -206,29 +256,27 @@ class RoomState extends StoreComponent
   {
     const isMatch = this.state.roomData?.state === 'match';
 
-    return (
-      <div className={ styles.wrapper }>
-        {
-          (isMatch) ?
-            <div match={ 'true' } className={ styles.container }>
-              <div match={ 'true' } className={ styles.state }>{ this.state.displayMessage }</div>
+    return <div className={ styles.wrapper }>
+      {
+        (isMatch) ?
+          <div match={ 'true' } className={ styles.container }>
+            <div match={ 'true' } className={ styles.state }>{ this.state.displayMessage }</div>
 
-              <div className={ styles.counter }>{ this.formatted }</div>
-            </div>
-            :
-            <div match={ 'false' } className={ styles.container }>
-              <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
+            <div className={ styles.counter }>{ this.formatted }</div>
+          </div>
+          :
+          <div match={ 'false' } className={ styles.container }>
+            <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
 
-              {
-                navigator.share ? <ShareIcon className={ styles.icon } onClick={ this.shareRoomURL }/> :
-                  this.state.clipboard ? <CopyIcon className={ styles.icon } onClick={ this.copyRoomURL }/> :
+            {
+              navigator.share ? <ShareIcon className={ styles.icon } onClick={ this.shareRoomURL }/> :
+                this.state.clipboard ? <CopyIcon className={ styles.icon } onClick={ this.copyRoomURL }/> :
                   // just show the room's id
-                    <div className={ styles.id }>{ this.state.roomData?.id }</div>
-              }
-            </div>
-        }
-      </div>
-    );
+                  <div className={ styles.id }>{ this.state.roomData?.id }</div>
+            }
+          </div>
+      }
+    </div>;
   }
 }
 

@@ -713,6 +713,19 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Qassa (Reading)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=qassa&mock=reading"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }

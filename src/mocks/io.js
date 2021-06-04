@@ -1,11 +1,9 @@
 export const socket = {
-  id: 'skye',
-
   on,
   once,
   emit,
   off,
-  
+  id: 'skye',
   connected: true,
   close: () => undefined
 };
@@ -460,7 +458,6 @@ function startQassa()
     key: Math.random(),
     story: {
       key: Math.random(),
-      name: 'Test',
       blocks: [
         { prefix: 'Hello', requires: 'name', suffix: '.' },
         { prefix: 'Where Will You Be Next', requires: 'day of the week', suffix: '?' },
@@ -503,7 +500,21 @@ function startQassa()
   }
   else if (params.get('mock') === 'reading')
   {
-    // TODO
+    room.phase = 'transaction';
+    room.playerProperties['skye'].state = 'waiting';
+
+    room.field[0].story.name = 'Test Story';
+    
+    room.field[0].story.blocks = [];
+
+    room.field[0].story.composed = {
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend ut urna ac mattis. Suspendisse eleifend eros odio. Proin vulputate est nec tellus venenatis faucibus. In placerat euismod urna, ac fringilla arcu tempus vel. Ut dapibus lacus in blandit posuere.\nAenean vestibulum leo sed tempor pharetra.\n\nVivamus placerat congue placerat. Pellentesque ultricies blandit mauris, at sollicitudin libero ornare non. Duis ultrices faucibus dapibus. Mauris ac nulla erat. Aliquam sed imperdiet sem, quis pharetra dui. Donec quis mi a leo tristique gravida. Pellentesque vehicula leo lobortis, accumsan leo sit amet, ultrices leo. Donec gravida dolor eu purus vehicula lacinia.',
+    };
+
+    Promise.all([
+      fetch('1.mp3').then(response => response.arrayBuffer()).then(buffer => room.field[0].story.composed.music = buffer),
+      fetch('test.mp3').then(response => response.arrayBuffer()).then(buffer => room.field[0].story.composed.audio = buffer)
+    ]).then(() => matchBroadcast(room));
   }
   else
   {
@@ -514,14 +525,11 @@ function startQassa()
 
     matchBroadcast(room);
 
-    matchLogic = ({ index, content }) =>
+    matchLogic = ({ index }) =>
     {
       // eslint-disable-next-line security/detect-object-injection
       room.field[0].story.blocks[index].requires = undefined;
 
-      // eslint-disable-next-line security/detect-object-injection
-      // room.field[0].story.blocks[index].content = content;
-      
       matchBroadcast(room);
     };
   }

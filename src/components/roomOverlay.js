@@ -60,7 +60,7 @@ export let requestRoomData;
 * @property { string } key
 * @property { string } name
 * @property { Block[] } blocks
-* @property { { text: string, music: string, audio: ArrayBuffer } } composed
+* @property { { text: string, music: ArrayBuffer, audio: ArrayBuffer } } composed
 */
 
 /**

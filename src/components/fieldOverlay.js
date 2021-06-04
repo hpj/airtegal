@@ -30,6 +30,7 @@ const overlayRef = createRef();
 /**
 * @typedef { object } State
 * @prop { import('./roomOverlay').RoomData } roomData
+* @prop { import('./roomOverlay').RoomData['field'] } field
 * @extends {React.Component<{}, State>}
 */
 class FieldOverlay extends StoreComponent
@@ -189,36 +190,37 @@ class FieldOverlay extends StoreComponent
                       const winner = entryIndex === winnerEntryIndex;
                       const allowed = playerState === 'judging' && entryIndex > 0;
 
-                      return (
-                        <div className={ styles.entry } key={ entry.key }>
-                          {
-                            entry.cards.map((card, cardIndex) => <Card
-                              key={ card.key }
-                              type={ card.type }
-                              content={ card.content }
-                              hidden={ !card.content }
-                              allowed={ allowed || winner }
-                              self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
-                              owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
-                              winner= { winner }
-                              share={ winner && cardIndex === 0 }
-                              onClick={ () => winner ? this.shareEntry(entryIndex) : this.submit(entryIndex, undefined, allowed) }
-                            />)
-                          }
-                        </div>
-                      );
+                      return  <div className={ styles.entry } key={ entry.key }>
+                        {
+                          entry.cards.map((card, cardIndex) => <Card
+                            key={ card.key }
+                            type={ card.type }
+                            content={ card.content }
+                            hidden={ !card.content }
+                            allowed={ allowed || winner }
+                            self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
+                            owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
+                            winner= { winner }
+                            share={ winner && cardIndex === 0 }
+                            onClick={ () => winner ? this.shareEntry(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                          />)
+                        }
+                      </div>;
                     })
                   }
                 </div>
                 :
                 <div id={ 'qassa-field-overlay' } className={ styles.container }>
                   {
-                    this.state.field[0]?.story.blocks.map((block, blockIndex) => <Block
-                      key={ blockIndex }
-                      block={ block }
-                      allowed={ playerState === 'writing' }
-                      onSubmit={ content => this.submit(blockIndex, content, playerState === 'writing') }
-                    />)
+                    this.state.field[0]?.story.composed ? <div className={ styles.qassa }>
+                      { this.state.field[0]?.story.composed.text }
+                    </div> :
+                      this.state.field[0]?.story.blocks.map((block, blockIndex) => <Block
+                        key={ blockIndex }
+                        block={ block }
+                        allowed={ playerState === 'writing' }
+                        onSubmit={ content => this.submit(blockIndex, content, playerState === 'writing') }
+                      />)
                   }
                 </div>
             }
@@ -297,6 +299,28 @@ const styles = createStyle({
       width: 'calc(100% - 5vw)',
       height: '2px'
     }
+  },
+
+  qassa: {
+    userSelect: 'none',
+    direction: locale.direction,
+    
+    color: colors.whiteText,
+    backgroundColor: colors.blackCardBackground,
+    
+    fontWeight: 700,
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    
+    lineHeight: '2em',
+    whiteSpace: 'pre-wrap',
+
+    width: '100%',
+    maxWidth: '480px',
+
+    padding: '45px 35px',
+    margin: '45px 0',
+    borderRadius: '10px'
   }
 });
 

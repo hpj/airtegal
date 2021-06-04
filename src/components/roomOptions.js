@@ -723,14 +723,16 @@ const styles = createStyle({
 
   groupName: {
     flexBasis: '100%',
-    padding: '0 0 15px',
-    fontSize: 'calc(8px + 0.35vw + 0.35vh)'
+    fontSize: 'calc(8px + 0.35vw + 0.35vh)',
+    padding: '0 0 15px'
   },
 
   member: {
     color: colors.whiteText,
     backgroundColor: colors.blackBackground,
-    padding: '10px',
+
+    fontSize: 'calc(8px + 0.25vw + 0.25vh)',
+    padding: '10px 15px',
     borderRadius: '5px',
 
     ':not(:nth-child(2))': {

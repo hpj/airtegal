@@ -28,7 +28,10 @@ module.exports = {
     })
   ],
   devServer: {
-    contentBase: './public',
+    contentBase: [
+      __dirname + '/public',
+      __dirname + '/src/mocks',
+    ],
     historyApiFallback: true,
     hot: true
   },
