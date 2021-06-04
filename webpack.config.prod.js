@@ -31,6 +31,7 @@ module.exports = {
   },
   plugins: [
     new DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.RELEASE': JSON.stringify(gitRevisionPlugin.commithash())
     }),
     new CompressionPlugin({
