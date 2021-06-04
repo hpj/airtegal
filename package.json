@@ -33,6 +33,7 @@
     "json5-loader": "^4.0.1",
     "might-cli": "^2.1.5",
     "might-ui": "^1.1.8",
+    "serve": "^11.3.2",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2"

@@ -30,7 +30,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
+    new DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.API_ENDPOINT': JSON.stringify('https://api.airtegal.me'),
       'process.env.RELEASE': JSON.stringify(gitRevisionPlugin.commithash())
