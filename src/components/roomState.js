@@ -168,7 +168,8 @@ class RoomState extends StoreComponent
           // end music 1s after audio ends
           this.audio.onended = () => setTimeout(() => this.music.pause(), 1000);
           
-          this.music.play();
+          if (process.env.NODE_ENV !== 'test')
+            this.music.play();
         }
         catch (e)
         {
