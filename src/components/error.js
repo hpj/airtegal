@@ -13,11 +13,9 @@ const colors = getTheme();
 */
 const Error = ({ error }) =>
 {
-  return (
-    <div className={ styles.container }>
-      <p className={ styles.error }>{error}</p>
-    </div>
-  );
+  return <div className={ styles.container }>
+    <p className={ styles.error }>{error}</p>
+  </div>;
 };
 
 Error.propTypes = {

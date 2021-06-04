@@ -48,15 +48,31 @@ export let requestRoomData;
 */
 
 /**
+* @typedef { Object } Block
+* @property { string } prefix
+* @property { string } requires
+* @property { string } suffix
+* @property { string } content
+*/
+
+/**
+* @typedef { Object } Story
+* @property { string } key
+* @property { string } name
+* @property { Block[] } blocks
+* @property { { text: string, music: string, audio: ArrayBuffer } } composed
+*/
+
+/**
 * @typedef { Object } PlayerProperties
-* @property { 'waiting' | 'picking' | 'judging' | 'left' } state
+* @property { 'waiting' | 'picking' | 'judging' | 'writing' | 'left' } state
 * @property { boolean } rando
 * @property { string } username
 */
 
 /**
 * @typedef { Object } RoomOptionsT
-* @property { 'kuruit' } gameMode
+* @property { 'kuruit' | 'qassa' } gameMode
 * @property { 'limited' | 'timer' } endCondition
 * @property { {
 *    maxPlayers: number,
@@ -78,14 +94,15 @@ export let requestRoomData;
 * @property { string } region
 * @property { string } master
 * @property { 'lobby' | 'match' } state
-* @property { 'black' | 'picking' | 'judging' | 'transaction' |
+* @property { 'picking' | 'judging' | 'transaction' |
 *          'judge-left' | 'judge-timeout' | 'picking-timeout' |
+*          'writing' |
 *          'not-enough-players' | 'unhandled' } phase
 * @property { string[] } players
 * @property { Object<string, PlayerProperties> } playerProperties
 * @property { { hand: Card[] } } playerSecretProperties
 * @property { RoomOptionsT } options
-* @property { { id: string, key: string, highlighted: boolean, cards: Card[] }[] } field
+* @property { { id: string, key: string, highlighted: boolean, cards: Card[], story: Story }[] } field
 */
 
 /**
@@ -174,7 +191,7 @@ class RoomOverlay extends StoreComponent
       optionsRef.current?.scrollTo({ top: 0 });
     
     // show that the round ended
-    if (roomData.phase && roomData.phase !== 'black' && roomData.phase !== 'picking' && roomData.phase !== 'judging'&& roomData.phase !== 'transaction')
+    if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing'&& roomData.phase !== 'transaction')
     {
       this.addNotification(i18n(roomData.phase));
     }

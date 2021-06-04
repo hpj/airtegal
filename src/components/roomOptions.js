@@ -282,7 +282,7 @@ class RoomOptions extends StoreComponent
             <CheckIcon className={ styles.mark }/>
           </div>
 
-          <div>{ i18n('max-rounds-1') }</div>
+          <div>{ i18n('after') }</div>
 
           <AutoSizeInput
             required
@@ -306,7 +306,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div>{ i18n('max-rounds-2', dirtyOptions.match.maxRounds) }</div>
+          <div>{ i18n('max-rounds', dirtyOptions.match.maxRounds) }</div>
         </div>
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.match.maxTime !== dirtyOptions.match.maxTime)).toString() }>
@@ -319,7 +319,7 @@ class RoomOptions extends StoreComponent
             <CheckIcon className={ styles.mark }/>
           </div>
 
-          <div>{ i18n('max-time-1') }</div>
+          <div>{ i18n('after') }</div>
 
           <AutoSizeInput
             required
@@ -344,7 +344,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div>{ i18n('max-time-2', dirtyOptions.match.maxTime / 60 / 1000) }</div>
+          <div>{ i18n('max-time', dirtyOptions.match.maxTime / 60 / 1000) }</div>
         </div>
 
         <div style={ { margin: '5px -5px 5px 0px' } }>
@@ -481,7 +481,7 @@ class RoomOptions extends StoreComponent
       return <div>
         {
           groups.map((group, y) => <div className={ styles.group } key={ y }>
-            <div className={ styles.groupName }>{ `${i18n('group')} ${y + 1}` }</div>
+            <div className={ styles.groupName }>{ `${i18n('groups')} ${y + 1}` }</div>
             {
               group.map((playerId, x) => <div className={ styles.member } key={ x }>
                 {/* eslint-disable-next-line security/detect-object-injection */}

@@ -16,6 +16,8 @@ import Interactable from './Interactable.js';
 
 import Card from './card.js';
 
+import Block from './block.js';
+
 import { shareEntry } from './shareOverlay.js';
 
 const colors = getTheme();
@@ -69,7 +71,7 @@ class FieldOverlay extends StoreComponent
       return;
 
     state.winnerEntryIndex = roomData.phase === 'transaction' ?
-      roomData.field.findIndex((e) => e.highlight) :
+      roomData.field.findIndex(e => e.highlight) :
       undefined;
 
     state.field = roomData.field;
@@ -85,30 +87,32 @@ class FieldOverlay extends StoreComponent
       overlayRef.current.snapTo({ index: 0 });
   }
 
-  /** send the card the judge judged to the server's match logic
-  * @param { number } index
-  * @param { boolean } allowed if the card can be picked
-  */
-  judgeCard(index, allowed)
+  submit(index, content, allowed)
   {
     if (!allowed)
       return;
       
     const { sendMessage } = this.props;
+
+    const { roomData } = this.state;
     
-    sendMessage('matchLogic', { index }).then(() =>
+    sendMessage('matchLogic', { index, content }).then(() =>
     {
       // store the entry for the match highlights
 
-      const { entries } = this.state;
+      if (roomData.options.gameMode === 'kuruit')
+      {
+        
+        const { entries } = this.state;
+  
+        entries.push([
+          this.state.field[0].cards[0].content,
+          // eslint-disable-next-line security/detect-object-injection
+          ...this.state.field[index].cards.map(c => c.content)
+        ]);
 
-      entries.push([
-        this.state.field[0].cards[0].content,
-        // eslint-disable-next-line security/detect-object-injection
-        ...this.state.field[index].cards.map(c => c.content)
-      ]);
-
-      this.store.set({ entries });
+        this.store.set({ entries });
+      }
     });
   }
 
@@ -117,10 +121,15 @@ class FieldOverlay extends StoreComponent
   */
   shareEntry(index)
   {
-    shareEntry(
-      this.state.field[0].cards[0].content,
-      // eslint-disable-next-line security/detect-object-injection
-      this.state.field[index].cards.map(c => c.content));
+    const { roomData } = this.state;
+
+    if (roomData.options.gameMode === 'kuruit')
+    {
+      shareEntry(
+        this.state.field[0].cards[0].content,
+        // eslint-disable-next-line security/detect-object-injection
+        this.state.field[index].cards.map(c => c.content));
+    }
   }
 
   render()
@@ -128,6 +137,8 @@ class FieldOverlay extends StoreComponent
     const { size } = this.props;
 
     const { roomData, winnerEntryIndex } = this.state;
+
+    const gameMode = roomData?.options.gameMode;
 
     const playerState = roomData?.playerProperties[socket.id]?.state;
     
@@ -157,7 +168,7 @@ class FieldOverlay extends StoreComponent
 
           dragEnabled={ false }
           horizontalOnly={ true }
-  
+
           onMovement={ onMovement }
           frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
@@ -169,41 +180,48 @@ class FieldOverlay extends StoreComponent
           initialPosition={ { x: size.width } }
         >
           <div className={ styles.wrapper }>
-            <div id={ 'kuruit-field-overlay' } className={ styles.container }>
-              {
-                this.state.field.map((entry, entryIndex) =>
-                {
-                  const winner = entryIndex === winnerEntryIndex;
-                  const allowed = playerState === 'judging' && entryIndex > 0;
-
-                  return <div className={ styles.entry } key={ entry.key }>
+            {
+              gameMode === 'kuruit' ?
+                <div id={ 'kuruit-field-overlay' } className={ styles.container }>
+                  {
+                    this.state.field.map((entry, entryIndex) =>
                     {
-                      entry.cards.map((card, cardIndex) =>
-                      {
-                        return <Card
-                          key={ card.key }
-                          type={ card.type }
-                          content={ card.content }
-                          hidden={ !card.content }
-                          allowed={ allowed || winner }
-                          self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
-                          owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
-                          winner= { winner }
-                          share={ winner && cardIndex === 0 }
-                          onClick={ () =>
+                      const winner = entryIndex === winnerEntryIndex;
+                      const allowed = playerState === 'judging' && entryIndex > 0;
+
+                      return (
+                        <div className={ styles.entry } key={ entry.key }>
                           {
-                            if (winner)
-                              this.shareEntry(entryIndex);
-                            else
-                              this.judgeCard(entryIndex, allowed);
-                          } }
-                        />;
-                      })
-                    }
-                  </div>;
-                })
-              }
-            </div>
+                            entry.cards.map((card, cardIndex) => <Card
+                              key={ card.key }
+                              type={ card.type }
+                              content={ card.content }
+                              hidden={ !card.content }
+                              allowed={ allowed || winner }
+                              self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
+                              owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
+                              winner= { winner }
+                              share={ winner && cardIndex === 0 }
+                              onClick={ () => winner ? this.shareEntry(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                            />)
+                          }
+                        </div>
+                      );
+                    })
+                  }
+                </div>
+                :
+                <div id={ 'qassa-field-overlay' } className={ styles.container }>
+                  {
+                    this.state.field[0]?.story.blocks.map((block, blockIndex) => <Block
+                      key={ blockIndex }
+                      block={ block }
+                      allowed={ playerState === 'writing' }
+                      onSubmit={ content => this.submit(blockIndex, content, playerState === 'writing') }
+                    />)
+                  }
+                </div>
+            }
           </div>
         </Interactable>
       </div>

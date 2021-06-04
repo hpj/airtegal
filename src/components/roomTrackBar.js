@@ -42,7 +42,7 @@ class RoomTrackBar extends StoreComponent
                 // eslint-disable-next-line security/detect-object-injection
                 const player = this.state.roomData?.playerProperties[playerId];
                 
-                const turn = player?.state === 'judging' || player?.state === 'picking';
+                const turn = player?.state === 'judging' || player?.state === 'picking' || player?.state === 'writing';
 
                 return <div className={ styles.player } key={ playerId }>
                   {

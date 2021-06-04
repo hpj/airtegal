@@ -87,7 +87,7 @@ class RoomState extends StoreComponent
     {
       clearInterval(this.countdownInterval);
 
-      if (roomData.phase === 'black' || roomData.phase === 'picking' || roomData.phase === 'judging')
+      if (roomData.phase === 'picking' || roomData.phase === 'judging')
       {
         const time = roomData.options.round.maxTime;
   
@@ -134,26 +134,30 @@ class RoomState extends StoreComponent
     if (roomData.state === 'lobby')
       state.displayMessage = undefined;
     
-    if (roomData.phase === 'black')
+    if (!roomData.playerProperties[socket.id])
     {
-      if (roomData.playerProperties[socket.id]?.state === 'picking')
-        state.displayMessage = i18n('picking-phase');
-      else
-        state.displayMessage = i18n('wait-until-judge-picks');
+      state.displayMessage = i18n('spectating');
     }
     else if (roomData.phase === 'picking')
     {
       if (roomData.playerProperties[socket.id]?.state === 'picking')
         state.displayMessage = i18n('picking-phase');
       else
-        state.displayMessage = i18n('you-are-the-judge-wait');
+        state.displayMessage = i18n('wait-for-your-turn');
     }
     else if (roomData.phase === 'judging')
     {
       if (roomData.playerProperties[socket.id]?.state === 'judging')
         state.displayMessage = i18n('judging-phase');
       else
-        state.displayMessage = i18n('wait-until-judge-judges');
+        state.displayMessage = i18n('wait-until-judged');
+    }
+    else if (roomData.phase === 'writing')
+    {
+      if (roomData.playerProperties[socket.id]?.state === 'writing')
+        state.displayMessage = i18n('writing-phase');
+      else
+        state.displayMessage = i18n('wait-for-your-turn');
     }
     else if (roomData.phase === 'transaction')
     {
@@ -161,7 +165,7 @@ class RoomState extends StoreComponent
 
       if (id === socket.id)
         state.displayMessage = i18n('you-won-the-round');
-      else
+      else if (id)
         // eslint-disable-next-line security/detect-object-injection
         state.displayMessage = i18n('won-this-round', roomData.playerProperties[id]?.username);
     }

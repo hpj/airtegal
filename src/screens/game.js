@@ -347,31 +347,29 @@ class Game extends React.Component
   {
     const Header = () =>
     {
-      return (
-        <div className={ headerStyles.container }>
-          <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
+      return <div className={ headerStyles.container }>
+        <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
 
-          <AutoSizeInput
-            id={ 'usrname-input' }
-            className={ headerStyles.usrname }
-            required
-            type={ 'text' }
-            maxLength={ 18 }
-            placeholder={ i18n('username-placeholder') }
-            value={ this.state.username }
-            onUpdate={ (value, resize, blur) =>
-            {
-              const trimmed = (blur) ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
+        <AutoSizeInput
+          id={ 'usrname-input' }
+          className={ headerStyles.usrname }
+          required
+          type={ 'text' }
+          maxLength={ 18 }
+          placeholder={ i18n('username-placeholder') }
+          value={ this.state.username }
+          onUpdate={ (value, resize, blur) =>
+          {
+            const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
 
-              localStorage.setItem('username', trimmed);
+            localStorage.setItem('username', trimmed);
 
-              this.setState({
-                username: trimmed
-              }, resize);
-            } }
-          />
-        </div>
-      );
+            this.setState({
+              username: trimmed
+            }, resize);
+          } }
+        />
+      </div>;
     };
 
     const Options = () =>
@@ -499,11 +497,19 @@ const RoomHighlights = (room) =>
   if (gameMode === 'kuruit')
   {
     if (room.options.endCondition === 'limited')
-      highlights.push(`${i18n('max-rounds-1')} ${i18n('max-rounds-2', room.options.match.maxRounds, true)}.`);
+      highlights.push(`${i18n('max-rounds', room.options.match.maxRounds, true)}.`);
     else if (room.options.endCondition === 'timer')
-      highlights.push(`${i18n('max-time-1')} ${i18n('max-time-2', room.options.match.maxTime / 60 / 1000, true)}.`);
+      highlights.push(`${i18n('max-time', room.options.match.maxTime / 60 / 1000, true)}.`);
 
     highlights.push(`${i18n('hand-cap-lobby', room.options.match.startingHandAmount, true)}.`);
+
+    if (room.options.match.blankProbability > 0)
+      highlights.push(`%${room.options.match.blankProbability} ${i18n('blank-probability-lobby')}.`);
+  }
+  else if (gameMode === 'qassa')
+  {
+    highlights.push(`${i18n('max-groups', 3, true)}.`);
+    highlights.push(`${i18n('max-stories', 3, true)}.`);
   }
 
   return <div>

@@ -8,16 +8,14 @@
 
   "blank": "____",
 
-  "confirm": "تاكيد",
-  "clear": "الغاء",
-
   // error connection errors
 
   "server-unavailable": "السيرفر خارج الخدمة",
-  "timeout": "فشل الاتصال بالسيرفر بعد مرور الوقت المحدد",
   "you-were-disconnected": "انقطع اتصالك بالسيرفر",
 
   "server-mismatch": "السيرفر تحت الصيانة",
+  "timeout": "فشل الاتصال بالسيرفر بعد مرور الوقت المحدد",
+
   "app-country-block": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
   "app-country-taboo": "اللعبة دي حرام",
 
@@ -28,6 +26,8 @@
   
   "create-room": "اعمل روم",
   "random-room": "روم عشؤئية",
+  
+  "spectating": "أنت بتتفرج بس",
 
   "available-rooms": "الرومات المتاحة",
 
@@ -94,9 +94,10 @@
   // room options
   
   "match-highlights": "مقتطفات",
-  "changes-not-applied": "*في تغييرات لسه متطبقتش",
 
   "room-edited": "تم تعديل اعدادت الروم.",
+  "changes-not-applied": "*في تغييرات لسه متطبقتش",
+
   "game-mode": "الجيم مود",
   
   "kuruit": "كروت",
@@ -107,26 +108,27 @@
 
   "match-options": "اعدادات الماتش",
 
-  "group": "فريق",
+  "groups": "فريق",
+  "max-groups": "فرق~فريق",
   
   "end-condition": "النهاية:",
   
   "options-placeholder": "0",
 
-  "max-rounds-1": "بعد",
-  "max-rounds-2": "جولات~جولة",
+  "after": "بعد",
 
-  "max-time-1": "بعد",
-  "max-time-2": "دقائق~دقيقة",
+  "max-stories": "قصص~قصة",
+  "max-rounds": "جولات~جولة",
+  "max-time": "دقائق~دقيقة",
 
   "max-players": "عدد اللعيبة",
   "round-countdown": "دقيقه لكل جولة",
 
-  "hand-cap": "رقم الكروت في ايد كل لعيب",
-  "hand-cap-lobby": "كروت~كرت",
+  "hand-cap": "أوراق في ايد كل لعيب",
+  "hand-cap-lobby": "أوراق~ورقة",
 
   "blank-probability": "نسبة سحب كرت فاضي",
-  "blank-probability:cover": "كرت فاضي",
+  "blank-probability-lobby": "كرت فاضي",
 
   "room-options": "اعدادات الروم:",
 
@@ -142,26 +144,23 @@
 
   "this-card-is-yours": "انت",
 
+  "not-enough-cards": "الجولة أتلغت علشان مفيش كروت كفاية علي الارض",
   "not-enough-players": "الماتش اتلغي علشان مفيش لعيبة كفاية.",
   
-  "not-enough-cards": "الجولة أتلغت علشان مفيش كروت كفاية علي الارض",
   "judge-left": "الجولة أتلغت علشان القاضي خرج من الماتش.",
   "judge-timeout": "الجولة أتلغت علشان الوقت خلص.",
   
   // match state
 
-  "wait-until-judge-picks": "أستني القاضي.",
-
   "picking-phase": "اختر كرت من ايدك.",
-  "you-are-the-judge-wait": "أستني دورك.",
-
   "judging-phase": "اختر اكثر كرت خلاك تتضحك.",
-  "wait-until-judge-judges": "أستني حكم القاضي.",
+  "writing-phase": "املي الخانات مع فريقك.",
+
+  "wait-for-your-turn": "أستني دورك.",
+  "wait-until-judged": "أستني حكم القاضي.",
 
   "you-won-the-round": "انت الي كسبت الجولة.",
   "won-this-round": "%0 كسب الجولة.",
-
-  "round-canceled": "الجولة أتلغت",
 
   // share overlay
   

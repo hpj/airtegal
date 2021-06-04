@@ -122,11 +122,21 @@ function emit(eventName, args)
             maxRounds: 5,
             maxTime: 10 * 60 * 1000,
             blankProbability: 0,
-            startingHandAmount: 7,
+            startingHandAmount: 4,
             randos: true
           },
           round: {
             maxTime: 2 * 60 * 1000
+          }
+        }
+      },
+      {
+        id: 'mika',
+        players: 4,
+        options: {
+          gameMode: 'qassa',
+          match: {
+            maxPlayers: 6
           }
         }
       }
@@ -175,9 +185,16 @@ function emit(eventName, args)
     });
   }
   else if (eventName === 'matchRequest')
-    startMatch();
+  {
+    if (defaultRoom.options.gameMode === 'kuruit')
+      startKuruit();
+    else if (defaultRoom.options.gameMode === 'qassa')
+      startQassa();
+  }
   else if (eventName === 'matchLogic')
+  {
     matchLogic.call(undefined, args);
+  }
 
   // call done
   setTimeout(() => emitter.emit('done', nonce, returnValue), 100);
@@ -193,7 +210,7 @@ function matchBroadcast(data)
   }));
 }
 
-function startMatch()
+function startKuruit()
 {
   /**
   * @type { import('../components/roomOverlay').RoomData }
@@ -406,6 +423,104 @@ function startMatch()
         key: Math.random(),
         cards: [ card ]
       });
+      
+      matchBroadcast(room);
+    };
+  }
+}
+
+function startQassa()
+{
+  /**
+  * @type { import('../components/roomOverlay').RoomData }
+  */
+  const room = {};
+
+  room.state = 'match';
+
+  room.players = [ 'skye', 'mika', 'mana' ];
+
+  room.playerProperties =
+  {
+    'skye': {
+      username: 'Skye',
+      state: 'waiting'
+    },
+    'mika': {
+      username: 'Mika',
+      state: 'waiting'
+    },
+    'mana': {
+      username: 'Mana',
+      state: 'waiting'
+    }
+  };
+
+  room.field = [ {
+    key: Math.random(),
+    story: {
+      key: Math.random(),
+      name: 'Test',
+      blocks: [
+        { prefix: 'Hello', requires: 'name', suffix: '.' },
+        { prefix: 'Where Will You Be Next', requires: 'day of the week', suffix: '?' },
+        { requires: 'verb', suffix: 'And I Hate it.' }
+      ]
+    }
+  } ];
+
+  if (params.get('mock') === 'spectator')
+  {
+    room.master = '';
+
+    room.phase = 'writing';
+
+    room.players = [ 'mana', 'mika' ];
+    
+    room.playerProperties = {
+      'mana': {
+        username: 'Mana',
+        state: 'writing'
+      },
+      'mika': {
+        username: 'Mika',
+        state: 'waiting'
+      }
+    };
+
+    room.playerSecretProperties = {};
+
+    matchBroadcast(room);
+  }
+  else if (params.get('mock') === 'waiting')
+  {
+    room.phase = 'writing';
+    room.playerProperties['skye'].state = 'waiting';
+
+    room.field[0].story.blocks[2].requires = undefined;
+  
+    matchBroadcast(room);
+  }
+  else if (params.get('mock') === 'reading')
+  {
+    // TODO
+  }
+  else
+  {
+    room.phase = 'writing';
+    room.playerProperties['skye'].state = 'writing';
+
+    room.field[0].story.blocks[1].requires = undefined;
+
+    matchBroadcast(room);
+
+    matchLogic = ({ index, content }) =>
+    {
+      // eslint-disable-next-line security/detect-object-injection
+      room.field[0].story.blocks[index].requires = undefined;
+
+      // eslint-disable-next-line security/detect-object-injection
+      // room.field[0].story.blocks[index].content = content;
       
       matchBroadcast(room);
     };
