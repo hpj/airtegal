@@ -17,11 +17,10 @@ export function fillTheBlanks(template, content)
 
 class Discord extends EventTarget
 {
-  constructor(clientId)
+  constructor()
   {
     super();
 
-    this.clientId = clientId;
     this.tries = 0;
     this.ws = null;
   }
@@ -32,7 +31,7 @@ class Discord extends EventTarget
     
     this.tries += 1;
 
-    this.ws = new WebSocket(`ws://127.0.0.1:${port}/?v=1&client_id=${this.clientId}`);
+    this.ws = new WebSocket(`ws://127.0.0.1:${port}/?v=1`);
 
     this.ws.onopen = this.onOpen.bind(this);
     this.ws.onclose = this.onClose.bind(this);
@@ -49,7 +48,7 @@ class Discord extends EventTarget
   {
     if (!event.wasClean)
       return;
-    
+
     this.dispatchEvent(new CustomEvent('close', {
       detail: event
     }));
@@ -103,9 +102,12 @@ class Discord extends EventTarget
 
 export function detectDiscord(callback)
 {
-  const ts = new Discord('622201604992401437');
+  if (process.env.NODE_ENV === 'test')
+    return;
+  
+  const discord = new Discord();
 
-  ts.addEventListener('open', callback);
+  discord.addEventListener('open', callback);
 
-  ts.connect();
+  discord.connect();
 }

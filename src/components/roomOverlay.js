@@ -48,18 +48,10 @@ export let requestRoomData;
 */
 
 /**
-* @typedef { Object } Block
-* @property { string } prefix
-* @property { string } requires
-* @property { string } suffix
-* @property { string } content
-*/
-
-/**
 * @typedef { Object } Story
 * @property { string } key
 * @property { string } name
-* @property { Block[] } blocks
+* @property { { key: string, description: string }[] } items
 * @property { { text: string, music: ArrayBuffer, audio: ArrayBuffer } } composed
 */
 
@@ -98,6 +90,7 @@ export let requestRoomData;
 *          'judge-left' | 'judge-timeout' | 'picking-timeout' |
 *          'writing' |
 *          'not-enough-players' | 'unhandled' } phase
+* @property { number } timestamp
 * @property { string[] } players
 * @property { Object<string, PlayerProperties> } playerProperties
 * @property { { hand: Card[] } } playerSecretProperties
@@ -126,11 +119,9 @@ class RoomOverlay extends StoreComponent
       overlayHandlerVisible: true
     });
 
-    // bind functions that are use as callbacks
-
     this.onSnapEnd = this.onSnapEnd.bind(this);
 
-    this.closeOverlay = this.closeOverlay.bind(this);
+    this.onKicked = this.onKicked.bind(this);
     this.onRoomData = this.onRoomData.bind(this);
 
     this.addNotification = this.addNotification.bind(this);
@@ -141,7 +132,7 @@ class RoomOverlay extends StoreComponent
   {
     super.componentDidMount();
 
-    socket.on('kicked', this.closeOverlay);
+    socket.on('kicked', this.onKicked);
     socket.on('roomData', this.onRoomData);
 
     const params = new URL(document.URL).searchParams;
@@ -158,10 +149,21 @@ class RoomOverlay extends StoreComponent
   {
     super.componentWillUnmount();
 
+    socket.off('kicked', this.onKicked);
     socket.off('roomData', this.onRoomData);
 
     // make sure socket is closed before component unmount
     socket.close();
+  }
+
+  onKicked()
+  {
+    // make sure overlay is closed
+    overlayRef.current?.snapTo({ index: 1 });
+
+    this.addNotification(i18n('you-were-kicked'));
+    
+    this.closeOverlay();
   }
 
   /**
@@ -170,7 +172,7 @@ class RoomOverlay extends StoreComponent
   onRoomData(roomData)
   {
     // handler is only visible if user is on the match's lobby screen
-    setTimeout(() => this.handlerVisibility(roomData.state === 'lobby'));
+    this.handlerVisibility(roomData.state === 'lobby');
 
     if (roomData.state === 'lobby')
     {
@@ -210,7 +212,7 @@ class RoomOverlay extends StoreComponent
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('create', { username, region: locale.value }).then(() =>
+    sendMessage('create', { username, region: locale.value }).then(id =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -222,6 +224,10 @@ class RoomOverlay extends StoreComponent
       navigator.wakeLock?.request('screen')
         .then(wl => this.wakeLock = wl)
         .catch(e => e);
+
+      window.history
+        .replaceState(null, document.title,
+          `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
 
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
@@ -245,7 +251,7 @@ class RoomOverlay extends StoreComponent
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('join', { id, username, region: locale.value }).then(() =>
+    sendMessage('join', { id, username, region: locale.value }).then(id =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -255,6 +261,10 @@ class RoomOverlay extends StoreComponent
         .then(wl => this.wakeLock = wl)
         .catch(e => e);
       
+      window.history
+        .replaceState(null, document.title,
+          `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
+
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
@@ -285,17 +295,17 @@ class RoomOverlay extends StoreComponent
 
     this.wakeLock = undefined;
 
+    window.history
+      .replaceState(null, document.title,
+        `${location.protocol}//${location.host}${location.pathname}`);
+
     // reset room options scroll
     optionsRef.current?.scrollTo({ top: 0 });
 
     // after leaving the room
     this.store.set({
-      field: [],
-      hand: [],
-      picks: [],
       blanks: [],
       entries: [],
-
       matchState: undefined,
       dirtyOptions: undefined,
       roomData: undefined
@@ -316,7 +326,7 @@ class RoomOverlay extends StoreComponent
   {
     // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
     this.store.set({ overlayHandlerVisible: visible },
-      () => overlayRef.current.snapTo({ index: 0 }));
+      () => requestAnimationFrame(() => this.forceUpdate(() => overlayRef.current.snapTo({ index: 0 }))));
   }
   
   /**

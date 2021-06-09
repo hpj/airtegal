@@ -6,8 +6,6 @@ import { createStyle, createAnimation } from 'flcss';
 
 import { ErrorBoundary } from '@sentry/react';
 
-import ArrowUpIcon from 'mdi-react/ArrowUpIcon';
-
 import getTheme from '../colors.js';
 
 import Warning from '../components/warning.js';
@@ -48,7 +46,7 @@ class Homepage extends React.Component
     const index = this.randomIndex(this.state.data.length, -1);
     
     this.setState({ data: this.state.data, index },
-      () => this.interval = setInterval(this.updateIndex, 6500));
+      () => this.interval = setInterval(this.updateIndex, 4500));
   }
 
   componentWillUnmount()
@@ -81,9 +79,9 @@ class Homepage extends React.Component
   {
     const { data, index } = this.state;
 
-    // this.setState({
-    //   index: this.randomIndex(data.length, index)
-    // });
+    this.setState({
+      index: this.randomIndex(data.length, index)
+    });
   }
 
   render()
@@ -119,10 +117,11 @@ class Homepage extends React.Component
 
           <div className={ styles.footer }>
             <Link className={ styles.play } to={ 'play' }>
-              <ArrowUpIcon className={ styles.playIcon }/>
               { i18n('play') }
             </Link>
-            <a className={ styles.hpj } href={ 'https://herpproject.com' }>{ i18n('hpj') }</a>
+            <div className={ styles.hpj }>
+              <a className={ styles.button } href={ 'https://herpproject.com' }>{ i18n('hpj') }</a>
+            </div>
           </div>
         </div>
       </div>
@@ -166,10 +165,10 @@ const playAnimation = createAnimation({
   iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
-      bottom: '-50%'
+      transform: 'scale(1)'
     },
     to: {
-      bottom: '-25%'
+      transform: 'scale(0.75)'
     }
   }
 });
@@ -247,37 +246,26 @@ const styles = createStyle({
     direction: locale.direction
   },
 
-  playIcon: {
-    pointerEvents: 'none',
-    position: 'absolute',
-
-    color: colors.whiteText,
-    animation: playAnimation,
-    
-    right: '26.5%',
-    bottom: '-50%',
-    width: 'calc(11px + 0.25vw + 0.25vh)',
-    height: 'calc(11px + 0.25vw + 0.25vh)'
-  },
-  
   play: {
     extend: 'button',
     position: 'relative',
     fontSize: 'calc(16px + 0.25vw + 0.25vh)',
+
+    animation: playAnimation,
 
     padding: '0',
     margin: '3.5vh auto 2.5vh auto'
   },
 
   hpj: {
-    extend: 'button',
-    flexBasis: '100%',
-
     display: 'flex',
+    flexBasis: '100%',
     flexDirection: 'row-reverse',
+    padding: '18px 0',
 
-    fontSize: 'calc(18px + 0.35vw + 0.35vh)',
-    padding: '18px 20px'
+    '> a': {
+      fontSize: 'calc(18px + 0.35vw + 0.35vh)'
+    }
   }
 });
 

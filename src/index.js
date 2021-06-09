@@ -30,6 +30,8 @@ let keepLoading = false;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
+const version = 2.2;
+
 // detect touch screen
 export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
 
@@ -40,17 +42,9 @@ function loaded()
   const pages =
     <Router>
       <Switch>
-        <Route exact path={ '/' }>
-          <Homepage/>
-        </Route>
-
-        <Route path={ '/play' }>
-          <Game/>
-        </Route>
-
-        <Route path={ '*' }>
-          <NotFound/>
-        </Route>
+        <Route exact path={ '/' } component={ Homepage }/>
+        <Route path={ '/play' } component={ Game }/>
+        <Route path={ '*' } component={ NotFound }/>
       </Switch>
     </Router>;
 
@@ -163,7 +157,7 @@ const ipCheckPromise = () =>
         {
           reject(i18n(response.data) || response.data);
         }
-        else if (response.data.version !== 2.1)
+        else if (response.data.version !== version)
         {
           reject(i18n('server-mismatch'));
         }

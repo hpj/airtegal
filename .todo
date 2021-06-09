@@ -2,21 +2,19 @@ Performance Issues and Bugs:
   ☐ fix some of the issues of on firefox
 
 Testing:
-  @critical
-  ☐ playing a game of kuruit after we disabled card packs on the backend
-
-  - test if the app reloads automatically if it lost connection while in the background
-  - an issue that's more common on mobile devices
-
   ☐ options overlay
 
 UI/UX:
-  @critical
-  ☐ write the Qassa Component and play the audio files
+  ☐ show the master's name on room's lobby card
+  
+  ☐ update the wait until master start the match to include the master username or the oldest username
+  
+  ☐ update the game mode select element because it looks too fuckin' thicc
 
-  @low 
-  ☐ following Qassa example spilt kuruit components out of the hand and field overlays
-  - maybe move them out of the room options yoo because it's soe complex right now
+  ☐ look into copying some elements from garlic phone lobbies
+
+  ☐ we change the hand & field overlay containers style to allow more animations
+  - look into learning react transaction group to create animation for entering and exiting entries
 
 Homepage:
 

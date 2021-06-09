@@ -19,9 +19,10 @@ const defaultRoom = {
   id: 'sskye',
   region: 'egypt',
   master: 'skye',
-
+  
   state: 'lobby',
   phase: '',
+  timestamp: Date.now(),
 
   players: [ 'skye', 'mika', 'aqua', 'aire' ],
   playerProperties: {
@@ -38,19 +39,15 @@ const defaultRoom = {
   options: {
     gameMode: params.get('gameMode') ?? 'kuruit',
     endCondition: 'limited',
-    match: {
-      maxPlayers: 8,
-      maxRounds: 5,
-      maxTime: 10 * 60 * 1000,
-      blankProbability: 0,
-      startingHandAmount: 7,
-      randos: false
-    },
-    round: {
-      delay: 2000,
-      maxDelay: 10000,
-      maxTime: 2 * 60 * 1000
-    }
+    maxPlayers: 8,
+    maxRounds: 5,
+    maxTime: 10 * 60 * 1000,
+    blankProbability: 0,
+    startingHandAmount: 7,
+    randos: false,
+    roundDelay: 2000,
+    roundMaxDelay: 10000,
+    roundTime: 2 * 60 * 1000
   }
 };
 
@@ -96,17 +93,13 @@ function emit(eventName, args)
         options: {
           gameMode: 'kuruit',
           endCondition: 'limited',
-          match: {
-            maxPlayers: 8,
-            maxRounds: 10,
-            maxTime: 10 * 60 * 1000,
-            blankProbability: 2,
-            startingHandAmount: 7,
-            randos: false
-          },
-          round: {
-            maxTime: 2 * 60 * 1000
-          }
+          maxPlayers: 8,
+          maxRounds: 10,
+          maxTime: 10 * 60 * 1000,
+          blankProbability: 2,
+          startingHandAmount: 7,
+          randos: false,
+          roundTime: 2 * 60 * 1000
         }
       },
       {
@@ -115,17 +108,13 @@ function emit(eventName, args)
         options: {
           gameMode: 'kuruit',
           endCondition: 'timer',
-          match: {
-            maxPlayers: 4,
-            maxRounds: 5,
-            maxTime: 10 * 60 * 1000,
-            blankProbability: 0,
-            startingHandAmount: 4,
-            randos: true
-          },
-          round: {
-            maxTime: 2 * 60 * 1000
-          }
+          maxPlayers: 4,
+          maxRounds: 5,
+          maxTime: 10 * 60 * 1000,
+          blankProbability: 0,
+          startingHandAmount: 4,
+          randos: true,
+          roundTime: 2 * 60 * 1000
         }
       },
       {
@@ -133,9 +122,7 @@ function emit(eventName, args)
         players: 4,
         options: {
           gameMode: 'qassa',
-          match: {
-            maxPlayers: 6
-          }
+          maxPlayers: 6
         }
       }
     ];
@@ -458,10 +445,10 @@ function startQassa()
     key: Math.random(),
     story: {
       key: Math.random(),
-      blocks: [
-        { prefix: 'Hello', requires: 'name', suffix: '.' },
-        { prefix: 'Where Will You Be Next', requires: 'day of the week', suffix: '?' },
-        { requires: 'verb', suffix: 'And I Hate it.' }
+      items: [
+        { description: 'name' },
+        { description: 'day of the week' },
+        { description: 'verb' }
       ]
     }
   } ];
@@ -494,7 +481,7 @@ function startQassa()
     room.phase = 'writing';
     room.playerProperties['skye'].state = 'waiting';
 
-    room.field[0].story.blocks[2].requires = undefined;
+    room.field[0].story.items[2].description = undefined;
   
     matchBroadcast(room);
   }
@@ -505,7 +492,7 @@ function startQassa()
 
     room.field[0].story.name = 'Test Story';
     
-    room.field[0].story.blocks = [];
+    room.field[0].story.items = [];
 
     room.field[0].story.composed = {
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend ut urna ac mattis. Suspendisse eleifend eros odio. Proin vulputate est nec tellus venenatis faucibus. In placerat euismod urna, ac fringilla arcu tempus vel. Ut dapibus lacus in blandit posuere.\nAenean vestibulum leo sed tempor pharetra.\n\nVivamus placerat congue placerat. Pellentesque ultricies blandit mauris, at sollicitudin libero ornare non. Duis ultrices faucibus dapibus. Mauris ac nulla erat. Aliquam sed imperdiet sem, quis pharetra dui. Donec quis mi a leo tristique gravida. Pellentesque vehicula leo lobortis, accumsan leo sit amet, ultrices leo. Donec gravida dolor eu purus vehicula lacinia.'
@@ -521,14 +508,14 @@ function startQassa()
     room.phase = 'writing';
     room.playerProperties['skye'].state = 'writing';
 
-    room.field[0].story.blocks[1].requires = undefined;
+    room.field[0].story.items[1].description = undefined;
 
     matchBroadcast(room);
 
     matchLogic = ({ index }) =>
     {
       // eslint-disable-next-line security/detect-object-injection
-      room.field[0].story.blocks[index].requires = undefined;
+      room.field[0].story.items[index].description = undefined;
 
       matchBroadcast(room);
     };

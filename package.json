@@ -5,13 +5,13 @@
   "scripts": {
     "start": "webpack serve --config webpack.config.dev.js --node-env development",
     "start:testing": "webpack serve --config webpack.config.dev.js --node-env test",
-    "build": "webpack --config webpack.config.prod.js --mode production",
+    "build": "webpack --config webpack.config.prod.js --node-env production",
     "test": "might",
     "test:coverage": "might -c"
   },
   "dependencies": {
-    "@sentry/react": "^6.4.1",
-    "@sentry/tracing": "^6.4.1",
+    "@sentry/react": "^6.5.1",
+    "@sentry/tracing": "^6.5.1",
     "autosize-input": "^1.0.2",
     "axios": "^0.21.1",
     "flcss": "^2.2.5",
@@ -26,14 +26,13 @@
   "devDependencies": {
     "compression-webpack-plugin": "^8.0.0",
     "esbuild-loader": "^2.13.1",
-    "eslint": "^7.27.0",
-    "eslint-plugin-react": "^7.23.2",
+    "eslint": "^7.28.0",
+    "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-security": "^1.4.0",
     "git-revision-webpack-plugin": "^5.0.0",
     "json5-loader": "^4.0.1",
     "might-cli": "^2.1.5",
     "might-ui": "^1.1.8",
-    "serve": "^11.3.2",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2"

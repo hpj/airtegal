@@ -24,8 +24,6 @@ class MatchHighlights extends StoreComponent
       entries: []
     });
 
-    // bind functions that are use as callbacks
-
     this.clearEntries = this.clearEntries.bind(this);
   }
 

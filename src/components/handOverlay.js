@@ -44,9 +44,7 @@ class HandOverlay extends StoreComponent
     super({
       handHidden: true,
       handVisible: false,
-      handBlockDragging: false,
-
-      hand: []
+      handBlockDragging: false
     });
 
     this.active = undefined;
@@ -82,7 +80,6 @@ class HandOverlay extends StoreComponent
       changes?.handBlockDragging ||
       changes?.handVisible ||
       changes?.handHidden ||
-      changes?.hand ||
       changes?.pick
     )
       return true;
@@ -98,8 +95,6 @@ class HandOverlay extends StoreComponent
     // if in match and and has to pick a card
     state.handVisible = roomData?.state === 'match' &&
       roomData?.playerProperties[socket.id]?.state === 'picking';
-
-    state.hand = roomData?.playerSecretProperties?.hand ?? [];
 
     return state;
   }
@@ -166,9 +161,9 @@ class HandOverlay extends StoreComponent
   */
   activateCard(element, card, index)
   {
-    const { roomData } = this.state;
+    const { playerProperties } = this.state.roomData;
 
-    if (roomData?.playerProperties[socket.id]?.state !== 'picking')
+    if (playerProperties[socket.id]?.state !== 'picking')
       return;
 
     const { textareaRef } = element;
@@ -214,7 +209,9 @@ class HandOverlay extends StoreComponent
   {
     const { size } = this.props;
 
-    const { handViewport, handHidden } = this.state;
+    const { handViewport, handHidden, handBlockDragging } = this.state;
+
+    const hand = this.state.roomData?.playerSecretProperties?.hand ?? [];
 
     const top = isTouchScreen ? 0 : percent(size.height, 15);
 
@@ -232,7 +229,7 @@ class HandOverlay extends StoreComponent
     const overlayWidth = size.width >= 700 ? '(min(100vw, 700px) / 1.45)' : '(min(85vw, 700px) / 1.45)';
 
     const margin =
-      `calc((${width} - (${overlayWidth} / ${this.state.hand?.length})) / -2)`;
+      `calc((${width} - (${overlayWidth} / ${hand?.length})) / -2)`;
 
     return <div className={ styles.view }>
       <Interactable
@@ -245,7 +242,7 @@ class HandOverlay extends StoreComponent
         } }
 
         verticalOnly={ true }
-        dragEnabled={ !this.state.handBlockDragging }
+        dragEnabled={ !handBlockDragging }
         
         onMovement={ this.onMovement }
         frame={ { pixels: Math.round(size.height * 0.05), every: 8 } }
@@ -269,15 +266,15 @@ class HandOverlay extends StoreComponent
                 flexWrap: isTouchScreen ? 'wrap' : undefined
               } }>
                 {
-                  this.state.hand?.map((card, i) =>
+                  hand?.map((card, i) =>
                   {
-                    const deg = i > this.state.hand.length * 0.5 ?
-                      -(this.state.hand.length / 2) :
-                      (this.state.hand.length / 2);
+                    const deg = i > hand.length * 0.5 ?
+                      -(hand.length / 2) :
+                      (hand.length / 2);
 
-                    const y = i > this.state.hand.length * 0.5 ?
-                      (this.state.hand.length / 3) :
-                      -(this.state.hand.length / 3);
+                    const y = i > hand.length * 0.5 ?
+                      (hand.length / 3) :
+                      -(hand.length / 3);
 
                     return <Card
                       key={ card.key }

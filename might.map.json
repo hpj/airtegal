@@ -165,14 +165,6 @@
           "value": "-1"
         },
         {
-          "action": "select",
-          "value": "#room-options-apply"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
           "action": "wait",
           "value": 2
         }

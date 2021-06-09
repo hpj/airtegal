@@ -16,18 +16,18 @@ import AutoSizeInput from './autoSizeInput.js';
 const colors = getTheme();
 
 /**
-* @param { { block: import('./roomOverlay').Block, allowed: boolean, onSubmit: () => void } } param0
+* @param { { description: string, allowed: boolean, onSubmit: () => void } } param0
 */
-const Block = ({ block, allowed, onSubmit }) =>
+const Box = ({ description, allowed, onSubmit }) =>
 {
-  if (allowed && !block.requires)
+  if (allowed && !description)
     allowed = false;
 
-  const [ content, setContent ] = useState(allowed ? '' : block.requires);
+  const [ content, setContent ] = useState(allowed ? '' : description);
   
   return <div className={ styles.container }>
     {
-      allowed ? <div className={ styles.requires }>{ block.requires }</div> : undefined
+      allowed ? <div className={ styles.items }>{ description }</div> : undefined
     }
 
     <AutoSizeInput
@@ -35,7 +35,7 @@ const Block = ({ block, allowed, onSubmit }) =>
       className={ styles.input }
       placeholder={ i18n('blank') }
       type={ 'text' }
-      value={ block.requires ? content : i18n('qassa') }
+      value={ allowed ? content : i18n('qassa') }
       disabled={ !allowed }
       onUpdate={ (value, resize, blur) =>
       {
@@ -49,8 +49,8 @@ const Block = ({ block, allowed, onSubmit }) =>
   </div>;
 };
 
-Block.propTypes = {
-  block: PropTypes.object.isRequired,
+Box.propTypes = {
+  description: PropTypes.string,
   allowed: PropTypes.bool,
   onSubmit: PropTypes.func
 };
@@ -61,7 +61,7 @@ const styles = createStyle({
     gridTemplateColumns: '1fr auto',
     gridTemplateRows: 'auto 1fr',
 
-    gridTemplateAreas: '"requires icon" "content icon"',
+    gridTemplateAreas: '"items icon" "content icon"',
 
     backgroundColor: colors.blackCardBackground,
     
@@ -74,8 +74,8 @@ const styles = createStyle({
     borderRadius: '10px'
   },
 
-  requires: {
-    gridArea: 'requires',
+  items: {
+    gridArea: 'items',
     color: colors.whiteText,
 
     userSelect: 'none',
@@ -154,4 +154,4 @@ const styles = createStyle({
   }
 });
 
-export default Block;
+export default Box;

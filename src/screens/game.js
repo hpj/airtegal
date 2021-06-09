@@ -128,8 +128,6 @@ class Game extends React.Component
       rooms: []
     };
 
-    // bind functions that are use as callbacks
-
     this.resize = this.resize.bind(this);
     this.visibilityChange = this.visibilityChange.bind(this);
 
@@ -191,7 +189,7 @@ class Game extends React.Component
     else if (params?.has('create') || params?.has('match'))
       overlayRef.current.createRoom();
 
-    if (params?.has('discord'))
+    if (process.env.NODE_ENV === 'test' && params?.has('discord'))
       this.setState({ detectDiscord: true });
 
     navigator.permissions?.query({ name: 'clipboard-write' })
@@ -431,7 +429,7 @@ class Game extends React.Component
                       <div className={ roomsStyles.counter }>
                         <div>{room.players}</div>
                         <div>/</div>
-                        <div>{ room.options.match.maxPlayers }</div>
+                        <div>{ room.options.maxPlayers }</div>
                       </div>
 
                       { RoomHighlights(room) }
@@ -497,14 +495,14 @@ const RoomHighlights = (room) =>
   if (gameMode === 'kuruit')
   {
     if (room.options.endCondition === 'limited')
-      highlights.push(`${i18n('max-rounds', room.options.match.maxRounds, true)}.`);
+      highlights.push(`${i18n('max-rounds', room.options.maxRounds, true)}.`);
     else if (room.options.endCondition === 'timer')
-      highlights.push(`${i18n('max-time', room.options.match.maxTime / 60 / 1000, true)}.`);
+      highlights.push(`${i18n('max-time', room.options.maxTime / 60 / 1000, true)}.`);
 
-    highlights.push(`${i18n('hand-cap-lobby', room.options.match.startingHandAmount, true)}.`);
+    highlights.push(`${i18n('hand-cap-lobby', room.options.startingHandAmount, true)}.`);
 
-    if (room.options.match.blankProbability > 0)
-      highlights.push(`%${room.options.match.blankProbability} ${i18n('blank-probability-lobby')}.`);
+    if (room.options.blankProbability > 0)
+      highlights.push(`%${room.options.blankProbability} ${i18n('blank-probability-lobby')}.`);
   }
   else if (gameMode === 'qassa')
   {
@@ -551,7 +549,6 @@ const headerStyles = createStyle({
     gridArea: 'header',
     display: 'flex',
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
 
     direction: locale.direction,
@@ -721,8 +718,6 @@ const optionsStyles = createStyle({
 const roomsStyles = createStyle({
   container: {
     overflow: 'hidden',
-
-    fontSize: 'calc(8px + 0.2vw + 0.2vh)',
     padding: '10px 3vw 0 3vw'
   },
 
@@ -794,8 +789,8 @@ const roomsStyles = createStyle({
 
     animation: createAnimation({
       duration: '2s',
-      timingFunction: 'linear',
-      iterationCount: 'ease',
+      timingFunction: 'ease',
+      iterationCount: 'infinite',
       keyframes: {
         from: {
           transform: 'rotate(0deg)'
@@ -810,8 +805,8 @@ const roomsStyles = createStyle({
   error: {
     extend: 'loading',
     
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
+    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
@@ -847,15 +842,21 @@ const roomsStyles = createStyle({
     width: 'calc(50% - 40px)',
     height: 'auto',
 
-    margin: '10px 20px'
+    margin: '10px 20px',
+
+    '> * > *': {
+      fontSize: 'calc(8px + 0.25vw + 0.25vh)'
+    }
   },
 
   counter: {
     display: 'flex',
-    fontSize: 'calc(10px + 0.35vw + 0.35vh)',
-
     width: 'min-content',
-    margin: '0 0 5px 0'
+    margin: '0 0 5px 0',
+
+    '> div': {
+      fontSize: 'calc(10px + 0.35vw + 0.35vh)'
+    }
   },
 
   cover: {

@@ -45,8 +45,8 @@ class RoomState extends StoreComponent
     super.componentDidMount();
 
     this.music.loop = true;
-    this.music.volume = 0.35;
-
+    
+    this.music.volume = 0.15;
     this.audio.volume = 0.95;
   }
 
@@ -84,15 +84,17 @@ class RoomState extends StoreComponent
     if (!roomData)
       return;
 
+    const player = roomData.playerProperties[socket.id];
+
     if (roomData.state === 'lobby')
     {
       clearInterval(this.countdownInterval);
 
       // set state as players count
       if (locale.direction === 'ltr')
-        this.formatted = `${roomData.players.length}/${roomData.options.match.maxPlayers}`;
+        this.formatted = `${roomData.players.length}/${roomData.options.maxPlayers}`;
       else
-        this.formatted = `${roomData.options.match.maxPlayers}/${roomData.players.length}`;
+        this.formatted = `${roomData.options.maxPlayers}/${roomData.players.length}`;
 
       // stop music & audio
 
@@ -104,17 +106,17 @@ class RoomState extends StoreComponent
       // re-render to show correct counter
       this.forceUpdate();
     }
-    else if (this.state.roomData.phase !== roomData.phase)
+    else if (this.state.roomData?.phase !== roomData.phase)
     {
       clearInterval(this.countdownInterval);
 
       if (roomData.phase === 'picking' || roomData.phase === 'judging')
       {
-        const time = roomData.options.round.maxTime;
+        const time = roomData.options.roundTime;
   
-        this.formatted = this.formatMs(time);
+        this.countdown = roomData.timestamp + time;
         
-        this.countdown = Date.now() + time;
+        this.formatted = this.formatMs((this.countdown + 500) - Date.now());
   
         // interval are disabled in end-to-end testing
         
@@ -140,6 +142,10 @@ class RoomState extends StoreComponent
             // re-render to show correct counter
             this.forceUpdate();
           }, 1000);
+        }
+        else
+        {
+          this.formatted = this.formatMs((this.countdown + 500) - roomData.timestamp);
         }
   
         // re-render to show correct counter
@@ -181,7 +187,7 @@ class RoomState extends StoreComponent
     // if lobby clear match state
     state.displayMessage = undefined;
     
-    if (!roomData.playerProperties[socket.id])
+    if (!player)
     {
       state.displayMessage = i18n('spectating');
     }

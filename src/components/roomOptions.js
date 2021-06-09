@@ -47,8 +47,6 @@ class RoomOptions extends StoreComponent
       dirtyOptions: undefined
     });
 
-    // bind functions that are use as callbacks
-
     this.editRequest = this.editRequest.bind(this);
     this.matchRequest = this.matchRequest.bind(this);
   }
@@ -114,20 +112,6 @@ class RoomOptions extends StoreComponent
     this.store.set({ optionsErrorMessage: err });
   }
 
-  checkValidity()
-  {
-    const inputs = document.querySelectorAll('#room-options-input');
-
-    for (let i = 0; i < inputs.length; i++)
-    {
-      // eslint-disable-next-line security/detect-object-injection
-      if (!inputs[i].validity.valid)
-        return false;
-    }
-
-    return true;
-  }
-
   editRequest()
   {
     const { sendMessage } = this.props;
@@ -150,7 +134,6 @@ class RoomOptions extends StoreComponent
         this.showErrorMessage(i18n(err) || err);
       });
   }
-
   matchRequest()
   {
     const { sendMessage } = this.props;
@@ -210,10 +193,7 @@ class RoomOptions extends StoreComponent
     this.store.set({
       dirtyOptions: {
         ...this.state.dirtyOptions,
-        match: {
-          ...this.state.dirtyOptions.match,
-          randos: value
-        }
+        randos: value
       }
     });
   }
@@ -224,20 +204,10 @@ class RoomOptions extends StoreComponent
     const dirtyOptions = this.state.dirtyOptions;
 
     const isMaster = this.state.roomData?.master === socket.id;
-
-    const isValid = this.checkValidity();
+    const isPlayer = this.state.roomData?.playerProperties[socket.id] !== undefined;
 
     const isDirty = JSON.stringify(dirtyOptions) !== JSON.stringify(options);
     
-    let isAllowed = false;
-
-    if (process.env.NODE_ENV !== 'production')
-      isAllowed = true;
-    if (this.state.roomData?.players?.length >= 3 && this.state.roomData?.state !== 'match')
-      isAllowed = true;
-    else if (options?.match.randos && this.state.roomData?.state !== 'match')
-      isAllowed = true;
-
     if (!dirtyOptions)
       return <div/>;
 
@@ -272,7 +242,7 @@ class RoomOptions extends StoreComponent
       return <div>
         <div className={ styles.title }>{ i18n('match-options') }</div>
 
-        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.match.maxRounds !== dirtyOptions.match.maxRounds)).toString() }>
+        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds)).toString() }>
           <div
             id={ 'room-options-kuruit-limited' }
             className={ styles.checkbox }
@@ -294,22 +264,19 @@ class RoomOptions extends StoreComponent
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
-            value={ dirtyOptions.match.maxRounds }
+            value={ dirtyOptions.maxRounds }
             onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
-                match: {
-                  ...dirtyOptions.match,
-                  maxRounds: value
-                }
+                maxRounds: value
               }
             }, resize) }
           />
 
-          <div>{ i18n('max-rounds', dirtyOptions.match.maxRounds) }</div>
+          <div>{ i18n('max-rounds', dirtyOptions.maxRounds) }</div>
         </div>
 
-        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.match.maxTime !== dirtyOptions.match.maxTime)).toString() }>
+        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime)).toString() }>
           <div
             id={ 'room-options-kuruit-timer' }
             className={ styles.checkbox }
@@ -332,23 +299,20 @@ class RoomOptions extends StoreComponent
             master={ isMaster.toString() }
             className={ styles.input }
             placeholder={ i18n('options-placeholder') }
-            value={ dirtyOptions.match.maxTime }
+            value={ dirtyOptions.maxTime }
             onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
                 ...dirtyOptions,
-                match: {
-                  ...dirtyOptions.match,
-                  maxTime: value
-                }
+                maxTime: value
               }
             }, resize) }
           />
 
-          <div>{ i18n('max-time', dirtyOptions.match.maxTime / 60 / 1000) }</div>
+          <div>{ i18n('max-time', dirtyOptions.maxTime / 60 / 1000) }</div>
         </div>
 
         <div style={ { margin: '5px -5px 5px 0px' } }>
-          <div className={ styles.field } dirty={ (dirtyOptions.match.maxPlayers !== options.match.maxPlayers).toString() }>
+          <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
             <AutoSizeInput
               required
               type={ 'number' }
@@ -359,14 +323,11 @@ class RoomOptions extends StoreComponent
               master={ isMaster.toString() }
               className={ styles.input }
               placeholder={ i18n('options-placeholder') }
-              value={ dirtyOptions.match.maxPlayers }
+              value={ dirtyOptions.maxPlayers }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
                   ...dirtyOptions,
-                  match: {
-                    ...dirtyOptions.match,
-                    maxPlayers: value
-                  }
+                  maxPlayers: value
                 }
               }, resize) }
             />
@@ -374,7 +335,7 @@ class RoomOptions extends StoreComponent
             <div>{ i18n('max-players') }</div>
           </div>
 
-          <div className={ styles.field } dirty={ (dirtyOptions.round.maxTime !== options.round.maxTime).toString() }>
+          <div className={ styles.field } dirty={ (dirtyOptions.roundTime !== options.roundTime).toString() }>
             <AutoSizeInput
               required
               type={ 'number' }
@@ -386,14 +347,11 @@ class RoomOptions extends StoreComponent
               master={ isMaster.toString() }
               className={ styles.input }
               placeholder={ i18n('options-placeholder') }
-              value={ dirtyOptions.round.maxTime }
+              value={ dirtyOptions.roundTime }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
                   ...dirtyOptions,
-                  round: {
-                    ...dirtyOptions.round,
-                    maxTime: value
-                  }
+                  roundTime: value
                 }
               }, resize) }
             />
@@ -401,7 +359,7 @@ class RoomOptions extends StoreComponent
             <div>{ i18n('round-countdown') }</div>
           </div>
 
-          <div className={ styles.field } dirty={ (dirtyOptions.match.startingHandAmount !== options.match.startingHandAmount).toString() }>
+          <div className={ styles.field } dirty={ (dirtyOptions.startingHandAmount !== options.startingHandAmount).toString() }>
             <AutoSizeInput
               required
               type={ 'number' }
@@ -412,14 +370,11 @@ class RoomOptions extends StoreComponent
               master={ isMaster.toString() }
               className={ styles.input }
               placeholder={ i18n('options-placeholder') }
-              value={ dirtyOptions.match.startingHandAmount }
+              value={ dirtyOptions.startingHandAmount }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
                   ...dirtyOptions,
-                  match: {
-                    ...dirtyOptions.match,
-                    startingHandAmount: value
-                  }
+                  startingHandAmount: value
                 }
               }, resize) }
             />
@@ -427,7 +382,7 @@ class RoomOptions extends StoreComponent
             <div>{ i18n('hand-cap') }</div>
           </div>
 
-          <div className={ styles.field } dirty={ (dirtyOptions.match.blankProbability !== options.match.blankProbability).toString() }>
+          <div className={ styles.field } dirty={ (dirtyOptions.blankProbability !== options.blankProbability).toString() }>
 
             <AutoSizeInput
               required
@@ -439,14 +394,11 @@ class RoomOptions extends StoreComponent
               master={ isMaster.toString() }
               className={ styles.input }
               placeholder={ i18n('options-placeholder') }
-              value={ dirtyOptions.match.blankProbability }
+              value={ dirtyOptions.blankProbability }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
                   ...dirtyOptions,
-                  match: {
-                    ...dirtyOptions.match,
-                    blankProbability: value
-                  }
+                  blankProbability: value
                 }
               }, resize) }
             />
@@ -456,11 +408,11 @@ class RoomOptions extends StoreComponent
           </div>
         </div>
 
-        <div className={ styles.field } dirty={ (dirtyOptions.match.randos !== options.match.randos).toString() }>
+        <div className={ styles.field } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
           <div>{ i18n('randos') }</div>
 
-          <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.match.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
-          <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.match.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+          <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
+          <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
         </div>
       </div>;
     };
@@ -469,14 +421,32 @@ class RoomOptions extends StoreComponent
     {
       const players = this.state.roomData?.players;
       const playerProperties = this.state.roomData?.playerProperties;
-      
-      const split = Math.round(players?.length / 3);
 
-      const groups = [
-        players.slice(0, split),
-        players.slice(split, split * 2),
-        players.slice(split * 2)
-      ];
+      let groups = [];
+
+      if (players.length < 4)
+      {
+        groups = [ players ];
+      }
+      else if (players.length < 6)
+      {
+        const split = Math.round(players.length / 2);
+
+        groups = [
+          players.slice(0, split),
+          players.slice(split)
+        ];
+      }
+      else
+      {
+        const split = Math.round(players.length / 3);
+
+        groups = [
+          players.slice(0, split),
+          players.slice(split, split * 2),
+          players.slice(split * 2)
+        ];
+      }
       
       return <div>
         {
@@ -526,32 +496,31 @@ class RoomOptions extends StoreComponent
                   KuruitOptions() : QassaOptions()
               }
 
-              {/* Dirty Changes Notice */}
-
-              <div className={ styles.dirty } style={ { display: (isDirty) ? '' : 'none' } }>{ i18n('changes-not-applied') }</div>
-
               {/* Apply Button */}
 
-              <div
-                id={ 'room-options-apply' }
-                className={ styles.button }
-                master={ isMaster.toString() }
-                valid={ isValid.toString() }
-                allowed={ isDirty.toString() }
-                onClick={ this.editRequest }>
-                { i18n('apply') }
-              </div>
+              {
+                !isMaster && isPlayer ? <div className={ styles.wait }>{ i18n('wait-for-room-master') }</div> : undefined
+              }
+
+              {
+                isDirty && isMaster ? <div
+                  id={ 'room-options-apply' }
+                  className={ styles.button }
+                  onClick={ this.editRequest }>
+                  { i18n('apply') }
+                </div> : undefined
+              }
 
               {/* Start Button */}
 
-              <div
-                id={ 'room-options-start' }
-                className={ styles.button }
-                master={ isMaster.toString() }
-                allowed={ isAllowed.toString() }
-                onClick={ this.matchRequest }>
-                { i18n('start') }
-              </div>
+              {
+                !isDirty && isMaster ? <div
+                  id={ 'room-options-start' }
+                  className={ styles.button }
+                  onClick={ this.matchRequest }>
+                  { i18n('start') }
+                </div> : undefined
+              }
             </div>
         }
       </div>
@@ -686,33 +655,19 @@ const styles = createStyle({
     ':hover': {
       color: colors.whiteText,
       backgroundColor: colors.blackBackground
-    },
-
-    '[master="false"]': {
-      display: 'none'
-    },
-
-    '[allowed="false"]': {
-      pointerEvents: 'none',
-      color: colors.greyText,
-      backgroundColor: colors.whiteBackground
-    },
-
-    '[allowed="true"][valid="false"]': {
-      pointerEvents: 'none',
-      color: colors.whiteText,
-      backgroundColor: colors.red
     }
-  },
-
-  dirty: {
-    textAlign: 'center',
-    fontStyle: 'italic',
-    padding: '10px'
   },
 
   title: {
     padding: '20px 25px'
+  },
+
+  wait: {
+    width: 'fit-content',
+    
+    margin: '0 auto',
+    padding: '25px 25px 5px',
+    borderBottom: '2px solid'
   },
 
   group: {

@@ -30,10 +30,7 @@ class OptionsOverlay extends React.Component
       }
     };
 
-    // bind functions that are use as callbacks
-
     this.hide = this.hide.bind(this);
-
     // this.apply = this.apply.bind(this);
   }
 

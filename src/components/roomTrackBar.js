@@ -79,9 +79,21 @@ const styles = createStyle({
     zIndex: 3,
     gridArea: 'trackBar',
 
-    overflow: 'hidden',
     backgroundColor: colors.trackBarBackground,
     
+    overflow: 'hidden auto',
+
+    '::-webkit-scrollbar':
+    {
+      width: '8px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '8px',
+      boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
+    },
+
     '@media screen and (max-width: 1080px)': {
       display: 'none'
     }
@@ -93,31 +105,15 @@ const styles = createStyle({
     
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
+    
     width: '100%',
-    height: '100%'
+    height: 'min-content'
   },
 
   players: {
     gridArea: 'players',
-
-    maxHeight: '100%',
-    width: '100%',
-    height: 'min-content',
-
-    overflowX: 'hidden',
-    overflowY: 'auto',
-
-    '::-webkit-scrollbar':
-    {
-      width: '8px'
-    },
-
-    '::-webkit-scrollbar-thumb':
-    {
-      borderRadius: '8px',
-      boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
-    }
+    
+    height: 'min-content'
   },
 
   player: {
@@ -132,16 +128,16 @@ const styles = createStyle({
   name: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
-    padding: '5px 0'
+    padding: '15px'
   },
 
   played: {
     width: 'calc(7px + 0.25vw + 0.25vh)',
     height: 'calc(7px + 0.25vw + 0.25vh)',
     
-    color: colors.blackText,
-    padding: '0 15px'
+    color: colors.blackText
   },
 
   waiting: {

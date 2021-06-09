@@ -10,8 +10,6 @@ class AutoSizeInput extends React.Component
   {
     super();
 
-    // bind functions that are use as callbacks
-
     this.resize = this.resize.bind(this);
 
     this.inputRef = createRef();

@@ -63,8 +63,6 @@ class ShareOverlay extends React.Component
   {
     super();
 
-    // bind functions that are use as callbacks
-
     this.copyURL = this.copyURL.bind(this);
 
     this.shareOnFacebook = this.shareOnFacebook.bind(this);
@@ -237,7 +235,7 @@ const styles = createStyle({
     maxWidth: '490px',
 
     top: '25vh',
-    width: '70vw',
+    width: '40vw',
     height: '50vh',
     
     overflow: 'hidden',
@@ -257,7 +255,7 @@ const styles = createStyle({
   image: {
     backgroundColor: colors.shareUrlBackground,
 
-    width: '75%',
+    width: '90%',
     height: '90%',
 
     objectFit: 'cover',
