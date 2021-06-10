@@ -37,6 +37,7 @@ const Box = ({ description, allowed, onSubmit }) =>
       type={ 'text' }
       value={ allowed ? content : i18n('qassa') }
       disabled={ !allowed }
+      onSubmit={ () => onSubmit(content) }
       onUpdate={ (value, resize, blur) =>
       {
         const c = value.replace(locale.blank, '').replace(/\s+/g, ' ');

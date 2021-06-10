@@ -57,12 +57,9 @@ class AutoSizeInput extends React.Component
     }
 
     if (type === 'number' && value > 0 && minutes)
-    {
       value = value * (60 * 1000);
-    }
 
-    if (onUpdate)
-      onUpdate((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize);
+    onUpdate?.((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize);
   }
   
   onBlur(e)
@@ -77,12 +74,9 @@ class AutoSizeInput extends React.Component
       value = parseInt(value);
     
     if (type === 'number' && value > 0 && minutes)
-    {
       value = value * (60 * 1000);
-    }
 
-    if (onUpdate)
-      onUpdate((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize, true);
+    onUpdate?.((value !== undefined && !Number.isNaN(value)) ? value : '', this.resize, true);
   }
 
   render()
@@ -92,7 +86,7 @@ class AutoSizeInput extends React.Component
     const {
       required, type, minutes, min, max,
       id, master, className, placeholder,
-      disabled
+      disabled, onSubmit
     } = this.props;
 
     // change value form ms to minutes
@@ -122,6 +116,11 @@ class AutoSizeInput extends React.Component
       placeholder={ placeholder }
       value={ value }
 
+      onKeyPress={ (e) =>
+      {
+        if (e.key === 'Enter')
+          onSubmit?.();
+      } }
       onChange={ this.onChange }
       onBlur={ this.onBlur }
     />;
@@ -145,7 +144,8 @@ AutoSizeInput.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.any,
 
-  onUpdate: PropTypes.func
+  onUpdate: PropTypes.func,
+  onSubmit: PropTypes.func
 };
 
 export default AutoSizeInput;
