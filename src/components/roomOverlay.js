@@ -225,9 +225,12 @@ class RoomOverlay extends StoreComponent
         .then(wl => this.wakeLock = wl)
         .catch(e => e);
 
-      window.history
-        .replaceState(null, document.title,
-          `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
+      if (process.env.NODE_ENV !== 'test')
+      {
+        window.history
+          .replaceState(null, document.title,
+            `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
+      }
 
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
@@ -261,10 +264,13 @@ class RoomOverlay extends StoreComponent
         .then(wl => this.wakeLock = wl)
         .catch(e => e);
       
-      window.history
-        .replaceState(null, document.title,
-          `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
-
+      if (process.env.NODE_ENV !== 'test')
+      {
+        window.history
+          .replaceState(null, document.title,
+            `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
+      }
+      
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>

@@ -3,6 +3,7 @@ import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 
 import CheckIcon from 'mdi-react/CheckIcon';
+import WaitingIcon from 'mdi-react/LoadingIcon';
 
 import autoSize from 'autosize-input';
 
@@ -27,8 +28,8 @@ const colors = getTheme();
 const wrapperRef = createRef();
 
 const gameModes = [
-  { label: i18n('kuruit'), value: 'kuruit' },
-  { label: i18n('qassa'), value: 'qassa' }
+  { label: i18n('kuruit'), value: 'kuruit', group: i18n('free-for-all') },
+  { label: i18n('qassa'), value: 'qassa', group: i18n('co-op')  }
 ];
 
 /**
@@ -200,13 +201,16 @@ class RoomOptions extends StoreComponent
 
   render()
   {
-    const options = this.state.roomData?.options;
-    const dirtyOptions = this.state.dirtyOptions;
+    const { roomData, dirtyOptions } = this.state;
 
-    const isMaster = this.state.roomData?.master === socket.id;
-    const isPlayer = this.state.roomData?.playerProperties[socket.id] !== undefined;
+    const options = roomData?.options;
+
+    const isMaster = roomData?.master === socket.id;
+    const isPlayer = roomData?.playerProperties[socket.id] !== undefined;
 
     const isDirty = JSON.stringify(dirtyOptions) !== JSON.stringify(options);
+
+    const master = roomData?.playerProperties[roomData?.master ?? roomData?.players[0]]?.username;
     
     if (!dirtyOptions)
       return <div/>;
@@ -222,8 +226,7 @@ class RoomOptions extends StoreComponent
               id={ 'room-options-select-game-mode' }
 
               className={ dirtyOptions.gameMode !== options.gameMode ? styles.selectDirty : styles.select }
-              menuClassName={ styles.selectMenu }
-              optionClassName={ styles.selectOption }
+
               optionsIdPrefix={ 'room-options-game-mode' }
           
               defaultIndex={ 0 }
@@ -419,8 +422,8 @@ class RoomOptions extends StoreComponent
 
     const QassaOptions = () =>
     {
-      const players = this.state.roomData?.players;
-      const playerProperties = this.state.roomData?.playerProperties;
+      const players = roomData?.players;
+      const playerProperties = roomData?.playerProperties;
 
       let groups = [];
 
@@ -499,7 +502,10 @@ class RoomOptions extends StoreComponent
               {/* Apply Button */}
 
               {
-                !isMaster && isPlayer ? <div className={ styles.wait }>{ i18n('wait-for-room-master') }</div> : undefined
+                !isMaster && isPlayer ? <div className={ styles.wait }>
+                  <div>{ i18n('wait-for-room-master', master) }</div>
+                  <WaitingIcon className={ styles.waiting }/>
+                </div> : undefined
               }
 
               {
@@ -535,6 +541,20 @@ RoomOptions.propTypes = {
   sendMessage: PropTypes.func.isRequired,
   addNotification: PropTypes.func.isRequired
 };
+
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   wrapper: {
@@ -663,11 +683,22 @@ const styles = createStyle({
   },
 
   wait: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+
     width: 'fit-content',
     
     margin: '0 auto',
     padding: '25px 25px 5px',
-    borderBottom: '2px solid'
+
+    '> svg': {
+      width: '24px',
+      height: '24px',
+      color: colors.blackText,
+      animation: waitingAnimation,
+      margin: '10px'
+    }
   },
 
   group: {
@@ -769,15 +800,6 @@ const styles = createStyle({
       display: 'block',
       content: '"*"'
     }
-  },
-
-  selectMenu: {
-    borderColor: colors.greyText,
-    padding: '10px 0'
-  },
-
-  selectOption: {
-    height: '50px'
   },
 
   field: {

@@ -175,7 +175,7 @@ class Select extends React.Component
 
       <div shown={ shown.toString() } className={ styles.block } onClick={ this.toggle }/>
 
-      <div shown={ shown.toString() } className={ `${styles.menu} ${this.props.menuClassName ?? ''}` }>
+      <div shown={ shown.toString() } className={ styles.menu }>
 
         <div className={ styles.options }>
           {
@@ -184,11 +184,11 @@ class Select extends React.Component
               const highlighted = index === i;
 
               return <div key={ i }>
-                { opt.group ? this.props.formatLabel(opt.group) : <div/> }
+                { opt.group ? <div className={ styles.group }>{ opt.group }</div> : undefined }
                 <div
                   highlighted={ highlighted.toString() }
                   id={ (this.props.optionsIdPrefix) ? `${this.props.optionsIdPrefix}-${i + 1}` : '' }
-                  className={ `${styles.option} ${this.props.optionClassName ?? ''}` }
+                  className={ styles.option }
                   onMouseOver={ () => this.hover(i) }
                   onClick={ () => this.onChange(opt) }
                 >
@@ -205,10 +205,8 @@ class Select extends React.Component
 
 Select.propTypes = {
   id: PropTypes.string,
-
   className: PropTypes.string,
-  menuClassName: PropTypes.string,
-  optionClassName: PropTypes.string,
+
   optionsIdPrefix: PropTypes.string,
   
   defaultIndex: PropTypes.number,
@@ -237,8 +235,6 @@ const styles = createStyle({
     borderRadius: '5px',
 
     '[shown="true"]': {
-      // color: colors.whiteText,
-      // backgroundColor: colors.greyText,
       color: colors.whiteText,
       backgroundColor: colors.blackBackground,
       border: 0
@@ -302,10 +298,11 @@ const styles = createStyle({
 
     top: '100%',
 
+    maxWidth: '420px',
     width: '100%',
     height: 'auto',
 
-    border: `${colors.blackText} 2px solid`,
+    border: `${colors.greyText} 2px solid`,
     borderRadius: '5px',
 
     margin: '8px 0',
@@ -333,11 +330,14 @@ const styles = createStyle({
 
   options: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
+  },
 
-    '> div > div': {
-      padding: '0 15px'
-    }
+  group: {
+    pointerEvents: 'none',
+    color: colors.greyText,
+    fontSize: 'calc(6px + 0.25vw + 0.25vh)',
+    padding: '8px 15px'
   },
 
   option: {
@@ -349,7 +349,8 @@ const styles = createStyle({
 
     fontSize: 'calc(11px + 0.25vw + 0.25vh)',
 
-    height: '40px',
+    height: '50px',
+    padding: '0 15px',
 
     '[highlighted="true"]': {
       color: colors.whiteText,

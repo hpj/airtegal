@@ -112,17 +112,15 @@ class RoomState extends StoreComponent
 
       if (roomData.phase === 'picking' || roomData.phase === 'judging')
       {
-        const time = roomData.options.roundTime;
-  
-        this.countdown = roomData.timestamp + time;
-        
-        this.formatted = this.formatMs((this.countdown + 500) - Date.now());
-  
-        // interval are disabled in end-to-end testing
-        
+        this.countdown = roomData.timestamp + roomData.options.roundTime;
+          
+        // interval are disabled in testing
+
         // istanbul ignore if
         if (process.env.NODE_ENV !== 'test')
         {
+          this.formatted = this.formatMs((this.countdown + 500) - Date.now());
+
           // set a 1s interval
           this.countdownInterval = setInterval(() =>
           {
@@ -145,7 +143,7 @@ class RoomState extends StoreComponent
         }
         else
         {
-          this.formatted = this.formatMs((this.countdown + 500) - roomData.timestamp);
+          this.formatted = this.formatMs(this.countdown - roomData.timestamp);
         }
   
         // re-render to show correct counter

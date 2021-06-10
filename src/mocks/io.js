@@ -89,6 +89,7 @@ function emit(eventName, args)
     const list = [
       {
         id: 'skye',
+        master: 'Skye',
         players: 4,
         options: {
           gameMode: 'kuruit',
@@ -104,6 +105,7 @@ function emit(eventName, args)
       },
       {
         id: 'mana',
+        master: 'Mana',
         players: 4,
         options: {
           gameMode: 'kuruit',
@@ -119,6 +121,7 @@ function emit(eventName, args)
       },
       {
         id: 'mika',
+        master: 'Mika',
         players: 4,
         options: {
           gameMode: 'qassa',

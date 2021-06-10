@@ -195,12 +195,8 @@ class Game extends React.Component
     navigator.permissions?.query({ name: 'clipboard-write' })
       .then(({ state }) =>
       {
-        if (state !== 'granted' || !navigator.clipboard)
-          return;
-        
-        getStore().set({
-          clipboard: true
-        });
+        if (state === 'granted' && navigator.clipboard)
+          getStore().set({ clipboard: true });
       });
   }
 
@@ -421,13 +417,11 @@ class Game extends React.Component
                 :
                 this.state.rooms.map((room, i) =>
                 {
-                  const title = i18n(`${room.options.gameMode}:cover`);
-
-                  return <div key={ i } onClick={ () => overlayRef.current.joinRoom(room.id) } className={ roomsStyles.room }>
+                  return <div key={ i } className={ roomsStyles.room } onClick={ () => overlayRef.current.joinRoom(room.id) }>
                     <div className={ roomsStyles.highlights }>
                       
                       <div className={ roomsStyles.counter }>
-                        <div>{room.players}</div>
+                        <div>{ room.players }</div>
                         <div>/</div>
                         <div>{ room.options.maxPlayers }</div>
                       </div>
@@ -437,10 +431,8 @@ class Game extends React.Component
 
                     <div className={ roomsStyles.cover }>
                       <div className={ roomsStyles.coverShadow }/>
-                      <div className={ roomsStyles.coverBackground }/>
-    
-                      <div className={ roomsStyles.coverTitle }>
-                        { title }
+                      <div className={ roomsStyles.coverBackground }>
+                        <div className={ roomsStyles.coverTitle }>{ room.master }</div>
                       </div>
                     </div>
                   </div>;
@@ -852,10 +844,10 @@ const roomsStyles = createStyle({
   counter: {
     display: 'flex',
     width: 'min-content',
-    margin: '0 0 5px 0',
+    margin: '0 0 8px',
 
     '> div': {
-      fontSize: 'calc(10px + 0.35vw + 0.35vh)'
+      fontSize: 'calc(9px + 0.35vw + 0.35vh)'
     }
   },
 
@@ -863,9 +855,22 @@ const roomsStyles = createStyle({
     position: 'relative',
     width: '50%'
   },
+  
+  coverShadow: {
+    extend: 'coverBackground',
+    
+    backgroundColor: colors.whiteBackground,
+
+    top: '4px',
+    transform: 'rotate(5deg)'
+  },
 
   coverBackground: {
     position: 'absolute',
+    display: 'flex',
+
+    alignItems: 'center',
+    justifyContent: 'center',
 
     backgroundColor: colors.blackBackground,
 
@@ -880,32 +885,13 @@ const roomsStyles = createStyle({
     transform: 'rotate(-2deg)'
   },
 
-  coverShadow: {
-    extend: 'coverBackground',
-    
-    backgroundColor: colors.whiteBackground,
-
-    top: '4px',
-    transform: 'rotate(5deg)'
-  },
-
   coverTitle: {
-    position: 'absolute',
-    display: 'flex',
+    color: colors.whiteText,
     
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 'min-content',
     textAlign: 'center',
 
-    color: colors.whiteText,
-    lineHeight: 'calc(15px + 0.5vw + 0.5vh)',
-
-    left: 0,
-    width: 'calc(80% - 20px)',
-    height: 'calc(100% - 30px)',
-
-    fontSize: 'calc(10px + 0.2vw + 0.2vh)',
-    margin: '15px calc(10% + 15px)'
+    fontSize: 'calc(8px + 0.25vw + 0.25vh)'
   }
 });
 

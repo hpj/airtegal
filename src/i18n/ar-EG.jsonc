@@ -99,12 +99,12 @@
   "you-were-kicked": "تم طردك من الروم",
 
   "game-mode": "الجيم مود",
-  
-  "kuruit": "كروت",
-  "kuruit:cover": "كروت",
 
+  "free-for-all": "كلة ضد بعض",
+  "co-op": "فرق",
+  
   "qassa": "قصة",
-  "qassa:cover": "قصة",
+  "kuruit": "كروت",
 
   "match-options": "اعدادات الماتش",
 
@@ -137,7 +137,7 @@
   "yes": "نعم",
   "no": "لأ",
 
-  "wait-for-room-master": "استني لحد مصاحب الروم يبدأ الماتش",
+  "wait-for-room-master": "استني لحد ما %0 يبدأ الماتش",
 
   "apply": "طبق",
   "start": "أبدا",

@@ -5,14 +5,6 @@ Testing:
   ☐ options overlay
 
 UI/UX:
-  ☐ show the master's name on room's lobby card
-  
-  ☐ update the wait until master start the match to include the master username or the oldest username
-  
-  ☐ update the game mode select element because it looks too fuckin' thicc
-
-  ☐ look into copying some elements from garlic phone lobbies
-
   ☐ we change the hand & field overlay containers style to allow more animations
   - look into learning react transaction group to create animation for entering and exiting entries
 

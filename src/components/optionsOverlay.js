@@ -107,8 +107,7 @@ class OptionsOverlay extends React.Component
 
               <Select
                 className={ styles.select }
-                menuClassName={ styles.selectMenu }
-            
+
                 defaultIndex={ locales.indexOf(locale) }
                 options={ locales }
 
@@ -265,10 +264,6 @@ const styles = createStyle({
       color: colors.blackText,
       backgroundColor: colors.whiteBackground
     }
-  },
-
-  selectMenu: {
-    borderColor: colors.greyText
   },
 
   buttons: {
