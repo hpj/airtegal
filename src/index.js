@@ -97,9 +97,7 @@ if (process.env.NODE_ENV === 'production')
     release: process.env.RELEASE,
     dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
     integrations: [
-      new Tracing.Integrations.BrowserTracing({
-        routingInstrumentation: Sentry.reactRouterV5Instrumentation()
-      })
+      new Tracing.Integrations.BrowserTracing()
     ],
     tracesSampleRate: 0.65
   });
