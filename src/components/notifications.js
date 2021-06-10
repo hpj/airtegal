@@ -1,8 +1,10 @@
 import React from 'react';
 
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import PropTypes from 'prop-types';
 
-import { createStyle, createAnimation } from 'flcss';
+import { createStyle } from 'flcss';
 
 import { locale } from '../i18n.js';
 
@@ -10,41 +12,28 @@ import getTheme from '../colors.js';
 
 const colors = getTheme();
 
+/**
+* @param { { notifications: { content: string, timestamp: number, remove: () => void }[] } } param0
+*/
 const Notifications = ({ notifications }) =>
 {
-  return <div className={ styles.notifications }>
+  return <TransitionGroup className={ styles.notifications }>
     {
-      notifications?.map((item, i) =>
-      {
-        return <div
-          key={ i }
+      notifications?.map(item => <CSSTransition key={ item.timestamp } timeout={ 350 }>
+        <div
           className={ `${styles.notification } game-notification` }
           onClick={ item.remove }
         >
           { item.content }
-        </div>;
-      })
+        </div>
+      </CSSTransition>)
     }
-  </div>;
+  </TransitionGroup>;
 };
 
 Notifications.propTypes = {
   notifications: PropTypes.array.isRequired
 };
-
-const enterAnimation = createAnimation({
-  keyframes: {
-    from: {
-      opacity: '0.35'
-    },
-    to: {
-      opacity: '1'
-    }
-  },
-  duration: '0.25s',
-  timingFunction: 'cubic-bezier(0.46, 0.03, 0.52, 0.96)',
-  iterationCount: '1'
-});
 
 const styles = createStyle({
   notifications: {
@@ -76,8 +65,6 @@ const styles = createStyle({
     backgroundColor: colors.whiteBackground,
     color: colors.blackText,
 
-    animation: enterAnimation,
-
     overflow: 'hidden',
     pointerEvents: 'auto',
 
@@ -93,7 +80,25 @@ const styles = createStyle({
     borderRadius: '5px',
 
     padding: '10px',
-    margin: '15px auto'
+    margin: '15px auto',
+
+    '.enter': {
+      opacity: 0
+    },
+    
+    '.enter-active': {
+      opacity: 1,
+      transition: 'opacity 0.35s'
+    },
+
+    '.exit': {
+      opacity: 1
+    },
+
+    '.exit-active': {
+      opacity: 0,
+      transition: 'opacity 0.35s'
+    }
   }
 });
 

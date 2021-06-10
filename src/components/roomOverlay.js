@@ -140,8 +140,11 @@ class RoomOverlay extends StoreComponent
     // if testing and there's a match parameter then start a mockup match
     if (process.env.NODE_ENV === 'test' && params.has('notifications'))
     {
-      this.addNotification('Test 1');
-      this.addNotification('Test 2');
+      requestAnimationFrame(() =>
+      {
+        this.addNotification('Test 1');
+        this.addNotification('Test 2');
+      });
     }
   }
 
