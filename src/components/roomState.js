@@ -46,7 +46,7 @@ class RoomState extends StoreComponent
 
     this.music.loop = true;
     
-    this.music.volume = 0.15;
+    this.music.volume = 0;
     this.audio.volume = 0.95;
   }
 
@@ -96,19 +96,17 @@ class RoomState extends StoreComponent
       else
         this.formatted = `${roomData.options.maxPlayers}/${roomData.players.length}`;
 
-      // stop music & audio
-
-      this.music.pause();
-      this.audio.pause();
-
-      this.music.currentTime = this.audio.currentTime = 0;
-
       // re-render to show correct counter
       this.forceUpdate();
     }
     else if (this.state.roomData?.phase !== roomData.phase)
     {
       clearInterval(this.countdownInterval);
+
+      this.music.pause();
+      this.audio.pause();
+
+      this.music.currentTime = this.audio.currentTime = 0;
 
       if (roomData.phase === 'picking' || roomData.phase === 'judging')
       {
@@ -166,11 +164,21 @@ class RoomState extends StoreComponent
           this.music.src = window.URL.createObjectURL(musicBlob);
           this.audio.src = window.URL.createObjectURL(audioBlob);
 
-          // play audio 1.5s after music starts
-          this.music.onplaying = () => setTimeout(() => this.audio.play(), 1500);
+          // play audio after music starts
+          this.music.onplaying = () =>
+          {
+            this.gracefullyStartAudio(this.music, 0.25, 0.02);
 
-          // end music 1s after audio ends
-          this.audio.onended = () => setTimeout(() => this.music.pause(), 1000);
+            setTimeout(() => this.audio.play(), 1500);
+          };
+
+          // end music after audio ends
+          this.audio.onended = () =>
+          {
+            this.gracefullyMuteAudio(this.music, -0.02);
+
+            setTimeout(() => this.music.pause(), 1500);
+          };
           
           if (process.env.NODE_ENV !== 'test')
             this.music.play();
@@ -226,6 +234,31 @@ class RoomState extends StoreComponent
     }
 
     return state;
+  }
+
+  /**
+  * @param { HTMLAudioElement } audio
+  * @param { number } target
+  * @param { number } step
+  */
+  gracefullyStartAudio(audio, target, step)
+  {
+    audio.volume = Math.min(audio.volume + step, target);
+
+    if (audio.volume !== target)
+      setTimeout(() => this.gracefullyStartAudio(audio, target, step), 100);
+  }
+
+  /**
+  * @param { HTMLAudioElement } audio
+  * @param { number } step
+  */
+  gracefullyMuteAudio(audio, step)
+  {
+    audio.volume = Math.max(audio.volume + step, 0);
+    
+    if (audio.volume > 0)
+      setTimeout(() => this.gracefullyMuteAudio(audio, step), 100);
   }
 
   // istanbul ignore next
