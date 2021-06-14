@@ -1,5 +1,7 @@
 import React, { createRef } from 'react';
 
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import PropTypes from 'prop-types';
 
 import { createStyle } from 'flcss';
@@ -10,7 +12,7 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import { locale } from '../i18n.js';
+import i18n, { locale } from '../i18n.js';
 
 import Interactable from './Interactable.js';
 
@@ -205,19 +207,28 @@ class FieldOverlay extends StoreComponent
                 }
               </div>
               :
-              <div id={ 'qassa-field-overlay' } className={ styles.container }>
+              <TransitionGroup id={ 'qassa-field-overlay' } className={ styles.container }>
                 {
-                  field[0]?.story?.composed ? <div className={ styles.qassa }>
-                    { field[0].story.composed.text }
-                  </div> :
-                    field[0]?.story?.items.map((item, index) => <Box
-                      key={ item.key }
-                      description={ item.description }
-                      allowed={ playerState === 'writing' }
-                      onSubmit={ content => this.submit(index, content, playerState === 'writing') }
-                    />)
+                  field[0]?.story?.composed ?
+                    <CSSTransition key={ field[0].story.key } timeout={ 250 }>
+                      <div className={ styles.qassa }>
+                        <div className={ styles.content }>
+                          { field[0].story.composed.text }
+                          <div className={ styles.bottom }>{ i18n('qassa') }</div>
+                        </div>
+                      </div>
+                    </CSSTransition>
+                    :
+                    field[0]?.story?.items.map((item, index) =>
+                      <CSSTransition key={ item.key } timeout={ 250 }>
+                        <Box
+                          description={ item.description }
+                          allowed={ playerState === 'writing' }
+                          onSubmit={ content => this.submit(index, content, playerState === 'writing') }
+                        />
+                      </CSSTransition>)
                 }
-              </div>
+              </TransitionGroup>
           }
         </div>
       </Interactable>
@@ -238,7 +249,7 @@ const styles = createStyle({
   },
 
   wrapper: {
-    overflow: 'hidden overlay',
+    overflow: 'auto',
 
     position: 'relative',
     backgroundColor: colors.fieldBackground,
@@ -259,13 +270,7 @@ const styles = createStyle({
 
     '::-webkit-scrollbar':
     {
-      width: '6px'
-    },
-
-    '::-webkit-scrollbar-thumb':
-    {
-      borderRadius: '6px',
-      boxShadow: `inset 0 0 6px 6px ${colors.fieldScrollbar}`
+      width: 0
     }
   },
 
@@ -296,6 +301,34 @@ const styles = createStyle({
   },
 
   qassa: {
+    position: 'absolute',
+    display: 'flex',
+    justifyContent: 'center',
+
+    width: '100%',
+    height: 'auto',
+    minHeight: '100%',
+
+    '.enter': {
+      left: '100vw'
+    },
+    
+    '.enter-active': {
+      left: 0,
+      transition: 'left 0.25s'
+    },
+
+    '.exit': {
+      left: 0
+    },
+
+    '.exit-active': {
+      left: '100vw',
+      transition: 'left 0.25s'
+    }
+  },
+
+  content: {
     userSelect: 'none',
     direction: locale.direction,
     
@@ -306,15 +339,20 @@ const styles = createStyle({
     fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     
-    lineHeight: '2em',
     whiteSpace: 'pre-wrap',
+    lineHeight: '2em',
 
-    width: '100%',
     maxWidth: '480px',
+    width: '100%',
+    height: 'min-content',
 
-    padding: '45px 35px',
-    margin: '45px 0',
+    margin: '25px',
+    padding: '45px 35px 0',
     borderRadius: '10px'
+  },
+
+  bottom: {
+    padding: '15px 0px 15px'
   }
 });
 

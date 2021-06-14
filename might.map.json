@@ -645,7 +645,7 @@
       ]
     },
     {
-      "title": "Submit A Block Content",
+      "title": "Submit Blocks Content",
       "steps": [
         {
           "action": "goto",
@@ -669,7 +669,7 @@
         },
         {
           "action": "select",
-          "value": "#qassa-field-overlay > :first-child svg"
+          "value": "#qassa-field-overlay > div > svg"
         },
         {
           "action": "click",

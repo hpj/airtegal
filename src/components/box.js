@@ -59,6 +59,7 @@ Box.propTypes = {
 const styles = createStyle({
   container: {
     display: 'grid',
+    position: 'relative',
     gridTemplateColumns: '1fr auto',
     gridTemplateRows: 'auto 1fr',
 
@@ -71,8 +72,26 @@ const styles = createStyle({
     height: '55px',
 
     padding: '25px',
-    margin: '35px 25px',
-    borderRadius: '10px'
+    margin: '25px',
+    borderRadius: '10px',
+
+    '.enter': {
+      left: '100vw'
+    },
+    
+    '.enter-active': {
+      left: 0,
+      transition: 'left 0.25s'
+    },
+
+    '.exit': {
+      left: 0
+    },
+
+    '.exit-active': {
+      left: '100vw',
+      transition: 'left 0.25s'
+    }
   },
 
   items: {
@@ -104,7 +123,7 @@ const styles = createStyle({
     minWidth: '35px',
     maxWidth: '65vw',
 
-    margin: '15px 0 0 10px',
+    margin: '10px 0 0',
     padding: 0,
     border: 0,
 

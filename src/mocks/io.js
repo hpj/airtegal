@@ -447,11 +447,12 @@ function startQassa()
   room.field = [ {
     key: Math.random(),
     story: {
+      name: 'Test',
       key: Math.random(),
       items: [
-        { description: 'name' },
-        { description: 'day of the week' },
-        { description: 'verb' }
+        { key: Math.random(), description: 'name' },
+        { key: Math.random(), description: 'day of the week' },
+        { key: Math.random(), description: 'verb' }
       ]
     }
   } ];
@@ -521,6 +522,18 @@ function startQassa()
       room.field[0].story.items[index].description = undefined;
 
       matchBroadcast(room);
+
+      if (room.field[0].story.items.every(item => item.description === undefined))
+      {
+        room.phase = 'transaction';
+        room.playerProperties['skye'].state = 'waiting';
+
+        room.field[0].story.composed = {
+          text: 'Testing The Story Mode, Ta ta.'
+        };
+
+        matchBroadcast(room);
+      }
     };
   }
 }
