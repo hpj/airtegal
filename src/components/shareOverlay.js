@@ -95,14 +95,21 @@ class ShareOverlay extends React.Component
   // istanbul ignore next
   copyURL()
   {
-    const { clipboard, share, addNotification } = this.props;
+    const { addNotification } = this.props;
 
-    if (!clipboard)
-      return;
-    
-    navigator.clipboard.writeText(share.url)
-      .then(() => addNotification(i18n('share-copied-to-clipboard')))
-      .catch(console.warn);
+    // navigator.clipboard?.writeText(this.props.share.url)
+    //   .then(() => addNotification(i18n('share-copied-to-clipboard')))
+    //   .catch(console.warn);
+
+    try
+    {
+      if (document.execCommand('copy'))
+        addNotification(i18n('share-copied-to-clipboard'));
+    }
+    catch
+    {
+      //
+    }
   }
 
   // istanbul ignore next
@@ -181,7 +188,6 @@ class ShareOverlay extends React.Component
 }
 
 ShareOverlay.propTypes = {
-  clipboard: PropTypes.bool,
   addNotification: PropTypes.func.isRequired,
   share: PropTypes.object,
   hide: PropTypes.func
@@ -294,9 +300,14 @@ const styles = createStyle({
     width: '16px',
     height: '16px',
 
-    padding: '5px',
+    padding: '10px',
     margin: '0 5px',
     borderRadius: '100%',
+
+    ':hover': {
+      color: colors.whiteText,
+      backgroundColor: colors.blackBackground
+    },
 
     ':active': {
       transform: 'scale(0.9)'
@@ -305,9 +316,17 @@ const styles = createStyle({
 
   close: {
     cursor: 'pointer',
+    
     userSelect: 'none',
+    textAlign: 'center',
 
-    margin: 'auto'
+    width: '100%',
+    padding: '5px 0',
+
+    ':hover': {
+      color: colors.whiteText,
+      backgroundColor: colors.blackBackground
+    }
   }
 });
 

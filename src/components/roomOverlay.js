@@ -228,13 +228,6 @@ class RoomOverlay extends StoreComponent
         .then(wl => this.wakeLock = wl)
         .catch(e => e);
 
-      if (process.env.NODE_ENV !== 'test')
-      {
-        window.history
-          .replaceState(null, document.title,
-            `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
-      }
-
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
@@ -267,13 +260,6 @@ class RoomOverlay extends StoreComponent
         .then(wl => this.wakeLock = wl)
         .catch(e => e);
       
-      if (process.env.NODE_ENV !== 'test')
-      {
-        window.history
-          .replaceState(null, document.title,
-            `${location.protocol}//${location.host}${location.pathname}?join=${id}`);
-      }
-      
       // show the room overlay
       overlayRef.current.snapTo({ index: 0 });
     }).catch((err) =>
@@ -303,10 +289,6 @@ class RoomOverlay extends StoreComponent
     this.wakeLock?.release();
 
     this.wakeLock = undefined;
-
-    window.history
-      .replaceState(null, document.title,
-        `${location.protocol}//${location.host}${location.pathname}`);
 
     // reset room options scroll
     optionsRef.current?.scrollTo({ top: 0 });
@@ -416,7 +398,6 @@ class RoomOverlay extends StoreComponent
       <Notifications notifications={ this.state.notifications }/>
 
       <ShareOverlay
-        clipboard={ this.state.clipboard }
         addNotification={ this.addNotification }
         share={ this.state.share }
         hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>

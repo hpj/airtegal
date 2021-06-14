@@ -31,8 +31,6 @@ import i18n, { locale } from '../i18n.js';
 
 import { detectDiscord } from '../utils.js';
 
-import { getStore } from '../store.js';
-
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
@@ -191,13 +189,6 @@ class Game extends React.Component
 
     if (process.env.NODE_ENV === 'test' && params?.has('discord'))
       this.setState({ detectDiscord: true });
-
-    navigator.permissions?.query({ name: 'clipboard-write' })
-      .then(({ state }) =>
-      {
-        if (state === 'granted' && navigator.clipboard)
-          getStore().set({ clipboard: true });
-      });
   }
 
   componentWillUnmount()

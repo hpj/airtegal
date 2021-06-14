@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
-import CopyIcon from 'mdi-react/ContentCopyIcon';
 
 import { StoreComponent } from '../store.js';
 
@@ -68,7 +67,6 @@ class RoomState extends StoreComponent
   {
     if (
       changes?.roomData ||
-      changes?.clipboard ||
       changes?.displayMessage
     )
       return true;
@@ -271,14 +269,47 @@ class RoomState extends StoreComponent
     }).catch(console.warn);
   }
 
+  /**
+  * @param { HTMLDivElement } element
+  * @param { text } value
+  */
+  setSelection(element, value)
+  {
+    element.innerHTML = value;
+
+    const range = document.createRange();
+
+    range.selectNodeContents(element);
+
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(range);
+  }
+
+  /**
+  * @param { { nativeEvent: MouseEvent } } e
+  */
   // istanbul ignore next
-  copyRoomURL()
+  copyRoomURL(e)
   {
     const { addNotification } = this.props;
 
-    navigator.clipboard.writeText(`${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`)
-      .then(() => addNotification(i18n('room-copied-to-clipboard')))
-      .catch(console.warn);
+    const value = `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`;
+
+    // navigator.clipboard.writeText(value)
+    //   .then(() => addNotification(i18n('room-copied-to-clipboard')))
+    //   .catch(console.warn);
+    
+    try
+    {
+      this.setSelection(e.nativeEvent.target, value);
+
+      if (document.execCommand('copy'))
+        addNotification(i18n('room-copied-to-clipboard'));
+    }
+    finally
+    {
+      e.nativeEvent.target.innerHTML = this.state.roomData?.id;
+    }
   }
 
   formatMs(milliseconds)
@@ -308,9 +339,7 @@ class RoomState extends StoreComponent
 
             {
               navigator.share ? <ShareIcon className={ styles.icon } onClick={ this.shareRoomURL }/> :
-                this.state.clipboard ? <CopyIcon className={ styles.icon } onClick={ this.copyRoomURL }/> :
-                  // just show the room's id
-                  <div className={ styles.id }>{ this.state.roomData?.id }</div>
+                <div className={ styles.id } onClick={ this.copyRoomURL }>{ this.state.roomData?.id }</div>
             }
           </div>
       }
@@ -368,8 +397,7 @@ const styles = createStyle({
   id: {
     cursor: 'text',
     userSelect: 'all',
-
-    textTransform: 'uppercase',
+    
     fontSize: 'calc(5px + 0.35vw + 0.35vh)',
 
     padding: '5px',
