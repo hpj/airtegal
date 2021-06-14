@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import SubmitIcon from 'mdi-react/KeyboardReturnIcon';
+import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import { createStyle } from 'flcss';
+import { createAnimation, createStyle } from 'flcss';
 
 import getTheme from '../colors.js';
 
@@ -20,14 +21,11 @@ const colors = getTheme();
 */
 const Box = ({ description, allowed, onSubmit }) =>
 {
-  if (allowed && !description)
-    allowed = false;
-
-  const [ content, setContent ] = useState(allowed ? '' : description);
+  const [ content, setContent ] = useState(allowed && description ? '' : description);
   
-  return <div className={ styles.container }>
+  return <div className={ styles.container } waiting={ (!allowed && description !== undefined).toString() }>
     {
-      allowed ? <div className={ styles.items }>{ description }</div> : undefined
+      allowed && description ? <div className={ styles.items }>{ description }</div> : undefined
     }
 
     <AutoSizeInput
@@ -35,8 +33,8 @@ const Box = ({ description, allowed, onSubmit }) =>
       className={ styles.input }
       placeholder={ i18n('blank') }
       type={ 'text' }
-      value={ allowed ? content : i18n('qassa') }
-      disabled={ !allowed }
+      value={ allowed && description ? content : i18n('qassa') }
+      disabled={ !allowed || !description }
       onSubmit={ () => onSubmit(content) }
       onUpdate={ (value, resize, blur) =>
       {
@@ -46,7 +44,13 @@ const Box = ({ description, allowed, onSubmit }) =>
       } }
     />
 
-    <SubmitIcon className={ styles.icon } onClick={ () => onSubmit(content) }/>
+    {
+      !allowed ? <WaitingIcon className={ styles.waiting }/> : undefined
+    }
+
+    {
+      allowed ? <SubmitIcon className={ styles.icon } onClick={ () => onSubmit(content) }/> : undefined
+    }
   </div>;
 };
 
@@ -55,6 +59,20 @@ Box.propTypes = {
   allowed: PropTypes.bool,
   onSubmit: PropTypes.func
 };
+
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   container: {
@@ -74,6 +92,12 @@ const styles = createStyle({
     padding: '25px',
     margin: '25px',
     borderRadius: '10px',
+
+    '[waiting="true"] > svg': {
+      width: '20px',
+      height: '20px',
+      padding: '15px'
+    },
 
     '.enter': {
       left: '100vw'
@@ -123,12 +147,17 @@ const styles = createStyle({
     minWidth: '35px',
     maxWidth: '65vw',
 
-    margin: '10px 0 0',
     padding: 0,
+    margin: '10px 0 0',
     border: 0,
 
     ':focus': {
       'outline': 'none'
+    },
+
+    '::placeholder':
+    {
+      color: colors.greyText
     },
 
     ':first-child': {
@@ -149,6 +178,20 @@ const styles = createStyle({
     }
   },
 
+  waiting: {
+    gridArea: 'icon',
+    color: colors.whiteText,
+
+    animation: waitingAnimation,
+
+    width: '0',
+    height: '0',
+    padding: '0',
+    margin: 'auto',
+
+    transition: 'width 0.25s, height 0.25s, padding 0.25s, transform 0.15s'
+  },
+
   icon: {
     cursor: 'pointer',
 
@@ -160,8 +203,9 @@ const styles = createStyle({
     padding: '0',
     margin: 'auto',
 
-    transition: 'width 0.25s, height 0.25s, padding 0.25s, transform 0.15s',
     borderRadius: '100%',
+
+    transition: 'width 0.25s, height 0.25s, padding 0.25s, transform 0.15s',
 
     ':hover': {
       color: colors.blackText,

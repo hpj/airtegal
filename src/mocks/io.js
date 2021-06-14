@@ -483,7 +483,9 @@ function startQassa()
   else if (params.get('mock') === 'waiting')
   {
     room.phase = 'writing';
+    
     room.playerProperties['skye'].state = 'waiting';
+    room.playerProperties['mika'].state = 'writing';
 
     room.field[0].story.items[2].description = undefined;
   
