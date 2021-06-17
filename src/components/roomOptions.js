@@ -29,6 +29,7 @@ const wrapperRef = createRef();
 
 const gameModes = [
   { label: i18n('kuruit'), value: 'kuruit', group: i18n('free-for-all') },
+  // { label: i18n('king'), value: 'king' },
   { label: i18n('qassa'), value: 'qassa', group: i18n('co-op')  }
 ];
 
@@ -314,7 +315,7 @@ class RoomOptions extends StoreComponent
           <div>{ i18n('max-time', dirtyOptions.maxTime / 60 / 1000) }</div>
         </div>
 
-        <div style={ { margin: '5px -5px 5px 0px' } }>
+        <div style={ { margin: '5px 35px 5px' } }>
           <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
             <AutoSizeInput
               required
@@ -409,13 +410,13 @@ class RoomOptions extends StoreComponent
             <div suffix={ 'true' } className={ styles.inputSuffix }>%</div>
             <div>{ i18n('blank-probability') }</div>
           </div>
-        </div>
+        
+          <div className={ styles.field } style={ { margin: '0 5px' } } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
+            <div>{ i18n('randos') }</div>
 
-        <div className={ styles.field } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
-          <div>{ i18n('randos') }</div>
-
-          <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
-          <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+            <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
+            <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+          </div>
         </div>
       </div>;
     };
@@ -452,6 +453,34 @@ class RoomOptions extends StoreComponent
       }
       
       return <div>
+
+        <div className={ styles.title }>{ i18n('match-options') }</div>
+
+        <div style={ { margin: '5px -5px 5px 0px' } }>
+          <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
+            <AutoSizeInput
+              required
+              type={ 'number' }
+              min={ '3' }
+              max={ '16' }
+              maxLength={ 2 }
+              id={ 'room-options-input' }
+              master={ isMaster.toString() }
+              className={ styles.input }
+              placeholder={ i18n('options-placeholder') }
+              value={ dirtyOptions.maxPlayers }
+              onUpdate={ (value, resize) => this.store.set({
+                dirtyOptions: {
+                  ...dirtyOptions,
+                  maxPlayers: value
+                }
+              }, resize) }
+            />
+
+            <div>{ i18n('max-players') }</div>
+          </div>
+        </div>
+
         {
           groups.map((group, y) => <div className={ styles.group } key={ y }>
             <div className={ styles.groupName }>{ `${i18n('groups')} ${y + 1}` }</div>
@@ -806,7 +835,7 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 calc(25px + 24px + 20px) 8px 25px',
+    padding: '0px 25px 8px',
 
     '[dirty="true"]': {
       fontStyle: 'italic',
