@@ -29,6 +29,9 @@ module.exports = {
       }
     ]
   },
+  experiments: {
+    syncWebAssembly: true
+  },
   plugins: [
     new DefinePlugin({
       'process.env.RELEASE': JSON.stringify(gitRevisionPlugin.commithash()),

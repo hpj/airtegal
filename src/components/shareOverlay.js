@@ -20,23 +20,14 @@ const colors = getTheme();
 * @param { string } black
 * @param { string[] } white
 */
-export function shareEntry(black, white)
+export async function shareEntry(black, white)
 {
-  const b64 = (str) =>
-  {
-    // first we use encodeURIComponent to get percent-encoded UTF-8,
-    // then we convert the percent encodings into raw bytes which
-    // can be fed into btoa.
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-      (match, p1) =>
-      {
-        return String.fromCharCode('0x' + p1);
-      }));
-  };
+  const { compress } = await import('wasm-brotli');
 
-  const obj = { black, white };
+  const content = new TextEncoder('utf8')
+    .encode(JSON.stringify({ black, white }));
 
-  const data = b64(JSON.stringify(obj)).replace('/', '_').replace('+', '-');
+  const data = btoa(String.fromCharCode(...compress(content)));
 
   const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
   const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
@@ -72,7 +63,7 @@ class ShareOverlay extends React.Component
     this.hide = this.hide.bind(this);
   }
 
-  componentDidMount()
+  async componentDidMount()
   {
     window.addEventListener('keyup', this.hide);
   }
