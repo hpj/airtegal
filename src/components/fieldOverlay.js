@@ -194,12 +194,12 @@ class FieldOverlay extends StoreComponent
                           type={ card.type }
                           content={ card.content }
                           hidden={ !card.content }
-                          allowed={ allowed || winner }
+                          allowed={ allowed }
                           self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
                           winner= { winner }
-                          share={ winner && cardIndex === 0 }
-                          onClick={ () => winner ? this.shareEntry(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                          share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
+                          onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.shareEntry(entryIndex) : this.submit(entryIndex, undefined, allowed) }
                         />)
                       }
                     </div>;

@@ -75,21 +75,23 @@ class Card extends React.Component
       content,
       style, self,
       owner, blank,
-      type, allowed,
-      share, onClick
+      type, onClick
     } = this.props;
 
     const input = this.state.content;
 
-    let { hidden, winner  } = this.props;
+    let { allowed, hidden, winner, share } = this.props;
+
+    allowed = allowed ?? false;
 
     hidden = hidden ?? false;
     winner = winner ?? false;
+    share = share ?? false;
 
     return <div className={ styles.wrapper } style={ style }>
       <div
         type={ type }
-        allowed={ (allowed && !hidden)?.toString() ?? 'false' }
+        allowed={ ((allowed || share) && !hidden).toString() }
         winner={ winner.toString() }
         className={ styles.container }
         onClick={ e =>
@@ -349,8 +351,10 @@ const styles = createStyle({
 
   share: {
     color: colors.whiteCardForeground,
+
     width: 'calc(14px + 0.3vw + 0.3vh)',
     height: 'calc(14px + 0.3vw + 0.3vh)',
+
     margin: '0 auto 0 0'
   }
 });
