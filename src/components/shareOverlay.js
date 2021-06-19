@@ -16,20 +16,27 @@ import { getStore } from '../store.js';
 
 const colors = getTheme();
 
+let compress;
+
+import('wasm-brotli')
+  .then(brotli => compress = brotli.compress)
+  .catch(console.warn);
+
 /**
 * @param { string } black
 * @param { string[] } white
 */
 export async function shareEntry(black, white)
 {
-  const { compress } = await import('wasm-brotli');
-
+  if (!compress)
+    return;
+  
   const content = new TextEncoder('utf8')
     .encode(JSON.stringify({ black, white }));
 
   const data = btoa(String.fromCharCode(...compress(content)))
     // base64 has some characters not compatible with urls
-    .replace('/', '_').replace('+', '-');
+    .replace(/\//g, '_').replace(/\+/g, '-');
 
   const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
   const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
