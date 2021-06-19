@@ -213,7 +213,7 @@ class FieldOverlay extends StoreComponent
                     <CSSTransition key={ field[0].story.key } timeout={ 250 }>
                       <div className={ styles.qassa }>
                         <div className={ styles.content }>
-                          { field[0].story.composed.text }
+                          { field[0].story.composed.text?.replace(/\\n/g, '\n') }
                           <div className={ styles.bottom }>{ i18n('qassa') }</div>
                         </div>
                       </div>
