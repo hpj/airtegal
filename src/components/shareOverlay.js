@@ -27,7 +27,9 @@ export async function shareEntry(black, white)
   const content = new TextEncoder('utf8')
     .encode(JSON.stringify({ black, white }));
 
-  const data = btoa(String.fromCharCode(...compress(content)));
+  const data = btoa(String.fromCharCode(...compress(content)))
+    // base64 has some characters not compatible with urls
+    .replace('/', '_').replace('+', '-');
 
   const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
   const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
