@@ -12,7 +12,7 @@ import WebFont from 'webfontloader';
 
 import axios from 'axios';
 
-import { createStore } from './store.js';
+import { createStore, getStore } from './store.js';
 
 import Error from './components/error.js';
 import Loading from './components/loading.js';
@@ -96,6 +96,13 @@ if (process.env.NODE_ENV === 'production')
   Sentry.init({
     release: process.env.RELEASE,
     dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
+    // send the app state with each error
+    beforeSend: event =>
+    {
+      event.extra = getStore();
+
+      return event;
+    },
     integrations: [
       new Tracing.Integrations.BrowserTracing()
     ],

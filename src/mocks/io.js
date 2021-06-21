@@ -504,10 +504,7 @@ function startQassa()
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend ut urna ac mattis. Suspendisse eleifend eros odio. Proin vulputate est nec tellus venenatis faucibus. In placerat euismod urna, ac fringilla arcu tempus vel. Ut dapibus lacus in blandit posuere.\nAenean vestibulum leo sed tempor pharetra.\n\nVivamus placerat congue placerat. Pellentesque ultricies blandit mauris, at sollicitudin libero ornare non. Duis ultrices faucibus dapibus. Mauris ac nulla erat. Aliquam sed imperdiet sem, quis pharetra dui. Donec quis mi a leo tristique gravida. Pellentesque vehicula leo lobortis, accumsan leo sit amet, ultrices leo. Donec gravida dolor eu purus vehicula lacinia.'
     };
 
-    Promise.all([
-      fetch('1.mp3').then(response => response.arrayBuffer()).then(buffer => room.field[0].story.composed.music = buffer),
-      fetch('test.mp3').then(response => response.arrayBuffer()).then(buffer => room.field[0].story.composed.audio = buffer)
-    ]).then(() => matchBroadcast(room));
+    matchBroadcast(room);
   }
   else
   {
@@ -531,7 +528,7 @@ function startQassa()
         room.playerProperties['skye'].state = 'waiting';
 
         room.field[0].story.composed = {
-          text: 'Testing The Story Mode, Ta ta.'
+          text: 'Testing The Story Mode,\\n\\nTa ta.'
         };
 
         matchBroadcast(room);

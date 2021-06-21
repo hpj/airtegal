@@ -10,8 +10,8 @@
     "test:coverage": "might -c"
   },
   "dependencies": {
-    "@sentry/react": "^6.6.0",
-    "@sentry/tracing": "^6.6.0",
+    "@sentry/react": "^6.7.1",
+    "@sentry/tracing": "^6.7.1",
     "autosize-input": "^1.0.2",
     "axios": "^0.21.1",
     "flcss": "^2.2.5",
@@ -28,14 +28,14 @@
   "devDependencies": {
     "compression-webpack-plugin": "^8.0.0",
     "esbuild-loader": "^2.13.1",
-    "eslint": "^7.28.0",
+    "eslint": "^7.29.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-security": "^1.4.0",
     "git-revision-webpack-plugin": "^5.0.0",
     "json5-loader": "^4.0.1",
     "might-cli": "^2.1.5",
     "might-ui": "^1.1.8",
-    "webpack": "^5.38.1",
+    "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   }
