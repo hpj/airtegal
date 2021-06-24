@@ -18,6 +18,7 @@
     "/webpack/**",
     "/ws '('ignored')'",
     "/'('webpack')'/**",
-    "/'('webpack')'-dev-server/**"
+    "/'('webpack')'-dev-server/**",
+    "**/*.jsonc"
   ]
 }
