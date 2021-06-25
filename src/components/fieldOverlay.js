@@ -124,7 +124,7 @@ class FieldOverlay extends StoreComponent
 
     if (options.gameMode === 'qassa')
     {
-      shareEntry(field[0]?.story?.composed?.text);
+      shareEntry(field[0]?.story?.composed?.text.replace(/\\n/g, '\n'));
     }
     else if (options.gameMode === 'kuruit')
     {
@@ -219,7 +219,7 @@ class FieldOverlay extends StoreComponent
                     <CSSTransition key={ field[0].story.key } timeout={ 250 }>
                       <div className={ styles.qassa }>
                         <div className={ styles.content } onClick={ () => this.shareEntry() }>
-                          { field[0].story.composed.text?.replace(/\\n/g, '\n') }
+                          { field[0].story.composed?.text.replace(/\\n/g, '\n') }
                           <div className={ styles.bottom }>
                             { i18n('qassa') }
                             <ShareIcon className={ styles.share }/>
