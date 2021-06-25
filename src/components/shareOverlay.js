@@ -30,9 +30,16 @@ export async function shareEntry(black, white)
 {
   if (!compress)
     return;
-  
+
+  let obj = {};
+
+  if (!white)
+    obj = { story: black };
+  else
+    obj = { black, white };
+
   const content = new TextEncoder('utf8')
-    .encode(JSON.stringify({ black, white }));
+    .encode(JSON.stringify(obj));
 
   const data = btoa(String.fromCharCode(...compress(content)))
     // base64 has some characters not compatible with urls

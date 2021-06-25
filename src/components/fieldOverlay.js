@@ -4,7 +4,9 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import PropTypes from 'prop-types';
 
-import { createStyle } from 'flcss';
+import { createStyle, createAnimation } from 'flcss';
+
+import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import { StoreComponent } from '../store.js';
 
@@ -120,12 +122,16 @@ class FieldOverlay extends StoreComponent
   {
     const { options, field } = this.state.roomData;
 
-    if (options.gameMode === 'kuruit')
+    if (options.gameMode === 'qassa')
+    {
+      shareEntry(field[0]?.story?.composed?.text);
+    }
+    else if (options.gameMode === 'kuruit')
     {
       shareEntry(
-        field[0].cards[0].content,
+        field[0]?.cards[0]?.content,
         // eslint-disable-next-line security/detect-object-injection
-        field[index].cards.map(c => c.content));
+        field[index]?.cards?.map(c => c.content));
     }
   }
 
@@ -212,9 +218,12 @@ class FieldOverlay extends StoreComponent
                   field[0]?.story?.composed ?
                     <CSSTransition key={ field[0].story.key } timeout={ 250 }>
                       <div className={ styles.qassa }>
-                        <div className={ styles.content }>
+                        <div className={ styles.content } onClick={ () => this.shareEntry() }>
                           { field[0].story.composed.text?.replace(/\\n/g, '\n') }
-                          <div className={ styles.bottom }>{ i18n('qassa') }</div>
+                          <div className={ styles.bottom }>
+                            { i18n('qassa') }
+                            <ShareIcon className={ styles.share }/>
+                          </div>
                         </div>
                       </div>
                     </CSSTransition>
@@ -240,6 +249,21 @@ FieldOverlay.propTypes = {
   sendMessage: PropTypes.func.isRequired,
   size: PropTypes.object
 };
+
+const hoverAnimation = createAnimation({
+  duration: '1.5s',
+  timingFunction: 'ease-in-out',
+  iterationCount: 'infinite',
+  direction: 'alternate',
+  keyframes: {
+    from: {
+      transform: 'translateY(-10px)'
+    },
+    to: {
+      transform: 'translateY(-5px)'
+    }
+  }
+});
 
 const styles = createStyle({
   view: {
@@ -329,6 +353,7 @@ const styles = createStyle({
   },
 
   content: {
+    cursor: 'pointer',
     userSelect: 'none',
     direction: locale.direction,
     
@@ -348,11 +373,25 @@ const styles = createStyle({
 
     margin: '25px',
     padding: '45px 35px 0',
-    borderRadius: '10px'
+    borderRadius: '10px',
+
+    ':hover': {
+      animation: hoverAnimation
+    }
   },
 
   bottom: {
+    display: 'flex',
     padding: '15px 0px 15px'
+  },
+
+  share: {
+    color: colors.blackCardForeground,
+
+    width: 'calc(14px + 0.3vw + 0.3vh)',
+    height: 'calc(14px + 0.3vw + 0.3vh)',
+
+    margin: 'auto auto auto 0'
   }
 });
 
