@@ -62,7 +62,9 @@ function connect()
     {
       socket = process.env.NODE_ENV === 'test' ?
         mocks.socket :
-        io(process.env.API_ENDPOINT, { path: '/io' });
+        io(process.env.API_ENDPOINT, { path: '/io', query: {
+          region: locale.value
+        } });
 
       socket.once('connect', resolve)
         .once('error', (e) =>
@@ -72,13 +74,28 @@ function connect()
           reject(e);
         });
 
+      socket.on('error', (err) =>
+      {
+        setTimeout(() =>
+        {
+          socket.close();
+  
+          errorScreen(i18n(err));
+  
+          reject();
+        });
+      });
+
       socket.on('disconnect', () =>
       {
-        socket.close();
-
-        errorScreen(i18n('you-were-disconnected'));
-
-        reject();
+        setTimeout(() =>
+        {
+          socket.close();
+  
+          errorScreen(i18n('you-were-disconnected'));
+  
+          reject();
+        });
       });
 
       // connecting timeout

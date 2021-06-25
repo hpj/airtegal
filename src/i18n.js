@@ -21,10 +21,7 @@ export let locale = getDefault();
 */
 export function setLocale(country)
 {
-  if (!country)
-    return;
-
-  const find = locales.find((e) => e.value === country.toLowerCase());
+  const find = locales.find(e => e.value === country?.toLowerCase());
 
   if (find)
     locale = find;
@@ -34,9 +31,7 @@ function getDefault()
 {
   const browserLocale = navigator.language || navigator.userLanguage || navigator.languages[0];
 
-  const find = locales.find((e) => e.locale === browserLocale);
-
-  return (find) ? find : locales[0];
+  return locales.find(e => e.locale === browserLocale) ?? locales[0];
 }
 
 /**
