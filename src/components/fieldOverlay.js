@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import PropTypes from 'prop-types';
 
-import { createStyle, createAnimation } from 'flcss';
+import { createStyle } from 'flcss';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
@@ -250,21 +250,6 @@ FieldOverlay.propTypes = {
   size: PropTypes.object
 };
 
-const hoverAnimation = createAnimation({
-  duration: '1.5s',
-  timingFunction: 'ease-in-out',
-  iterationCount: 'infinite',
-  direction: 'alternate',
-  keyframes: {
-    from: {
-      transform: 'translateY(-10px)'
-    },
-    to: {
-      transform: 'translateY(-5px)'
-    }
-  }
-});
-
 const styles = createStyle({
   view: {
     position: 'absolute',
@@ -373,11 +358,7 @@ const styles = createStyle({
 
     margin: '25px',
     padding: '45px 35px 0',
-    borderRadius: '10px',
-
-    ':hover': {
-      animation: hoverAnimation
-    }
+    borderRadius: '10px'
   },
 
   bottom: {

@@ -285,10 +285,11 @@ const styles = createStyle({
     
     userSelect: 'all',
     overflow: 'hidden',
+    whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    
-    padding: '15px',
+
     margin: '0 auto',
+    padding: '10px 15px',
     borderRadius: '5px'
   },
 
@@ -322,10 +323,14 @@ const styles = createStyle({
   },
 
   close: {
+    display: 'flex',
     cursor: 'pointer',
     
     userSelect: 'none',
     textAlign: 'center',
+
+    justifyContent: 'center',
+    alignItems: 'center',
 
     width: '100%',
     padding: '5px 0',
