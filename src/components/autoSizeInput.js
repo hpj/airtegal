@@ -85,8 +85,8 @@ class AutoSizeInput extends React.Component
 
     const {
       required, type, minutes, min, max,
-      id, master, className, placeholder,
-      disabled, onSubmit
+      id, master, className, style,
+      placeholder, disabled, onSubmit
     } = this.props;
 
     // change value form ms to minutes
@@ -112,7 +112,8 @@ class AutoSizeInput extends React.Component
       id={ id }
       master={ master }
       className={ className }
-
+      style={ style }
+      
       placeholder={ placeholder }
       value={ value }
 
@@ -139,6 +140,7 @@ AutoSizeInput.propTypes = {
   id: PropTypes.string,
   master: PropTypes.string,
   className: PropTypes.string,
+  style: PropTypes.obj,
   
   disabled: PropTypes.bool,
   placeholder: PropTypes.string,

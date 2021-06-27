@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { createStyle } from 'flcss';
 
-import { locale } from '../i18n.js';
+import { useI18n } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
@@ -17,7 +17,9 @@ const colors = getTheme();
 */
 const Notifications = ({ notifications }) =>
 {
-  return <TransitionGroup className={ styles.notifications }>
+  const { locale } = useI18n();
+
+  return <TransitionGroup className={ styles.notifications } style={ { direction: locale.direction } }>
     {
       notifications?.map(item => <CSSTransition key={ item.timestamp } timeout={ 350 }>
         <div
@@ -39,8 +41,6 @@ const styles = createStyle({
   notifications: {
     zIndex: 10,
     position: 'absolute',
-
-    direction: locale.direction,
 
     userSelect: 'none',
     pointerEvents: 'none',

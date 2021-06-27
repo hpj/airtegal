@@ -9,7 +9,7 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import i18n, { locale } from '../i18n.js';
+import { withI18n } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -64,6 +64,8 @@ class Card extends React.Component
 
   onChange(e)
   {
+    const { locale } = this.props;
+
     this.setState({
       content: e.target.value.replace(locale.blank, '').replace(/\s+/g, ' ')
     }, () => this.resize());
@@ -75,7 +77,8 @@ class Card extends React.Component
       content,
       style, self,
       owner, blank,
-      type, onClick
+      type, onClick,
+      locale, i18n
     } = this.props;
 
     const input = this.state.content;
@@ -103,16 +106,17 @@ class Card extends React.Component
         } }
       >
         {
-          hidden ? <div className={ styles.hidden } type={ type }>
+          hidden ? <div className={ styles.hidden } type={ type } style={ { direction: locale.direction } }>
             <div>{ i18n('kuruit') }</div>
           </div> : undefined
         }
 
         {
-          !hidden ? <div className={ styles.card } type={ type }>
+          !hidden ? <div className={ styles.card } type={ type } style={ { direction: locale.direction } }>
             <textarea
               ref={ this.textareaRef }
               className={ blank ? styles.input : styles.content }
+              style={ { textAlign: locale.direction === 'ltr' ? 'left' : 'right' } }
 
               value={ input ?? content }
 
@@ -141,11 +145,21 @@ class Card extends React.Component
           </div> : undefined
         }
 
-        <div hide={ (hidden && type === 'white') ? 'true' : 'false' } visible={ ((!self && !owner) || type === 'black').toString() } enabled={ ((!self && !owner) || type === 'black').toString() } className={ styles.bottom }>
+        <div
+          hide={ (hidden && type === 'white') ? 'true' : 'false' }
+          visible={ ((!self && !owner) || type === 'black').toString() }
+          enabled={ ((!self && !owner) || type === 'black').toString() }
+          className={ styles.bottom }
+          style={ { direction: locale.direction } }
+        >
           { blank ? i18n('blank') : i18n('kuruit') }
         </div>
 
-        <div enabled={ ((self === true || owner !== undefined) && type === 'white').toString() } className={ styles.bottom }>
+        <div
+          enabled={ ((self === true || owner !== undefined) && type === 'white').toString() }
+          className={ styles.bottom }
+          style={ { direction: locale.direction } }
+        >
           { self ? i18n('this-card-is-yours') : owner }
           { share ? <ShareIcon className={ styles.share }/> : undefined }
         </div>
@@ -155,6 +169,8 @@ class Card extends React.Component
 }
 
 Card.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   style: PropTypes.object,
   onClick: PropTypes.func,
   self: PropTypes.bool,
@@ -254,7 +270,6 @@ const styles = createStyle({
 
     userSelect: 'none',
     fontSize: 'calc(8px + 0.4vw + 0.4vh)',
-    direction: locale.direction,
     
     width: '100%',
     minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
@@ -272,7 +287,6 @@ const styles = createStyle({
     gridTemplateAreas: '"content"',
 
     userSelect: 'none',
-    direction: locale.direction,
   
     width: '100%',
     minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
@@ -291,7 +305,6 @@ const styles = createStyle({
 
   input: {
     cursor: 'pointer',
-    textAlign: locale.direction === 'ltr' ? 'left' : 'right',
 
     fontWeight: 700,
     fontSize: 'calc(6px + 0.4vw + 0.4vh)',
@@ -325,7 +338,6 @@ const styles = createStyle({
     alignItems: 'center',
     
     userSelect: 'none',
-    direction: locale.direction,
 
     fontSize: 'calc(5px + 0.4vw + 0.4vh)',
 
@@ -359,4 +371,4 @@ const styles = createStyle({
   }
 });
 
-export default Card;
+export default withI18n(Card);

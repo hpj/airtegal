@@ -14,7 +14,7 @@ import Card from './card.js';
 
 import { isTouchScreen } from '../index.js';
 
-import { locale } from '../i18n.js';
+import { withI18n } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
@@ -207,7 +207,7 @@ class HandOverlay extends StoreComponent
 
   render()
   {
-    const { size } = this.props;
+    const { locale, size } = this.props;
 
     const { handViewport, handHidden, handBlockDragging } = this.state;
 
@@ -263,6 +263,7 @@ class HandOverlay extends StoreComponent
             } } onScroll={ this.onScroll }>
 
               <div id={ 'kuruit-hand-overlay' } className={ styles.container } style={ {
+                direction: locale.direction,
                 flexWrap: isTouchScreen ? 'wrap' : undefined
               } }>
                 {
@@ -302,6 +303,8 @@ class HandOverlay extends StoreComponent
 }
 
 HandOverlay.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   size: PropTypes.object,
   sendMessage: PropTypes.func.isRequired
 };
@@ -374,7 +377,6 @@ const styles = createStyle({
 
   container: {
     display: 'flex',
-    direction: locale.direction,
     justifyContent: 'center',
 
     '> div': {
@@ -398,4 +400,4 @@ const styles = createStyle({
   }
 });
 
-export default HandOverlay;
+export default withI18n(HandOverlay);

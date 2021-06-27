@@ -9,7 +9,7 @@ import autoSize from 'autosize-input';
 
 import { StoreComponent } from '../store.js';
 
-import i18n, { locale } from '../i18n.js';
+import { getI18n, withI18n } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -26,12 +26,6 @@ import { createStyle, createAnimation } from 'flcss';
 const colors = getTheme();
 
 const wrapperRef = createRef();
-
-const gameModes = [
-  { label: i18n('kuruit'), value: 'kuruit', group: i18n('free-for-all') },
-  // { label: i18n('king'), value: 'king' },
-  { label: i18n('qassa'), value: 'qassa', group: i18n('co-op')  }
-];
 
 /**
 * @typedef { object } State
@@ -105,7 +99,7 @@ class RoomOptions extends StoreComponent
       inputs.forEach(e => autoSize(e));
 
       if (!master && state.dirtyOptions && old.dirtyOptions)
-        this.props.addNotification?.(i18n('room-edited'));
+        this.props.addNotification?.(getI18n('room-edited'));
     }
   }
 
@@ -133,9 +127,10 @@ class RoomOptions extends StoreComponent
         this.loadingVisibility(false);
 
         // show an error message
-        this.showErrorMessage(i18n(err) || err);
+        this.showErrorMessage(getI18n(err) || err);
       });
   }
+  
   matchRequest()
   {
     const { sendMessage } = this.props;
@@ -155,7 +150,7 @@ class RoomOptions extends StoreComponent
         this.loadingVisibility(false);
 
         // show an error message
-        this.showErrorMessage(i18n(err) || err);
+        this.showErrorMessage(getI18n(err) || err);
       });
   }
 
@@ -202,6 +197,8 @@ class RoomOptions extends StoreComponent
 
   render()
   {
+    const { locale, i18n } = this.props;
+
     const { roomData, dirtyOptions } = this.state;
 
     const options = roomData?.options;
@@ -215,6 +212,12 @@ class RoomOptions extends StoreComponent
     
     if (!dirtyOptions)
       return <div/>;
+
+    const gameModes = [
+      { label: i18n('kuruit'), value: 'kuruit', group: i18n('free-for-all') },
+      // { label: i18n('king'), value: 'king' },
+      { label: i18n('qassa'), value: 'qassa', group: i18n('co-op')  }
+    ];
 
     const GameModes = () =>
     {
@@ -407,11 +410,11 @@ class RoomOptions extends StoreComponent
               }, resize) }
             />
 
-            <div suffix={ 'true' } className={ styles.inputSuffix }>%</div>
+            <div suffix={ 'true' } style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } }>%</div>
             <div>{ i18n('blank-probability') }</div>
           </div>
         
-          <div className={ styles.field } style={ { margin: '0 5px' } } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
+          < div className={ styles.field } style={ { margin: '0 5px' } } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
             <div>{ i18n('randos') }</div>
 
             <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
@@ -420,6 +423,38 @@ class RoomOptions extends StoreComponent
         </div>
       </div>;
     };
+
+    // const KingOptions = () =>
+    // {
+    //   return <div>
+    //     <div className={ styles.title }>{ i18n('match-options') }</div>
+
+    //     <div style={ { margin: '5px -5px 5px' } }>
+    //       <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
+    //         <AutoSizeInput
+    //           required
+    //           type={ 'number' }
+    //           min={ '3' }
+    //           max={ '16' }
+    //           maxLength={ 2 }
+    //           id={ 'room-options-input' }
+    //           master={ isMaster.toString() }
+    //           className={ styles.input }
+    //           placeholder={ i18n('options-placeholder') }
+    //           value={ dirtyOptions.maxPlayers }
+    //           onUpdate={ (value, resize) => this.store.set({
+    //             dirtyOptions: {
+    //               ...dirtyOptions,
+    //               maxPlayers: value
+    //             }
+    //           }, resize) }
+    //         />
+
+    //         <div>{ i18n('max-players') }</div>
+    //       </div>
+    //     </div>
+    //   </div>;
+    // };
 
     const QassaOptions = () =>
     {
@@ -453,10 +488,9 @@ class RoomOptions extends StoreComponent
       }
       
       return <div>
-
         <div className={ styles.title }>{ i18n('match-options') }</div>
 
-        <div style={ { margin: '5px -5px 5px 0px' } }>
+        <div style={ { margin: '5px -5px 5px' } }>
           <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
             <AutoSizeInput
               required
@@ -495,6 +529,15 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
+    let modeOptions;
+
+    if (dirtyOptions.gameMode === 'kuruit')
+      modeOptions = KuruitOptions;
+    // else if (dirtyOptions.gameMode === 'king')
+    //   modeOptions = KingOptions;
+    else
+      modeOptions = QassaOptions;
+
     return <div ref={ wrapperRef } className={ styles.wrapper }>
 
       <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
@@ -505,7 +548,13 @@ class RoomOptions extends StoreComponent
         <div>{ this.state.optionsErrorMessage }</div>
       </div>
 
-      <div className={ styles.container } style={ { display: (this.state.optionsLoadingHidden && !this.state.optionsErrorMessage) ? '' : 'none' } }>
+      <div
+        className={ styles.container }
+        style={ {
+          direction: locale.direction,
+          display: (this.state.optionsLoadingHidden && !this.state.optionsErrorMessage) ? '' : 'none'
+        } }
+      >
 
         {
           this.props.children
@@ -523,10 +572,7 @@ class RoomOptions extends StoreComponent
 
               { /* Game Mode Options */ }
                 
-              {
-                dirtyOptions.gameMode === 'kuruit' ?
-                  KuruitOptions() : QassaOptions()
-              }
+              { modeOptions() }
 
               {/* Apply Button */}
 
@@ -564,6 +610,8 @@ class RoomOptions extends StoreComponent
 }
 
 RoomOptions.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node ]),
@@ -616,7 +664,6 @@ const styles = createStyle({
   },
 
   container: {
-    direction: locale.direction,
     maxWidth: '80%',
     margin: '0 auto',
 
@@ -928,11 +975,7 @@ const styles = createStyle({
       WebkitAppearance: 'none',
       margin: 0
     }
-  },
-
-  inputSuffix: {
-    margin: (locale.direction === 'ltr') ? '0 5px -2px -5px': '0 -5px -2px 5px'
   }
 });
 
-export default RoomOptions;
+export default withI18n(RoomOptions);

@@ -10,7 +10,7 @@ import { createAnimation, createStyle } from 'flcss';
 
 import getTheme from '../colors.js';
 
-import i18n, { locale } from '../i18n.js';
+import { useI18n } from '../i18n.js';
 
 import AutoSizeInput from './autoSizeInput.js';
 
@@ -21,11 +21,15 @@ const colors = getTheme();
 */
 const Box = ({ description, allowed, onSubmit }) =>
 {
+  const { locale, i18n } = useI18n();
+
   const [ content, setContent ] = useState(allowed && description ? '' : description);
   
-  return <div className={ styles.container } waiting={ (!allowed && description !== undefined).toString() }>
+  return <div className={ styles.container } waiting={ (!allowed && description !== undefined).toString() } style={ { direction: locale.direction } }>
     {
-      allowed && description ? <div className={ styles.items }>{ description }</div> : undefined
+      allowed && description ? <div
+        className={ styles.items }
+      >{ description }</div> : undefined
     }
 
     <AutoSizeInput
@@ -123,7 +127,6 @@ const styles = createStyle({
     color: colors.whiteText,
 
     userSelect: 'none',
-    direction: locale.direction,
     textTransform: 'capitalize',
 
     fontWeight: 700,
@@ -133,7 +136,6 @@ const styles = createStyle({
 
   input: {
     gridArea: 'content',
-    direction: locale.direction,
 
     color: colors.whiteText,
     backgroundColor: colors.blackCardBackground,

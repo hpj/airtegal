@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import * as Tracing from '@sentry/tracing';
 
-import i18n, { setLocale } from './i18n.js';
+import { getI18n, setLocale } from './i18n.js';
 
 import WebFont from 'webfontloader';
 
@@ -22,15 +22,11 @@ import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
 
-export let country = '';
-
 let visibleLoading = true;
 let keepLoading = false;
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
-
-const version = 2.3;
 
 // detect touch screen
 export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
@@ -57,10 +53,7 @@ function loaded()
 
 export function holdLoadingScreen()
 {
-  if (visibleLoading)
-    return keepLoading = true;
-  else
-    return false;
+  return visibleLoading ? keepLoading = true : false;
 }
 
 export function remountLoadingScreen()
@@ -128,64 +121,45 @@ const webFontPromise = () =>
   });
 };
 
-const connectivityPromise = () =>
+const connectivityPromise = async() =>
 {
-  return new Promise((resolve, reject) =>
-  {
-    if (navigator.onLine === false && process.env.NODE_ENV === 'production')
-      reject('You Are Offline');
-    else
-      resolve();
-  });
+  if (process.env.NODE_ENV === 'production' && !navigator.onLine)
+    throw new Error('You Are Offline');
 };
 
-const ipCheckPromise = () =>
+const ipCheckPromise = async() =>
 {
-  return new Promise((resolve, reject) =>
+  // bypass check if on a development or testing environments
+  if (process.env.NODE_ENV !== 'production')
   {
-    // bypass check if on a development or testing environments
-    if (process.env.NODE_ENV !== 'production')
-    {
-      country = 'Egypt';
+    setLocale('Egypt', 'ar');
   
-      resolve();
-  
-      return;
-    }
-  
-    axios.get(`${process.env.API_ENDPOINT}/check`, {
+    return;
+  }
+
+  try
+  {
+    /**
+    * @type { import('axios').AxiosResponse<{ version: number, country: string, language: string }> }
+    */
+    const response = await axios.get(`${process.env.API_ENDPOINT}/check`, {
       timeout: 15000
-    })
-      .then((response) =>
-      {
-        if (response.status !== 200)
-        {
-          reject(i18n(response.data) || response.data);
-        }
-        else if (response.data.version !== version)
-        {
-          reject(i18n('server-mismatch'));
-        }
-        else
-        {
-          // try to set the locale as the country
-          setLocale(country = response.data.country);
+    });
   
-          resolve();
-        }
-      })
-      .catch((e) =>
-      {
-        if (e.response)
-          reject(i18n(e.response.data.message) || e.response.data.message);
-        else
-          resolve();
-      });
-  });
+    if (response.status !== 200)
+      throw new Error(getI18n(response.data) ?? response.data);
+    else
+      setLocale(response.data.country, response.data.language);
+  }
+  catch (e)
+  {
+    if (e.response)
+      throw new Error(getI18n(e.response.data?.message) ?? e.response.data?.message);
+  }
 };
 
 // remove the loading screen if all the promises resolve
 Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
   .then(loaded)
   // eslint-disable-next-line react/no-render-return-value
-  .catch((e) => ReactDOM.render(<Error error={ e }/>, placeholder));
+  .catch(err => ReactDOM.render(<Error error={ err }/>, placeholder));

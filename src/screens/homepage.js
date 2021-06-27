@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 
+import PropTypes from 'prop-types';
+
 import { createStyle, createAnimation } from 'flcss';
 
 import { ErrorBoundary } from '@sentry/react';
@@ -10,7 +12,7 @@ import getTheme from '../colors.js';
 
 import Warning from '../components/warning.js';
 
-import i18n, { locale } from '../i18n.js';
+import { withI18n } from '../i18n.js';
 
 import { fillTheBlanks } from '../utils.js';
 
@@ -38,15 +40,6 @@ class Homepage extends React.Component
   {
     // disable any dragging functionality in the app
     window.addEventListener('dragstart', this.disableDrag);
-
-    i18n('combos')
-      .forEach(({ card, combos }) =>
-        this.state.data.push(fillTheBlanks(card.content, combos.map(c => c.content))));
-
-    const index = this.randomIndex(this.state.data.length, -1);
-    
-    this.setState({ data: this.state.data, index },
-      () => this.interval = setInterval(this.updateIndex, 4500));
   }
 
   componentWillUnmount()
@@ -60,6 +53,18 @@ class Homepage extends React.Component
   {
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  onI18nChange(i18n)
+  {
+    i18n('combos')
+      .forEach(({ card, combos }) =>
+        this.state.data.push(fillTheBlanks(card.content, combos.map(c => c.content))));
+
+    const index = this.randomIndex(this.state.data.length, -1);
+    
+    this.setState({ data: this.state.data, index },
+      () => this.interval = setInterval(this.updateIndex, 4500));
   }
 
   randomIndex(length, lastIndex)
@@ -91,6 +96,8 @@ class Homepage extends React.Component
     */
     const { data } = this.state;
 
+    const { locale, i18n } = this.props;
+
     return <ErrorBoundary fallback={ 'An error has occurred' }>
       <div id={ 'homepage' }>
         <Warning
@@ -100,13 +107,13 @@ class Homepage extends React.Component
         />
 
         <div className={ styles.container }>
-          <div className={ styles.header }>
+          <div className={ styles.header } style={ { direction: locale.direction } }>
             <div className={ styles.airtegal }>{ i18n('airtegal') }</div>
             <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ i18n('terms-and-conditions') }</a>
             <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ i18n('privacy-policy') }</a>
           </div>
 
-          <span className={ styles.main } key={ +new Date() }>
+          <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
             {
               data?.[this.state.index]?.split('\n')
                 .map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
@@ -115,7 +122,7 @@ class Homepage extends React.Component
             }
           </span>
 
-          <div className={ styles.footer }>
+          <div className={ styles.footer } style={ { direction: locale.direction } }>
             <Link className={ styles.play } to={ 'play' }>
               { i18n('play') }
             </Link>
@@ -128,6 +135,12 @@ class Homepage extends React.Component
     </ErrorBoundary>;
   }
 }
+
+Homepage.propTypes =
+{
+  i18n: PropTypes.func,
+  locale: PropTypes.object
+};
 
 const backgroundAnimation = createAnimation({
   duration: '7.5s',
@@ -198,8 +211,7 @@ const styles = createStyle({
 
   header: {
     display: 'flex',
-    alignItems: 'center',
-    direction: locale.direction
+    alignItems: 'center'
   },
 
   airtegal: {
@@ -225,7 +237,6 @@ const styles = createStyle({
   main: {
     textAlign: 'center',
     animation: enterAnimation,
-    direction: locale.direction,
     margin: 'auto 20vw'
   },
 
@@ -242,8 +253,7 @@ const styles = createStyle({
 
   footer: {
     display: 'flex',
-    flexWrap: 'wrap',
-    direction: locale.direction
+    flexWrap: 'wrap'
   },
 
   play: {
@@ -269,4 +279,4 @@ const styles = createStyle({
   }
 });
 
-export default Homepage;
+export default withI18n(Homepage);

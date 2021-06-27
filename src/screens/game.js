@@ -1,5 +1,8 @@
 import React, { createRef } from 'react';
+
 import ReactDOM from 'react-dom';
+
+import PropTypes from 'prop-types';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
 import OptionsIcon from 'mdi-react/CogIcon';
@@ -17,8 +20,6 @@ import { createStyle, createAnimation } from 'flcss';
 
 import * as mocks from '../mocks/io.js';
 
-import stupidNames from '../stupidNames.js';
-
 import AutoSizeInput from '../components/autoSizeInput.js';
 
 import Error from '../components/error.js';
@@ -27,19 +28,26 @@ import Warning from '../components/warning.js';
 import RoomOverlay from '../components/roomOverlay.js';
 import OptionsOverlay from '../components/optionsOverlay.js';
 
-import i18n, { locale } from '../i18n.js';
+import { getLocale, getI18n, withI18n } from '../i18n.js';
 
 import { detectDiscord } from '../utils.js';
+
+const version = 2.4;
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
 const colors = getTheme();
 
+/**
+* @type { React.RefObject<AutoSizeInput> }
+*/
+const usernameRef = createRef();
+
 const overlayRef = createRef();
 
 /**
-* @type { import('socket.io').Socket }
+* @type { import('socket.io-client').Socket }
 */
 export let socket;
 
@@ -60,11 +68,13 @@ function connect()
   {
     try
     {
-      socket = process.env.NODE_ENV === 'test' ?
-        mocks.socket :
-        io(process.env.API_ENDPOINT, { path: '/io', query: {
-          region: locale.value
-        } });
+      socket = process.env.NODE_ENV === 'test' ? mocks.socket :
+        io(process.env.API_ENDPOINT, {
+          path: '/io',
+          query: {
+            version,
+            region: getLocale().value
+          } });
 
       socket.once('connect', resolve)
         .once('error', (e) =>
@@ -74,39 +84,35 @@ function connect()
           reject(e);
         });
 
-      socket.on('error', (err) =>
+      socket.once('error', (err) =>
       {
         setTimeout(() =>
         {
           socket.close();
   
-          errorScreen(i18n(err));
-  
-          reject();
+          errorScreen(getI18n(err));
         });
       });
 
-      socket.on('disconnect', () =>
+      socket.once('disconnect', () =>
       {
         setTimeout(() =>
         {
           socket.close();
   
-          errorScreen(i18n('you-were-disconnected'));
-  
-          reject();
+          errorScreen(getI18n('you-were-disconnected'));
         });
       });
 
       // connecting timeout
       setTimeout(() =>
       {
-        if (!socket.connected)
-        {
-          socket.close();
+        if (socket.connected)
+          return;
+        
+        socket.close();
 
-          reject('Error: Connecting Timeout');
-        }
+        reject('Error: Connecting Timeout');
       }, 3000);
     }
     catch (e)
@@ -134,10 +140,8 @@ class Game extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
+      username: localStorage.getItem('username')?.trim() || '',
       detectDiscord: false,
-
-      // load user preference or use default
-      username: localStorage.getItem('username') || stupidNames(),
 
       size: {},
       rooms: []
@@ -171,12 +175,26 @@ class Game extends React.Component
           detectDiscord: true
         }));
       })
-      .catch((err) =>
+      .catch(err =>
       {
-        errorScreen(i18n('server-unavailable'));
+        errorScreen(getI18n('server-unavailable'));
 
         console.error(err);
       });
+  }
+
+  stupidName(firstNames, lastNames)
+  {
+    if (process.env.NODE_ENV === 'test')
+    {
+      firstNames = [ 'اسلام' ];
+      lastNames = [ 'المرج' ];
+    }
+  
+    const first = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const last = lastNames[Math.floor(Math.random() * lastNames.length)];
+  
+    return `${first} ${last}`;
   }
 
   componentDidMount()
@@ -212,6 +230,16 @@ class Game extends React.Component
   {
     window.removeEventListener('resize', this.resize);
     window.removeEventListener('dragstart', this.disableDrag);
+  }
+
+  onI18nChange(i18n)
+  {
+    if (!localStorage.getItem('username')?.trim())
+    {
+      this.setState({
+        username: this.stupidName(i18n('stupid-first-names'), i18n('stupid-last-names'))
+      }, usernameRef.current?.resize);
+    }
   }
 
   /**
@@ -268,7 +296,7 @@ class Game extends React.Component
           socket.off('done', doneListen);
           socket.off('err', errListen);
 
-          errListen(nonce, i18n('timeout'));
+          errListen(nonce, getI18n('timeout'));
         }, timeout ?? 15000);
       }
 
@@ -283,8 +311,8 @@ class Game extends React.Component
     // show a loading indictor
     this.loadingVisibility(true);
 
-    this.sendMessage('list', { region: locale.value }, 60000)
-      .then((rooms) =>
+    this.sendMessage('list', 60000)
+      .then(rooms =>
       {
         // hide the loading indictor
         this.loadingVisibility(false);
@@ -293,13 +321,13 @@ class Game extends React.Component
         this.setState({
           rooms: rooms
         });
-      }).catch((err) =>
+      }).catch(err =>
       {
         // hide the loading indictor
         this.loadingVisibility(false);
 
         // show an error message
-        this.showErrorMessage(i18n(err) || err);
+        this.showErrorMessage(getI18n(err) || err);
       });
   }
 
@@ -347,107 +375,139 @@ class Game extends React.Component
 
   render()
   {
-    const Header = () =>
-    {
-      return <div className={ headerStyles.container }>
-        <p className={ headerStyles.welcome }> { i18n('username-prefix') } </p>
+    const { locale, i18n } = this.props;
 
-        <AutoSizeInput
-          id={ 'usrname-input' }
-          className={ headerStyles.usrname }
-          required
-          type={ 'text' }
-          maxLength={ 18 }
-          placeholder={ i18n('username-placeholder') }
-          value={ this.state.username }
-          onUpdate={ (value, resize, blur) =>
-          {
-            const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
+    const Header = () => <div className={ headerStyles.container } style={ { direction: locale.direction } }>
+      { i18n('username-prefix') }
 
-            localStorage.setItem('username', trimmed);
+      <AutoSizeInput
+        required
+        ref={ usernameRef }
+        type={ 'text' }
+        id={ 'usrname-input' }
+        className={ headerStyles.usrname }
+        style={ { direction: locale.direction } }
+        maxLength={ 18 }
+        placeholder={ i18n('username-placeholder') }
+        value={ this.state.username }
+        onUpdate={ (value, resize, blur) =>
+        {
+          const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
 
-            this.setState({
-              username: trimmed
-            }, resize);
+          localStorage.setItem('username', trimmed);
+
+          this.setState({
+            username: trimmed
+          }, resize);
+        } }
+      />
+    </div>;
+
+    const Options = () => <div className={ optionsStyles.container } style={ { direction: locale.direction } }>
+      <div className={ optionsStyles.buttons }>
+        <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
+        <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
+
+        {
+          this.state.detectDiscord ?
+            <a id={ 'discord-button' } className={ optionsStyles.discord } href={ 'https://herpproject.com/discord' }>
+              { i18n('discord-button') }
+              <DiscordIcon className={ optionsStyles.discordIcon }/>
+            </a> : undefined
+        }
+      </div>
+
+      <div className={ optionsStyles.title }> { i18n('available-rooms') }</div>
+
+      <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
+
+      <OptionsIcon className={ optionsStyles.icon } onClick={ () => this.setState({ options: { active: true } }) }/>
+    </div>;
+
+    const Rooms = () => <div className={ roomsStyles.container }>
+      <div className={ roomsStyles.roomsWrapper }>
+        <div style={ {
+          display: (this.state.loadingHidden) ? 'none' : ''
+        } } className={ roomsStyles.loading }
+        >
+          <div className={ roomsStyles.loadingSpinner }></div>
+        </div>
+
+        <div className={ roomsStyles.error } style={ {
+          display: (this.state.errorMessage) ? '' : 'none'
+        } } >
+          { this.state.errorMessage }
+        </div>
+
+        <div
+          className={ roomsStyles.roomsContainer }
+          style={ {
+            direction: locale.direction,
+            display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none'
           } }
-        />
-      </div>;
-    };
-
-    const Options = () =>
-    {
-      return <div className={ optionsStyles.container }>
-
-        <div className={ optionsStyles.buttons }>
-          <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
-          <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
-
+        >
           {
-            this.state.detectDiscord ?
-              <a id={ 'discord-button' } className={ optionsStyles.discord } href={ 'https://herpproject.com/discord' }>
-                { i18n('discord-button') }
-                <DiscordIcon className={ optionsStyles.discordIcon }/>
-              </a> : undefined
+            (this.state.rooms.length <= 0) ?
+              <div className={ roomsStyles.indicator }>
+                { i18n('no-rooms-available') }
+              </div>
+              :
+              this.state.rooms.map((room, i) =>
+              {
+                return <div key={ i } className={ roomsStyles.room } onClick={ () => overlayRef.current.joinRoom(room.id) }>
+                  <div className={ roomsStyles.highlights } style={ { direction: locale.direction } }>
+                    
+                    <div className={ roomsStyles.counter }>
+                      <div>{ room.players }</div>
+                      <div>/</div>
+                      <div>{ room.options.maxPlayers }</div>
+                    </div>
+
+                    { Highlights(room) }
+                  </div>
+
+                  <div className={ roomsStyles.cover }>
+                    <div className={ roomsStyles.coverShadow }/>
+                    <div className={ roomsStyles.coverBackground }>
+                      <div className={ roomsStyles.coverTitle }>{ room.master }</div>
+                    </div>
+                  </div>
+                </div>;
+              })
           }
         </div>
+      </div>
+    </div>;
 
-        <div className={ optionsStyles.title }> { i18n('available-rooms') }</div>
-
-        <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
-
-        <OptionsIcon className={ optionsStyles.icon } onClick={ () => this.setState({ options: { active: true } }) }/>
-      </div>;
-    };
-
-    const Rooms = () =>
+    const Highlights = room =>
     {
-      return <div className={ roomsStyles.container }>
-        <div className={ roomsStyles.roomsWrapper }>
-          <div style={ {
-            display: (this.state.loadingHidden) ? 'none' : ''
-          } } className={ roomsStyles.loading }
-          >
-            <div className={ roomsStyles.loadingSpinner }></div>
-          </div>
+      const highlights = [];
 
-          <div className={ roomsStyles.error } style={ {
-            display: (this.state.errorMessage) ? '' : 'none'
-          } } >
-            {this.state.errorMessage}
-          </div>
+      const gameMode = room.options.gameMode;
 
-          <div className={ roomsStyles.roomsContainer } style={ { display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none' } }>
-            {
-              (this.state.rooms.length <= 0) ?
-                <div className={ roomsStyles.indicator }>
-                  { i18n('no-rooms-available') }
-                </div>
-                :
-                this.state.rooms.map((room, i) =>
-                {
-                  return <div key={ i } className={ roomsStyles.room } onClick={ () => overlayRef.current.joinRoom(room.id) }>
-                    <div className={ roomsStyles.highlights }>
-                      
-                      <div className={ roomsStyles.counter }>
-                        <div>{ room.players }</div>
-                        <div>/</div>
-                        <div>{ room.options.maxPlayers }</div>
-                      </div>
+      // cards based game modes
+      if (gameMode === 'kuruit')
+      {
+        if (room.options.endCondition === 'limited')
+          highlights.push(`${i18n('max-rounds', room.options.maxRounds, true)}.`);
+        else if (room.options.endCondition === 'timer')
+          highlights.push(`${i18n('max-time', room.options.maxTime / 60 / 1000, true)}.`);
 
-                      { RoomHighlights(room) }
-                    </div>
+        highlights.push(`${i18n('hand-cap-lobby', room.options.startingHandAmount, true)}.`);
 
-                    <div className={ roomsStyles.cover }>
-                      <div className={ roomsStyles.coverShadow }/>
-                      <div className={ roomsStyles.coverBackground }>
-                        <div className={ roomsStyles.coverTitle }>{ room.master }</div>
-                      </div>
-                    </div>
-                  </div>;
-                })
-            }
-          </div>
-        </div>
+        if (room.options.blankProbability > 0)
+          highlights.push(`%${room.options.blankProbability} ${i18n('blank-probability-lobby')}.`);
+      }
+      else if (gameMode === 'qassa')
+      {
+        highlights.push(`${i18n('max-groups', 3, true)}.`);
+        highlights.push(`${i18n('max-stories', 3, true)}.`);
+      }
+
+      return <div>
+        {
+          highlights.map((s, i) => <div key={ i }>{ s }</div>)
+        }
       </div>;
     };
 
@@ -485,36 +545,10 @@ class Game extends React.Component
   }
 }
 
-const RoomHighlights = (room) =>
+Game.propTypes =
 {
-  const highlights = [];
-
-  const gameMode = room.options.gameMode;
-
-  // cards based game modes
-  if (gameMode === 'kuruit')
-  {
-    if (room.options.endCondition === 'limited')
-      highlights.push(`${i18n('max-rounds', room.options.maxRounds, true)}.`);
-    else if (room.options.endCondition === 'timer')
-      highlights.push(`${i18n('max-time', room.options.maxTime / 60 / 1000, true)}.`);
-
-    highlights.push(`${i18n('hand-cap-lobby', room.options.startingHandAmount, true)}.`);
-
-    if (room.options.blankProbability > 0)
-      highlights.push(`%${room.options.blankProbability} ${i18n('blank-probability-lobby')}.`);
-  }
-  else if (gameMode === 'qassa')
-  {
-    highlights.push(`${i18n('max-groups', 3, true)}.`);
-    highlights.push(`${i18n('max-stories', 3, true)}.`);
-  }
-
-  return <div>
-    {
-      highlights.map((s, i) => <div key={ i }>{ s }</div>)
-    }
-  </div>;
+  i18n: PropTypes.func,
+  locale: PropTypes.object
 };
 
 const mainStyles = createStyle({
@@ -551,17 +585,11 @@ const headerStyles = createStyle({
 
     fontWeight: '700',
 
-    direction: locale.direction,
     padding: '15px 3vw 5px 3vw'
-  },
-
-  welcome: {
-    margin: '0'
   },
 
   usrname: {
     margin: '0 5px -2px 5px',
-    direction: locale.direction,
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
@@ -593,8 +621,6 @@ const optionsStyles = createStyle({
   container: {
     gridArea: 'options',
     display: 'grid',
-
-    direction: locale.direction,
 
     gridTemplateColumns: '1fr 1fr auto auto',
     gridTemplateRows: '1fr auto',
@@ -743,7 +769,6 @@ const roomsStyles = createStyle({
 
   roomsContainer: {
     display: 'grid',
-    direction: locale.direction,
 
     gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
     gridTemplateRows: 'min-content',
@@ -836,8 +861,6 @@ const roomsStyles = createStyle({
   },
 
   highlights: {
-    direction: locale.direction,
-
     minHeight: '165px',
     width: 'calc(50% - 40px)',
     height: 'auto',
@@ -903,4 +926,4 @@ const roomsStyles = createStyle({
   }
 });
 
-export default Game;
+export default withI18n(Game);

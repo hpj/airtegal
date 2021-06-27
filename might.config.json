@@ -13,6 +13,9 @@
   "defaultTimeout": 25000,
   "tolerance": 2.5,
   "antialiasingTolerance": 3.5,
+  "pageErrorIgnore": [
+    "net::ERR_ABORTED"
+  ],
   "coverageExclude": [
     "/node_modules/**",
     "/webpack/**",

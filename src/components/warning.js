@@ -6,12 +6,14 @@ import { createStyle } from 'flcss';
 
 import getTheme, { opacity } from '../colors.js';
 
-import { locale } from '../i18n.js';
+import { useI18n } from '../i18n.js';
 
 const colors = getTheme();
 
 const Warning = ({ storageKey, text, button }) =>
 {
+  const { locale } = useI18n();
+
   // starts hidden, so it won't appear and disappear again if the user turned it off
   const [ visible, changeVisibility ] = useState(false);
 
@@ -44,7 +46,7 @@ const Warning = ({ storageKey, text, button }) =>
   // if the waring is visible
   return visible ?
     <div className={ styles.wrapper }>
-      <div className={ styles.container }>
+      <div className={ styles.container } style={ { direction: locale.direction } }>
         {text}
         <div id={ 'warning-button' } className={ styles.button } onClick={ onClick }>
           {button}
@@ -79,7 +81,6 @@ const styles = createStyle({
 
   container: {
     color: colors.blackText,
-    direction: locale.direction,
 
     maxWidth: '850px',
     height: 'min-content',
