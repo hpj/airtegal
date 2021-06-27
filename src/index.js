@@ -30,8 +30,6 @@ let keepLoading = false;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
-const version = 2.3;
-
 // detect touch screen
 export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
 
@@ -161,10 +159,6 @@ const ipCheckPromise = () =>
         if (response.status !== 200)
         {
           reject(i18n(response.data) || response.data);
-        }
-        else if (response.data.version !== version)
-        {
-          reject(i18n('server-mismatch'));
         }
         else
         {
