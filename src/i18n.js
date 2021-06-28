@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
 const locales = [
-  {
-    value: 'united states',
-    label: 'United States',
-    language: 'en',
-    locale: 'en-US',
-    direction: 'ltr',
-    blank: /[^A-z0-9 /!؟_\-.]/g,
-    // eslint-disable-next-line no-undef
-    json: require('./i18n/en-US.jsonc').default
-  },
+  // {
+  //   value: 'united states',
+  //   label: 'United States',
+  //   language: 'en',
+  //   locale: 'en-US',
+  //   direction: 'ltr',
+  //   blank: /[^A-z0-9 /!؟_\-.]/g,
+  //   // eslint-disable-next-line no-undef
+  //   json: require('./i18n/en-US.jsonc').default
+  // },
   {
     value: 'egypt',
     label: 'مصر',

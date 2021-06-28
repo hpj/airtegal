@@ -427,14 +427,14 @@ class Game extends React.Component
     const Rooms = () => <div className={ roomsStyles.container }>
       <div className={ roomsStyles.roomsWrapper }>
         <div style={ {
-          display: (this.state.loadingHidden) ? 'none' : ''
+          display: this.state.loadingHidden ? 'none' : ''
         } } className={ roomsStyles.loading }
         >
-          <div className={ roomsStyles.loadingSpinner }></div>
+          <div className={ roomsStyles.loadingSpinner }/>
         </div>
 
         <div className={ roomsStyles.error } style={ {
-          display: (this.state.errorMessage) ? '' : 'none'
+          display: this.state.errorMessage ? '' : 'none'
         } } >
           { this.state.errorMessage }
         </div>
@@ -447,7 +447,7 @@ class Game extends React.Component
           } }
         >
           {
-            (this.state.rooms.length <= 0) ?
+            this.state.rooms.length <= 0 ?
               <div className={ roomsStyles.indicator }>
                 { i18n('no-rooms-available') }
               </div>
@@ -637,16 +637,17 @@ const optionsStyles = createStyle({
 
   buttons: {
     gridArea: 'buttons',
-    display: 'flex',
-    flexWrap: 'wrap'
+    display: 'grid',
+
+    gridTemplateAreas: '". ." "discord discord"',
+
+    gridTemplateColumns: '1fr 1fr',
+    gridTemplateRows: '1fr',
+    gap: '8px'
   },
 
   button: {
     flexGrow: 1,
-    display: 'flex',
-
-    alignItems: 'center',
-    justifyContent: 'center',
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
@@ -657,18 +658,10 @@ const optionsStyles = createStyle({
     cursor: 'pointer',
     padding: '6px 0',
 
+    textAlign: 'center',
+
     transform: 'scale(1)',
     transition: 'transform 0.15s, background-color 0.25s, color 0.25s',
-
-    ':nth-child(1)':
-    {
-      margin: '0 0 0 7px'
-    },
-
-    ':nth-child(2)':
-    {
-      margin: '0 7px 0 0'
-    },
 
     ':hover': {
       color: colors.whiteText,
@@ -682,11 +675,13 @@ const optionsStyles = createStyle({
 
   discord: {
     extend: 'button',
-    
-    flexBasis: '100%',
-    textDecoration: 'none',
+    display: 'flex',
 
-    margin: '12px 0 0 0',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    gridArea: 'discord',
+    textDecoration: 'none',
 
     ':hover> svg': {
       color: colors.whiteText
