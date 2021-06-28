@@ -195,7 +195,7 @@ class FieldOverlay extends StoreComponent
 
                     return  <div className={ styles.entry } key={ entry.key }>
                       {
-                        entry.cards.map((card, cardIndex) => <Card
+                        entry.cards?.map((card, cardIndex) => <Card
                           key={ card.key }
                           type={ card.type }
                           content={ card.content }
