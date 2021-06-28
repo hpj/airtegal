@@ -49,6 +49,10 @@
         {
           "action": "wait",
           "value": "#game"
+        },
+        {
+          "action": "wait",
+          "value": 2
         }
       ]
     },
@@ -145,7 +149,7 @@
         },
         {
           "action": "wait",
-          "value": 1
+          "value": 2
         }
       ]
     },
@@ -265,10 +269,6 @@
         },
         {
           "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
           "value": "#kuruit-hand-overlay > div > div > div > textarea"
         },
         {
@@ -285,7 +285,7 @@
         },
         {
           "action": "wait",
-          "value": 2
+          "value": 3
         }
       ]
     },
@@ -472,7 +472,7 @@
         },
         {
           "action": "wait",
-          "value": 2
+          "value": 3
         }
       ]
     },
@@ -493,7 +493,7 @@
         },
         {
           "action": "wait",
-          "value": 2
+          "value": 3
         }
       ]
     },

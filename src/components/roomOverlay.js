@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { StoreComponent } from '../store.js';
 
-import i18n, { locale } from '../i18n.js';
+import { getI18n } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -33,6 +33,9 @@ const colors = getTheme();
 */
 const overlayRef = createRef();
 
+/**
+* @type { React.RefObject<RoomOptions> }
+*/
 const optionsRef = createRef();
 
 export let requestRoomData;
@@ -164,7 +167,7 @@ class RoomOverlay extends StoreComponent
     // make sure overlay is closed
     overlayRef.current?.snapTo({ index: 1 });
 
-    this.addNotification(i18n('you-were-kicked'));
+    this.addNotification(getI18n('you-were-kicked'));
     
     this.closeOverlay();
   }
@@ -183,9 +186,9 @@ class RoomOverlay extends StoreComponent
       if (this.state.roomData?.master && this.state.roomData?.master !== roomData.master)
       {
         if (roomData.master === socket.id)
-          this.addNotification(i18n('you-are-now-master'));
+          this.addNotification(getI18n('you-are-now-master'));
         else
-          this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${i18n('new-master')}`);
+          this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${getI18n('new-master')}`);
       }
     }
 
@@ -198,7 +201,7 @@ class RoomOverlay extends StoreComponent
     // show that the round ended
     if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing'&& roomData.phase !== 'transaction')
     {
-      this.addNotification(i18n(roomData.phase));
+      this.addNotification(getI18n(roomData.phase));
     }
 
     this.store.set({
@@ -215,7 +218,7 @@ class RoomOverlay extends StoreComponent
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('create', { username, region: locale.value }).then(id =>
+    sendMessage('create', { username }).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -236,7 +239,7 @@ class RoomOverlay extends StoreComponent
       this.loadingVisibility(false);
 
       // show an error message
-      this.showErrorMessage(i18n(err) || err);
+      this.showErrorMessage(getI18n(err) || err);
     });
   }
 
@@ -250,7 +253,7 @@ class RoomOverlay extends StoreComponent
     // show a loading indictor
     this.loadingVisibility(true);
 
-    sendMessage('join', { id, username, region: locale.value }).then(id =>
+    sendMessage('join', { id, username }).then(() =>
     {
       // hide the loading indictor
       this.loadingVisibility(false);
@@ -268,7 +271,7 @@ class RoomOverlay extends StoreComponent
       this.loadingVisibility(false);
 
       // show an error message
-      this.showErrorMessage(i18n(err) || err);
+      this.showErrorMessage(getI18n(err) || err);
     });
   }
 
@@ -476,6 +479,8 @@ class RoomOverlay extends StoreComponent
 }
 
 RoomOverlay.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   sendMessage: PropTypes.func.isRequired,
   requestRooms: PropTypes.func.isRequired,
   size: PropTypes.object,

@@ -1,11 +1,13 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
 import { StoreComponent } from '../store.js';
 
-import { locale } from '../i18n.js';
+import { withI18n } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
@@ -31,32 +33,32 @@ class RoomTrackBar extends StoreComponent
 
   render()
   {
-    return (
-      <div className={ styles.wrapper }>
-        <div className={ styles.container }>
-          <div className={ styles.players }>
-            {
-              this.state.roomData?.players.map((playerId) =>
-              {
-                const match = this.state.roomData?.state === 'match';
-                // eslint-disable-next-line security/detect-object-injection
-                const player = this.state.roomData?.playerProperties[playerId];
-                
-                const turn = player?.state === 'judging' || player?.state === 'picking' || player?.state === 'writing';
+    const { locale } = this.props;
 
-                return <div className={ styles.player } key={ playerId }>
-                  {
-                    turn ? <WaitingIcon className={ styles.waiting } style={ { display: !match ? 'none' : undefined } }/> :
-                      <CheckIcon className={ styles.played } style={ { display: !match ? 'none' : undefined } }/>
-                  }
-                  <div className={ styles.name }>{ player?.username }</div>
-                </div>;
-              })
-            }
-          </div>
+    return <div className={ styles.wrapper }>
+      <div className={ styles.container }>
+        <div className={ styles.players }>
+          {
+            this.state.roomData?.players.map((playerId) =>
+            {
+              const match = this.state.roomData?.state === 'match';
+              // eslint-disable-next-line security/detect-object-injection
+              const player = this.state.roomData?.playerProperties[playerId];
+              
+              const turn = player?.state === 'judging' || player?.state === 'picking' || player?.state === 'writing';
+
+              return <div key={ playerId } className={ styles.player } style={ { direction: locale.direction } }>
+                {
+                  turn ? <WaitingIcon className={ styles.waiting } style={ { display: !match ? 'none' : undefined } }/> :
+                    <CheckIcon className={ styles.played } style={ { display: !match ? 'none' : undefined } }/>
+                }
+                <div className={ styles.name }>{ player?.username }</div>
+              </div>;
+            })
+          }
         </div>
       </div>
-    );
+    </div>;
   }
 }
 
@@ -73,6 +75,12 @@ const waitingAnimation = createAnimation({
     }
   }
 });
+
+RoomTrackBar.propTypes =
+{
+  i18n: PropTypes.func,
+  locale: PropTypes.object
+};
 
 const styles = createStyle({
   wrapper: {
@@ -119,7 +127,6 @@ const styles = createStyle({
   player: {
     display: 'flex',
     alignItems: 'center',
-    direction: locale.direction,
     color: colors.blackText,
 
     padding: '0 10px'
@@ -146,4 +153,4 @@ const styles = createStyle({
   }
 });
 
-export default RoomTrackBar;
+export default withI18n(RoomTrackBar);

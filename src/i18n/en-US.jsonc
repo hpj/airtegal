@@ -1,0 +1,191 @@
+{
+  // brands
+
+  "airtegal": "",
+  "hpj": "HP.J",
+
+  // hand
+
+  "blank": "____",
+
+  // error connection errors
+
+  "server-unavailable": "",
+  "you-were-disconnected": "",
+
+  "server-mismatch": "",
+  "timeout": "",
+
+  "app-country-block": "",
+  "app-country-taboo": "",
+
+  // lobby
+
+  "username-prefix": "",
+  "username-placeholder": "",
+  
+  "create-room": "",
+  "random-room": "",
+  
+  "spectating": "",
+
+  "available-rooms": "",
+
+  "discord-button": "",
+
+  // app options
+
+  "theme": "",
+  "region": "",
+  "save": "",
+
+  "no-options": "",
+
+  // random usernames
+
+  "stupid-first-names": [
+  ],
+
+  "stupid-last-names": [
+  ],
+
+  // matchmaking errors
+
+  "no-rooms-available": " ",
+  "room-does-not-exists": "   ",
+  
+  "request-has-wrong-parameters": "",
+  
+  "user-does-not-have-permission": "",
+  "minimal-number-of-players-required": "",
+
+  // endpoint errors
+
+  "forbidden": "",
+  "internal-server-error": "",
+
+  // room id sharing
+
+  "room-copied-to-clipboard": "",
+  "join-me": "",
+
+  // room master changes
+
+  "you-are-now-master": "",
+  "new-master": "",
+
+  // room options
+  
+  "match-highlights": "",
+
+  "room-edited": "",
+  "you-were-kicked": "",
+
+  "game-mode": "",
+
+  "free-for-all": "",
+  "co-op": "",
+  
+  "kuruit": "",
+  "king": "",
+  "qassa": "",
+
+  "match-options": "",
+
+  "groups": "",
+  "max-groups": "",
+  
+  "end-condition": "",
+  
+  "options-placeholder": "0",
+
+  "after": "",
+
+  "max-stories": "",
+  "max-rounds": "",
+  "max-time": "",
+
+  "max-players": "",
+  "round-countdown": "",
+
+  "hand-cap": "",
+  "hand-cap-lobby": "",
+
+  "blank-probability": "",
+  "blank-probability-lobby": "",
+
+  "room-options": "",
+
+  "randos": "",
+
+  "yes": "",
+  "no": "",
+
+  "wait-for-room-master": "",
+
+  "apply": "",
+  "start": "",
+
+  // match logic
+
+  "this-card-is-yours": "",
+
+  "not-enough-cards": "",
+  "not-enough-players": "",
+  
+  "judge-left": "",
+  "judge-timeout": "",
+  
+  // match state
+
+  "picking-phase": "",
+  "judging-phase": "",
+  "writing-phase": "",
+
+  "wait-for-your-turn": "",
+  "wait-until-judged": "",
+
+  "you-won-the-round": "",
+  "won-this-round": "",
+
+  // share overlay
+  
+  "hashtag-airtegal": "",
+
+  "share-copied-to-clipboard": "",
+
+  "close": "",
+
+  "limited:match-ended": "",
+  "timer:match-ended": "",
+
+  // warning
+
+  "ok": "",
+  "airtegal-adults-warning": "",
+
+  // homepage
+
+  // last updated 26 May, 2021
+  "combos": [
+  ],
+
+  "play": "",
+  "terms-and-conditions": "",
+  "privacy-policy": ""
+  
+  // "copyright-notice": "",
+  
+  // "what-is-airtegal": "",
+  // "that-is-airtegal": "",
+
+  // "who-is-hpj": "",
+  // "this-is-hpj": "",
+
+  // "why-is-game-raciest": "",
+  // "freedom-of-speech-1": "",
+  // "freedom-of-speech-2": "",
+  
+  // "how-to-suggest-cards": "",
+  // "suggesting-cards": ""
+}

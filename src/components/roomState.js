@@ -6,7 +6,7 @@ import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import { StoreComponent } from '../store.js';
 
-import i18n, { locale } from '../i18n.js';
+import { getI18n, getLocale, withI18n } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -89,7 +89,7 @@ class RoomState extends StoreComponent
       clearInterval(this.countdownInterval);
 
       // set state as players count
-      if (locale.direction === 'ltr')
+      if (getLocale().direction === 'ltr')
         this.formatted = `${roomData.players.length}/${roomData.options.maxPlayers}`;
       else
         this.formatted = `${roomData.options.maxPlayers}/${roomData.players.length}`;
@@ -193,28 +193,28 @@ class RoomState extends StoreComponent
     
     if (!player)
     {
-      state.displayMessage = i18n('spectating');
+      state.displayMessage = getI18n('spectating');
     }
     else if (roomData.phase === 'picking')
     {
       if (roomData.playerProperties[socket.id]?.state === 'picking')
-        state.displayMessage = i18n('picking-phase');
+        state.displayMessage = getI18n('picking-phase');
       else
-        state.displayMessage = i18n('wait-for-your-turn');
+        state.displayMessage = getI18n('wait-for-your-turn');
     }
     else if (roomData.phase === 'judging')
     {
       if (roomData.playerProperties[socket.id]?.state === 'judging')
-        state.displayMessage = i18n('judging-phase');
+        state.displayMessage = getI18n('judging-phase');
       else
-        state.displayMessage = i18n('wait-until-judged');
+        state.displayMessage = getI18n('wait-until-judged');
     }
     else if (roomData.phase === 'writing')
     {
       if (roomData.playerProperties[socket.id]?.state === 'writing')
-        state.displayMessage = i18n('writing-phase');
+        state.displayMessage = getI18n('writing-phase');
       else
-        state.displayMessage = i18n('wait-for-your-turn');
+        state.displayMessage = getI18n('wait-for-your-turn');
     }
     else if (roomData.phase === 'transaction' && roomData.options.gameMode === 'qassa')
     {
@@ -225,10 +225,10 @@ class RoomState extends StoreComponent
       const { id } = roomData.field.find(e => e.highlight);
 
       if (id === socket.id)
-        state.displayMessage = i18n('you-won-the-round');
+        state.displayMessage = getI18n('you-won-the-round');
       else if (id)
         // eslint-disable-next-line security/detect-object-injection
-        state.displayMessage = i18n('won-this-round', roomData.playerProperties[id]?.username);
+        state.displayMessage = getI18n('won-this-round', roomData.playerProperties[id]?.username);
     }
 
     return state;
@@ -264,7 +264,7 @@ class RoomState extends StoreComponent
   {
     navigator.share({
       title: 'Share Room URL',
-      text: i18n('join-me'),
+      text: getI18n('join-me'),
       url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`
     }).catch(console.warn);
   }
@@ -304,7 +304,7 @@ class RoomState extends StoreComponent
       this.setSelection(e.nativeEvent.target, value);
 
       if (document.execCommand('copy'))
-        addNotification(i18n('room-copied-to-clipboard'));
+        addNotification(getI18n('room-copied-to-clipboard'));
     }
     finally
     {
@@ -323,31 +323,36 @@ class RoomState extends StoreComponent
 
   render()
   {
+    const { locale } = this.props;
+
     const isMatch = this.state.roomData?.state === 'match';
 
     return <div className={ styles.wrapper }>
-      {
-        (isMatch) ?
-          <div match={ 'true' } className={ styles.container }>
-            <div match={ 'true' } className={ styles.state }>{ this.state.displayMessage }</div>
+      <div match={ isMatch.toString() } className={ styles.container } style={ { direction: locale.direction } }>
+        {
+          isMatch ?
+            <>
+              <div match={ 'true' } className={ styles.state }>{ this.state.displayMessage }</div>
+              <div className={ styles.counter }>{ this.formatted }</div>
+            </>
+            :
+            <>
+              <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
 
-            <div className={ styles.counter }>{ this.formatted }</div>
-          </div>
-          :
-          <div match={ 'false' } className={ styles.container }>
-            <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
-
-            {
-              navigator.share ? <ShareIcon className={ styles.icon } onClick={ this.shareRoomURL }/> :
-                <div className={ styles.id } onClick={ this.copyRoomURL }>{ this.state.roomData?.id }</div>
-            }
-          </div>
-      }
+              {
+                navigator.share ? <ShareIcon className={ styles.icon } onClick={ this.shareRoomURL }/> :
+                  <div className={ styles.id } onClick={ this.copyRoomURL }>{ this.state.roomData?.id }</div>
+              }
+            </>
+        }
+      </div>
     </div>;
   }
 }
 
 RoomState.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   addNotification: PropTypes.func.isRequired
 };
 
@@ -372,8 +377,6 @@ const styles = createStyle({
     gridRowGap: '10px',
 
     userSelect: 'none',
-
-    direction: locale.direction,
 
     color: colors.blackText,
     
@@ -485,4 +488,4 @@ const styles = createStyle({
   }
 });
 
-export default RoomState;
+export default withI18n(RoomState);

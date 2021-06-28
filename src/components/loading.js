@@ -6,21 +6,21 @@ import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
 
-import i18n, { locale } from '../i18n.js';
+import { useI18n } from '../i18n.js';
 
 const colors = getTheme();
 
 const Loading = ({ splash }) =>
 {
-  return (
-    <div className={ styles.container }>
-      {
-        (splash) ?
-          <div className={ styles.splash }><div/></div> :
-          <div className={ styles.loading }>{ i18n('airtegal') }</div>
-      }
-    </div>
-  );
+  const { i18n } = useI18n();
+
+  return <div className={ styles.container }>
+    {
+      splash ?
+        <div className={ styles.splash }><div/></div> :
+        <div className={ styles.loading }>{ i18n('airtegal') }</div>
+    }
+  </div>;
 };
 
 Loading.propTypes = {
@@ -39,8 +39,6 @@ const styles = createStyle({
     alignItems: 'center',
     
     backgroundColor: colors.whiteBackground,
-
-    direction: locale.direction,
 
     minWidth: '100vw',
     minHeight: '100vh'

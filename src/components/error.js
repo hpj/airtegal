@@ -5,7 +5,7 @@ import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
 
-import { locale } from '../i18n.js';
+import { useI18n } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -13,7 +13,9 @@ const colors = getTheme();
 */
 const Error = ({ error }) =>
 {
-  return <div className={ styles.container }>
+  const { locale } = useI18n();
+
+  return <div className={ styles.container } style={ { direction: locale.direction } }>
     <p className={ styles.error }>{error}</p>
   </div>;
 };
@@ -33,8 +35,6 @@ const styles = createStyle({
     
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
-
-    direction: locale.direction,
 
     width: 'calc(100vw - 30px)',
     height: 'calc(100vh - 30px)',

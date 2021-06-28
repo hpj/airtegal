@@ -14,7 +14,7 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import i18n, { locale } from '../i18n.js';
+import { withI18n } from '../i18n.js';
 
 import Interactable from './Interactable.js';
 
@@ -137,7 +137,7 @@ class FieldOverlay extends StoreComponent
 
   render()
   {
-    const { size } = this.props;
+    const { locale, i18n, size } = this.props;
 
     const { roomData, fieldHidden, fieldVisible, winnerEntryIndex } = this.state;
 
@@ -186,7 +186,7 @@ class FieldOverlay extends StoreComponent
         <div className={ styles.wrapper }>
           {
             gameMode === 'kuruit' ?
-              <div id={ 'kuruit-field-overlay' } className={ styles.container }>
+              <div id={ 'kuruit-field-overlay' } className={ styles.container } style={ { direction: locale.direction } }>
                 {
                   field.map((entry, entryIndex) =>
                   {
@@ -218,7 +218,7 @@ class FieldOverlay extends StoreComponent
                   field[0]?.story?.composed ?
                     <CSSTransition key={ field[0].story.key } timeout={ 250 }>
                       <div className={ styles.qassa }>
-                        <div className={ styles.content } onClick={ () => this.shareEntry() }>
+                        <div className={ styles.content } style={ { direction: locale.direction } } onClick={ () => this.shareEntry() }>
                           { field[0].story.composed?.text.replace(/\\n/g, '\n') }
                           <div className={ styles.bottom }>
                             { i18n('qassa') }
@@ -246,6 +246,8 @@ class FieldOverlay extends StoreComponent
 }
 
 FieldOverlay.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   sendMessage: PropTypes.func.isRequired,
   size: PropTypes.object
 };
@@ -286,7 +288,6 @@ const styles = createStyle({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
-    direction: locale.direction,
     justifyContent: 'center'
   },
 
@@ -340,7 +341,6 @@ const styles = createStyle({
   content: {
     cursor: 'pointer',
     userSelect: 'none',
-    direction: locale.direction,
     
     color: colors.whiteText,
     backgroundColor: colors.blackCardBackground,
@@ -376,6 +376,6 @@ const styles = createStyle({
   }
 });
 
-export default FieldOverlay;
+export default withI18n(FieldOverlay);
 
 

@@ -10,7 +10,7 @@ import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
 
-import i18n from '../i18n.js';
+import { getI18n, withI18n } from '../i18n.js';
 
 import { getStore } from '../store.js';
 
@@ -52,7 +52,7 @@ export async function shareEntry(black, white)
   {
     navigator.share({
       title: 'Airtegal',
-      text: i18n('hashtag-airtegal'),
+      text: getI18n('hashtag-airtegal'),
       url: shareURL
     }).catch(console.warn);
   }
@@ -105,13 +105,13 @@ class ShareOverlay extends React.Component
     const { addNotification } = this.props;
 
     // navigator.clipboard?.writeText(this.props.share.url)
-    //   .then(() => addNotification(i18n('share-copied-to-clipboard')))
+    //   .then(() => addNotification(getI18n('share-copied-to-clipboard')))
     //   .catch(console.warn);
 
     try
     {
       if (document.execCommand('copy'))
-        addNotification(i18n('share-copied-to-clipboard'));
+        addNotification(getI18n('share-copied-to-clipboard'));
     }
     catch
     {
@@ -124,7 +124,7 @@ class ShareOverlay extends React.Component
   {
     const { share } = this.props;
 
-    const url = `https://www.facebook.com/dialog/share?app_id=196958018362010&href=${share.url}&hashtag=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
+    const url = `https://www.facebook.com/dialog/share?app_id=196958018362010&href=${share.url}&hashtag=${encodeURIComponent(getI18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
@@ -137,7 +137,7 @@ class ShareOverlay extends React.Component
   {
     const { share } = this.props;
 
-    const url = `https://twitter.com/intent/tweet?url=${share.url}&text=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
+    const url = `https://twitter.com/intent/tweet?url=${share.url}&text=${encodeURIComponent(getI18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
@@ -150,7 +150,7 @@ class ShareOverlay extends React.Component
   {
     const { share } = this.props;
 
-    const url = `https://www.reddit.com/submit?url=${share.url}&title=${encodeURIComponent(i18n('hashtag-airtegal'))}`;
+    const url = `https://www.reddit.com/submit?url=${share.url}&title=${encodeURIComponent(getI18n('hashtag-airtegal'))}`;
   
     const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
   
@@ -160,6 +160,8 @@ class ShareOverlay extends React.Component
 
   render()
   {
+    const { i18n } = this.props;
+
     let { share } = this.props;
 
     if (!share)
@@ -195,6 +197,8 @@ class ShareOverlay extends React.Component
 }
 
 ShareOverlay.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   addNotification: PropTypes.func.isRequired,
   share: PropTypes.object,
   hide: PropTypes.func
@@ -342,4 +346,4 @@ const styles = createStyle({
   }
 });
 
-export default ShareOverlay;
+export default withI18n(ShareOverlay);

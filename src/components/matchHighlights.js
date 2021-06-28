@@ -1,12 +1,14 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { createStyle } from 'flcss';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import getTheme, { opacity } from '../colors.js';
 
-import i18n, { locale } from '../i18n.js';
+import { withI18n } from '../i18n.js';
 
 import { fillTheBlanks } from '../utils';
 
@@ -65,35 +67,40 @@ class MatchHighlights extends StoreComponent
 
   render()
   {
-    if (this.state.entries.length <= 0)
+    if (!this.state.entries?.length)
       return <div/>;
-    
-    return (
-      <div id={ 'match-highlights' } className={ styles.container }>
-        <div className={ styles.title }>{ i18n('match-highlights') }</div>
-        {
-          this.state.entries.slice(0, 3)
-            .map(e => fillTheBlanks(e[0], e.slice(1)))
-            // eslint-disable-next-line security/detect-object-injection
-            .map((e, k) => <div className={ styles.entry } key={ k } onClick={ () => this.shareEntry(this.state.entries[k]) }>
-              {
-                e.split('\n').map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
-                  { t }
-                </span>)
-              }
 
-              <ShareIcon className={ styles.icon }/>
-            </div>)
-        }
-      </div>
-    );
+    const { locale, i18n } = this.props;
+    
+    return <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
+      <div className={ styles.title }>{ i18n('match-highlights') }</div>
+      {
+        this.state.entries.slice(0, 3)
+          .map(e => fillTheBlanks(e[0], e.slice(1)))
+          // eslint-disable-next-line security/detect-object-injection
+          .map((e, k) => <div className={ styles.entry } key={ k } onClick={ () => this.shareEntry(this.state.entries[k]) }>
+            {
+              e.split('\n').map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
+                { t }
+              </span>)
+            }
+
+            <ShareIcon className={ styles.icon }/>
+          </div>)
+      }
+    </div>;
   }
 }
+
+MatchHighlights.propTypes =
+{
+  i18n: PropTypes.func,
+  locale: PropTypes.object
+};
 
 const styles = createStyle({
   container: {
     padding: '0 25px',
-    direction: locale.direction,
     fontSize: 'calc(6px + 0.4vw + 0.4vh)'
   },
 
@@ -146,4 +153,4 @@ const styles = createStyle({
   }
 });
 
-export default MatchHighlights;
+export default withI18n(MatchHighlights);

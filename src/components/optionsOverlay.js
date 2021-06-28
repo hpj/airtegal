@@ -7,11 +7,11 @@ import { createStyle } from 'flcss';
 import Brightness2Icon from 'mdi-react/Brightness2Icon';
 import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
-import Select from './select.js';
+// import Select from './select.js';
 
 import getTheme, { detectDeviceIsDark } from '../colors.js';
 
-import i18n, { locales, locale, setLocale } from '../i18n.js';
+import { withI18n } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -80,58 +80,58 @@ class OptionsOverlay extends React.Component
 
   render()
   {
+    const { locale, i18n } = this.props;
+
     let { options } = this.props;
 
     if (!options)
       options = { active: false };
 
-    // const isDirty = JSON.stringify(this.state.dirty) !== JSON.stringify(this.state.options);
-  
-    return (
-      <div enabled={ options.active.toString() } className={ styles.wrapper }>
-        <div enabled={ options.active.toString() } className={ styles.holder }/>
+    return <div enabled={ options.active.toString() } className={ styles.wrapper }>
+      <div enabled={ options.active.toString() } className={ styles.holder }/>
 
-        <div enabled={ options.active.toString() } className={ styles.container }>
+      <div enabled={ options.active.toString() } className={ styles.container }>
 
-          <div className={ styles.options }>
+        <div className={ styles.options }>
 
-            <div className={ styles.choice }>
-              <div className={ styles.title }>{ i18n('theme') }</div>
+          <div className={ styles.choice } style={ { direction: locale.direction } }>
+            <div className={ styles.title }>{ i18n('theme') }</div>
 
-              <Brightness5Icon active={ (this.state.dirty.darkTheme === false).toString() } onClick={ () => this.switchTheme(false) } className={ styles.icon }/>
-              <Brightness2Icon active={ (this.state.dirty.darkTheme === true).toString() } onClick={ () => this.switchTheme(true) } className={ styles.icon }/>
-            </div>
-
-            <div className={ styles.choice }>
-              <div className={ styles.title }>{ i18n('region') }</div>
-
-              <Select
-                className={ styles.select }
-
-                defaultIndex={ locales.indexOf(locale) }
-                options={ locales }
-
-                onChange={ (locale) => setLocale(locale) }
-              />
-            </div>
+            <Brightness5Icon active={ (this.state.dirty.darkTheme === false).toString() } onClick={ () => this.switchTheme(false) } className={ styles.icon }/>
+            <Brightness2Icon active={ (this.state.dirty.darkTheme === true).toString() } onClick={ () => this.switchTheme(true) } className={ styles.icon }/>
           </div>
 
-          <div className={ styles.buttons }>
-            {/* <div className={ styles.button } enabled={ isDirty.toString() } onClick={ hide } >
-              { i18n('save') }
-            </div> */}
+          {/* <div className={ styles.choice } style={ { direction: locale.direction } }>
+            <div className={ styles.title }>{ i18n('region') }</div>
 
-            <div className={ styles.button } enabled={ 'true' } onClick={ this.hide }>
-              { i18n('close') }
-            </div>
+            <Select
+              className={ styles.select }
+
+              defaultIndex={ locales.indexOf(locale) }
+              options={ locales }
+
+              onChange={ (locale) => setLocale(locale) }
+            />
+          </div> */}
+        </div>
+
+        <div className={ styles.buttons }>
+          {/* <div className={ styles.button } enabled={ isDirty.toString() } onClick={ hide } >
+            { i18n('save') }
+          </div> */}
+
+          <div className={ styles.button } enabled={ 'true' } onClick={ this.hide }>
+            { i18n('close') }
           </div>
         </div>
       </div>
-    );
+    </div>;
   }
 }
 
 OptionsOverlay.propTypes = {
+  i18n: PropTypes.func,
+  locale: PropTypes.object,
   options: PropTypes.object,
   hide: PropTypes.func
 };
@@ -205,8 +205,6 @@ const styles = createStyle({
 
   choice: {
     display: 'flex',
-
-    direction: locale.direction,
     alignItems: 'center',
 
     margin: '25px'
@@ -268,9 +266,6 @@ const styles = createStyle({
 
   buttons: {
     display: 'flex',
-
-    direction: locale.direction,
-
     userSelect: 'none',
 
     margin: '15px'
@@ -290,4 +285,4 @@ const styles = createStyle({
   }
 });
 
-export default OptionsOverlay;
+export default withI18n(OptionsOverlay);
