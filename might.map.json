@@ -49,6 +49,10 @@
         {
           "action": "wait",
           "value": "#game"
+        },
+        {
+          "action": "wait",
+          "value": 2
         }
       ]
     },
