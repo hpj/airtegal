@@ -10,8 +10,6 @@ import DiscordIcon from 'mdi-react/DiscordIcon';
 
 import { io } from 'socket.io-client';
 
-import { ErrorBoundary } from '@sentry/react';
-
 import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
 import getTheme from '../colors.js';
@@ -511,37 +509,35 @@ class Game extends React.Component
       </div>;
     };
 
-    return <ErrorBoundary fallback={ 'An error has occurred' }>
-      <div id={ 'game' } className={ mainStyles.wrapper }>
+    return <div id={ 'game' } className={ mainStyles.wrapper }>
 
-        <Warning
-          storageKey={ 'airtegal-adults-warning' }
-          text={ i18n('airtegal-adults-warning') }
-          button={ i18n('ok') }
-        />
+      <Warning
+        storageKey={ 'airtegal-adults-warning' }
+        text={ i18n('airtegal-adults-warning') }
+        button={ i18n('ok') }
+      />
 
-        <OptionsOverlay
-          options={ this.state.options }
-          hide={ () => this.setState({ options: { active: false } }) }
-        />
+      <OptionsOverlay
+        options={ this.state.options }
+        hide={ () => this.setState({ options: { active: false } }) }
+      />
 
-        <div className={ mainStyles.container }>
+      <div className={ mainStyles.container }>
 
-          { Header() }
-          { Options() }
-          { Rooms() }
+        { Header() }
+        { Options() }
+        { Rooms() }
 
-        </div>
-
-        <RoomOverlay
-          ref={ overlayRef }
-          sendMessage={ this.sendMessage.bind(this) }
-          requestRooms={ this.requestRooms }
-          size={ this.state.size }
-          username={ this.state.username }
-        />
       </div>
-    </ErrorBoundary>;
+
+      <RoomOverlay
+        ref={ overlayRef }
+        sendMessage={ this.sendMessage.bind(this) }
+        requestRooms={ this.requestRooms }
+        size={ this.state.size }
+        username={ this.state.username }
+      />
+    </div>;
   }
 }
 
