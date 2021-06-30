@@ -6,8 +6,6 @@ import PropTypes from 'prop-types';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import { ErrorBoundary } from '@sentry/react';
-
 import getTheme from '../colors.js';
 
 import Warning from '../components/warning.js';
@@ -98,41 +96,39 @@ class Homepage extends React.Component
 
     const { locale, i18n } = this.props;
 
-    return <ErrorBoundary fallback={ 'An error has occurred' }>
-      <div id={ 'homepage' }>
-        <Warning
-          storageKey={ 'airtegal-adults-warning' }
-          text={ i18n('airtegal-adults-warning') }
-          button={ i18n('ok') }
-        />
+    return <div id={ 'homepage' }>
+      <Warning
+        storageKey={ 'airtegal-adults-warning' }
+        text={ i18n('airtegal-adults-warning') }
+        button={ i18n('ok') }
+      />
 
-        <div className={ styles.container }>
-          <div className={ styles.header } style={ { direction: locale.direction } }>
-            <div className={ styles.airtegal }>{ i18n('airtegal') }</div>
-            <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ i18n('terms-and-conditions') }</a>
-            <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ i18n('privacy-policy') }</a>
-          </div>
+      <div className={ styles.container }>
+        <div className={ styles.header } style={ { direction: locale.direction } }>
+          <div className={ styles.airtegal }>{ i18n('airtegal') }</div>
+          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ i18n('terms-and-conditions') }</a>
+          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ i18n('privacy-policy') }</a>
+        </div>
 
-          <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
-            {
-              data?.[this.state.index]?.split('\n')
-                .map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
-                  { t }
-                </span>)
-            }
-          </span>
+        <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
+          {
+            data?.[this.state.index]?.split('\n')
+              .map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
+                { t }
+              </span>)
+          }
+        </span>
 
-          <div className={ styles.footer } style={ { direction: locale.direction } }>
-            <Link className={ styles.play } to={ 'play' }>
-              { i18n('play') }
-            </Link>
-            <div className={ styles.hpj }>
-              <a className={ styles.button } href={ 'https://herpproject.com' }>{ i18n('hpj') }</a>
-            </div>
+        <div className={ styles.footer } style={ { direction: locale.direction } }>
+          <Link className={ styles.play } to={ 'play' }>
+            { i18n('play') }
+          </Link>
+          <div className={ styles.hpj }>
+            <a className={ styles.button } href={ 'https://herpproject.com' }>{ i18n('hpj') }</a>
           </div>
         </div>
       </div>
-    </ErrorBoundary>;
+    </div>;
   }
 }
 
