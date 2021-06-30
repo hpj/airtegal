@@ -140,7 +140,7 @@ AutoSizeInput.propTypes = {
   id: PropTypes.string,
   master: PropTypes.string,
   className: PropTypes.string,
-  style: PropTypes.obj,
+  style: PropTypes.object,
   
   disabled: PropTypes.bool,
   placeholder: PropTypes.string,

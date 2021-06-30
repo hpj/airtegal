@@ -149,6 +149,11 @@ export default class Store
   {
     const keys = Object.keys(state);
 
+    // this is temporary addiction to the code
+    // to detect the reason behindd locale being added to the store
+    if (keys.includes('locale'))
+      throw new Error('locale should not be called here');
+
     keys.forEach((key) => this.changes[key] = this.state[key] = state[key]);
 
     // dispatch changes

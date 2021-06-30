@@ -9,8 +9,8 @@
     "test": "might"
   },
   "dependencies": {
-    "@sentry/react": "^6.7.2",
-    "@sentry/tracing": "^6.7.2",
+    "@sentry/react": "^6.8.0",
+    "@sentry/tracing": "^6.8.0",
     "autosize-input": "^1.0.2",
     "axios": "^0.21.1",
     "flcss": "^2.2.7",
@@ -34,7 +34,7 @@
     "json5-loader": "^4.0.1",
     "might-cli": "^2.3.0",
     "might-ui": "^1.1.8",
-    "webpack": "^5.40.0",
+    "webpack": "^5.41.1",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   }
