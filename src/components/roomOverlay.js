@@ -279,7 +279,7 @@ class RoomOverlay extends StoreComponent
   {
     const { sendMessage } = this.props;
 
-    sendMessage('leave').then(this.closeOverlay)
+    sendMessage('leave').then(() => this.closeOverlay)
       .catch(console.error);
   }
 
@@ -479,8 +479,6 @@ class RoomOverlay extends StoreComponent
 }
 
 RoomOverlay.propTypes = {
-  i18n: PropTypes.func,
-  locale: PropTypes.object,
   sendMessage: PropTypes.func.isRequired,
   requestRooms: PropTypes.func.isRequired,
   size: PropTypes.object,

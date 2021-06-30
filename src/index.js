@@ -92,7 +92,9 @@ if (process.env.NODE_ENV === 'production')
     // send the app state with each error
     beforeSend: event =>
     {
-      event.extra = getStore();
+      event.extra = {
+        ...getStore().state
+      };
 
       return event;
     },
