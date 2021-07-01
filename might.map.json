@@ -284,6 +284,10 @@
           "value": "left"
         },
         {
+          "action": "click",
+          "value": "left"
+        },
+        {
           "action": "wait",
           "value": 3
         }

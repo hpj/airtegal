@@ -133,7 +133,6 @@ class Card extends React.Component
                 this.focused = true;
               } }
 
-              onFocus={ () => this.focused = true }
               onBlur={ () => this.focused = false }
 
               onChange={ e =>
