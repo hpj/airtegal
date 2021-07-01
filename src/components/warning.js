@@ -6,13 +6,13 @@ import { createStyle } from 'flcss';
 
 import getTheme, { opacity } from '../colors.js';
 
-import { useI18n } from '../i18n.js';
+import { useTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
 const Warning = ({ storageKey, text, button }) =>
 {
-  const { locale } = useI18n();
+  const { locale } = useTranslation();
 
   // starts hidden, so it won't appear and disappear again if the user turned it off
   const [ visible, changeVisibility ] = useState(false);

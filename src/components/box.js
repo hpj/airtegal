@@ -10,7 +10,7 @@ import { createAnimation, createStyle } from 'flcss';
 
 import getTheme from '../colors.js';
 
-import { useI18n } from '../i18n.js';
+import { useTranslation } from '../i18n.js';
 
 import AutoSizeInput from './autoSizeInput.js';
 
@@ -21,7 +21,7 @@ const colors = getTheme();
 */
 const Box = ({ description, allowed, onSubmit }) =>
 {
-  const { locale, i18n } = useI18n();
+  const { locale, translation } = useTranslation();
 
   const [ content, setContent ] = useState(allowed && description ? '' : description);
   
@@ -41,9 +41,9 @@ const Box = ({ description, allowed, onSubmit }) =>
     <AutoSizeInput
       required
       className={ styles.input }
-      placeholder={ i18n('blank') }
+      placeholder={ translation('blank') }
       type={ 'text' }
-      value={ allowed && description ? content : i18n('qassa') }
+      value={ allowed && description ? content : translation('qassa') }
       disabled={ !allowed || !description }
       onSubmit={ () => onSubmit(content) }
       onUpdate={ (value, resize, blur) =>

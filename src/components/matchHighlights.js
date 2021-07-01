@@ -8,7 +8,7 @@ import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import getTheme from '../colors.js';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 import { fillTheBlanks } from '../utils';
 
@@ -74,10 +74,10 @@ class MatchHighlights extends StoreComponent
     if (!this.state.entries?.length)
       return <div/>;
 
-    const { locale, i18n } = this.props;
+    const { locale, translation } = this.props;
     
     return <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
-      <div className={ styles.title }>{ i18n('match-highlights') }</div>
+      <div className={ styles.title }>{ translation('match-highlights') }</div>
       {
         this.state.entries.slice(0, 3)
           .map(e => fillTheBlanks(e[0], e.slice(1)))
@@ -105,7 +105,7 @@ class MatchHighlights extends StoreComponent
 
 MatchHighlights.propTypes =
 {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object
 };
 
@@ -149,4 +149,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(MatchHighlights);
+export default withTranslation(MatchHighlights);

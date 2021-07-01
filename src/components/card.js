@@ -9,7 +9,7 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -78,7 +78,7 @@ class Card extends React.Component
       style, self,
       owner, blank,
       type, onClick,
-      locale, i18n
+      locale, translation
     } = this.props;
 
     const input = this.state.content;
@@ -107,7 +107,7 @@ class Card extends React.Component
       >
         {
           hidden ? <div className={ styles.hidden } type={ type } style={ { direction: locale.direction } }>
-            <div>{ i18n('kuruit') }</div>
+            <div>{ translation('kuruit') }</div>
           </div> : undefined
         }
 
@@ -121,7 +121,7 @@ class Card extends React.Component
               value={ input ?? content }
 
               maxLength={ 105 }
-              placeholder={ blank ? i18n('blank') : undefined }
+              placeholder={ blank ? translation('blank') : undefined }
 
               onClick={ e =>
               {
@@ -151,9 +151,9 @@ class Card extends React.Component
         >
           {
             hidden ? '' :
-              self && type === 'white' ? i18n('this-card-is-yours') :
+              self && type === 'white' ? translation('this-card-is-yours') :
                 owner && type === 'white' ? owner :
-                  blank ? i18n('blank') : i18n('kuruit')
+                  blank ? translation('blank') : translation('kuruit')
           }
           { share ? <ShareIcon className={ styles.share }/> : undefined }
         </div>
@@ -163,7 +163,7 @@ class Card extends React.Component
 }
 
 Card.propTypes = {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object,
   style: PropTypes.object,
   onClick: PropTypes.func,
@@ -342,4 +342,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(Card);
+export default withTranslation(Card);

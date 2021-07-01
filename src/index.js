@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import * as Tracing from '@sentry/tracing';
 
-import { getI18n, setLocale } from './i18n.js';
+import { translation, setLocale } from './i18n.js';
 
 import WebFont from 'webfontloader';
 
@@ -149,14 +149,14 @@ const ipCheckPromise = async() =>
     });
   
     if (response.status !== 200)
-      throw new Error(getI18n(response.data) ?? response.data);
+      throw new Error(translation(response.data) ?? response.data);
     else
       setLocale(response.data.country, response.data.language);
   }
   catch (e)
   {
     if (e.response)
-      throw new Error(getI18n(e.response.data?.message) ?? e.response.data?.message);
+      throw new Error(translation(e.response.data?.message) ?? e.response.data?.message);
   }
 };
 

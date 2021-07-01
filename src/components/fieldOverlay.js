@@ -14,7 +14,7 @@ import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 import Interactable from './Interactable.js';
 
@@ -137,7 +137,7 @@ class FieldOverlay extends StoreComponent
 
   render()
   {
-    const { locale, i18n, size } = this.props;
+    const { locale, translation, size } = this.props;
 
     const { roomData, fieldHidden, fieldVisible, winnerEntryIndex } = this.state;
 
@@ -221,7 +221,7 @@ class FieldOverlay extends StoreComponent
                         <div className={ styles.content } style={ { direction: locale.direction } } onClick={ () => this.shareEntry() }>
                           { field[0].story.composed?.text.replace(/\\n/g, '\n') }
                           <div className={ styles.bottom }>
-                            { i18n('qassa') }
+                            { translation('qassa') }
                             <ShareIcon className={ styles.share }/>
                           </div>
                         </div>
@@ -246,7 +246,7 @@ class FieldOverlay extends StoreComponent
 }
 
 FieldOverlay.propTypes = {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object,
   sendMessage: PropTypes.func.isRequired,
   size: PropTypes.object
@@ -377,6 +377,6 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(FieldOverlay);
+export default withTranslation(FieldOverlay);
 
 

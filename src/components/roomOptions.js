@@ -9,7 +9,7 @@ import autoSize from 'autosize-input';
 
 import { StoreComponent } from '../store.js';
 
-import { getI18n, withI18n } from '../i18n.js';
+import { translation, withTranslation } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -99,7 +99,7 @@ class RoomOptions extends StoreComponent
       inputs.forEach(e => autoSize(e));
 
       if (!master && state.dirtyOptions && old.dirtyOptions)
-        this.props.addNotification?.(getI18n('room-edited'));
+        this.props.addNotification?.(translation('room-edited'));
     }
   }
 
@@ -127,7 +127,7 @@ class RoomOptions extends StoreComponent
         this.loadingVisibility(false);
 
         // show an error message
-        this.showErrorMessage(getI18n(err) || err);
+        this.showErrorMessage(translation(err) || err);
       });
   }
   
@@ -150,7 +150,7 @@ class RoomOptions extends StoreComponent
         this.loadingVisibility(false);
 
         // show an error message
-        this.showErrorMessage(getI18n(err) || err);
+        this.showErrorMessage(translation(err) || err);
       });
   }
 
@@ -197,7 +197,7 @@ class RoomOptions extends StoreComponent
 
   render()
   {
-    const { locale, i18n } = this.props;
+    const { locale, translation } = this.props;
 
     const { roomData, dirtyOptions } = this.state;
 
@@ -214,15 +214,15 @@ class RoomOptions extends StoreComponent
       return <div/>;
 
     const gameModes = [
-      { label: i18n('kuruit'), value: 'kuruit', group: i18n('free-for-all') },
-      // { label: i18n('king'), value: 'king' },
-      { label: i18n('qassa'), value: 'qassa', group: i18n('co-op')  }
+      { label: translation('kuruit'), value: 'kuruit', group: translation('free-for-all') },
+      // { label: translation('king'), value: 'king' },
+      { label: translation('qassa'), value: 'qassa', group: translation('co-op')  }
     ];
 
     const GameModes = () =>
     {
       return <div>
-        <div className={ styles.title }>{ i18n('game-mode') }</div>
+        <div className={ styles.title }>{ translation('game-mode') }</div>
 
         {
           isMaster ?
@@ -238,7 +238,7 @@ class RoomOptions extends StoreComponent
 
               onChange={ (mode) => this.onGameModeChange(mode) }
             /> :
-            <div className={ styles.gameMode }>{ i18n(dirtyOptions.gameMode) }</div>
+            <div className={ styles.gameMode }>{ translation(dirtyOptions.gameMode) }</div>
         }
         
       </div>;
@@ -247,7 +247,7 @@ class RoomOptions extends StoreComponent
     const KuruitOptions = () =>
     {
       return <div>
-        <div className={ styles.title }>{ i18n('match-options') }</div>
+        <div className={ styles.title }>{ translation('match-options') }</div>
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds)).toString() }>
           <div
@@ -259,7 +259,7 @@ class RoomOptions extends StoreComponent
             <CheckIcon className={ styles.mark }/>
           </div>
 
-          <div>{ i18n('after') }</div>
+          <div>{ translation('after') }</div>
 
           <AutoSizeInput
             required
@@ -270,7 +270,7 @@ class RoomOptions extends StoreComponent
             id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
-            placeholder={ i18n('options-placeholder') }
+            placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxRounds }
             onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
@@ -280,7 +280,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div>{ i18n('max-rounds', dirtyOptions.maxRounds) }</div>
+          <div>{ translation('max-rounds', dirtyOptions.maxRounds) }</div>
         </div>
 
         <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime)).toString() }>
@@ -293,7 +293,7 @@ class RoomOptions extends StoreComponent
             <CheckIcon className={ styles.mark }/>
           </div>
 
-          <div>{ i18n('after') }</div>
+          <div>{ translation('after') }</div>
 
           <AutoSizeInput
             required
@@ -305,7 +305,7 @@ class RoomOptions extends StoreComponent
             id={ 'room-options-input' }
             master={ isMaster.toString() }
             className={ styles.input }
-            placeholder={ i18n('options-placeholder') }
+            placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxTime }
             onUpdate={ (value, resize) => this.store.set({
               dirtyOptions: {
@@ -315,7 +315,7 @@ class RoomOptions extends StoreComponent
             }, resize) }
           />
 
-          <div>{ i18n('max-time', dirtyOptions.maxTime / 60 / 1000) }</div>
+          <div>{ translation('max-time', dirtyOptions.maxTime / 60 / 1000) }</div>
         </div>
 
         <div style={ { margin: '5px 35px 5px' } }>
@@ -329,7 +329,7 @@ class RoomOptions extends StoreComponent
               id={ 'room-options-input' }
               master={ isMaster.toString() }
               className={ styles.input }
-              placeholder={ i18n('options-placeholder') }
+              placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.maxPlayers }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
@@ -339,7 +339,7 @@ class RoomOptions extends StoreComponent
               }, resize) }
             />
 
-            <div>{ i18n('max-players') }</div>
+            <div>{ translation('max-players') }</div>
           </div>
 
           <div className={ styles.field } dirty={ (dirtyOptions.roundTime !== options.roundTime).toString() }>
@@ -353,7 +353,7 @@ class RoomOptions extends StoreComponent
               id={ 'room-options-input' }
               master={ isMaster.toString() }
               className={ styles.input }
-              placeholder={ i18n('options-placeholder') }
+              placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.roundTime }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
@@ -363,7 +363,7 @@ class RoomOptions extends StoreComponent
               }, resize) }
             />
 
-            <div>{ i18n('round-countdown') }</div>
+            <div>{ translation('round-countdown') }</div>
           </div>
 
           <div className={ styles.field } dirty={ (dirtyOptions.startingHandAmount !== options.startingHandAmount).toString() }>
@@ -376,7 +376,7 @@ class RoomOptions extends StoreComponent
               id={ 'room-options-input' }
               master={ isMaster.toString() }
               className={ styles.input }
-              placeholder={ i18n('options-placeholder') }
+              placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.startingHandAmount }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
@@ -386,7 +386,7 @@ class RoomOptions extends StoreComponent
               }, resize) }
             />
 
-            <div>{ i18n('hand-cap') }</div>
+            <div>{ translation('hand-cap') }</div>
           </div>
 
           <div className={ styles.field } dirty={ (dirtyOptions.blankProbability !== options.blankProbability).toString() }>
@@ -400,7 +400,7 @@ class RoomOptions extends StoreComponent
               id={ 'room-options-input' }
               master={ isMaster.toString() }
               className={ styles.input }
-              placeholder={ i18n('options-placeholder') }
+              placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.blankProbability }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
@@ -411,14 +411,14 @@ class RoomOptions extends StoreComponent
             />
 
             <div suffix={ 'true' } style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } }>%</div>
-            <div>{ i18n('blank-probability') }</div>
+            <div>{ translation('blank-probability') }</div>
           </div>
         
           < div className={ styles.field } style={ { margin: '0 5px' } } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
-            <div>{ i18n('randos') }</div>
+            <div>{ translation('randos') }</div>
 
-            <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ i18n('yes') }</div>
-            <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ i18n('no') }</div>
+            <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ translation('yes') }</div>
+            <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ translation('no') }</div>
           </div>
         </div>
       </div>;
@@ -427,7 +427,7 @@ class RoomOptions extends StoreComponent
     // const KingOptions = () =>
     // {
     //   return <div>
-    //     <div className={ styles.title }>{ i18n('match-options') }</div>
+    //     <div className={ styles.title }>{ translation('match-options') }</div>
 
     //     <div style={ { margin: '5px -5px 5px' } }>
     //       <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
@@ -440,7 +440,7 @@ class RoomOptions extends StoreComponent
     //           id={ 'room-options-input' }
     //           master={ isMaster.toString() }
     //           className={ styles.input }
-    //           placeholder={ i18n('options-placeholder') }
+    //           placeholder={ translation('options-placeholder') }
     //           value={ dirtyOptions.maxPlayers }
     //           onUpdate={ (value, resize) => this.store.set({
     //             dirtyOptions: {
@@ -450,7 +450,7 @@ class RoomOptions extends StoreComponent
     //           }, resize) }
     //         />
 
-    //         <div>{ i18n('max-players') }</div>
+    //         <div>{ translation('max-players') }</div>
     //       </div>
     //     </div>
     //   </div>;
@@ -488,7 +488,7 @@ class RoomOptions extends StoreComponent
       }
       
       return <div>
-        <div className={ styles.title }>{ i18n('match-options') }</div>
+        <div className={ styles.title }>{ translation('match-options') }</div>
 
         <div style={ { margin: '5px -5px 5px' } }>
           <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
@@ -501,7 +501,7 @@ class RoomOptions extends StoreComponent
               id={ 'room-options-input' }
               master={ isMaster.toString() }
               className={ styles.input }
-              placeholder={ i18n('options-placeholder') }
+              placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.maxPlayers }
               onUpdate={ (value, resize) => this.store.set({
                 dirtyOptions: {
@@ -511,13 +511,13 @@ class RoomOptions extends StoreComponent
               }, resize) }
             />
 
-            <div>{ i18n('max-players') }</div>
+            <div>{ translation('max-players') }</div>
           </div>
         </div>
 
         {
           groups.map((group, y) => <div className={ styles.group } key={ y }>
-            <div className={ styles.groupName }>{ `${i18n('groups')} ${y + 1}` }</div>
+            <div className={ styles.groupName }>{ `${translation('groups')} ${y + 1}` }</div>
             {
               group.map((playerId, x) => <div className={ styles.member } key={ x }>
                 {/* eslint-disable-next-line security/detect-object-injection */}
@@ -578,7 +578,7 @@ class RoomOptions extends StoreComponent
 
               {
                 !isMaster && isPlayer ? <div className={ styles.wait }>
-                  <div>{ i18n('wait-for-room-master', master) }</div>
+                  <div>{ translation('wait-for-room-master', master) }</div>
                   <WaitingIcon className={ styles.waiting }/>
                 </div> : undefined
               }
@@ -588,7 +588,7 @@ class RoomOptions extends StoreComponent
                   id={ 'room-options-apply' }
                   className={ styles.button }
                   onClick={ this.editRequest }>
-                  { i18n('apply') }
+                  { translation('apply') }
                 </div> : undefined
               }
 
@@ -599,7 +599,7 @@ class RoomOptions extends StoreComponent
                   id={ 'room-options-start' }
                   className={ styles.button }
                   onClick={ this.matchRequest }>
-                  { i18n('start') }
+                  { translation('start') }
                 </div> : undefined
               }
             </div>
@@ -610,7 +610,7 @@ class RoomOptions extends StoreComponent
 }
 
 RoomOptions.propTypes = {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -977,4 +977,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(RoomOptions);
+export default withTranslation(RoomOptions);

@@ -14,7 +14,7 @@ import Card from './card.js';
 
 import { isTouchScreen } from '../index.js';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
@@ -305,7 +305,7 @@ class HandOverlay extends StoreComponent
 }
 
 HandOverlay.propTypes = {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object,
   size: PropTypes.object,
   sendMessage: PropTypes.func.isRequired
@@ -402,4 +402,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(HandOverlay);
+export default withTranslation(HandOverlay);
