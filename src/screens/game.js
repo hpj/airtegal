@@ -761,8 +761,9 @@ const roomsStyles = createStyle({
 
     gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
     gridTemplateRows: 'min-content',
+    justifyContent: 'space-around',
 
-    justifyContent: 'space-around'
+    rowGap: 'calc(15px + 2.5vh)'
   },
 
   indicator: {
@@ -824,7 +825,9 @@ const roomsStyles = createStyle({
   },
 
   room: {
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    columnGap: '20px',
 
     cursor: 'pointer',
     color: colors.roomForeground,
@@ -832,11 +835,13 @@ const roomsStyles = createStyle({
 
     width: 'auto',
     height: 'fit-content',
+    minHeight: '185px',
 
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    margin: '10px 10px 30px 10px',
+    padding: '10px 20px',
+    margin: '0px 10px',
     borderRadius: '10px',
 
     ':hover': {
@@ -849,12 +854,6 @@ const roomsStyles = createStyle({
   },
 
   highlights: {
-    minHeight: '165px',
-    width: 'calc(50% - 40px)',
-    height: 'auto',
-
-    margin: '10px 20px',
-
     '> * > *': {
       fontSize: 'calc(8px + 0.25vw + 0.25vh)'
     }
@@ -871,17 +870,9 @@ const roomsStyles = createStyle({
   },
 
   cover: {
+    display: 'flex',
     position: 'relative',
-    width: '50%'
-  },
-  
-  coverShadow: {
-    extend: 'coverBackground',
-    
-    backgroundColor: colors.whiteBackground,
-
-    top: '4px',
-    transform: 'rotate(5deg)'
+    alignItems: 'center'
   },
 
   coverBackground: {
@@ -893,22 +884,30 @@ const roomsStyles = createStyle({
 
     backgroundColor: colors.blackBackground,
 
-    left: 0,
-    width: 'calc(100% - 20px)',
-    height: 'calc(100% - 30px)',
+    width: '100%',
+    height: 'calc(100% - 40px)',
 
     overflow: 'hidden',
-    borderRadius: '7px',
+    borderRadius: '8px',
     
-    margin: '15px',
+    margin: '-4px 0 0',
     transform: 'rotate(-2deg)'
+  },
+
+  coverShadow: {
+    extend: 'coverBackground',
+    
+    backgroundColor: colors.whiteBackground,
+
+    margin: '3px 0 0',
+    transform: 'rotate(5deg)'
   },
 
   coverTitle: {
     color: colors.whiteText,
     
-    width: 'min-content',
     textAlign: 'center',
+    width: 'min-content',
 
     fontSize: 'calc(8px + 0.25vw + 0.25vh)'
   }
