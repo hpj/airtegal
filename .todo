@@ -1,15 +1,11 @@
 Performance Issues and Bugs:
   ☐ fix some of the issues of on firefox
-  
-  ☐ hand overlay on small screens is un-bear-able
 
+  ☐ look for more broken content with LTR
+  
   ☐ setup some feature flags using environment variables
 
 Testing:
   ☐ options overlay
 
 UI/UX:
-
-Homepage:
-
-Lobby:

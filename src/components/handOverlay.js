@@ -213,7 +213,13 @@ class HandOverlay extends StoreComponent
 
     const hand = this.state.roomData?.playerSecretProperties?.hand ?? [];
 
-    const top = isTouchScreen ? 0 : percent(size.height, 15);
+    const miniView = isTouchScreen || size.width < 700;
+
+    const width = '(115px + 2vw + 2vh)';
+    const overlayWidth = size.width >= 700 ? '(min(100vw, 700px) / 1.45)' : '(min(85vw, 700px) / 1.45)';
+
+    const margin =
+      `calc((${width} - (${overlayWidth} / ${hand?.length})) / -2)`;
 
     const snapPoints = isTouchScreen ? [
       { y: size.height, draggable: false },
@@ -224,12 +230,6 @@ class HandOverlay extends StoreComponent
       { y: percent(size.height, 50) },
       { y: percent(size.height, 80) }
     ];
-    
-    const width = '(115px + 2vw + 2vh)';
-    const overlayWidth = size.width >= 700 ? '(min(100vw, 700px) / 1.45)' : '(min(85vw, 700px) / 1.45)';
-
-    const margin =
-      `calc((${width} - (${overlayWidth} / ${hand?.length})) / -2)`;
 
     return <div className={ styles.view }>
       <Interactable
@@ -247,8 +247,10 @@ class HandOverlay extends StoreComponent
         onMovement={ this.onMovement }
         frame={ { pixels: Math.round(size.height * 0.05), every: 8 } }
 
-        boundaries={ { top } }
+        boundaries={ { top: isTouchScreen ? 0 : percent(size.height, 15) } }
+
         snapPoints={ snapPoints }
+
         initialPosition={ { y: size.height } }
       >
         <div className={ styles.overlayWrapper }>
@@ -264,7 +266,7 @@ class HandOverlay extends StoreComponent
 
               <div id={ 'kuruit-hand-overlay' } className={ styles.container } style={ {
                 direction: locale.direction,
-                flexWrap: isTouchScreen ? 'wrap' : undefined
+                flexWrap: miniView ? 'wrap' : undefined
               } }>
                 {
                   hand?.map((card, i) =>
@@ -280,9 +282,9 @@ class HandOverlay extends StoreComponent
                     return <Card
                       key={ card.key }
                       style={ {
-                        marginLeft: !isTouchScreen ? margin : undefined,
-                        marginRight: !isTouchScreen ? margin : undefined,
-                        transform: !isTouchScreen ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
+                        marginLeft: !miniView ? margin : undefined,
+                        marginRight: !miniView ? margin : undefined,
+                        transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
                       } }
                       onClick={ (c) => this.activateCard(c, card, i) }
                       allowed={ true }
