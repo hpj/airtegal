@@ -69,7 +69,6 @@ const styles = createStyle({
     pointerEvents: 'auto',
 
     fontWeight: '700',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     maxWidth: '350px',

@@ -590,7 +590,6 @@ const headerStyles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
@@ -626,7 +625,6 @@ const optionsStyles = createStyle({
     margin: '15px 0px',
 
     fontWeight: '700',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
 
     padding: '0 3vw'
   },
@@ -822,7 +820,6 @@ const roomsStyles = createStyle({
     extend: 'loading',
     
     fontWeight: '700',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 

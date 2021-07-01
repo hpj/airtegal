@@ -56,7 +56,7 @@ export function setLocale(country, language)
 
   setTag('region', locale.value);
   setTag('locale', locale.locale);
-  
+
   event.dispatchEvent(new Event('update'));
 }
 

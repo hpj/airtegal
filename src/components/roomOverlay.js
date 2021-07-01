@@ -544,7 +544,6 @@ const styles = createStyle({
 
     textTransform: 'capitalize',
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 

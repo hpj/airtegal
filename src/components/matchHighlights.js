@@ -113,8 +113,7 @@ const styles = createStyle({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '0 25px',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)'
+    padding: '0 25px'
   },
 
   title: {
