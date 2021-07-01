@@ -10,7 +10,7 @@
 
   // error connection errors
 
-  "server-unavailable": "السيرفر خارج الخدمة",
+  "region-unavailable": "السيرفر خارج الخدمة",
   "you-were-disconnected": "انقطع اتصالك بالسيرفر",
 
   "server-mismatch": "السيرفر تحت الصيانة",
@@ -18,6 +18,11 @@
 
   "app-country-block": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
   "app-country-taboo": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
+
+  // endpoint errors
+
+  "forbidden": "تم رفض الطلب",
+  "internal-server-error": "اسفيين حصل خطئ من السيرفر بتاعنا",
 
   // lobby
 
@@ -75,11 +80,6 @@
   
   "user-does-not-have-permission": "معندكش صلاحية تكمل العمليه دي",
   "minimal-number-of-players-required": "مفيش عدد كفاية من اللعيبة",
-
-  // endpoint errors
-
-  "forbidden": "تم رفض الطلب",
-  "internal-server-error": "اسفيين حصل خطئ من السيرفر بتاعنا",
 
   // room id sharing
 

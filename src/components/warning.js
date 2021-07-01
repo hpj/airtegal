@@ -71,6 +71,8 @@ const styles = createStyle({
     userSelect: 'none',
     backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
+    textTransform: 'capitalize',
+
     fontSize: 'calc(6px + 0.5vw + 0.5vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
@@ -100,8 +102,8 @@ const styles = createStyle({
     backgroundColor: colors.whiteBackground,
     borderColor: colors.blackText,
 
-    padding: '2px 18px',
-    margin: '10px 0 0 0',
+    padding: '8px 25px',
+    margin: '15px 0 0',
 
     ':hover': {
       color: colors.whiteBackground,

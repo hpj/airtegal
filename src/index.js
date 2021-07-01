@@ -134,7 +134,7 @@ const ipCheckPromise = async() =>
   // bypass check if on a development or testing environments
   if (process.env.NODE_ENV !== 'production')
   {
-    // setLocale('Egypt', 'ar');
+    setLocale('Egypt', 'ar');
   
     return;
   }

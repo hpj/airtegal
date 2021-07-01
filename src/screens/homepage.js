@@ -113,7 +113,14 @@ class Homepage extends React.Component
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
           {
             data?.[this.state.index]?.split('\n')
-              .map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
+              .map((t, i) => <span
+                key={ i }
+                className={ styles.content }
+                style={ {
+                  paddingBottom: locale.direction === 'ltr' ? '5px' : '15px',
+                  borderBottom: i % 2 ? '4px solid' : undefined
+                } }
+              >
                 { t }
               </span>)
           }
@@ -238,15 +245,9 @@ const styles = createStyle({
 
   content: {
     color: colors.whiteText,
-    paddingBottom: '15px',
     fontSize: 'calc(22px + 0.4vw + 0.4vh)'
   },
   
-  underline: {
-    extend: 'content',
-    borderBottom: '4px solid'
-  },
-
   footer: {
     display: 'flex',
     flexWrap: 'wrap'
