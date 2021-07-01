@@ -25,7 +25,13 @@ const Box = ({ description, allowed, onSubmit }) =>
 
   const [ content, setContent ] = useState(allowed && description ? '' : description);
   
-  return <div className={ styles.container } waiting={ (!allowed && description !== undefined).toString() } style={ { direction: locale.direction } }>
+  return <div
+    className={ styles.container }
+    waiting={ (!allowed && description !== undefined).toString() }
+    style={ {
+      direction: locale.direction,
+      rowGap: allowed && description ? '10px' : 0
+    } }>
     {
       allowed && description ? <div
         className={ styles.items }
@@ -53,7 +59,7 @@ const Box = ({ description, allowed, onSubmit }) =>
     }
 
     {
-      allowed ? <SubmitIcon className={ styles.icon } onClick={ () => onSubmit(content) }/> : undefined
+      allowed ? <SubmitIcon className={ styles.icon } style={ { transform: locale.direction === 'ltr' ? 'scaleX(1)' : 'scaleX(-1)' } } onClick={ () => onSubmit(content) }/> : undefined
     }
   </div>;
 };
@@ -82,9 +88,9 @@ const styles = createStyle({
   container: {
     display: 'grid',
     position: 'relative',
+
     gridTemplateColumns: '1fr auto',
     gridTemplateRows: 'auto 1fr',
-
     gridTemplateAreas: '"items icon" "content icon"',
 
     backgroundColor: colors.blackCardBackground,
@@ -150,7 +156,6 @@ const styles = createStyle({
     maxWidth: '65vw',
 
     padding: 0,
-    margin: '10px 0 0',
     border: 0,
 
     ':focus': {
@@ -195,9 +200,9 @@ const styles = createStyle({
   },
 
   icon: {
-    cursor: 'pointer',
-
     gridArea: 'icon',
+    
+    cursor: 'pointer',
     color: colors.whiteText,
     
     width: '0',

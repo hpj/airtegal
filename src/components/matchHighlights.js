@@ -6,7 +6,7 @@ import { createStyle } from 'flcss';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
-import getTheme, { opacity } from '../colors.js';
+import getTheme from '../colors.js';
 
 import { withI18n } from '../i18n.js';
 
@@ -35,10 +35,14 @@ class MatchHighlights extends StoreComponent
     
     if (process.env.NODE_ENV === 'test' && params.has('highlights'))
     {
-      const entries = params
-        .get('highlights')
-        .split('|')
-        .map(c => c.split('~'));
+      const entries = [];
+
+      entries.push([ 'Test?', 'Yes' ]);
+      entries.push([ 'Green, ______ and ______.', 'Red', 'Blue' ]);
+      entries.push([ 'انا وحش مصر ___ رقم خسمة و_____.', 'فشخ', 'عشرين' ]);
+
+      entries.push([ 'Invalid?', 'Invalid' ]);
+      entries.push([ 'Invalid?', 'Invalid' ]);
 
       this.setState({ entries });
     }
@@ -78,11 +82,18 @@ class MatchHighlights extends StoreComponent
         this.state.entries.slice(0, 3)
           .map(e => fillTheBlanks(e[0], e.slice(1)))
           // eslint-disable-next-line security/detect-object-injection
-          .map((e, k) => <div className={ styles.entry } key={ k } onClick={ () => this.shareEntry(this.state.entries[k]) }>
+          .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.shareEntry(this.state.entries[k]) }>
             {
-              e.split('\n').map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
-                { t }
-              </span>)
+              e.split('\n').map((t, i) =>
+                <span
+                  key={ i }
+                  style = { {
+                    padding: '3px 0',
+                    borderBottom: i % 2 ? '2px solid' : undefined
+                  } }
+                >
+                  { t }
+                </span>)
             }
 
             <ShareIcon className={ styles.icon }/>
@@ -100,6 +111,8 @@ MatchHighlights.propTypes =
 
 const styles = createStyle({
   container: {
+    display: 'flex',
+    flexDirection: 'column',
     padding: '0 25px',
     fontSize: 'calc(6px + 0.4vw + 0.4vh)'
   },
@@ -110,46 +123,30 @@ const styles = createStyle({
 
   entry: {
     cursor: 'pointer',
-    position: 'relative',
+    display: 'flex',
+
+    width: 'fit-content',
+    
+    alignItems: 'center',
+    whiteSpace: 'pre-wrap',
+
     color: colors.blackText,
     
-    left: 0,
-    padding: '0 0 20px',
-    transition: 'left 0.35s ease',
+    margin: '20px 0',
+    transition: 'margin 0.25s ease',
     
     ':hover': {
-      left: '10px',
-
-      '> svg': {
-        opacity: 1,
-        width: 'calc(14px + 0.25vw + 0.25vh)'
-      }
+      margin: '20px -10px 20px -10px'
     }
   },
 
   icon: {
-    opacity: 0,
-    position: 'relative',
-    color: colors.whiteText,
-    backgroundColor: opacity(colors.greyText, 0.25),
+    color: colors.blackText,
 
-    top: '10px',
-    left: '-10px',
-    width: 'calc(8px + 0.25vw + 0.25vh)',
-    height: 'calc(14px + 0.25vw + 0.25vh)',
+    width: 'calc(12px + 0.2vw + 0.2vh)',
+    height: 'calc(12px + 0.2vw + 0.2vh)',
     
-    padding: '8px',
-    borderRadius: '100%',
-    transition: 'opacity 0.25s ease, width 0.35s ease'
-  },
-
-  content: {
-    padding: '2px 0'
-  },
-  
-  underline: {
-    extend: 'content',
-    borderBottom: '3px solid'
+    margin: '0 8px'
   }
 });
 

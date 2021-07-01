@@ -362,7 +362,8 @@ const styles = createStyle({
   },
 
   bottom: {
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
     padding: '15px 0px 15px'
   },
 
@@ -372,7 +373,7 @@ const styles = createStyle({
     width: 'calc(14px + 0.3vw + 0.3vh)',
     height: 'calc(14px + 0.3vw + 0.3vh)',
 
-    margin: 'auto auto auto 0'
+    margin: 'auto 0'
   }
 });
 

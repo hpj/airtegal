@@ -1,12 +1,14 @@
 Performance Issues and Bugs:
   ☐ fix some of the issues of on firefox
+  
+  ☐ hand overlay on small screens is un-bear-able
+
+  ☐ setup some feature flags using environment variables
 
 Testing:
   ☐ options overlay
 
 UI/UX:
-  ☐ if the region language is not a dialect of arabic
-    - (switch to english version of the app but the server will refuse to connect you)
 
 Homepage:
 

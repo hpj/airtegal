@@ -366,7 +366,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
+          "value": "/play?quiet&create&highlights"
         },
         {
           "action": "wait",
