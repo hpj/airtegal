@@ -364,9 +364,11 @@ const styles = createStyle({
     backgroundColor: colors.trackBarBackground,
 
     padding: '10px',
+    margin: '0px 0px 0px 10px',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
+      margin: 0,
       padding: '10px 15px'
     }
   },

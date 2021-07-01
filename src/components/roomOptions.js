@@ -805,7 +805,7 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px 8px 25px',
+    padding: '0 25px 15px',
 
     '[dirty="true"]': {
       fontStyle: 'italic',
@@ -881,7 +881,7 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0px 25px 8px',
+    padding: '0 25px 12px',
 
     '[dirty="true"]': {
       fontStyle: 'italic',

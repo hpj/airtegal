@@ -90,6 +90,8 @@ const styles = createStyle({
     backgroundColor: colors.trackBarBackground,
     
     overflow: 'hidden auto',
+    
+    margin: '0px 0px 0px 10px',
 
     '::-webkit-scrollbar':
     {
