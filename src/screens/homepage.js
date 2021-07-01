@@ -10,7 +10,7 @@ import getTheme from '../colors.js';
 
 import Warning from '../components/warning.js';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 import { fillTheBlanks } from '../utils.js';
 
@@ -53,9 +53,9 @@ class Homepage extends React.Component
     e.preventDefault();
   }
 
-  onI18nChange(i18n)
+  onLocaleChange(translation)
   {
-    i18n('combos')
+    translation('combos')
       .forEach(({ card, combos }) =>
         this.state.data.push(fillTheBlanks(card.content, combos.map(c => c.content))));
 
@@ -94,26 +94,33 @@ class Homepage extends React.Component
     */
     const { data } = this.state;
 
-    const { locale, i18n } = this.props;
+    const { locale, translation } = this.props;
 
     return <div id={ 'homepage' }>
       <Warning
         storageKey={ 'airtegal-adults-warning' }
-        text={ i18n('airtegal-adults-warning') }
-        button={ i18n('ok') }
+        text={ translation('airtegal-adults-warning') }
+        button={ translation('ok') }
       />
 
       <div className={ styles.container }>
         <div className={ styles.header } style={ { direction: locale.direction } }>
-          <div className={ styles.airtegal }>{ i18n('airtegal') }</div>
-          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ i18n('terms-and-conditions') }</a>
-          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ i18n('privacy-policy') }</a>
+          <div className={ styles.airtegal }>{ translation('airtegal') }</div>
+          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ translation('terms-and-conditions') }</a>
+          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ translation('privacy-policy') }</a>
         </div>
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
           {
             data?.[this.state.index]?.split('\n')
-              .map((t, i) => <span key={ i } className={ i % 2 ? styles.underline : styles.content }>
+              .map((t, i) => <span
+                key={ i }
+                className={ styles.content }
+                style={ {
+                  paddingBottom: locale.direction === 'ltr' ? '5px' : '15px',
+                  borderBottom: i % 2 ? '4px solid' : undefined
+                } }
+              >
                 { t }
               </span>)
           }
@@ -121,10 +128,10 @@ class Homepage extends React.Component
 
         <div className={ styles.footer } style={ { direction: locale.direction } }>
           <Link className={ styles.play } to={ 'play' }>
-            { i18n('play') }
+            { translation('play') }
           </Link>
           <div className={ styles.hpj }>
-            <a className={ styles.button } href={ 'https://herpproject.com' }>{ i18n('hpj') }</a>
+            <a className={ styles.button } href={ 'https://herpproject.com' }>{ translation('hpj') }</a>
           </div>
         </div>
       </div>
@@ -134,7 +141,7 @@ class Homepage extends React.Component
 
 Homepage.propTypes =
 {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object
 };
 
@@ -238,15 +245,9 @@ const styles = createStyle({
 
   content: {
     color: colors.whiteText,
-    paddingBottom: '15px',
     fontSize: 'calc(22px + 0.4vw + 0.4vh)'
   },
   
-  underline: {
-    extend: 'content',
-    borderBottom: '4px solid'
-  },
-
   footer: {
     display: 'flex',
     flexWrap: 'wrap'
@@ -275,4 +276,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(Homepage);
+export default withTranslation(Homepage);

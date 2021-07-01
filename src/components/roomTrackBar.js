@@ -7,7 +7,7 @@ import WaitingIcon from 'mdi-react/LoadingIcon';
 
 import { StoreComponent } from '../store.js';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
@@ -78,7 +78,7 @@ const waitingAnimation = createAnimation({
 
 RoomTrackBar.propTypes =
 {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object
 };
 
@@ -90,6 +90,8 @@ const styles = createStyle({
     backgroundColor: colors.trackBarBackground,
     
     overflow: 'hidden auto',
+    
+    margin: '0px 0px 0px 10px',
 
     '::-webkit-scrollbar':
     {
@@ -153,4 +155,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(RoomTrackBar);
+export default withTranslation(RoomTrackBar);

@@ -1,7 +1,7 @@
 {
   // brands
 
-  "airtegal": "",
+  "airtegal": "Airtegal",
   "hpj": "HP.J",
 
   // hand
@@ -10,14 +10,19 @@
 
   // error connection errors
 
-  "server-unavailable": "",
-  "you-were-disconnected": "",
+  "region-unavailable": "Region is unavailable",
+  "you-were-disconnected": "You were disconnected",
 
-  "server-mismatch": "",
-  "timeout": "",
+  "server-mismatch": "Server is under maintenance.",
+  "timeout": "Request timed out",
 
-  "app-country-block": "",
-  "app-country-taboo": "",
+  "app-country-block": "This app is blocked in your country for political reasons.",
+  "app-country-taboo": "This app is blocked in your country for political reasons.",
+
+  // endpoint errors
+
+  "forbidden": "Forbidden",
+  "internal-server-error": "Internal Server Error",
 
   // lobby
 
@@ -59,10 +64,6 @@
   "user-does-not-have-permission": "",
   "minimal-number-of-players-required": "",
 
-  // endpoint errors
-
-  "forbidden": "",
-  "internal-server-error": "",
 
   // room id sharing
 
@@ -161,18 +162,19 @@
 
   // warning
 
-  "ok": "",
-  "airtegal-adults-warning": "",
+  "ok": "Okay",
+  "airtegal-adults-warning": "This game is for adults... If you're under 16, you properly should leave.",
 
   // homepage
 
   // last updated 26 May, 2021
   "combos": [
+    {"card":{"content":"Coming Soon to the","type":"black"},"combos":[{"type": "white", "content": "United States"}]}
   ],
 
-  "play": "",
-  "terms-and-conditions": "",
-  "privacy-policy": ""
+  "play": "Play",
+  "terms-and-conditions": "Terms",
+  "privacy-policy": "Privacy"
   
   // "copyright-notice": "",
   

@@ -6,7 +6,7 @@ import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import { StoreComponent } from '../store.js';
 
-import { getI18n, getLocale, withI18n } from '../i18n.js';
+import { translation, locale, withTranslation } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -89,7 +89,7 @@ class RoomState extends StoreComponent
       clearInterval(this.countdownInterval);
 
       // set state as players count
-      if (getLocale().direction === 'ltr')
+      if (locale().direction === 'ltr')
         this.formatted = `${roomData.players.length}/${roomData.options.maxPlayers}`;
       else
         this.formatted = `${roomData.options.maxPlayers}/${roomData.players.length}`;
@@ -193,28 +193,28 @@ class RoomState extends StoreComponent
     
     if (!player)
     {
-      state.displayMessage = getI18n('spectating');
+      state.displayMessage = translation('spectating');
     }
     else if (roomData.phase === 'picking')
     {
       if (roomData.playerProperties[socket.id]?.state === 'picking')
-        state.displayMessage = getI18n('picking-phase');
+        state.displayMessage = translation('picking-phase');
       else
-        state.displayMessage = getI18n('wait-for-your-turn');
+        state.displayMessage = translation('wait-for-your-turn');
     }
     else if (roomData.phase === 'judging')
     {
       if (roomData.playerProperties[socket.id]?.state === 'judging')
-        state.displayMessage = getI18n('judging-phase');
+        state.displayMessage = translation('judging-phase');
       else
-        state.displayMessage = getI18n('wait-until-judged');
+        state.displayMessage = translation('wait-until-judged');
     }
     else if (roomData.phase === 'writing')
     {
       if (roomData.playerProperties[socket.id]?.state === 'writing')
-        state.displayMessage = getI18n('writing-phase');
+        state.displayMessage = translation('writing-phase');
       else
-        state.displayMessage = getI18n('wait-for-your-turn');
+        state.displayMessage = translation('wait-for-your-turn');
     }
     else if (roomData.phase === 'transaction' && roomData.options.gameMode === 'qassa')
     {
@@ -225,10 +225,10 @@ class RoomState extends StoreComponent
       const { id } = roomData.field.find(e => e.highlight);
 
       if (id === socket.id)
-        state.displayMessage = getI18n('you-won-the-round');
+        state.displayMessage = translation('you-won-the-round');
       else if (id)
         // eslint-disable-next-line security/detect-object-injection
-        state.displayMessage = getI18n('won-this-round', roomData.playerProperties[id]?.username);
+        state.displayMessage = translation('won-this-round', roomData.playerProperties[id]?.username);
     }
 
     return state;
@@ -264,7 +264,7 @@ class RoomState extends StoreComponent
   {
     navigator.share({
       title: 'Share Room URL',
-      text: getI18n('join-me'),
+      text: translation('join-me'),
       url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`
     }).catch(console.warn);
   }
@@ -296,7 +296,7 @@ class RoomState extends StoreComponent
     const value = `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`;
 
     // navigator.clipboard.writeText(value)
-    //   .then(() => addNotification(i18n('room-copied-to-clipboard')))
+    //   .then(() => addNotification(translation('room-copied-to-clipboard')))
     //   .catch(console.warn);
     
     try
@@ -304,7 +304,7 @@ class RoomState extends StoreComponent
       this.setSelection(e.nativeEvent.target, value);
 
       if (document.execCommand('copy'))
-        addNotification(getI18n('room-copied-to-clipboard'));
+        addNotification(translation('room-copied-to-clipboard'));
     }
     finally
     {
@@ -351,7 +351,7 @@ class RoomState extends StoreComponent
 }
 
 RoomState.propTypes = {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object,
   addNotification: PropTypes.func.isRequired
 };
@@ -364,9 +364,11 @@ const styles = createStyle({
     backgroundColor: colors.trackBarBackground,
 
     padding: '10px',
+    margin: '0px 0px 0px 10px',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
+      margin: 0,
       padding: '10px 15px'
     }
   },
@@ -488,4 +490,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(RoomState);
+export default withTranslation(RoomState);

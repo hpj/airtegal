@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { StoreComponent } from '../store.js';
 
-import { getI18n } from '../i18n.js';
+import { translation } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
@@ -167,7 +167,7 @@ class RoomOverlay extends StoreComponent
     // make sure overlay is closed
     overlayRef.current?.snapTo({ index: 1 });
 
-    this.addNotification(getI18n('you-were-kicked'));
+    this.addNotification(translation('you-were-kicked'));
     
     this.closeOverlay();
   }
@@ -186,9 +186,9 @@ class RoomOverlay extends StoreComponent
       if (this.state.roomData?.master && this.state.roomData?.master !== roomData.master)
       {
         if (roomData.master === socket.id)
-          this.addNotification(getI18n('you-are-now-master'));
+          this.addNotification(translation('you-are-now-master'));
         else
-          this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${getI18n('new-master')}`);
+          this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${translation('new-master')}`);
       }
     }
 
@@ -201,7 +201,7 @@ class RoomOverlay extends StoreComponent
     // show that the round ended
     if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing'&& roomData.phase !== 'transaction')
     {
-      this.addNotification(getI18n(roomData.phase));
+      this.addNotification(translation(roomData.phase));
     }
 
     this.store.set({
@@ -239,7 +239,7 @@ class RoomOverlay extends StoreComponent
       this.loadingVisibility(false);
 
       // show an error message
-      this.showErrorMessage(getI18n(err) || err);
+      this.showErrorMessage(translation(err) || err);
     });
   }
 
@@ -271,7 +271,7 @@ class RoomOverlay extends StoreComponent
       this.loadingVisibility(false);
 
       // show an error message
-      this.showErrorMessage(getI18n(err) || err);
+      this.showErrorMessage(translation(err) || err);
     });
   }
 
@@ -544,7 +544,6 @@ const styles = createStyle({
 
     textTransform: 'capitalize',
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 

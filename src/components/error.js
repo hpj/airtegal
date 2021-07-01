@@ -5,7 +5,7 @@ import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
 
-import { useI18n } from '../i18n.js';
+import { useTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -13,7 +13,7 @@ const colors = getTheme();
 */
 const Error = ({ error }) =>
 {
-  const { locale } = useI18n();
+  const { locale } = useTranslation();
 
   return <div className={ styles.container } style={ { direction: locale.direction } }>
     <p className={ styles.error }>{error}</p>

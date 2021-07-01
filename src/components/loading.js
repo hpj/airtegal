@@ -6,19 +6,19 @@ import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
 
-import { useI18n } from '../i18n.js';
+import { useTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
 const Loading = ({ splash }) =>
 {
-  const { i18n } = useI18n();
+  const { translation } = useTranslation();
 
   return <div className={ styles.container }>
     {
       splash ?
         <div className={ styles.splash }><div/></div> :
-        <div className={ styles.loading }>{ i18n('airtegal') }</div>
+        <div className={ styles.loading }>{ translation('airtegal') }</div>
     }
   </div>;
 };

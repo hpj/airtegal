@@ -11,7 +11,7 @@ import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
 import getTheme, { detectDeviceIsDark } from '../colors.js';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -80,7 +80,7 @@ class OptionsOverlay extends React.Component
 
   render()
   {
-    const { locale, i18n } = this.props;
+    const { locale, translation } = this.props;
 
     let { options } = this.props;
 
@@ -95,14 +95,14 @@ class OptionsOverlay extends React.Component
         <div className={ styles.options }>
 
           <div className={ styles.choice } style={ { direction: locale.direction } }>
-            <div className={ styles.title }>{ i18n('theme') }</div>
+            <div className={ styles.title }>{ translation('theme') }</div>
 
             <Brightness5Icon active={ (this.state.dirty.darkTheme === false).toString() } onClick={ () => this.switchTheme(false) } className={ styles.icon }/>
             <Brightness2Icon active={ (this.state.dirty.darkTheme === true).toString() } onClick={ () => this.switchTheme(true) } className={ styles.icon }/>
           </div>
 
           {/* <div className={ styles.choice } style={ { direction: locale.direction } }>
-            <div className={ styles.title }>{ i18n('region') }</div>
+            <div className={ styles.title }>{ translation('region') }</div>
 
             <Select
               className={ styles.select }
@@ -117,11 +117,11 @@ class OptionsOverlay extends React.Component
 
         <div className={ styles.buttons }>
           {/* <div className={ styles.button } enabled={ isDirty.toString() } onClick={ hide } >
-            { i18n('save') }
+            { translation('save') }
           </div> */}
 
           <div className={ styles.button } enabled={ 'true' } onClick={ this.hide }>
-            { i18n('close') }
+            { translation('close') }
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ class OptionsOverlay extends React.Component
 }
 
 OptionsOverlay.propTypes = {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object,
   options: PropTypes.object,
   hide: PropTypes.func
@@ -285,4 +285,4 @@ const styles = createStyle({
   }
 });
 
-export default withI18n(OptionsOverlay);
+export default withTranslation(OptionsOverlay);

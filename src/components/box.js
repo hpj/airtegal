@@ -10,7 +10,7 @@ import { createAnimation, createStyle } from 'flcss';
 
 import getTheme from '../colors.js';
 
-import { useI18n } from '../i18n.js';
+import { useTranslation } from '../i18n.js';
 
 import AutoSizeInput from './autoSizeInput.js';
 
@@ -21,11 +21,17 @@ const colors = getTheme();
 */
 const Box = ({ description, allowed, onSubmit }) =>
 {
-  const { locale, i18n } = useI18n();
+  const { locale, translation } = useTranslation();
 
   const [ content, setContent ] = useState(allowed && description ? '' : description);
   
-  return <div className={ styles.container } waiting={ (!allowed && description !== undefined).toString() } style={ { direction: locale.direction } }>
+  return <div
+    className={ styles.container }
+    waiting={ (!allowed && description !== undefined).toString() }
+    style={ {
+      direction: locale.direction,
+      rowGap: allowed && description ? '10px' : 0
+    } }>
     {
       allowed && description ? <div
         className={ styles.items }
@@ -35,9 +41,9 @@ const Box = ({ description, allowed, onSubmit }) =>
     <AutoSizeInput
       required
       className={ styles.input }
-      placeholder={ i18n('blank') }
+      placeholder={ translation('blank') }
       type={ 'text' }
-      value={ allowed && description ? content : i18n('qassa') }
+      value={ allowed && description ? content : translation('qassa') }
       disabled={ !allowed || !description }
       onSubmit={ () => onSubmit(content) }
       onUpdate={ (value, resize, blur) =>
@@ -53,7 +59,7 @@ const Box = ({ description, allowed, onSubmit }) =>
     }
 
     {
-      allowed ? <SubmitIcon className={ styles.icon } onClick={ () => onSubmit(content) }/> : undefined
+      allowed ? <SubmitIcon className={ styles.icon } style={ { transform: locale.direction === 'ltr' ? 'scaleX(1)' : 'scaleX(-1)' } } onClick={ () => onSubmit(content) }/> : undefined
     }
   </div>;
 };
@@ -82,9 +88,9 @@ const styles = createStyle({
   container: {
     display: 'grid',
     position: 'relative',
+
     gridTemplateColumns: '1fr auto',
     gridTemplateRows: 'auto 1fr',
-
     gridTemplateAreas: '"items icon" "content icon"',
 
     backgroundColor: colors.blackCardBackground,
@@ -150,7 +156,6 @@ const styles = createStyle({
     maxWidth: '65vw',
 
     padding: 0,
-    margin: '10px 0 0',
     border: 0,
 
     ':focus': {
@@ -195,9 +200,9 @@ const styles = createStyle({
   },
 
   icon: {
-    cursor: 'pointer',
-
     gridArea: 'icon',
+    
+    cursor: 'pointer',
     color: colors.whiteText,
     
     width: '0',

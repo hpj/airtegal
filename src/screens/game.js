@@ -26,7 +26,7 @@ import Warning from '../components/warning.js';
 import RoomOverlay from '../components/roomOverlay.js';
 import OptionsOverlay from '../components/optionsOverlay.js';
 
-import { getLocale, getI18n, withI18n } from '../i18n.js';
+import { locale, translation, withTranslation } from '../i18n.js';
 
 import { detectDiscord } from '../utils.js';
 
@@ -71,7 +71,7 @@ function connect()
           path: '/io',
           query: {
             version,
-            region: getLocale().value
+            region: locale().value
           } });
 
       socket.once('connect', resolve)
@@ -88,7 +88,7 @@ function connect()
         {
           socket.close();
   
-          errorScreen(getI18n(err));
+          errorScreen(translation(err));
         });
       });
 
@@ -98,7 +98,7 @@ function connect()
         {
           socket.close();
   
-          errorScreen(getI18n('you-were-disconnected'));
+          errorScreen(translation('you-were-disconnected'));
         });
       });
 
@@ -175,7 +175,7 @@ class Game extends React.Component
       })
       .catch(err =>
       {
-        errorScreen(getI18n('server-unavailable'));
+        errorScreen(translation('server-unavailable'));
 
         console.error(err);
       });
@@ -230,12 +230,12 @@ class Game extends React.Component
     window.removeEventListener('dragstart', this.disableDrag);
   }
 
-  onI18nChange(i18n)
+  onLocaleChange(translation)
   {
     if (!localStorage.getItem('username')?.trim())
     {
       this.setState({
-        username: this.stupidName(i18n('stupid-first-names'), i18n('stupid-last-names'))
+        username: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names'))
       }, usernameRef.current?.resize);
     }
   }
@@ -294,7 +294,7 @@ class Game extends React.Component
           socket.off('done', doneListen);
           socket.off('err', errListen);
 
-          errListen(nonce, getI18n('timeout'));
+          errListen(nonce, translation('timeout'));
         }, timeout ?? 15000);
       }
 
@@ -325,7 +325,7 @@ class Game extends React.Component
         this.loadingVisibility(false);
 
         // show an error message
-        this.showErrorMessage(getI18n(err) || err);
+        this.showErrorMessage(translation(err) || err);
       });
   }
 
@@ -373,10 +373,10 @@ class Game extends React.Component
 
   render()
   {
-    const { locale, i18n } = this.props;
+    const { locale, translation } = this.props;
 
     const Header = () => <div className={ headerStyles.container } style={ { direction: locale.direction } }>
-      { i18n('username-prefix') }
+      { translation('username-prefix') }
 
       <AutoSizeInput
         required
@@ -386,7 +386,7 @@ class Game extends React.Component
         className={ headerStyles.usrname }
         style={ { direction: locale.direction } }
         maxLength={ 18 }
-        placeholder={ i18n('username-placeholder') }
+        placeholder={ translation('username-placeholder') }
         value={ this.state.username }
         onUpdate={ (value, resize, blur) =>
         {
@@ -403,19 +403,19 @@ class Game extends React.Component
 
     const Options = () => <div className={ optionsStyles.container } style={ { direction: locale.direction } }>
       <div className={ optionsStyles.buttons }>
-        <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { i18n('create-room') } </div>
-        <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { i18n('random-room') } </div>
+        <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { translation('create-room') } </div>
+        <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { translation('random-room') } </div>
 
         {
           this.state.detectDiscord ?
             <a id={ 'discord-button' } className={ optionsStyles.discord } href={ 'https://herpproject.com/discord' }>
-              { i18n('discord-button') }
+              { translation('discord-button') }
               <DiscordIcon className={ optionsStyles.discordIcon }/>
             </a> : undefined
         }
       </div>
 
-      <div className={ optionsStyles.title }> { i18n('available-rooms') }</div>
+      <div className={ optionsStyles.title }> { translation('available-rooms') }</div>
 
       <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
 
@@ -447,7 +447,7 @@ class Game extends React.Component
           {
             this.state.rooms.length <= 0 ?
               <div className={ roomsStyles.indicator }>
-                { i18n('no-rooms-available') }
+                { translation('no-rooms-available') }
               </div>
               :
               this.state.rooms.map((room, i) =>
@@ -487,19 +487,19 @@ class Game extends React.Component
       if (gameMode === 'kuruit')
       {
         if (room.options.endCondition === 'limited')
-          highlights.push(`${i18n('max-rounds', room.options.maxRounds, true)}.`);
+          highlights.push(`${translation('max-rounds', room.options.maxRounds, true)}.`);
         else if (room.options.endCondition === 'timer')
-          highlights.push(`${i18n('max-time', room.options.maxTime / 60 / 1000, true)}.`);
+          highlights.push(`${translation('max-time', room.options.maxTime / 60 / 1000, true)}.`);
 
-        highlights.push(`${i18n('hand-cap-lobby', room.options.startingHandAmount, true)}.`);
+        highlights.push(`${translation('hand-cap-lobby', room.options.startingHandAmount, true)}.`);
 
         if (room.options.blankProbability > 0)
-          highlights.push(`%${room.options.blankProbability} ${i18n('blank-probability-lobby')}.`);
+          highlights.push(`%${room.options.blankProbability} ${translation('blank-probability-lobby')}.`);
       }
       else if (gameMode === 'qassa')
       {
-        highlights.push(`${i18n('max-groups', 3, true)}.`);
-        highlights.push(`${i18n('max-stories', 3, true)}.`);
+        highlights.push(`${translation('max-groups', 3, true)}.`);
+        highlights.push(`${translation('max-stories', 3, true)}.`);
       }
 
       return <div>
@@ -513,8 +513,8 @@ class Game extends React.Component
 
       <Warning
         storageKey={ 'airtegal-adults-warning' }
-        text={ i18n('airtegal-adults-warning') }
-        button={ i18n('ok') }
+        text={ translation('airtegal-adults-warning') }
+        button={ translation('ok') }
       />
 
       <OptionsOverlay
@@ -543,7 +543,7 @@ class Game extends React.Component
 
 Game.propTypes =
 {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object
 };
 
@@ -590,7 +590,6 @@ const headerStyles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
@@ -626,7 +625,6 @@ const optionsStyles = createStyle({
     margin: '15px 0px',
 
     fontWeight: '700',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
 
     padding: '0 3vw'
   },
@@ -763,8 +761,9 @@ const roomsStyles = createStyle({
 
     gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
     gridTemplateRows: 'min-content',
+    justifyContent: 'space-around',
 
-    justifyContent: 'space-around'
+    rowGap: 'calc(15px + 2.5vh)'
   },
 
   indicator: {
@@ -822,12 +821,13 @@ const roomsStyles = createStyle({
     extend: 'loading',
     
     fontWeight: '700',
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   room: {
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    columnGap: '20px',
 
     cursor: 'pointer',
     color: colors.roomForeground,
@@ -835,11 +835,13 @@ const roomsStyles = createStyle({
 
     width: 'auto',
     height: 'fit-content',
+    minHeight: '185px',
 
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    margin: '10px 10px 30px 10px',
+    padding: '10px 20px',
+    margin: '0px 10px',
     borderRadius: '10px',
 
     ':hover': {
@@ -852,12 +854,6 @@ const roomsStyles = createStyle({
   },
 
   highlights: {
-    minHeight: '165px',
-    width: 'calc(50% - 40px)',
-    height: 'auto',
-
-    margin: '10px 20px',
-
     '> * > *': {
       fontSize: 'calc(8px + 0.25vw + 0.25vh)'
     }
@@ -874,17 +870,9 @@ const roomsStyles = createStyle({
   },
 
   cover: {
+    display: 'flex',
     position: 'relative',
-    width: '50%'
-  },
-  
-  coverShadow: {
-    extend: 'coverBackground',
-    
-    backgroundColor: colors.whiteBackground,
-
-    top: '4px',
-    transform: 'rotate(5deg)'
+    alignItems: 'center'
   },
 
   coverBackground: {
@@ -896,25 +884,33 @@ const roomsStyles = createStyle({
 
     backgroundColor: colors.blackBackground,
 
-    left: 0,
-    width: 'calc(100% - 20px)',
-    height: 'calc(100% - 30px)',
+    width: '100%',
+    height: 'calc(100% - 40px)',
 
     overflow: 'hidden',
-    borderRadius: '7px',
+    borderRadius: '8px',
     
-    margin: '15px',
+    margin: '-4px 0 0',
     transform: 'rotate(-2deg)'
+  },
+
+  coverShadow: {
+    extend: 'coverBackground',
+    
+    backgroundColor: colors.whiteBackground,
+
+    margin: '3px 0 0',
+    transform: 'rotate(5deg)'
   },
 
   coverTitle: {
     color: colors.whiteText,
     
-    width: 'min-content',
     textAlign: 'center',
+    width: 'min-content',
 
     fontSize: 'calc(8px + 0.25vw + 0.25vh)'
   }
 });
 
-export default withI18n(Game);
+export default withTranslation(Game);

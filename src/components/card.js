@@ -9,7 +9,7 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import { withI18n } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
@@ -78,7 +78,7 @@ class Card extends React.Component
       style, self,
       owner, blank,
       type, onClick,
-      locale, i18n
+      locale, translation
     } = this.props;
 
     const input = this.state.content;
@@ -107,7 +107,7 @@ class Card extends React.Component
       >
         {
           hidden ? <div className={ styles.hidden } type={ type } style={ { direction: locale.direction } }>
-            <div>{ i18n('kuruit') }</div>
+            <div>{ translation('kuruit') }</div>
           </div> : undefined
         }
 
@@ -121,7 +121,7 @@ class Card extends React.Component
               value={ input ?? content }
 
               maxLength={ 105 }
-              placeholder={ blank ? i18n('blank') : undefined }
+              placeholder={ blank ? translation('blank') : undefined }
 
               onClick={ e =>
               {
@@ -133,7 +133,6 @@ class Card extends React.Component
                 this.focused = true;
               } }
 
-              onFocus={ () => this.focused = true }
               onBlur={ () => this.focused = false }
 
               onChange={ e =>
@@ -145,22 +144,17 @@ class Card extends React.Component
           </div> : undefined
         }
 
-        <div
-          hide={ (hidden && type === 'white') ? 'true' : 'false' }
-          visible={ ((!self && !owner) || type === 'black').toString() }
-          enabled={ ((!self && !owner) || type === 'black').toString() }
-          className={ styles.bottom }
-          style={ { direction: locale.direction } }
-        >
-          { blank ? i18n('blank') : i18n('kuruit') }
-        </div>
 
         <div
-          enabled={ ((self === true || owner !== undefined) && type === 'white').toString() }
           className={ styles.bottom }
           style={ { direction: locale.direction } }
         >
-          { self ? i18n('this-card-is-yours') : owner }
+          {
+            hidden ? '' :
+              self && type === 'white' ? translation('this-card-is-yours') :
+                owner && type === 'white' ? owner :
+                  blank ? translation('blank') : translation('kuruit')
+          }
           { share ? <ShareIcon className={ styles.share }/> : undefined }
         </div>
       </div>
@@ -169,7 +163,7 @@ class Card extends React.Component
 }
 
 Card.propTypes = {
-  i18n: PropTypes.func,
+  t: PropTypes.func,
   locale: PropTypes.object,
   style: PropTypes.object,
   onClick: PropTypes.func,
@@ -219,9 +213,9 @@ const styles = createStyle({
     borderRadius: '10px',
 
     fontWeight: 700,
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
+    padding: '10px 10px 0',
     boxShadow: '0 0 0 0',
 
     transition: 'box-shadow 0.25s ease',
@@ -272,24 +266,20 @@ const styles = createStyle({
     fontSize: 'calc(8px + 0.4vw + 0.4vh)',
     
     width: '100%',
-    minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
+    minHeight: 'calc((115px + 2vw + 2vh) * 0.985)',
     height: 'auto',
 
     '> div': {
-      margin: '25px 0 0 0'
+      margin: '45px 0 0'
     }
   },
 
   card: {
-    display: 'grid',
-    gridTemplateRows: ' 1fr',
-    gridTemplateColumns: '100%',
-    gridTemplateAreas: '"content"',
+    display: 'flex',
 
     userSelect: 'none',
   
     width: '100%',
-    minHeight: 'calc((115px + 2vw + 2vh) * 1.15)',
     height: 'auto',
 
     '[type="black"]> textarea': {
@@ -307,14 +297,12 @@ const styles = createStyle({
     cursor: 'pointer',
 
     fontWeight: 700,
-    fontSize: 'calc(6px + 0.4vw + 0.4vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     resize: 'none',
     overflow: 'hidden auto',
 
-    margin: '10px',
-    minHeight: 'calc(100% - 20px)',
+    minHeight: 'calc((115px + 2vw + 2vh) * 0.985)',
 
     padding: 0,
     border: 0,
@@ -334,41 +322,24 @@ const styles = createStyle({
   },
 
   bottom: {
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
     alignItems: 'center',
     
+    minHeight: '25px',
+    padding: '10px 0',
+
     userSelect: 'none',
-
-    fontSize: 'calc(5px + 0.4vw + 0.4vh)',
-
-    height: 0,
-
-    margin: 0,
-    padding: '10px 10px 20px 10px',
-
-    transition: 'padding 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28)',
-
-    '[hide="true"]': {
-      color: colors.whiteCardBackground
-    },
-
-    '[enabled="false"]': {
-      padding: 0
-    },
-
-    '[visible="false"]': {
-      display: 'none'
-    }
+    fontSize: 'calc(5px + 0.4vw + 0.4vh)'
   },
 
   share: {
     color: colors.whiteCardForeground,
 
-    width: 'calc(14px + 0.3vw + 0.3vh)',
-    height: 'calc(14px + 0.3vw + 0.3vh)',
-
-    margin: '0 auto 0 0'
+    width: 'calc(12px + 0.25vw + 0.25vh)',
+    height: 'calc(12px + 0.25vw + 0.25vh)',
+    margin: 'auto 5px'
   }
 });
 
-export default withI18n(Card);
+export default withTranslation(Card);
