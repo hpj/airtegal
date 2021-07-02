@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { setTag } from '@sentry/react';
-
 const locales = [
   {
     value: 'united states',
@@ -53,9 +51,6 @@ export function setLocale(country, language)
     return;
   
   __locale = match;
-
-  setTag('region', __locale.value);
-  setTag('locale', __locale.locale);
 
   event.dispatchEvent(new Event('update'));
 }

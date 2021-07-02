@@ -610,7 +610,7 @@ class RoomOptions extends StoreComponent
 }
 
 RoomOptions.propTypes = {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),

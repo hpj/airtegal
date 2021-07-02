@@ -305,7 +305,7 @@ class HandOverlay extends StoreComponent
 }
 
 HandOverlay.propTypes = {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object,
   size: PropTypes.object,
   sendMessage: PropTypes.func.isRequired

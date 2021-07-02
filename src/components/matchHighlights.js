@@ -105,7 +105,7 @@ class MatchHighlights extends StoreComponent
 
 MatchHighlights.propTypes =
 {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object
 };
 

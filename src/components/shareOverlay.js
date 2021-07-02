@@ -197,7 +197,7 @@ class ShareOverlay extends React.Component
 }
 
 ShareOverlay.propTypes = {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object,
   addNotification: PropTypes.func.isRequired,
   share: PropTypes.object,

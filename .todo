@@ -1,4 +1,6 @@
 Performance Issues and Bugs:
+  ☐ block game view until connection is confirmed
+
   ☐ fix some of the issues of on firefox
 
   ☐ setup some feature flags using environment variables
@@ -7,3 +9,6 @@ Testing:
   ☐ options overlay
 
 UI/UX:
+  ☐ entry winning animation
+
+  ☐ card share icon animation
