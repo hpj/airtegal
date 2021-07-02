@@ -66,6 +66,8 @@ function connect()
   {
     try
     {
+      let rejected = false;
+
       socket = process.env.NODE_ENV === 'test' ? mocks.socket :
         io(process.env.API_ENDPOINT, {
           path: '/io',
@@ -74,33 +76,34 @@ function connect()
             region: locale().value
           } });
 
-      socket.once('connect', resolve)
-        .once('error', (e) =>
-        {
-          socket.close();
-
-          reject(e);
-        });
-
-      socket.once('error', (err) =>
+      socket.once('connect', () =>
       {
         setTimeout(() =>
         {
-          socket.close();
-  
+          if (socket.connected)
+            resolve();
+        }, 100);
+      });
+
+      const fail = (err) =>
+      {
+        if (!rejected)
+        {
+          rejected = true;
+
+          reject(err);
+        }
+        else
+        {
           errorScreen(translation(err));
-        });
-      });
+        }
 
-      socket.once('disconnect', () =>
-      {
-        setTimeout(() =>
-        {
-          socket.close();
+        socket.close();
+      };
+
+      socket.once('error', fail);
   
-          errorScreen(translation('you-were-disconnected'));
-        });
-      });
+      socket.once('disconnect', () => fail('you-were-disconnected'));
 
       // connecting timeout
       setTimeout(() =>
@@ -108,9 +111,11 @@ function connect()
         if (socket.connected)
           return;
         
+        rejected = true;
+
         socket.close();
 
-        reject('Error: Connecting Timeout');
+        reject('timeout');
       }, 3000);
     }
     catch (e)
@@ -169,16 +174,9 @@ class Game extends React.Component
         
         hideLoadingScreen();
         
-        detectDiscord(() => this.setState({
-          detectDiscord: true
-        }));
+        detectDiscord(() => this.setState({ detectDiscord: true }));
       })
-      .catch(err =>
-      {
-        errorScreen(translation('server-unavailable'));
-
-        console.error(err);
-      });
+      .catch(err => errorScreen(translation(err?.message ?? err)));
   }
 
   stupidName(firstNames, lastNames)
