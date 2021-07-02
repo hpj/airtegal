@@ -543,7 +543,7 @@ class Game extends React.Component
 
 Game.propTypes =
 {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object
 };
 

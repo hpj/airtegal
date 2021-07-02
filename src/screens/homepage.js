@@ -23,7 +23,7 @@ class Homepage extends React.Component
     super();
     
     this.state = {
-      index: -1,
+      item: '',
       data: []
     };
 
@@ -31,7 +31,7 @@ class Homepage extends React.Component
 
     window.scrollTo(0, 0);
 
-    this.updateIndex = this.updateIndex.bind(this);
+    this.randomItem = this.randomItem.bind(this);
   }
 
   componentDidMount()
@@ -55,44 +55,42 @@ class Homepage extends React.Component
 
   onLocaleChange(translation)
   {
+    const data = [];
+
     translation('combos')
       .forEach(({ card, combos }) =>
-        this.state.data.push(fillTheBlanks(card.content, combos.map(c => c.content))));
+        data.push(fillTheBlanks(card.content, combos.map(c => c.content))));
 
-    const index = this.randomIndex(this.state.data.length, -1);
+    this.interval = setInterval(this.randomItem, 3500);
     
-    this.setState({ data: this.state.data, index },
-      () => this.interval = setInterval(this.updateIndex, 4500));
+    this.randomItem(data);
   }
 
-  randomIndex(length, lastIndex)
+  randomItem(data)
   {
-    const index = Math.floor(((window.crypto.getRandomValues(new Uint32Array(1))[0]) / 2**32) * length);
+    data = data ?? this.state.data;
 
-    // istanbul ignore else
-    if (process.env.NODE_ENV === 'test')
-      return 0;
-    else if (index === lastIndex)
-      return this.randomIndex(length, lastIndex);
+    // istanbul ignore next
+    if (!data.length)
+    {
+      clearInterval(this.interval);
+    }
+    else if (process.env.NODE_ENV === 'test')
+    {
+      this.setState({ item: data[0], data });
+    }
+    // istanbul ignore next
     else
-      return index;
-  }
+    {
+      const item = data.splice(Math.floor(Math.random() * data.length), 1)[0];
 
-  updateIndex()
-  {
-    const { data, index } = this.state;
-
-    this.setState({
-      index: this.randomIndex(data.length, index)
-    });
+      this.setState({ item, data });
+    }
   }
 
   render()
   {
-    /**
-    * @type { { data: string[] } }
-    */
-    const { data } = this.state;
+    const { item } = this.state;
 
     const { locale, translation } = this.props;
 
@@ -112,7 +110,7 @@ class Homepage extends React.Component
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
           {
-            data?.[this.state.index]?.split('\n')
+            item?.split('\n')
               .map((t, i) => <span
                 key={ i }
                 className={ styles.content }
@@ -141,7 +139,7 @@ class Homepage extends React.Component
 
 Homepage.propTypes =
 {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object
 };
 

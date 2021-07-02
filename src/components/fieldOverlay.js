@@ -246,7 +246,7 @@ class FieldOverlay extends StoreComponent
 }
 
 FieldOverlay.propTypes = {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object,
   sendMessage: PropTypes.func.isRequired,
   size: PropTypes.object

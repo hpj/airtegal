@@ -144,7 +144,6 @@ class Card extends React.Component
           </div> : undefined
         }
 
-
         <div
           className={ styles.bottom }
           style={ { direction: locale.direction } }
@@ -163,7 +162,7 @@ class Card extends React.Component
 }
 
 Card.propTypes = {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object,
   style: PropTypes.object,
   onClick: PropTypes.func,

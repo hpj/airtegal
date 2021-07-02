@@ -130,7 +130,7 @@ class OptionsOverlay extends React.Component
 }
 
 OptionsOverlay.propTypes = {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object,
   options: PropTypes.object,
   hide: PropTypes.func

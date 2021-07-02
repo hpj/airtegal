@@ -351,7 +351,7 @@ class RoomState extends StoreComponent
 }
 
 RoomState.propTypes = {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object,
   addNotification: PropTypes.func.isRequired
 };

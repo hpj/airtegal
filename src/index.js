@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import * as Tracing from '@sentry/tracing';
 
-import { translation, setLocale } from './i18n.js';
+import { translation, locale, setLocale } from './i18n.js';
 
 import WebFont from 'webfontloader';
 
@@ -92,6 +92,9 @@ if (process.env.NODE_ENV === 'production')
     // send the app state with each error
     beforeSend: event =>
     {
+      event.tags['locale'] = locale().label;
+      event.tags['language'] = locale().locale;
+
       event.extra = {
         ...getStore().state
       };

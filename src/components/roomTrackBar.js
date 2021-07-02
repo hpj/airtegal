@@ -78,7 +78,7 @@ const waitingAnimation = createAnimation({
 
 RoomTrackBar.propTypes =
 {
-  t: PropTypes.func,
+  translation: PropTypes.func,
   locale: PropTypes.object
 };
 
