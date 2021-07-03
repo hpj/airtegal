@@ -5,11 +5,15 @@ import PropTypes from 'prop-types';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
+import Lottie from 'lottie-react';
+
 import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
 import { withTranslation } from '../i18n.js';
+
+import confettiAnimation from '../animations/confetti.json';
 
 const colors = getTheme();
 
@@ -92,6 +96,18 @@ class Card extends React.Component
     share = share ?? false;
 
     return <div className={ styles.wrapper } style={ style }>
+      {
+        winner && self ?
+          <Lottie style={ {
+            zIndex: -1,
+            pointerEvents: 'none',
+            position: 'absolute',
+            width: '150%',
+            left: '-25%',
+            top: '-35%'
+          } } loop={ false } animationData={ confettiAnimation }/> : undefined
+      }
+
       <div
         type={ type }
         allowed={ ((allowed || share) && !hidden).toString() }

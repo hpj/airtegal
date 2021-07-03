@@ -54,8 +54,7 @@ class FieldOverlay extends StoreComponent
     if (
       changes?.roomData ||
       changes?.fieldHidden ||
-      changes?.fieldVisible ||
-      changes?.winnerEntryIndex
+      changes?.fieldVisible
     )
       return true;
   }
@@ -68,13 +67,6 @@ class FieldOverlay extends StoreComponent
     const state = {};
 
     state.fieldVisible = roomData?.state === 'match';
-
-    if (!roomData)
-      return;
-
-    state.winnerEntryIndex = roomData.phase === 'transaction' ?
-      roomData.field.findIndex(e => e.highlight) :
-      undefined;
 
     return state;
   }
@@ -139,7 +131,7 @@ class FieldOverlay extends StoreComponent
   {
     const { locale, translation, size } = this.props;
 
-    const { roomData, fieldHidden, fieldVisible, winnerEntryIndex } = this.state;
+    const { roomData, fieldHidden, fieldVisible } = this.state;
 
     const field = roomData?.field ?? [];
 
@@ -190,7 +182,6 @@ class FieldOverlay extends StoreComponent
                 {
                   field.map((entry, entryIndex) =>
                   {
-                    const winner = entryIndex === winnerEntryIndex;
                     const allowed = playerState === 'judging' && entryIndex > 0;
 
                     return  <div className={ styles.entry } key={ entry.key }>
@@ -203,7 +194,7 @@ class FieldOverlay extends StoreComponent
                           allowed={ allowed }
                           self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
-                          winner= { winner }
+                          winner= { entry.highlight }
                           share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
                           onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.shareEntry(entryIndex) : this.submit(entryIndex, undefined, allowed) }
                         />)
