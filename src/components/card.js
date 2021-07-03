@@ -98,14 +98,7 @@ class Card extends React.Component
     return <div className={ styles.wrapper } style={ style }>
       {
         winner && self ?
-          <Lottie style={ {
-            zIndex: -1,
-            pointerEvents: 'none',
-            position: 'absolute',
-            width: '150%',
-            left: '-25%',
-            top: '-35%'
-          } } loop={ false } animationData={ confettiAnimation }/> : undefined
+          <Lottie className={ styles.animation } loop={ false } animationData={ confettiAnimation }/> : undefined
       }
 
       <div
@@ -361,6 +354,17 @@ const styles = createStyle({
     margin: 'auto 5px',
 
     transition: 'width 0.25s ease'
+  },
+
+  animation: {
+    zIndex: -1,
+    position: 'absolute',
+    
+    pointerEvents: 'none',
+    
+    width: '150%',
+    left: '-25%',
+    top: '-35%'
   }
 });
 
