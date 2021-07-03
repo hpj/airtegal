@@ -5,11 +5,15 @@ import PropTypes from 'prop-types';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
+import Lottie from 'lottie-react';
+
 import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
 import { withTranslation } from '../i18n.js';
+
+import confettiAnimation from '../animations/confetti.json';
 
 const colors = getTheme();
 
@@ -92,6 +96,11 @@ class Card extends React.Component
     share = share ?? false;
 
     return <div className={ styles.wrapper } style={ style }>
+      {
+        winner && self ?
+          <Lottie className={ styles.animation } loop={ false } animationData={ confettiAnimation }/> : undefined
+      }
+
       <div
         type={ type }
         allowed={ ((allowed || share) && !hidden).toString() }
@@ -154,7 +163,10 @@ class Card extends React.Component
                 owner && type === 'white' ? owner :
                   blank ? translation('blank') : translation('kuruit')
           }
-          { share ? <ShareIcon className={ styles.share }/> : undefined }
+
+          <ShareIcon className={ styles.share } style={ {
+            width: share ? undefined : 0
+          } } />
         </div>
       </div>
     </div>;
@@ -329,6 +341,8 @@ const styles = createStyle({
     padding: '10px 0',
 
     userSelect: 'none',
+    overflow: 'hidden',
+
     fontSize: 'calc(5px + 0.4vw + 0.4vh)'
   },
 
@@ -337,7 +351,20 @@ const styles = createStyle({
 
     width: 'calc(12px + 0.25vw + 0.25vh)',
     height: 'calc(12px + 0.25vw + 0.25vh)',
-    margin: 'auto 5px'
+    margin: 'auto 5px',
+
+    transition: 'width 0.25s ease'
+  },
+
+  animation: {
+    zIndex: -1,
+    position: 'absolute',
+    
+    pointerEvents: 'none',
+    
+    width: '150%',
+    left: '-25%',
+    top: '-35%'
   }
 });
 
