@@ -98,7 +98,7 @@ class Card extends React.Component
     return <div className={ styles.wrapper } style={ style }>
       {
         winner && self ?
-          <Lottie className={ styles.animation } loop={ false } animationData={ confettiAnimation }/> : undefined
+          <Lottie className={ styles.confetti } loop={ false } animationData={ confettiAnimation }/> : undefined
       }
 
       <div
@@ -356,7 +356,7 @@ const styles = createStyle({
     transition: 'width 0.25s ease'
   },
 
-  animation: {
+  confetti: {
     zIndex: -1,
     position: 'absolute',
     
