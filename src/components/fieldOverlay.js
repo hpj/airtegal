@@ -210,7 +210,7 @@ class FieldOverlay extends StoreComponent
                     <CSSTransition key={ field[0].story.key } timeout={ 250 }>
                       <div className={ styles.qassa }>
                         <div className={ styles.content } style={ { direction: locale.direction } } onClick={ () => this.shareEntry() }>
-                          { field[0].story.composed?.text.replace(/\\n/g, '\n') }
+                          { field[0].story.composed?.text.replace(/\\n/g, '\n').replace(/ +/g, ' ') }
                           <div className={ styles.bottom }>
                             { translation('qassa') }
                             <ShareIcon className={ styles.share }/>
