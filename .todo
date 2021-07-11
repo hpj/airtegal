@@ -1,9 +1,4 @@
 Performance Issues and Bugs:
-  @critical 
-  - qassa will break after the new room data changes
-    ☐ display content for group members during writing
-    ☐ test on a dev server
-  
   ☐ fix some of the issues of on firefox
 
   ☐ setup some feature flags using environment variables

@@ -43,7 +43,7 @@ const Box = ({ value, description, allowed, onSubmit }) =>
       className={ styles.input }
       placeholder={ translation('blank') }
       type={ 'text' }
-      value={ allowed && !value ? content : translation('qassa') }
+      value={ allowed && !value ? content : value ?? translation('qassa') }
       disabled={ !allowed || value !== undefined }
       onSubmit={ () => onSubmit(content) }
       onUpdate={ (v, resize, blur) =>
