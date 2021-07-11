@@ -66,7 +66,7 @@ function connect()
   {
     try
     {
-      let rejected = false;
+      let resolved = false;
 
       socket = process.env.NODE_ENV === 'test' ? mocks.socket :
         io(process.env.API_ENDPOINT, {
@@ -81,15 +81,19 @@ function connect()
         setTimeout(() =>
         {
           if (socket.connected)
+          {
+            resolved = true;
+
             resolve();
+          }
         }, 100);
       });
 
       const fail = (err) =>
       {
-        if (!rejected)
+        if (!resolved)
         {
-          rejected = true;
+          resolved = true;
 
           reject(err);
         }
@@ -111,7 +115,7 @@ function connect()
         if (socket.connected)
           return;
         
-        rejected = true;
+        resolved = true;
 
         socket.close();
 
