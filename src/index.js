@@ -92,6 +92,8 @@ if (process.env.NODE_ENV === 'production')
     // send the app state with each error
     beforeSend: event =>
     {
+      event.tags = event.tags ?? {};
+      
       event.tags['locale'] = locale().label;
       event.tags['language'] = locale().locale;
 

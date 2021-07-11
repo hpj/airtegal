@@ -23,23 +23,15 @@ import('wasm-brotli')
   .catch(console.warn);
 
 /**
-* @param { string } black
-* @param { string[] } white
+* @param { { template: string, items: string[], black: string, white: string } } param0
 */
-export async function shareEntry(black, white)
+export async function shareEntry({ template, items, black, white })
 {
   if (!compress)
     return;
 
-  let obj = {};
-
-  if (!white)
-    obj = { story: black };
-  else
-    obj = { black, white };
-
   const content = new TextEncoder('utf8')
-    .encode(JSON.stringify(obj));
+    .encode(JSON.stringify({ template, items, black, white }));
 
   const data = btoa(String.fromCharCode(...compress(content)))
     // base64 has some characters not compatible with urls

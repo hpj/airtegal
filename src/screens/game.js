@@ -30,7 +30,7 @@ import { locale, translation, withTranslation } from '../i18n.js';
 
 import { detectDiscord } from '../utils.js';
 
-const version = 2.4;
+const version = 2.5;
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');

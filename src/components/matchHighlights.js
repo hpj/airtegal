@@ -64,9 +64,12 @@ class MatchHighlights extends StoreComponent
   /**
   * @param { string[] } entry
   */
-  shareEntry(entry)
+  share(entry)
   {
-    shareEntry(entry[0], entry.slice(1));
+    shareEntry({
+      black: entry[0],
+      white: entry.slice(1)
+    });
   }
 
   render()
@@ -82,7 +85,7 @@ class MatchHighlights extends StoreComponent
         this.state.entries.slice(0, 3)
           .map(e => fillTheBlanks(e[0], e.slice(1)))
           // eslint-disable-next-line security/detect-object-injection
-          .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.shareEntry(this.state.entries[k]) }>
+          .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(this.state.entries[k]) }>
             {
               e.split('\n').map((t, i) =>
                 <span
