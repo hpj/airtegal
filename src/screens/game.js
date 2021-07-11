@@ -147,8 +147,10 @@ class Game extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
-      username: localStorage.getItem('username')?.trim() || '',
       detectDiscord: false,
+
+      username: localStorage.getItem('username')?.trim(),
+      usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names')),
 
       size: {},
       rooms: []
@@ -234,12 +236,9 @@ class Game extends React.Component
 
   onLocaleChange(translation)
   {
-    if (!localStorage.getItem('username')?.trim())
-    {
-      this.setState({
-        username: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names'))
-      }, usernameRef.current?.resize);
-    }
+    this.setState({
+      usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names'))
+    }, usernameRef.current?.resize);
   }
 
   /**
@@ -389,7 +388,7 @@ class Game extends React.Component
         style={ { direction: locale.direction } }
         maxLength={ 18 }
         placeholder={ translation('username-placeholder') }
-        value={ this.state.username }
+        value={ this.state.username ?? this.state.usernameRandomized }
         onUpdate={ (value, resize, blur) =>
         {
           const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
@@ -537,7 +536,7 @@ class Game extends React.Component
         sendMessage={ this.sendMessage.bind(this) }
         requestRooms={ this.requestRooms }
         size={ this.state.size }
-        username={ this.state.username }
+        username={ this.state.username ?? this.state.usernameRandomized }
       />
     </div>;
   }
