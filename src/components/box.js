@@ -17,23 +17,23 @@ import AutoSizeInput from './autoSizeInput.js';
 const colors = getTheme();
 
 /**
-* @param { { description: string, allowed: boolean, onSubmit: () => void } } param0
+* @param { { value, string, description: string, allowed: boolean, onSubmit: () => void } } param0
 */
-const Box = ({ description, allowed, onSubmit }) =>
+const Box = ({ value, description, allowed, onSubmit }) =>
 {
   const { locale, translation } = useTranslation();
 
-  const [ content, setContent ] = useState(allowed && description ? '' : description);
+  const [ content, setContent ] = useState(allowed && !value ? '' : description);
   
   return <div
     className={ styles.container }
     waiting={ (!allowed && description !== undefined).toString() }
     style={ {
       direction: locale.direction,
-      rowGap: allowed && description ? '10px' : 0
+      rowGap: allowed && !value ? '10px' : 0
     } }>
     {
-      allowed && description ? <div
+      allowed && !value ? <div
         className={ styles.items }
       >{ description }</div> : undefined
     }
@@ -43,12 +43,12 @@ const Box = ({ description, allowed, onSubmit }) =>
       className={ styles.input }
       placeholder={ translation('blank') }
       type={ 'text' }
-      value={ allowed && description ? content : translation('qassa') }
-      disabled={ !allowed || !description }
+      value={ allowed && !value ? content : value ?? translation('qassa') }
+      disabled={ !allowed || value !== undefined }
       onSubmit={ () => onSubmit(content) }
-      onUpdate={ (value, resize, blur) =>
+      onUpdate={ (v, resize, blur) =>
       {
-        const c = value.replace(locale.blank, '').replace(/\s+/g, ' ');
+        const c = v.replace(locale.blank, '').replace(/\s+/g, ' ');
 
         setContent(blur ? c.trim() : c);
       } }
@@ -65,6 +65,7 @@ const Box = ({ description, allowed, onSubmit }) =>
 };
 
 Box.propTypes = {
+  value: PropTypes.string,
   description: PropTypes.string,
   allowed: PropTypes.bool,
   onSubmit: PropTypes.func

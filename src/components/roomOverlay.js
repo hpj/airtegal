@@ -54,7 +54,8 @@ export let requestRoomData;
 * @typedef { Object } Story
 * @property { string } key
 * @property { string } name
-* @property { { key: string, description: string }[] } items
+* @property { string } template
+* @property { { key: string, value: string, description: string }[] } items
 * @property { { text: string, music: ArrayBuffer, audio: ArrayBuffer } } composed
 */
 

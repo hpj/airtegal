@@ -601,6 +601,7 @@ function startQassa()
     key: Math.random(),
     story: {
       name: 'Test',
+      template: 'Testing The ______,\\n\\nTa ta.',
       key: Math.random(),
       items: [
         { key: Math.random(), description: 'name' },
@@ -650,8 +651,7 @@ function startQassa()
     room.playerProperties['skye'].state = 'waiting';
 
     room.field[0].story.name = 'Test Story';
-    
-    room.field[0].story.items = [];
+    room.field[0].story.template = 'Lorem ipsum dolor sit amet ______.';
 
     room.field[0].story.composed = {
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend ut urna ac mattis. Suspendisse eleifend eros odio. Proin vulputate est nec tellus venenatis faucibus. In placerat euismod urna, ac fringilla arcu tempus vel. Ut dapibus lacus in blandit posuere.\nAenean vestibulum leo sed tempor pharetra.\n\nVivamus placerat congue placerat. Pellentesque ultricies blandit mauris, at sollicitudin libero ornare non. Duis ultrices faucibus dapibus. Mauris ac nulla erat. Aliquam sed imperdiet sem, quis pharetra dui. Donec quis mi a leo tristique gravida. Pellentesque vehicula leo lobortis, accumsan leo sit amet, ultrices leo. Donec gravida dolor eu purus vehicula lacinia.'
@@ -664,18 +664,18 @@ function startQassa()
     room.phase = 'writing';
     room.playerProperties['skye'].state = 'writing';
 
-    room.field[0].story.items[1].description = undefined;
+    room.field[0].story.items[1].value = 'hello';
 
     matchBroadcast(room);
 
-    matchLogic = ({ index }) =>
+    matchLogic = ({ index, content }) =>
     {
       // eslint-disable-next-line security/detect-object-injection
-      room.field[0].story.items[index].description = undefined;
+      room.field[0].story.items[index].value = content;
 
       matchBroadcast(room);
 
-      if (room.field[0].story.items.every(item => item.description === undefined))
+      if (room.field[0].story.items.every(item => typeof item.value === 'string'))
       {
         room.phase = 'transaction';
         room.playerProperties['skye'].state = 'waiting';

@@ -110,20 +110,24 @@ class FieldOverlay extends StoreComponent
   /**
   * @param { number } index
   */
-  shareEntry(index)
+  share(index)
   {
     const { options, field } = this.state.roomData;
 
     if (options.gameMode === 'qassa')
     {
-      shareEntry(field[0]?.story?.composed?.text.replace(/\\n/g, '\n'));
+      shareEntry({
+        template: field[0]?.story?.template?.replace(/\\n/g, '\n').replace(/ +/g, ' '),
+        items: field[0]?.story?.items?.map(i => i.value)
+      });
     }
     else if (options.gameMode === 'kuruit')
     {
-      shareEntry(
-        field[0]?.cards[0]?.content,
+      shareEntry({
+        black: field[0]?.cards[0]?.content,
         // eslint-disable-next-line security/detect-object-injection
-        field[index]?.cards?.map(c => c.content));
+        white: field[index]?.cards?.map(c => c.content)
+      });
     }
   }
 
@@ -184,7 +188,7 @@ class FieldOverlay extends StoreComponent
                   {
                     const allowed = playerState === 'judging' && entryIndex > 0;
 
-                    return  <div className={ styles.entry } key={ entry.key }>
+                    return <div className={ styles.entry } key={ entry.key }>
                       {
                         entry.cards?.map((card, cardIndex) => <Card
                           key={ card.key }
@@ -196,7 +200,7 @@ class FieldOverlay extends StoreComponent
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
                           winner= { entry.highlight }
                           share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
-                          onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.shareEntry(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                          onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
                         />)
                       }
                     </div>;
@@ -209,7 +213,7 @@ class FieldOverlay extends StoreComponent
                   field[0]?.story?.composed ?
                     <CSSTransition key={ field[0].story.key } timeout={ 250 }>
                       <div className={ styles.qassa }>
-                        <div className={ styles.content } style={ { direction: locale.direction } } onClick={ () => this.shareEntry() }>
+                        <div className={ styles.content } style={ { direction: locale.direction } } onClick={ () => this.share() }>
                           { field[0].story.composed?.text.replace(/\\n/g, '\n').replace(/ +/g, ' ') }
                           <div className={ styles.bottom }>
                             { translation('qassa') }
@@ -222,6 +226,7 @@ class FieldOverlay extends StoreComponent
                     field[0]?.story?.items.map((item, index) =>
                       <CSSTransition key={ item.key } timeout={ 250 }>
                         <Box
+                          value={ item.value }
                           description={ item.description }
                           allowed={ playerState === 'writing' }
                           onSubmit={ content => this.submit(index, content, playerState === 'writing') }

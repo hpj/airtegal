@@ -97,7 +97,7 @@ class Homepage extends React.Component
     return <div id={ 'homepage' }>
       <Warning
         storageKey={ 'airtegal-adults-warning' }
-        text={ translation('airtegal-adults-warning') }
+        text={ `${translation('airtegal-adults-warning')}\n\n${translation('airtegal-content-warning')}` }
         button={ translation('ok') }
       />
 
