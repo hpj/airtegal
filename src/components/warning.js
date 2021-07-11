@@ -83,9 +83,11 @@ const styles = createStyle({
 
   container: {
     color: colors.blackText,
-
+    
     maxWidth: '850px',
     height: 'min-content',
+    
+    whiteSpace: 'pre-wrap',
     margin: 'auto'
   },
 
