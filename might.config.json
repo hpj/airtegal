@@ -16,7 +16,8 @@
   "pageErrorIgnore": [
     "net::ERR_ABORTED",
     "NS_BINDING_ABORTED",
-    "access control checks"
+    "access control checks",
+    "Load request cancelled"
   ],
   "coverageExclude": [
     "/node_modules/**",
