@@ -14,7 +14,9 @@
   "tolerance": 2.5,
   "antialiasingTolerance": 3.5,
   "pageErrorIgnore": [
-    "net::ERR_ABORTED"
+    "net::ERR_ABORTED",
+    "NS_BINDING_ABORTED",
+    "access control checks"
   ],
   "coverageExclude": [
     "/node_modules/**",

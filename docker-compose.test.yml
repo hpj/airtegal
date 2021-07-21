@@ -1,0 +1,16 @@
+version: '3'
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    volumes:
+      - "./__might__:/__might__"
+    command: "might"
+  update-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    volumes:
+      - "./__might__:/__might__"
+    command: "might -u"
