@@ -127,15 +127,15 @@ class Interactable extends React.Component
   {
     const { x, y } =  this.state;
 
-    const { dragArea } =  this.props;
+    // const { dragArea } =  this.props;
 
     const { pageX, clientX, clientY } =  e.touches[0];
 
     const dragEnabled = this.props.dragEnabled ?? true;
     
     if (
-      !dragEnabled || this.animating ||
-      pageX > (dragArea?.width.size / 100) * dragArea?.width.percent
+      !dragEnabled || this.animating
+      // pageX > (dragArea?.width.size / 100) * dragArea?.width.percent
       // pageY > (dragArea?.height.size / 100) * dragArea?.height.percent
     )
       return;
@@ -355,7 +355,7 @@ Interactable.propTypes = {
   verticalOnly: PropTypes.bool,
   horizontalOnly: PropTypes.bool,
 
-  dragArea: PropTypes.object,
+  // dragArea: PropTypes.object,
   frame: PropTypes.object,
 
   initialPosition: PropTypes.object,
