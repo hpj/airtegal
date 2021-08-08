@@ -28,6 +28,11 @@ const colors = getTheme();
 const wrapperRef = createRef();
 
 /**
+* @type { React.RefObject<MatchHighlight> }
+*/
+const highlightsRef = createRef();
+
+/**
 * @typedef { object } State
 * @prop { import('./roomOverlay').RoomData } roomData
 * @extends {React.Component<{}, State>}
@@ -142,9 +147,14 @@ class RoomOptions extends StoreComponent
       .then(() =>
       {
         // hide the loading indictor (after 2.5s to allow animations to end)
-        setTimeout(() => this.loadingVisibility(false), 2500);
+        setTimeout(() =>
+        {
+          this.loadingVisibility(false);
+
+          highlightsRef.current?.clearEntries();
+        }, 2500);
       })
-      .catch((err) =>
+      .catch(err =>
       {
         // hide the loading indictor
         this.loadingVisibility(false);
@@ -560,7 +570,7 @@ class RoomOptions extends StoreComponent
           this.props.children
         }
 
-        <MatchHighlight/>
+        <MatchHighlight ref={ highlightsRef }/>
 
         {
           (!options) ? <div/> :
