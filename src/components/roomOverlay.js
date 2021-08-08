@@ -407,7 +407,7 @@ class RoomOverlay extends StoreComponent
         hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
 
       <div style={ {
-        display: (this.state.overlayLoadingHidden) ? 'none' : ''
+        display: this.state.overlayLoadingHidden ? 'none' : ''
       } } className={ styles.loading }
       />
 
@@ -430,28 +430,29 @@ class RoomOverlay extends StoreComponent
           zIndex: 1,
 
           position: 'fixed',
-          display: (this.state.overlayHidden) ? 'none' : '',
+          display: this.state.overlayHidden ? 'none' : '',
 
           backgroundColor: colors.whiteBackground,
           
-          width: (this.state.overlayHandlerVisible) ? '100vw' : 'calc(100vw + 18px)'
+          width: this.state.overlayHandlerVisible ? '100vw' : 'calc(100vw + 18px)'
         } }
 
         horizontalOnly={ true }
         
         dragEnabled={ this.state.overlayHandlerVisible }
 
-        dragArea={ { width: { percent: 25, size: size.width } } }
+        // dragArea={ { width: { percent: 25, size: size.width } } }
+
         frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
         initialPosition={ { x: size.width } }
           
         boundaries={ {
-          left: (this.state.overlayHandlerVisible) ? 0 : -18,
+          left: this.state.overlayHandlerVisible ? 0 : -18,
           right: size.width
         } }
 
-        snapPoints={ [ { x: (this.state.overlayHandlerVisible) ? 0 : -18 }, { x: size.width } ] }
+        snapPoints={ [ { x: this.state.overlayHandlerVisible ? 0 : -18 }, { x: size.width } ] }
 
         onMovement={ onMovement }
         onSnapEnd={ this.onSnapEnd }
@@ -472,7 +473,6 @@ class RoomOverlay extends StoreComponent
               <RoomOptions ref={ optionsRef } sendMessage={ sendMessage } addNotification={ this.addNotification }/>
             </div>
           </div>
-
         </div>
       </Interactable>
     </div>;
