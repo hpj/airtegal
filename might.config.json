@@ -9,12 +9,15 @@
     "height": null
   },
   "titleBasedScreenshots": true,
-  "parallelTests": 8,
+  "parallelTests": 6,
   "defaultTimeout": 25000,
   "tolerance": 2.5,
   "antialiasingTolerance": 3.5,
   "pageErrorIgnore": [
-    "net::ERR_ABORTED"
+    "net::ERR_ABORTED",
+    "NS_BINDING_ABORTED",
+    "access control checks",
+    "Load request cancelled"
   ],
   "coverageExclude": [
     "/node_modules/**",

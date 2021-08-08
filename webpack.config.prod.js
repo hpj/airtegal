@@ -19,7 +19,7 @@ module.exports = {
         loader: 'esbuild-loader',
         options: {
           loader: 'jsx',
-          target: [ 'chrome88', 'firefox86' ]
+          target: [ 'chrome90', 'safari12', 'firefox88' ]
         }
       },
       {

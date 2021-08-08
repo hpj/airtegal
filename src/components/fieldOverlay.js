@@ -117,7 +117,7 @@ class FieldOverlay extends StoreComponent
     if (options.gameMode === 'qassa')
     {
       shareEntry({
-        template: field[0]?.story?.template?.replace(/\\n/g, '\n').replace(/ +/g, ' '),
+        template: field[0]?.story?.template?.replace(/\\n/g, '\n'),
         items: field[0]?.story?.items?.map(i => i.value)
       });
     }
@@ -214,7 +214,7 @@ class FieldOverlay extends StoreComponent
                     <CSSTransition key={ field[0].story.key } timeout={ 250 }>
                       <div className={ styles.qassa }>
                         <div className={ styles.content } style={ { direction: locale.direction } } onClick={ () => this.share() }>
-                          { field[0].story.composed?.text.replace(/\\n/g, '\n').replace(/ +/g, ' ') }
+                          { field[0].story.composed?.text.replace(/\\n/g, '\n') }
                           <div className={ styles.bottom }>
                             { translation('qassa') }
                             <ShareIcon className={ styles.share }/>
