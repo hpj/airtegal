@@ -162,9 +162,9 @@
 
   // warning
 
-  "ok": "Okay",
+  "ok": "Accept",
   "airtegal-adults-warning": "This game is for adults... If you're under 16, you properly should leave.",
-  "airtegal-content-warning": "All content was submit and voted on by the community, some of that content\nmight be offensive to certain players.",
+  "airtegal-content-warning": "All content was submit and voted on by the community;\n\nSome of that content might be offensive to certain players.",
 
   // homepage
 
