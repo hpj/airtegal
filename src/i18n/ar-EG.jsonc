@@ -17,7 +17,7 @@
   "timeout": "فشل الاتصال بالسيرفر بعد مرور الوقت المحدد",
 
   "app-country-block": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
-  "app-country-taboo": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
+  "app-country-haram": "اللعبة دي حرام.",
 
   // endpoint errors
 
@@ -93,7 +93,7 @@
 
   // room options
   
-  "match-highlights": "مقتطفات",
+  "match-highlights": "هاي لايتز",
 
   "room-edited": "تم تعديل اعدادت الروم.",
   "you-were-kicked": "تم طردك من الروم",

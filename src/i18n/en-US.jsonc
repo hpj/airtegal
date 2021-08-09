@@ -17,7 +17,7 @@
   "timeout": "Request timed out",
 
   "app-country-block": "This app is blocked in your country for political reasons.",
-  "app-country-taboo": "This app is blocked in your country for political reasons.",
+  "app-country-haram": "This app is haram.",
 
   // endpoint errors
 
