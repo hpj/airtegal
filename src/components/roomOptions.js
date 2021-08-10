@@ -7,6 +7,8 @@ import WaitingIcon from 'mdi-react/LoadingIcon';
 
 import autoSize from 'autosize-input';
 
+import features from '../flags.js';
+
 import { StoreComponent } from '../store.js';
 
 import { translation, withTranslation } from '../i18n.js';
@@ -223,11 +225,16 @@ class RoomOptions extends StoreComponent
     if (!dirtyOptions)
       return <div/>;
 
-    const gameModes = [
-      { label: translation('kuruit'), value: 'kuruit', group: translation('free-for-all') },
-      // { label: translation('king'), value: 'king' },
-      { label: translation('qassa'), value: 'qassa', group: translation('co-op')  }
-    ];
+    const gameModes = [];
+
+    if (features.kuruit)
+      gameModes.push({ label: translation('kuruit'), value: 'kuruit', group: translation('free-for-all') });
+
+    // if (features.king)
+    //   gameModes.push({ label: translation('king'), value: 'king' });
+
+    if (features.qassa)
+      gameModes.push({ label: translation('qassa'), value: 'qassa', group: translation('co-op')  });
 
     const GameModes = () =>
     {
@@ -246,11 +253,10 @@ class RoomOptions extends StoreComponent
               defaultIndex={ 0 }
               options={ gameModes }
 
-              onChange={ (mode) => this.onGameModeChange(mode) }
+              onChange={ mode => this.onGameModeChange(mode) }
             /> :
             <div className={ styles.gameMode }>{ translation(dirtyOptions.gameMode) }</div>
         }
-        
       </div>;
     };
 
@@ -424,12 +430,15 @@ class RoomOptions extends StoreComponent
             <div>{ translation('blank-probability') }</div>
           </div>
         
-          < div className={ styles.field } style={ { margin: '0 5px' } } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
-            <div>{ translation('randos') }</div>
+          {
+            features.randos ?
+              <div className={ styles.field } style={ { margin: '0 5px' } } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
+                <div>{ translation('randos') }</div>
 
-            <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ translation('yes') }</div>
-            <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ translation('no') }</div>
-          </div>
+                <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ translation('yes') }</div>
+                <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ translation('no') }</div>
+              </div> : undefined
+          }
         </div>
       </div>;
     };
