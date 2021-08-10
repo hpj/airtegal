@@ -6,11 +6,13 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import * as Tracing from '@sentry/tracing';
 
-import { translation, locale, setLocale } from './i18n.js';
+import axios from 'axios';
 
 import WebFont from 'webfontloader';
 
-import axios from 'axios';
+import { translation, locale, setLocale } from './i18n.js';
+
+import { setFeatures } from './flags.js';
 
 import { createStore, getStore } from './store.js';
 
@@ -139,6 +141,12 @@ const ipCheckPromise = async() =>
   // bypass check if on a development or testing environments
   if (process.env.NODE_ENV !== 'production')
   {
+    setFeatures({
+      randos: 'true',
+      kuruit: 'true',
+      qassa: 'true'
+    });
+
     setLocale('Egypt', 'ar');
   
     return;
@@ -147,16 +155,22 @@ const ipCheckPromise = async() =>
   try
   {
     /**
-    * @type { import('axios').AxiosResponse<{ version: number, country: string, language: string }> }
+    * @type { import('axios').AxiosResponse<{ features: Object<string, string>, country: string, language: string }> }
     */
-    const response = await axios.get(`${process.env.API_ENDPOINT}/check`, {
+    const { status, data } = await axios.get(`${process.env.API_ENDPOINT}/check`, {
       timeout: 15000
     });
   
-    if (response.status !== 200)
-      throw new Error(translation(response.data) ?? response.data);
+    if (status !== 200)
+    {
+      throw new Error(translation(data) ?? data);
+    }
     else
-      setLocale(response.data.country, response.data.language);
+    {
+      setFeatures(data.features);
+      
+      setLocale(data.country, data.language);
+    }
   }
   catch (e)
   {
