@@ -9,13 +9,11 @@ const NotFound = () =>
   {
     document.title = 'Hi';
     window.scrollTo(0, 0);
-
-  }, [ window.location ]);
+  });
 
   return (
     <div className={ styles.container }>
       <div className={ styles.noiseWrapper }>
-        <div className={ styles.img }/>
         <div className={ styles.noise }/>
       </div>
     </div>
@@ -70,13 +68,6 @@ const styles = createStyle({
     backgroundColor: '#2c2c2c',
     width: '100vw',
     height: '100vh'
-  },
-
-  img: {
-    width: '256px',
-    height: '256px',
-    filter: 'blur(2px)',
-    backgroundImage: 'url(/assets/404_1.png)'
   },
 
   noiseWrapper: {
