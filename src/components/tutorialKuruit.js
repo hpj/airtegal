@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 import { createStyle } from 'flcss';
 
@@ -20,8 +20,27 @@ const Tutorial = () =>
   const containerRef = useRef();
 
   const [ index, setIndex ] = useState(0);
+  const [ auto, setAuto ] = useState(true);
 
-  const scroll = offset =>
+  useEffect(() =>
+  {
+    const interval = setInterval(() =>
+    {
+      let next = index + 1;
+
+      if (next > 4)
+        next = 0;
+
+      if (!auto)
+        clearInterval(interval);
+      else
+        scroll(next, true);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  });
+
+  const scroll = (offset, auto) =>
   {
     offset = Math.max(0, Math.min(4, offset));
 
@@ -30,6 +49,7 @@ const Tutorial = () =>
       left: locale.direction === 'rtl' ? -(offset * 300) : offset * 300
     });
 
+    setAuto(auto);
     setIndex(offset);
   };
 
@@ -67,11 +87,11 @@ const Tutorial = () =>
     </div>
 
     <div className={ styles.navagation }>
-      <div onClick={ () => scroll(index - 1) }>
+      <div onClick={ () => scroll(index - 1, false) }>
         { `< ${translation('previous')}` }
       </div>
 
-      <div onClick={ () => scroll(index + 1) }>
+      <div onClick={ () => scroll(index + 1, false) }>
         { `${translation('next')} >` }
       </div>
     </div>
@@ -80,7 +100,8 @@ const Tutorial = () =>
 
 const styles = createStyle({
   wrapper: {
-    width: '300px'
+    width: '300px',
+    margin: '0 15px'
   },
 
   container: {
