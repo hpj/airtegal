@@ -24,6 +24,9 @@ const Tutorial = () =>
 
   useEffect(() =>
   {
+    if (process.env.NODE_ENV === 'test')
+      return;
+    
     const interval = setInterval(() =>
     {
       let next = index + 1;
