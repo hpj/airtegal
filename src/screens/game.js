@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
 import OptionsIcon from 'mdi-react/CogIcon';
-import DiscordIcon from 'mdi-react/DiscordIcon';
 
 import { io } from 'socket.io-client';
 
@@ -26,9 +25,9 @@ import Warning from '../components/warning.js';
 import RoomOverlay from '../components/roomOverlay.js';
 import OptionsOverlay from '../components/optionsOverlay.js';
 
-import { locale, translation, withTranslation } from '../i18n.js';
+import TutorialKuruit from '../components/tutorialKuruit';
 
-import { detectDiscord } from '../utils.js';
+import { locale, translation, withTranslation } from '../i18n.js';
 
 const version = 2.5;
 
@@ -147,8 +146,6 @@ class Game extends React.Component
       loadingHidden: true,
       errorMessage: '',
 
-      detectDiscord: false,
-
       username: localStorage.getItem('username')?.trim(),
       usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names')),
 
@@ -179,8 +176,6 @@ class Game extends React.Component
         this.requestRooms();
         
         hideLoadingScreen();
-        
-        detectDiscord(() => this.setState({ detectDiscord: true }));
       })
       .catch(err => errorScreen(translation(err?.message ?? err)));
   }
@@ -223,9 +218,6 @@ class Game extends React.Component
     // create room
     else if (params?.has('create') || params?.has('match'))
       overlayRef.current.createRoom();
-
-    if (process.env.NODE_ENV === 'test' && params?.has('discord'))
-      this.setState({ detectDiscord: true });
   }
 
   componentWillUnmount()
@@ -406,14 +398,6 @@ class Game extends React.Component
       <div className={ optionsStyles.buttons }>
         <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { translation('create-room') } </div>
         <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { translation('random-room') } </div>
-
-        {
-          this.state.detectDiscord ?
-            <a id={ 'discord-button' } className={ optionsStyles.discord } href={ 'https://herpproject.com/discord' }>
-              { translation('discord-button') }
-              <DiscordIcon className={ optionsStyles.discordIcon }/>
-            </a> : undefined
-        }
       </div>
 
       <div className={ optionsStyles.title }> { translation('available-rooms') }</div>
@@ -512,11 +496,13 @@ class Game extends React.Component
 
     return <div id={ 'game' } className={ mainStyles.wrapper }>
 
-      <Warning
-        storageKey={ 'airtegal-adults-warning' }
-        text={ `${translation('airtegal-adults-warning')}\n\n${translation('airtegal-content-warning')}` }
-        button={ translation('ok') }
-      />
+      <Warning id={ 'tutorial-kuruit' } storageKey={ 'airtegal-tutorial-kuruit' }>
+        <TutorialKuruit/>
+      </Warning>
+
+      <Warning id={ 'adults-warning' } storageKey={ 'airtegal-adults-warning' }>
+        { `${translation('airtegal-adults-warning')}` }
+      </Warning>
 
       <OptionsOverlay
         options={ this.state.options }
@@ -634,7 +620,7 @@ const optionsStyles = createStyle({
     gridArea: 'buttons',
     display: 'grid',
 
-    gridTemplateAreas: '". ." "discord discord"',
+    gridTemplateAreas: '". ."',
 
     gridTemplateColumns: '1fr 1fr',
     gridTemplateRows: '1fr',
@@ -666,30 +652,6 @@ const optionsStyles = createStyle({
     ':active': {
       transform: 'scale(0.95)'
     }
-  },
-
-  discord: {
-    extend: 'button',
-    display: 'flex',
-
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    gridArea: 'discord',
-    textDecoration: 'none',
-
-    ':hover> svg': {
-      color: colors.whiteText
-    }
-  },
-
-  discordIcon: {
-    width: 'calc(12px + 0.35vw + 0.35vh)',
-    height: 'calc(12px + 0.35vw + 0.35vh)',
-    
-    padding: '0 10px',
-    color: colors.blackText,
-    transition: 'color 0.25s'
   },
 
   title: {
