@@ -496,11 +496,11 @@ class Game extends React.Component
 
     return <div id={ 'game' } className={ mainStyles.wrapper }>
 
-      <Warning storageKey={ 'airtegal-tutorial-kuruit' }>
+      <Warning id={ 'tutorial-kuruit' } storageKey={ 'airtegal-tutorial-kuruit' }>
         <TutorialKuruit/>
       </Warning>
 
-      <Warning storageKey={ 'airtegal-adults-warning' }>
+      <Warning id={ 'adults-warning' } storageKey={ 'airtegal-adults-warning' }>
         { `${translation('airtegal-adults-warning')}` }
       </Warning>
 

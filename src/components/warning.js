@@ -10,7 +10,7 @@ import { useTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
-const Warning = ({ storageKey, children }) =>
+const Warning = ({ id, storageKey, children }) =>
 {
   const { locale, translation } = useTranslation();
 
@@ -46,7 +46,7 @@ const Warning = ({ storageKey, children }) =>
   // if the waring is visible
   return visible ?
     <div className={ styles.wrapper }>
-      <div className={ styles.container } style={ { direction: locale.direction } }>
+      <div id={ id } className={ styles.container } style={ { direction: locale.direction } }>
         { children }
 
         <div className={ styles.button } onClick={ onClick }>
@@ -58,6 +58,7 @@ const Warning = ({ storageKey, children }) =>
 };
 
 Warning.propTypes = {
+  id: PropTypes.string,
   storageKey: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -67,16 +68,19 @@ Warning.propTypes = {
 const styles = createStyle({
   wrapper: {
     zIndex: 20,
+
     display: 'flex',
     position: 'fixed',
+    alignItems: 'center',
+    justifyContent: 'center',
 
     userSelect: 'none',
     backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
     textTransform: 'capitalize',
 
-    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
     fontWeight: '700',
+    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     
     width: '100vw',
@@ -84,12 +88,17 @@ const styles = createStyle({
   },
 
   container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+
     color: colors.blackText,
     
     maxWidth: '850px',
     whiteSpace: 'pre-wrap',
 
-    margin: '0 auto',
+    margin: '0 5vw',
     overflow: 'auto',
 
     '::-webkit-scrollbar':
@@ -115,7 +124,7 @@ const styles = createStyle({
     borderColor: colors.blackText,
 
     padding: '5px 25px',
-    margin: '15px 0',
+    margin: '15px 0 15px auto',
 
     ':hover': {
       color: colors.whiteBackground,

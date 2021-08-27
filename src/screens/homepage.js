@@ -95,7 +95,7 @@ class Homepage extends React.Component
     const { locale, translation } = this.props;
 
     return <div id={ 'homepage' }>
-      <Warning storageKey={ 'airtegal-adults-warning' }>
+      <Warning id={ 'adults-warning' } storageKey={ 'airtegal-adults-warning' }>
         { `${translation('airtegal-adults-warning')}` }
       </Warning>
 

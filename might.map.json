@@ -9,7 +9,7 @@
         },
         {
           "action": "wait",
-          "value": "#warning-button"
+          "value": "#adults-warning > div"
         },
         {
           "action": "click",
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "title": "Empty Lobby",
+      "title": "Kruit Tutorial",
       "steps": [
         {
           "action": "goto",
@@ -69,7 +69,7 @@
         },
         {
           "action": "select",
-          "value": "#warning-button"
+          "value": "#adults-warning > div"
         },
         {
           "action": "click",
@@ -82,15 +82,11 @@
       ]
     },
     {
-      "title": "Empty Lobby (Discord)",
+      "title": "Empty Lobby",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&discord"
-        },
-        {
-          "action": "wait",
-          "value": "#discord-button"
+          "value": "/play?quiet"
         },
         {
           "action": "wait",

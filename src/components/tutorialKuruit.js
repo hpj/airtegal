@@ -79,7 +79,7 @@ const Tutorial = () =>
 
       <div className={ styles.item }>
         <img src={ '/assets/join-our-discord.png' }/>
-        <div>{ translation('join-our-discord') }</div>
+        <div>{ `5.\n${translation('join-our-discord')}` }</div>
         <a className={ styles.button } href={ 'https://herpproject.com/discord' }>
           <DiscordIcon/>
         </a>
@@ -131,7 +131,7 @@ const styles = createStyle({
       alignItems: 'center',
       justifyContent: 'center',
 
-      color: colors.whiteText,
+      color: colors.blackText,
       fontSize: 'calc(8px + 0.5vw + 0.5vh)'
     }
   },
@@ -143,10 +143,10 @@ const styles = createStyle({
     justifyContent: 'center',
 
     width: '35%',
-    color: colors.whiteText,
+    color: colors.blackText,
 
     padding: '10px',
-    border: `1px solid ${colors.whiteText}`,
+    border: `1px solid ${colors.blackText}`,
     borderRadius: '100vw',
 
     margin: '25px 0',
@@ -157,8 +157,8 @@ const styles = createStyle({
     },
 
     ':hover': {
-      color: colors.selectBackground,
-      backgroundColor: colors.whiteText
+      color: colors.whiteBackground,
+      backgroundColor: colors.blackText
     },
 
     ':active': {
