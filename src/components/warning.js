@@ -71,7 +71,6 @@ const styles = createStyle({
 
     display: 'flex',
     position: 'fixed',
-    alignItems: 'center',
     justifyContent: 'center',
 
     userSelect: 'none',
