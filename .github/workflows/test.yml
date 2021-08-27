@@ -19,7 +19,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Run Tests
-        run: npx might -c
+        run: npx might -c -q 1
       - name: Upload any errors
         if: failure()
         uses: actions/upload-artifact@v2

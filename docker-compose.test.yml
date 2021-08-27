@@ -13,4 +13,4 @@ services:
       dockerfile: Dockerfile.test
     volumes:
       - "./__might__:/__might__"
-    command: "might -p 1 -u --quiet --clean"
+    command: "might -u --clean"
