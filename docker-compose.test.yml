@@ -6,11 +6,11 @@ services:
       dockerfile: Dockerfile.test
     volumes:
       - "./__might__:/__might__"
-    command: "might -q"
+    command: "might --quiet"
   update-tests:
     build:
       context: .
       dockerfile: Dockerfile.test
     volumes:
       - "./__might__:/__might__"
-    command: "might -u -q --clean"
+    command: "might -p 1 -u --quiet --clean"
