@@ -130,7 +130,7 @@ export default function()
     shareUrlBackground: '#171717'
   };
 
-  return (dark) ? darkTheme : lightTheme;
+  return dark ? darkTheme : lightTheme;
 }
 
 export function detectDeviceIsDark()

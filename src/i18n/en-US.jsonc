@@ -36,8 +36,6 @@
 
   "available-rooms": "",
 
-  "discord-button": "",
-
   // app options
 
   "theme": "",
@@ -164,7 +162,6 @@
 
   "ok": "Accept",
   "airtegal-adults-warning": "This game is for adults... If you're under 16, you properly should leave.",
-  "airtegal-content-warning": "All content was submit and voted on by the community;\n\nSome of that content might be offensive to certain players.",
 
   // homepage
 
@@ -175,20 +172,15 @@
 
   "play": "Play",
   "terms-and-conditions": "Terms",
-  "privacy-policy": "Privacy"
+  "privacy-policy": "Privacy",
   
-  // "copyright-notice": "",
-  
-  // "what-is-airtegal": "",
-  // "that-is-airtegal": "",
+  "how-to-kuruit": "",
+  "next": "",
+  "previous": "",
 
-  // "who-is-hpj": "",
-  // "this-is-hpj": "",
-
-  // "why-is-game-raciest": "",
-  // "freedom-of-speech-1": "",
-  // "freedom-of-speech-2": "",
-  
-  // "how-to-suggest-cards": "",
-  // "suggesting-cards": ""
+  "perfer-voice-chat": "",
+  "pick-a-card": "",
+  "write-a-card": "",
+  "judge-a-card": "",
+  "join-our-discord": ""
 }
