@@ -87,10 +87,21 @@ const styles = createStyle({
     color: colors.blackText,
     
     maxWidth: '850px',
-    height: 'min-content',
-    
     whiteSpace: 'pre-wrap',
-    margin: 'auto'
+
+    margin: '0 auto',
+    overflow: 'auto',
+
+    '::-webkit-scrollbar':
+    {
+      width: '6px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '6px',
+      boxShadow: `inset 0 0 6px 6px ${colors.handScrollbar}`
+    }
   },
 
   button: {
@@ -104,7 +115,7 @@ const styles = createStyle({
     borderColor: colors.blackText,
 
     padding: '5px 25px',
-    margin: '15px 0 0',
+    margin: '15px 0',
 
     ':hover': {
       color: colors.whiteBackground,
