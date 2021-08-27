@@ -25,6 +25,8 @@ import Warning from '../components/warning.js';
 import RoomOverlay from '../components/roomOverlay.js';
 import OptionsOverlay from '../components/optionsOverlay.js';
 
+import TutorialKuruit from '../components/tutorialKuruit';
+
 import { locale, translation, withTranslation } from '../i18n.js';
 
 const version = 2.5;
@@ -494,11 +496,13 @@ class Game extends React.Component
 
     return <div id={ 'game' } className={ mainStyles.wrapper }>
 
-      <Warning
-        storageKey={ 'airtegal-adults-warning' }
-        text={ `${translation('airtegal-adults-warning')}\n\n${translation('airtegal-content-warning')}` }
-        button={ translation('ok') }
-      />
+      <Warning storageKey={ 'airtegal-tutorial-kuruit' }>
+        <TutorialKuruit/>
+      </Warning>
+
+      <Warning storageKey={ 'airtegal-adults-warning' }>
+        { `${translation('airtegal-adults-warning')}` }
+      </Warning>
 
       <OptionsOverlay
         options={ this.state.options }

@@ -10,17 +10,17 @@ import { useTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
-const Warning = ({ storageKey, text, button }) =>
+const Warning = ({ storageKey, children }) =>
 {
-  const { locale } = useTranslation();
+  const { locale, translation } = useTranslation();
 
   // starts hidden, so it won't appear and disappear again if the user turned it off
-  const [ visible, changeVisibility ] = useState(false);
+  const [ visible, setVisibility ] = useState(false);
 
   const onClick = () =>
   {
     // hide the warning from UI
-    changeVisibility(false);
+    setVisibility(false);
 
     // set it so the warning won't appear the next time the user opens the page
     localStorage.setItem(storageKey, false);
@@ -29,7 +29,7 @@ const Warning = ({ storageKey, text, button }) =>
   // on url change
   useEffect(() =>
   {
-    const params = new URL(document.URL).searchParams;
+    const params = new URL(document.URL)?.searchParams;
 
     // the quiet param is used for testing
     // so we don't have to click on the warning each test
@@ -40,16 +40,17 @@ const Warning = ({ storageKey, text, button }) =>
     // we need to check if the user didn't accept the warning already
     // if they didn't then we assume it's the first time they open the page and show them the warning
     if (!localStorage.getItem(storageKey))
-      changeVisibility(true);
-  }, []);
+      setVisibility(true);
+  });
 
   // if the waring is visible
   return visible ?
     <div className={ styles.wrapper }>
       <div className={ styles.container } style={ { direction: locale.direction } }>
-        {text}
-        <div id={ 'warning-button' } className={ styles.button } onClick={ onClick }>
-          {button}
+        { children }
+
+        <div className={ styles.button } onClick={ onClick }>
+          { translation('ok') }
         </div>
       </div>
     </div>
@@ -58,8 +59,9 @@ const Warning = ({ storageKey, text, button }) =>
 
 Warning.propTypes = {
   storageKey: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  button: PropTypes.string.isRequired
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node ])
 };
 
 const styles = createStyle({
@@ -92,19 +94,16 @@ const styles = createStyle({
   },
 
   button: {
-    width: 'min-content',
-
     cursor: 'pointer',
-    textAlign: 'center',
+    width: 'min-content',
     
-    border: '3px solid',
-    boxShadow: '4px 4px 0px -2px',
-
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
+    
+    border: '3px solid',
     borderColor: colors.blackText,
 
-    padding: '8px 25px',
+    padding: '5px 25px',
     margin: '15px 0 0',
 
     ':hover': {

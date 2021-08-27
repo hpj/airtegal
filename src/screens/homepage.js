@@ -95,11 +95,9 @@ class Homepage extends React.Component
     const { locale, translation } = this.props;
 
     return <div id={ 'homepage' }>
-      <Warning
-        storageKey={ 'airtegal-adults-warning' }
-        text={ `${translation('airtegal-adults-warning')}\n\n${translation('airtegal-content-warning')}` }
-        button={ translation('ok') }
-      />
+      <Warning storageKey={ 'airtegal-adults-warning' }>
+        { `${translation('airtegal-adults-warning')}` }
+      </Warning>
 
       <div className={ styles.container }>
         <div className={ styles.header } style={ { direction: locale.direction } }>
