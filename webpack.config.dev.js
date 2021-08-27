@@ -31,7 +31,10 @@ module.exports = {
     })
   ],
   devServer: {
-    contentBase: [
+    client: {
+      overlay: false,
+    },
+    static: [
       __dirname + '/public',
       __dirname + '/src/mocks',
     ],
