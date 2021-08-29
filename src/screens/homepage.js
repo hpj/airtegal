@@ -8,8 +8,6 @@ import { createStyle, createAnimation } from 'flcss';
 
 import getTheme from '../colors.js';
 
-import Warning from '../components/warning.js';
-
 import { withTranslation } from '../i18n.js';
 
 import { fillTheBlanks } from '../utils.js';
@@ -95,10 +93,6 @@ class Homepage extends React.Component
     const { locale, translation } = this.props;
 
     return <div id={ 'homepage' }>
-      <Warning id={ 'adults-warning' } storageKey={ 'airtegal-adults-warning' }>
-        { `${translation('airtegal-adults-warning')}` }
-      </Warning>
-
       <div className={ styles.container }>
         <div className={ styles.header } style={ { direction: locale.direction } }>
           <div className={ styles.airtegal }>{ translation('airtegal') }</div>

@@ -2,9 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import { createStyle } from 'flcss';
 
+import CloseIcon from 'mdi-react/CloseBoldIcon';
 import DiscordIcon from 'mdi-react/DiscordIcon';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import { useTranslation } from '../i18n.js';
 
@@ -12,174 +13,240 @@ const colors = getTheme();
 
 const Tutorial = () =>
 {
-  const { locale, translation } = useTranslation();
-
   /**
   * @type { React.MutableRefObject<HTMLDivElement> }
   */
-  const containerRef = useRef();
+  const tutorialRef = useRef();
 
+  const storageKey = 'airtegal-kuruit-tutorial';
+  
+  const { locale, translation } = useTranslation();
+
+  const [ visible, setVisibility ] = useState(false);
+  
   const [ index, setIndex ] = useState(0);
-  const [ auto, setAuto ] = useState(true);
 
+  // init effect
+  useEffect(() =>
+  {
+    const params = new URL(document.URL)?.searchParams;
+
+    if (process.env.NODE_ENV === 'test' && params?.has('quiet'))
+      return;
+
+    // because the warning starts hidden
+    // we need to check if the user didn't accept the warning already
+    // if they didn't then we assume it's the first time they open the page and show them the warning
+    if (!localStorage.getItem(storageKey))
+      setVisibility(true);
+  });
+
+  // interval effect
   useEffect(() =>
   {
     if (process.env.NODE_ENV === 'test')
       return;
-    
+
     const interval = setInterval(() =>
     {
-      let next = index + 1;
+      const length = 5;
 
-      if (next > 4)
-        next = 0;
+      const next = index + 1;
 
-      if (!auto)
+      if (next > length)
+      {
         clearInterval(interval);
+      }
       else
-        scroll(next, true);
-    }, 5000);
+      {
+        tutorialRef.current.childNodes.item(next).scrollIntoView({ behavior: 'smooth' });
+
+        setIndex(next);
+      }
+    }, 1500);
 
     return () => clearInterval(interval);
   });
 
-  const scroll = (offset, auto) =>
+  const dismiss = () =>
   {
-    offset = Math.max(0, Math.min(4, offset));
+    setVisibility(false);
 
-    containerRef.current?.scrollTo({
-      behavior: 'smooth',
-      left: locale.direction === 'rtl' ? -(offset * 300) : offset * 300
-    });
-
-    setAuto(auto);
-    setIndex(offset);
+    localStorage.setItem(storageKey, false);
   };
 
-  return <div className={ styles.wrapper }>
-    <div className={ styles.title }>{ translation('how-to-kuruit') }</div>
+  return visible ?
+    <div className={ styles.wrapper }>
+      <div id={ 'kuruit-tutorial' } className={ styles.container } style={ { direction: locale.direction } }>
 
-    <div ref={ containerRef } className={ styles.container } style={ { direction: locale.direction } }>
-      <div className={ styles.item }>
-        <img src={ '/assets/perfer-voice-chat.png' }/>
-        <div>{ `1.\n${translation('perfer-voice-chat')}` }</div>
-      </div>
+        <div ref={ tutorialRef }>
 
-      <div className={ styles.item }>
-        <img src={ '/assets/pick-a-card.png' }/>
-        <div>{ `2.\n${translation('pick-a-card')}` }</div>
-      </div>
+          <div className={ styles.item }>
+            <div>{ translation('adults-only-title') }</div>
+            <img src={ '/assets/adults-only.png' }/>
+            <div>{ translation('adults-only') }</div>
+          </div>
+
+          <div className={ styles.item }>
+            <div>{ translation('perfer-voice-chat-title') }</div>
+            <img src={ '/assets/perfer-voice-chat.png' }/>
+            <div>{ translation('perfer-voice-chat') }</div>
+          </div>
+
+          <div className={ styles.item }>
+            <div>{ translation('pick-a-card-title') }</div>
+            <img src={ '/assets/pick-a-card.png' }/>
+            <div>{ translation('pick-a-card') }</div>
+          </div>
+
+          <div className={ styles.item }>
+            <div>{ translation('write-a-card-title') }</div>
+            <img src={ '/assets/write-a-card.png' }/>
+            <div>{ translation('write-a-card') }</div>
+          </div>
+
+          <div className={ styles.item }>
+            <div>{ translation('judge-a-card-title') }</div>
+            <img src={ '/assets/judge-a-card.png' }/>
+            <div>{ translation('judge-a-card') }</div>
+          </div>
+
+          <div className={ styles.item }>
+            <div>{ translation('join-our-discord-title') }</div>
+            <img src={ '/assets/join-our-discord.png' }/>
+            <div>{ translation('join-our-discord') }</div>
+
+            <div className={ styles.buttons }>
+              <div onClick={ dismiss }>
+                <CloseIcon/>
+              </div>
+              <a href={ 'https://herpproject.com/discord' }>
+                <DiscordIcon/>
+              </a>
+            </div>
+
+          </div>
+        </div>
       
-      <div className={ styles.item }>
-        <img src={ '/assets/write-a-card.png' }/>
-        <div>{ `3.\n${translation('write-a-card')}` }</div>
       </div>
-
-      <div className={ styles.item }>
-        <img src={ '/assets/judge-a-card.png' }/>
-        <div>{ `4.\n${translation('judge-a-card')}` }</div>
-      </div>
-
-      <div className={ styles.item }>
-        <img src={ '/assets/join-our-discord.png' }/>
-        <div>{ `5.\n${translation('join-our-discord')}` }</div>
-        <a className={ styles.button } href={ 'https://herpproject.com/discord' }>
-          <DiscordIcon/>
-        </a>
-      </div>
-    </div>
-
-    <div className={ styles.navagation }>
-      <div onClick={ () => scroll(index - 1, false) }>
-        { `< ${translation('previous')}` }
-      </div>
-
-      <div onClick={ () => scroll(index + 1, false) }>
-        { `${translation('next')} >` }
-      </div>
-    </div>
-  </div>;
+    </div> : <div/>;
 };
 
 const styles = createStyle({
   wrapper: {
-    width: '300px',
-    margin: '0 15px'
+    zIndex: 99,
+
+    display: 'flex',
+    position: 'fixed',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    userSelect: 'none',
+    backgroundColor: opacity(colors.whiteBackground, '0.95'),
+
+    textTransform: 'capitalize',
+
+    fontWeight: '700',
+    fontSize: 'calc(6px + 0.5vw + 0.5vh)',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+    
+    width: '100vw',
+    height: '100vh'
   },
 
   container: {
     display: 'flex',
-    direction: 'row',
-    overflow: 'hidden'
-  },
+    position: 'relative',
+    alignItems: 'center',
 
-  title: {
-    color: colors.whiteText,
-    fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-    margin: '25px 0'
+    color: colors.blackText,
+    
+    width: 'calc(300px + 10vw)',
+    height: '100%',
+
+    margin: '0 5vw',
+    overflow: 'auto',
+
+    '> :nth-child(1)': {
+      display: 'flex'
+    },
+
+    '::-webkit-scrollbar':
+    {
+      height: '6px'
+    },
+
+    '::-webkit-scrollbar-thumb':
+    {
+      borderRadius: '6px',
+      boxShadow: `inset 0 0 6px 6px ${colors.handScrollbar}`
+    }
   },
 
   item: {
     display: 'flex',
     flexDirection: 'column',
+    
+    width: '300px',
+    padding: '0 5vw',
 
-    '> img': {
-      margin: '15px 0',
+    '> :nth-child(1)': {
+      margin: '25px 0',
+      fontSize: 'calc(12px + 0.15vw + 0.15vh)'
+    },
+
+    '> :nth-child(2)': {
+      width: '210px',
+      margin: '15px auto',
       filter: colors.theme === 'light' ? 'invert(1)' : undefined
     },
-  
-    '> div': {
+
+    '> :nth-child(3)': {
       flexGrow: 1,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
-
-      color: colors.blackText,
-      fontSize: 'calc(8px + 0.5vw + 0.5vh)'
+      fontSize: 'calc(12px + 0.15vw + 0.15vh)'
     }
   },
 
-  button: {
+  buttons: {
     display: 'flex',
-    cursor: 'pointer',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    width: '35%',
-    color: colors.blackText,
-
-    padding: '10px',
-    border: `1px solid ${colors.blackText}`,
-    borderRadius: '100vw',
-
-    margin: '25px 0',
-
-    '> svg': {
-      width: '16px',
-      height: '16px'
-    },
-
-    ':hover': {
-      color: colors.whiteBackground,
-      backgroundColor: colors.blackText
-    },
-
-    ':active': {
-      transform: 'scale(0.95)'
-    }
-  },
-
-  navagation: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '5vh 0',
 
     '> *': {
+      display: 'flex',
       cursor: 'pointer',
-
+      alignItems: 'center',
+      justifyContent: 'center',
+  
+      color: colors.blackText,
+      
+      border: `1px solid ${colors.blackText}`,
+  
+      '> svg': {
+        width: '16px',
+        height: '16px'
+      },
+  
+      ':hover': {
+        color: colors.whiteBackground,
+        backgroundColor: colors.blackText
+      },
+  
       ':active': {
         transform: 'scale(0.95)'
       }
+    },
+
+    '> :nth-child(1)': {
+      margin: '25px 0',
+      padding: '10px 4vw'
+    },
+
+    '> :nth-child(2)': {
+      margin: '25px',
+      padding: '10px 2.5vw',
+      borderRadius: '100vw'
     }
   }
 });

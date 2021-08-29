@@ -158,11 +158,6 @@
   "limited:match-ended": "",
   "timer:match-ended": "",
 
-  // warning
-
-  "ok": "Accept",
-  "airtegal-adults-warning": "This game is for adults... If you're under 16, you properly should leave.",
-
   // homepage
 
   // last updated 26 May, 2021
@@ -174,10 +169,14 @@
   "terms-and-conditions": "Terms",
   "privacy-policy": "Privacy",
   
-  "how-to-kuruit": "",
-  "next": "",
-  "previous": "",
+  "adults-only-title": "",
+  "perfer-voice-chat-title": "",
+  "pick-a-card-title": "",
+  "write-a-card-title": "",
+  "judge-a-card-title": "",
+  "join-our-discord-title": "",
 
+  "adults-only": "",
   "perfer-voice-chat": "",
   "pick-a-card": "",
   "write-a-card": "",
