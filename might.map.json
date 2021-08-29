@@ -9,20 +9,7 @@
         },
         {
           "action": "wait",
-          "value": "#adults-warning > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        }
-      ]
-    },
-    {
-      "title": "Homepage (Warning)",
-      "steps": [
-        {
-          "action": "wait",
-          "value": "#homepage"
+          "value": 1
         }
       ]
     },
@@ -32,23 +19,6 @@
         {
           "action": "goto",
           "value": "/404"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Game (Warning)",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play"
-        },
-        {
-          "action": "wait",
-          "value": "#game"
         },
         {
           "action": "wait",
@@ -68,8 +38,12 @@
           "value": "#game"
         },
         {
+          "action": "wait",
+          "value": "#kuruit-tutorial"
+        },
+        {
           "action": "select",
-          "value": "#adults-warning > div"
+          "value": "#kuruit-tutorial > div > :nth-child(6)"
         },
         {
           "action": "click",
@@ -598,6 +572,27 @@
         {
           "action": "click",
           "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Game (Warning)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play"
+        },
+        {
+          "action": "wait",
+          "value": "#game"
+        },
+        {
+          "action": "wait",
+          "value": "#kuruit-tutorial"
         },
         {
           "action": "wait",
