@@ -20,12 +20,11 @@ import * as mocks from '../mocks/io.js';
 import AutoSizeInput from '../components/autoSizeInput.js';
 
 import Error from '../components/error.js';
-import Warning from '../components/warning.js';
+
+import TutorialKuruit from '../components/tutorialKuruit';
 
 import RoomOverlay from '../components/roomOverlay.js';
 import OptionsOverlay from '../components/optionsOverlay.js';
-
-import TutorialKuruit from '../components/tutorialKuruit';
 
 import { locale, translation, withTranslation } from '../i18n.js';
 
@@ -495,14 +494,7 @@ class Game extends React.Component
     };
 
     return <div id={ 'game' } className={ mainStyles.wrapper }>
-
-      <Warning id={ 'tutorial-kuruit' } storageKey={ 'airtegal-tutorial-kuruit' }>
-        <TutorialKuruit/>
-      </Warning>
-
-      <Warning id={ 'adults-warning' } storageKey={ 'airtegal-adults-warning' }>
-        { `${translation('airtegal-adults-warning')}` }
-      </Warning>
+      <TutorialKuruit/>
 
       <OptionsOverlay
         options={ this.state.options }
