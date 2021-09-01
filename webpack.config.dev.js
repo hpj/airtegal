@@ -21,9 +21,6 @@ module.exports = {
       }
     ]
   },
-  experiments: {
-    syncWebAssembly: true
-  },
   plugins: [
     new DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
