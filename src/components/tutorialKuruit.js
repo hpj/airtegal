@@ -53,7 +53,7 @@ const Tutorial = () =>
 
       const next = index + 1;
 
-      if (next > length)
+      if (next > length || !visible)
       {
         clearInterval(interval);
       }
