@@ -22,6 +22,11 @@ const colors = getTheme();
 */
 class RoomTrackBar extends StoreComponent
 {
+  constructor()
+  {
+    super();
+  }
+
   /**
   * @param { { roomData: import('./roomOverlay').RoomData } } changes
   */
