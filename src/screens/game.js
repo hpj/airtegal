@@ -15,6 +15,8 @@ import getTheme from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
+import { sendMessage } from '../utils.js';
+
 import * as mocks from '../mocks/io.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
@@ -232,76 +234,12 @@ class Game extends React.Component
     }, usernameRef.current?.resize);
   }
 
-  /**
-  * @param { string } eventName
-  * @param  { {} } args
-  * @param  { number } [timeout]
-  */
-  sendMessage(eventName, args, timeout)
-  {
-    return new Promise((resolve, reject) =>
-    {
-      let timeoutRef;
-
-      // nonce is a bunch of random numbers
-      const nonce = [
-        Math.random() * 32,
-        Math.random() * 8
-      ].join('.');
-
-      function errListen(n, err)
-      {
-        if (n !== nonce)
-          return;
-
-        clearTimeout(timeoutRef);
-
-        socket.off('done', doneListen);
-        socket.off('err', errListen);
-
-        reject(err);
-      }
-
-      function doneListen(n, data)
-      {
-        if (n !== nonce)
-          return;
-
-        clearTimeout(timeoutRef);
-
-        socket.off('done', doneListen);
-        socket.off('err', errListen);
-
-        resolve(data);
-      }
-
-      // emit the message
-      socket.emit(eventName, { nonce, ...args });
-
-      // setup the timeout
-      if (typeof timeout === 'number' && timeout > 0)
-      {
-        timeoutRef = setTimeout(() =>
-        {
-          socket.off('done', doneListen);
-          socket.off('err', errListen);
-
-          errListen(nonce, translation('timeout'));
-        }, timeout ?? 15000);
-      }
-
-      // assign the callbacks
-      socket.on('done', doneListen);
-      socket.on('err', errListen);
-    });
-  }
-
   requestRooms()
   {
     // show a loading indictor
     this.loadingVisibility(true);
 
-    this.sendMessage('list', 60000)
+    sendMessage('list', 60000)
       .then(rooms =>
       {
         // hide the loading indictor
@@ -511,7 +449,6 @@ class Game extends React.Component
 
       <RoomOverlay
         ref={ overlayRef }
-        sendMessage={ this.sendMessage.bind(this) }
         requestRooms={ this.requestRooms }
         size={ this.state.size }
         username={ this.state.username ?? this.state.usernameRandomized }

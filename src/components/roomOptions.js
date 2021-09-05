@@ -9,6 +9,8 @@ import autoSize from 'autosize-input';
 
 import features from '../flags.js';
 
+import { sendMessage } from '../utils.js';
+
 import { StoreComponent } from '../store.js';
 
 import { translation, withTranslation } from '../i18n.js';
@@ -117,8 +119,6 @@ class RoomOptions extends StoreComponent
 
   editRequest()
   {
-    const { sendMessage } = this.props;
-
     // show a loading indictor
     this.loadingVisibility(true);
 
@@ -140,8 +140,6 @@ class RoomOptions extends StoreComponent
   
   matchRequest()
   {
-    const { sendMessage } = this.props;
-
     // show a loading indictor
     this.loadingVisibility(true);
 
@@ -634,7 +632,6 @@ RoomOptions.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node ]),
-  sendMessage: PropTypes.func.isRequired,
   addNotification: PropTypes.func.isRequired
 };
 

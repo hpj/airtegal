@@ -4,11 +4,13 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import PropTypes from 'prop-types';
 
-import { createStyle } from 'flcss';
-
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
+import { createStyle } from 'flcss';
+
 import { StoreComponent } from '../store.js';
+
+import { sendMessage } from '../utils.js';
 
 import { socket } from '../screens/game.js';
 
@@ -84,8 +86,6 @@ class FieldOverlay extends StoreComponent
     if (!allowed)
       return;
       
-    const { sendMessage } = this.props;
-
     const { options, field } = this.state.roomData;
     
     sendMessage('matchLogic', { index, content }).then(() =>
@@ -244,7 +244,6 @@ class FieldOverlay extends StoreComponent
 FieldOverlay.propTypes = {
   translation: PropTypes.func,
   locale: PropTypes.object,
-  sendMessage: PropTypes.func.isRequired,
   size: PropTypes.object
 };
 

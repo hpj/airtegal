@@ -2,15 +2,17 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import { createStyle } from 'flcss';
+
 import { StoreComponent } from '../store.js';
+
+import { sendMessage } from '../utils.js';
 
 import { translation } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
 import getTheme from '../colors.js';
-
-import { createStyle } from 'flcss';
 
 import Notifications from './notifications.js';
 
@@ -212,7 +214,7 @@ class RoomOverlay extends StoreComponent
 
   createRoom()
   {
-    const { username, sendMessage } = this.props;
+    const { username } = this.props;
 
     const params = new URL(document.URL).searchParams;
 
@@ -246,7 +248,7 @@ class RoomOverlay extends StoreComponent
 
   joinRoom(id)
   {
-    const { username, sendMessage } = this.props;
+    const { username } = this.props;
     
     if (typeof id !== 'string')
       id = undefined;
@@ -278,8 +280,6 @@ class RoomOverlay extends StoreComponent
 
   leaveRoom()
   {
-    const { sendMessage } = this.props;
-
     sendMessage('leave').then(() => this.closeOverlay)
       .catch(console.error);
   }
@@ -380,7 +380,7 @@ class RoomOverlay extends StoreComponent
 
   render()
   {
-    const { size, sendMessage } = this.props;
+    const { size } = this.props;
 
     const onMovement = ({ x }) =>
     {
@@ -466,11 +466,11 @@ class RoomOverlay extends StoreComponent
             <RoomState addNotification={ this.addNotification }/>
             <RoomTrackBar/>
 
-            <HandOverlay sendMessage={ sendMessage } size={ size }/>
+            <HandOverlay size={ size }/>
 
             <div className={ styles.content }>
-              <FieldOverlay sendMessage={ sendMessage } size={ size }/>
-              <RoomOptions ref={ optionsRef } sendMessage={ sendMessage } addNotification={ this.addNotification }/>
+              <FieldOverlay size={ size }/>
+              <RoomOptions ref={ optionsRef } addNotification={ this.addNotification }/>
             </div>
           </div>
         </div>
@@ -480,7 +480,6 @@ class RoomOverlay extends StoreComponent
 }
 
 RoomOverlay.propTypes = {
-  sendMessage: PropTypes.func.isRequired,
   requestRooms: PropTypes.func.isRequired,
   size: PropTypes.object,
   username: PropTypes.string

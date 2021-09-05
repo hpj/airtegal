@@ -6,9 +6,11 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import Interactable from './Interactable.js';
+import { sendMessage } from '../utils.js';
 
 import { socket } from '../screens/game.js';
+
+import Interactable from './Interactable.js';
 
 import Card from './card.js';
 
@@ -200,8 +202,6 @@ class HandOverlay extends StoreComponent
 
   sendCard(index, content)
   {
-    const { sendMessage } = this.props;
-    
     sendMessage('matchLogic', { index, content });
   }
 
@@ -307,8 +307,7 @@ class HandOverlay extends StoreComponent
 HandOverlay.propTypes = {
   translation: PropTypes.func,
   locale: PropTypes.object,
-  size: PropTypes.object,
-  sendMessage: PropTypes.func.isRequired
+  size: PropTypes.object
 };
 
 const styles = createStyle({
