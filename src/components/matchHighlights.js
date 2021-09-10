@@ -137,8 +137,8 @@ const styles = createStyle({
     margin: '20px 0',
     transition: 'margin 0.25s ease',
     
-    ':hover': {
-      margin: '20px -10px 20px -10px'
+    ':active': {
+      transform: 'scale(0.95)'
     }
   },
 

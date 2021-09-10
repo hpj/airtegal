@@ -433,11 +433,6 @@ const styles = createStyle({
     borderBottom: '0',
     borderRadius: '100%',
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
-    },
-
     ':active': {
       transform: 'scale(0.9)'
     }

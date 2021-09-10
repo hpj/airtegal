@@ -204,8 +204,8 @@ const styles = createStyle({
 
     textDecoration: 'none',
 
-    ':hover': {
-      color: colors.accentColor
+    ':active': {
+      transform: 'scale(0.95)'
     }
   },
 

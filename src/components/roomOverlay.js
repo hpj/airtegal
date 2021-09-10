@@ -24,9 +24,8 @@ import RoomState from './roomState.js';
 import RoomOptions from './roomOptions.js';
 
 import FieldOverlay from './fieldOverlay.js';
-import HandOverlay from './handOverlay.js';
 
-import ShareOverlay from './shareOverlay.js';
+import HandOverlay from './handOverlay.js';
 
 const colors = getTheme();
 
@@ -90,6 +89,7 @@ export let requestRoomData;
 /**
 * @typedef { Object } RoomData
 * @property { string } region
+* @property { string } id
 * @property { string } master
 * @property { 'lobby' | 'match' } state
 * @property { 'picking' | 'judging' | 'transaction' |
@@ -400,11 +400,6 @@ class RoomOverlay extends StoreComponent
 
     return <div>
       <Notifications notifications={ this.state.notifications }/>
-
-      <ShareOverlay
-        addNotification={ this.addNotification }
-        share={ this.state.share }
-        hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
 
       <div style={ {
         display: this.state.overlayLoadingHidden ? 'none' : ''

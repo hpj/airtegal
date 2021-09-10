@@ -172,6 +172,10 @@ function emit(eventName, args)
       }
     });
   }
+  else if (eventName === 'share')
+  {
+    returnValue = 'http://localhost:3000/share/CxCAeyJ3aGl0ZSI6WyJNYW5hIl0sImJsYWNrIjoiQXF1YSJ9Aw';
+  }
   else if (eventName === 'matchRequest')
   {
     if (defaultRoom.options.gameMode === 'kuruit')

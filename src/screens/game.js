@@ -25,7 +25,10 @@ import Error from '../components/error.js';
 
 import TutorialKuruit from '../components/tutorialKuruit';
 
+import ShareOverlay from '../components/shareOverlay.js';
+
 import RoomOverlay from '../components/roomOverlay.js';
+
 import OptionsOverlay from '../components/optionsOverlay.js';
 
 import { locale, translation, withTranslation } from '../i18n.js';
@@ -434,6 +437,8 @@ class Game extends React.Component
     return <div id={ 'game' } className={ mainStyles.wrapper }>
       <TutorialKuruit/>
 
+      {/* <ShareOverlay/> */}
+
       <OptionsOverlay
         options={ this.state.options }
         hide={ () => this.setState({ options: { active: false } }) }
@@ -573,11 +578,6 @@ const optionsStyles = createStyle({
     transform: 'scale(1)',
     transition: 'transform 0.15s, background-color 0.25s, color 0.25s',
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
-    },
-
     ':active': {
       transform: 'scale(0.95)'
     }
@@ -607,13 +607,6 @@ const optionsStyles = createStyle({
     '[allowed="false"]': {
       pointerEvents: 'none',
       color: colors.greyText
-    },
-
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground,
-
-      transform: 'rotateZ(22deg)'
     },
 
     ':active': {
@@ -735,10 +728,6 @@ const roomsStyles = createStyle({
     padding: '10px 20px',
     margin: '0px 10px',
     borderRadius: '10px',
-
-    ':hover': {
-      opacity: '0.75'
-    },
 
     ':active': {
       transform: 'scale(0.95)'

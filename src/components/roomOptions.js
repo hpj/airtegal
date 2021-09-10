@@ -558,7 +558,7 @@ class RoomOptions extends StoreComponent
     return <div ref={ wrapperRef } className={ styles.wrapper }>
 
       <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
-        <div className={ styles.loadingSpinner }></div>
+        <div className={ styles.loadingSpinner }/>
       </div>
 
       <div className={ styles.error } style={ { display: (this.state.optionsErrorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
@@ -596,7 +596,7 @@ class RoomOptions extends StoreComponent
               {
                 !isMaster && isPlayer ? <div className={ styles.wait }>
                   <div>{ translation('wait-for-room-master', master) }</div>
-                  <WaitingIcon className={ styles.waiting }/>
+                  <WaitingIcon/>
                 </div> : undefined
               }
 
@@ -756,16 +756,14 @@ const styles = createStyle({
     width: '50%',
 
     padding: '10px',
-    margin: '15px auto 15px auto',
+    margin: '25px auto 25px',
 
     color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
-    
+    border: `1px solid ${colors.blackText}`,
     borderRadius: '5px',
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+    ':active': {
+      transform: 'scale(0.95)'
     }
   },
 
@@ -851,15 +849,6 @@ const styles = createStyle({
 
     borderRadius: '3px',
     margin: '0 10px',
-
-    ':hover':
-    {
-      backgroundColor: colors.blackBackground,
-
-      '> svg': {
-        color: colors.whiteText
-      }
-    },
 
     '[ticked="false"] > svg':
     {

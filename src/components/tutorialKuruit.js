@@ -249,11 +249,6 @@ const styles = createStyle({
         height: '16px'
       },
   
-      ':hover': {
-        color: colors.whiteBackground,
-        backgroundColor: colors.blackText
-      },
-  
       ':active': {
         transform: 'scale(0.95)'
       }
