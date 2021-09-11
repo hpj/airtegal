@@ -436,8 +436,6 @@ class RoomOverlay extends StoreComponent
         
         dragEnabled={ this.state.overlayHandlerVisible }
 
-        // dragArea={ { width: { percent: 25, size: size.width } } }
-
         frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
         initialPosition={ { x: size.width } }
@@ -448,6 +446,8 @@ class RoomOverlay extends StoreComponent
         } }
 
         snapPoints={ [ { x: this.state.overlayHandlerVisible ? 0 : -18 }, { x: size.width } ] }
+
+        triggers={ [ { x: size.width * 0.25, index: 1 } ] }
 
         onMovement={ onMovement }
         onSnapEnd={ this.onSnapEnd }

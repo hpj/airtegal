@@ -256,8 +256,8 @@ class HandOverlay extends StoreComponent
         <div className={ styles.overlayWrapper }>
           <div className={ styles.overlayContainer }>
               
-            <div className={ styles.handlerWrapper }>
-              <div id={ 'kuruit-hand-handler' } className={ styles.handler }/>
+            <div id={ 'kuruit-hand-handler' } className={ styles.handler }>
+              <div/>
             </div>
 
             <div ref={ wrapperRef } className={ styles.wrapper } style={ {
@@ -345,19 +345,19 @@ const styles = createStyle({
     }
   },
 
-  handlerWrapper: {
+  handler: {
     display: 'flex',
     justifyContent: 'center',
-    margin: '15px'
-  },
+    margin: '15px',
 
-  handler: {
-    cursor: 'pointer',
-    backgroundColor: colors.handler,
-
-    width: 'calc(35px + 2.5%)',
-    height: '6px',
-    borderRadius: '6px'
+    '> div': {
+      cursor: 'pointer',
+      backgroundColor: colors.handler,
+  
+      width: 'calc(35px + 2.5%)',
+      height: '6px',
+      borderRadius: '6px'
+    }
   },
 
   wrapper: {
