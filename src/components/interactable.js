@@ -240,6 +240,16 @@ class Interactable extends React.Component
   snapTo({ index, point })
   {
     const { snapPoints } = this.props;
+
+    if (this.props.verticalOnly && index === this.lastSnapIndex &&
+      // eslint-disable-next-line security/detect-object-injection
+      this.state.y === snapPoints[index].y)
+      return;
+
+    if (this.props.horizontalOnly && index === this.lastSnapIndex &&
+      // eslint-disable-next-line security/detect-object-injection
+      this.state.x === snapPoints[index].x)
+      return;
     
     // eslint-disable-next-line security/detect-object-injection
     if ((!snapPoints?.[index] && !point) || this.animating)
@@ -249,9 +259,9 @@ class Interactable extends React.Component
 
     const target = {
       // eslint-disable-next-line security/detect-object-injection
-      x: Math.round(snapPoints[index].x ?? point?.x ?? x),
+      x: Math.round(snapPoints[index]?.x ?? point?.x ?? x),
       // eslint-disable-next-line security/detect-object-injection
-      y: Math.round(snapPoints[index].y ?? point?.y ?? y)
+      y: Math.round(snapPoints[index]?.y ?? point?.y ?? y)
     };
 
     const frame = this.props.frame ?? { pixels: 2, every: 5 };

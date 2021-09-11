@@ -475,8 +475,8 @@ class RoomOverlay extends StoreComponent
 }
 
 RoomOverlay.propTypes = {
-  requestRooms: PropTypes.func.isRequired,
   size: PropTypes.object,
+  requestRooms: PropTypes.func.isRequired,
   username: PropTypes.string
 };
 

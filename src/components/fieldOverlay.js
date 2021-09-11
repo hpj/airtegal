@@ -165,17 +165,21 @@ class FieldOverlay extends StoreComponent
         } }
 
         dragEnabled={ false }
+
         horizontalOnly={ true }
 
         onMovement={ onMovement }
+
         frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
         boundaries={ {
           left: 0,
           right: size.width
         } }
-        snapPoints={ [ { x: size.width }, { x: 0 } ] }
+
         initialPosition={ { x: size.width } }
+        
+        snapPoints={ [ { x: size.width }, { x: 0 } ] }
       >
         <div className={ styles.wrapper }>
           {

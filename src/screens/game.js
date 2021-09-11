@@ -445,7 +445,7 @@ class Game extends React.Component
     return <div id={ 'game' } className={ mainStyles.wrapper }>
       <TutorialKuruit/>
 
-      <ShareOverlay ref={ shareRef }/>
+      <ShareOverlay ref={ shareRef } size={ this.state.size }/>
 
       <OptionsOverlay
         options={ this.state.options }
