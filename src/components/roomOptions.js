@@ -760,7 +760,6 @@ const styles = createStyle({
 
     color: colors.blackText,
     border: `1px solid ${colors.blackText}`,
-    borderRadius: '5px',
 
     ':active': {
       transform: 'scale(0.95)'

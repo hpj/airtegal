@@ -18,7 +18,7 @@ import getTheme from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
-import Interactable from './Interactable.js';
+import Interactable from './interactable.js';
 
 import Card from './card.js';
 

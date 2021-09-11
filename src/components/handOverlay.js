@@ -10,7 +10,7 @@ import { sendMessage } from '../utils.js';
 
 import { socket } from '../screens/game.js';
 
-import Interactable from './Interactable.js';
+import Interactable from './interactable.js';
 
 import Card from './card.js';
 

@@ -16,7 +16,7 @@ import getTheme from '../colors.js';
 
 import Notifications from './notifications.js';
 
-import Interactable from './Interactable.js';
+import Interactable from './interactable.js';
 
 import RoomTrackBar from './roomTrackBar.js';
 import RoomState from './roomState.js';
