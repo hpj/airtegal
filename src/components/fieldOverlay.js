@@ -12,7 +12,7 @@ import { StoreComponent } from '../store.js';
 
 import { sendMessage } from '../utils.js';
 
-import { socket } from '../screens/game.js';
+import { socket, shareRef } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
@@ -23,8 +23,6 @@ import Interactable from './Interactable.js';
 import Card from './card.js';
 
 import Box from './box.js';
-
-import { shareEntry } from './shareOverlay.js';
 
 const colors = getTheme();
 
@@ -116,14 +114,14 @@ class FieldOverlay extends StoreComponent
 
     if (options.gameMode === 'qassa')
     {
-      shareEntry({
+      shareRef.current?.shareEntry({
         template: field[0]?.story?.template?.replace(/\\n/g, '\n'),
         items: field[0]?.story?.items?.map(i => i.value)
       });
     }
     else if (options.gameMode === 'kuruit')
     {
-      shareEntry({
+      shareRef.current?.shareEntry({
         black: field[0]?.cards[0]?.content,
         // eslint-disable-next-line security/detect-object-injection
         white: field[index]?.cards?.map(c => c.content)

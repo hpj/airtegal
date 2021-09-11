@@ -6,6 +6,8 @@ import { createStyle } from 'flcss';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
+import { shareRef } from '../screens/game.js';
+
 import getTheme from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
@@ -13,8 +15,6 @@ import { withTranslation } from '../i18n.js';
 import { fillTheBlanks } from '../utils';
 
 import { StoreComponent } from '../store.js';
-
-import { shareEntry } from './shareOverlay.js';
 
 const colors = getTheme();
 
@@ -66,7 +66,7 @@ class MatchHighlights extends StoreComponent
   */
   share(entry)
   {
-    shareEntry({
+    shareRef.current?.shareEntry({
       black: entry[0],
       white: entry.slice(1)
     });

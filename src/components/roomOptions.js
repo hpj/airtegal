@@ -825,7 +825,6 @@ const styles = createStyle({
       fontStyle: 'italic',
 
       ':after': {
-        display: 'block',
         content: '"*"'
       }
     },
@@ -892,7 +891,6 @@ const styles = createStyle({
       fontStyle: 'italic',
 
       ':after': {
-        display: 'block',
         content: '"*"'
       }
     }
@@ -941,7 +939,7 @@ const styles = createStyle({
     borderBottom: '2px solid',
 
     '::placeholder': {
-      color: colors.red
+      color: colors.error
     },
 
     ':focus': {
@@ -950,8 +948,8 @@ const styles = createStyle({
 
     ':not(:valid)':
     {
-      color: colors.red,
-      borderColor: colors.red
+      color: colors.error,
+      borderColor: colors.error
     },
 
     '[master="false"]':
@@ -961,8 +959,8 @@ const styles = createStyle({
     },
 
     ':not(:valid) + div[suffix]': {
-      color: colors.red,
-      borderColor: colors.red
+      color: colors.error,
+      borderColor: colors.error
     },
 
     '[master="false"] + div[suffix]':

@@ -45,7 +45,15 @@ const colors = getTheme();
 */
 const usernameRef = createRef();
 
+/**
+* @type { React.RefObject<RoomOverlay> }
+*/
 const overlayRef = createRef();
+
+/**
+* @type { React.RefObject<ShareOverlay> }
+*/
+export const shareRef = createRef();
 
 /**
 * @type { import('socket.io-client').Socket }
@@ -437,7 +445,7 @@ class Game extends React.Component
     return <div id={ 'game' } className={ mainStyles.wrapper }>
       <TutorialKuruit/>
 
-      {/* <ShareOverlay/> */}
+      <ShareOverlay ref={ shareRef }/>
 
       <OptionsOverlay
         options={ this.state.options }
@@ -454,8 +462,8 @@ class Game extends React.Component
 
       <RoomOverlay
         ref={ overlayRef }
-        requestRooms={ this.requestRooms }
         size={ this.state.size }
+        requestRooms={ this.requestRooms }
         username={ this.state.username ?? this.state.usernameRandomized }
       />
     </div>;
@@ -519,7 +527,7 @@ const headerStyles = createStyle({
     borderBottom: `2px ${colors.blackText} solid`,
 
     '::placeholder': {
-      color: colors.red
+      color: colors.error
     },
 
     ':focus': {
@@ -528,7 +536,7 @@ const headerStyles = createStyle({
 
     ':not(:valid)':
     {
-      borderColor: colors.red
+      borderColor: colors.error
     }
   }
 });
