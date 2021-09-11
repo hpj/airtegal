@@ -221,8 +221,6 @@ const styles = createStyle({
   },
 
   container: {
-    borderRadius: '10px',
-
     fontWeight: 700,
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 

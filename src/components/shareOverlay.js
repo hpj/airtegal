@@ -2,59 +2,23 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import RedditIcon from 'mdi-react/RedditIcon';
-import FacebookIcon from 'mdi-react/FacebookIcon';
-import TwitterIcon from 'mdi-react/TwitterIcon';
+import CloseIcon from 'mdi-react/CloseBoldIcon';
+import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import getTheme from '../colors.js';
+import ShareIcon from 'mdi-react/ShareVariantIcon';
+import CopyIcon from 'mdi-react/ClipboardTextIcon';
 
-import { createStyle } from 'flcss';
+import DownloadIcon from 'mdi-react/DownloadIcon';
 
-import { translation, withTranslation } from '../i18n.js';
+import { createAnimation, createStyle } from 'flcss';
 
-import { getStore } from '../store.js';
+import { sendMessage } from '../utils.js';
+
+import getTheme, { opacity } from '../colors.js';
+
+import { withTranslation } from '../i18n.js';
 
 const colors = getTheme();
-
-let compress;
-
-import('wasm-brotli')
-  .then(brotli => compress = brotli.compress)
-  .catch(console.warn);
-
-/**
-* @param { { template: string, items: string[], black: string, white: string } } param0
-*/
-export async function shareEntry({ template, items, black, white })
-{
-  if (!compress)
-    return;
-
-  const content = new TextEncoder('utf8')
-    .encode(JSON.stringify({ template, items, black, white }));
-
-  const data = btoa(String.fromCharCode(...compress(content)))
-    // base64 has some characters not compatible with urls
-    .replace(/\//g, '_').replace(/\+/g, '-');
-
-  const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
-  const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
-
-  if (navigator.share)
-  {
-    navigator.share({
-      title: 'Airtegal',
-      text: translation('hashtag-airtegal'),
-      url: shareURL
-    }).catch(console.warn);
-  }
-  else
-  {
-    getStore().set({
-      share: { active: true, url: shareURL, img: pictureURL }
-    });
-  }
-}
 
 class ShareOverlay extends React.Component
 {
@@ -62,16 +26,18 @@ class ShareOverlay extends React.Component
   {
     super();
 
-    this.copyURL = this.copyURL.bind(this);
+    this.state = {
+      url: ''
+    };
 
-    this.shareOnFacebook = this.shareOnFacebook.bind(this);
-    this.shareOnTwitter = this.shareOnTwitter.bind(this);
-    this.shareOnReddit = this.shareOnReddit.bind(this);
+    this.download = this.download.bind(this);
+    this.share = this.share.bind(this);
+    this.copy = this.copy.bind(this);
 
     this.hide = this.hide.bind(this);
   }
 
-  async componentDidMount()
+  componentDidMount()
   {
     window.addEventListener('keyup', this.hide);
   }
@@ -81,29 +47,55 @@ class ShareOverlay extends React.Component
     window.removeEventListener('keyup', this.hide);
   }
 
+  /**
+  * @param { { template: string, items: string[], black: string, white: string[] } } data
+  */
+  async shareEntry(data)
+  {
+    const response = await sendMessage('share', { data });
+
+    this.setState({
+      url: `${process.env.API_ENDPOINT}/share/${response}`
+    });
+  }
+
   hide(e)
   {
-    const { hide } = this.props;
-
-    if (!(e instanceof KeyboardEvent))
-      hide();
-    else if (e.key === 'Escape')
-      hide();
+    if (e instanceof KeyboardEvent && e.key !== 'Escape')
+      return;
+    
+    this.setState({
+      url: undefined
+    });
   }
 
   // istanbul ignore next
-  copyURL()
+  download()
   {
-    const { addNotification } = this.props;
+    //
+  }
 
+  // istanbul ignore next
+  share()
+  {
+    // navigator.share({
+    //   title: 'Share Room URL',
+    //   text: translation('join-me'),
+    //   url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`
+    // }).catch(console.warn);
+  }
+
+  // istanbul ignore next
+  copy()
+  {
     // navigator.clipboard?.writeText(this.props.share.url)
     //   .then(() => addNotification(gettranslation('share-copied-to-clipboard')))
     //   .catch(console.warn);
 
     try
     {
-      if (document.execCommand('copy'))
-        addNotification(translation('share-copied-to-clipboard'));
+      // if (document.execCommand('copy'))
+      // addNotification(translation('share-copied-to-clipboard'));
     }
     catch
     {
@@ -111,229 +103,170 @@ class ShareOverlay extends React.Component
     }
   }
 
-  // istanbul ignore next
-  shareOnFacebook()
-  {
-    const { share } = this.props;
-
-    const url = `https://www.facebook.com/dialog/share?app_id=196958018362010&href=${share.url}&hashtag=${encodeURIComponent(translation('hashtag-airtegal'))}`;
-  
-    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
-  
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, 'Share', options);
-  }
-
-  // istanbul ignore next
-  shareOnTwitter()
-  {
-    const { share } = this.props;
-
-    const url = `https://twitter.com/intent/tweet?url=${share.url}&text=${encodeURIComponent(translation('hashtag-airtegal'))}`;
-  
-    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
-  
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, 'Share', options);
-  }
-
-  // istanbul ignore next
-  shareOnReddit()
-  {
-    const { share } = this.props;
-
-    const url = `https://www.reddit.com/submit?url=${share.url}&title=${encodeURIComponent(translation('hashtag-airtegal'))}`;
-  
-    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
-  
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, 'Share', options);
-  }
-
   render()
   {
-    const { translation } = this.props;
+    const { url } = this.state;
+    
+    const { translation, locale } = this.props;
 
-    let { share } = this.props;
+    // TODO add a close fucking button
 
-    if (!share)
-      share = { active: false };
+    return url ? <div className={ styles.wrapper }>
 
-    if (process.env.NODE_ENV === 'test')
-      share.img = '/assets/card.png';
+      <div className={ styles.container }>
+        <img src={ process.env.NODE_ENV === 'test' ? '/assets/card.png' : url }className={ styles.image }/>
 
-    return (
-      <div enabled={ share.active.toString() } className={ styles.wrapper }>
-        <div enabled={ share.active.toString() } className={ styles.holder }/>
+        <div className={ styles.url } data-value={ url }>
+          { url }
+          <WaitingIcon/>
+        </div>
 
-        <div enabled={ share.active.toString() } className={ styles.container }>
-          <img src={ share.img } className={ styles.image }/>
-
-          <div className={ styles.url } onClick={ this.copyURL }>
-            { share.url }
-          </div>
-
-          <div className={ styles.buttons }>
-            <FacebookIcon onClick={ this.shareOnFacebook } className={ styles.social }/>
-            <TwitterIcon onClick={ this.shareOnTwitter } className={ styles.social }/>
-            <RedditIcon onClick={ this.shareOnReddit } className={ styles.social }/>
-          </div>
-
-          <div className={ styles.close } onClick={ this.hide }>
-            { translation('close') }
+        <div className={ styles.buttons } style={ { direction: locale.direction } }>
+          {
+            navigator.share ? <div className={ styles.button } onClick={ this.share }>
+              <div>Share</div>
+              <ShareIcon/>
+            </div> : <div className={ styles.button } onClick={ this.copy }>
+              <div>Copy</div>
+              <CopyIcon/>
+            </div>
+          }
+     
+          <div className={ styles.button } onClick={ this.download }>
+            <div>Download</div>
+            <DownloadIcon/>
           </div>
         </div>
       </div>
-    );
+    </div> : <div/>;
   }
 }
 
 ShareOverlay.propTypes = {
   translation: PropTypes.func,
-  locale: PropTypes.object,
-  addNotification: PropTypes.func.isRequired,
-  share: PropTypes.object,
-  hide: PropTypes.func
+  locale: PropTypes.object
 };
+
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   wrapper: {
     zIndex: 4,
-    position: 'fixed',
-    display: 'flex',
 
+    display: 'flex',
+    position: 'fixed',
+
+    alignItems: 'center',
     justifyContent: 'center',
 
-    top: 0,
-    left: 0,
+    backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
-    width: 'calc(100vw + 18px)',
+    width: '100vw',
     height: '100vh',
 
-    '[enabled="false"]': {
-      pointerEvents: 'none'
-    }
-  },
-
-  holder: {
-    opacity: 0.85,
-    backgroundColor: colors.holder,
-
-    width: '100%',
-    height: '100%',
-
-    transition: 'opacity 0.25s ease-in-out',
-
-    '[enabled="false"]': {
-      opacity: 0
-    }
+    fontWeight: 700,
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   container: {
-    position: 'absolute',
-    display: 'grid',
-
-    gridTemplateRows: '60% auto 1fr 2fr',
-
-    color: colors.blackText,
-    backgroundColor: colors.shareBackground,
-
-    opacity: 1,
-    borderRadius: '10px',
-
-    maxWidth: '490px',
-
-    top: '25vh',
-    width: '40vw',
-    height: '50vh',
-    
-    overflow: 'hidden',
-
-    fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
-    transition: 'top 0.25s, opacity 0.25s',
-    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-
-    '[enabled="false"]': {
-      opacity: 0,
-      top: '100vh'
-    }
+    maxWidth: '640px',
+    width: '40vw'
   },
 
   image: {
-    backgroundColor: colors.shareUrlBackground,
-
-    width: '90%',
-    height: '90%',
-
-    objectFit: 'cover',
+    width: '100%',
+    height: 'auto',
     borderRadius: '10px',
-
-    margin: 'auto'
+    objectFit: 'cover'
   },
 
   url: {
-    color: colors.blackText,
-    backgroundColor: colors.shareUrlBackground,
-
-    width: 'calc(100% - 60px)',
-    
-    userSelect: 'all',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-
-    margin: '0 auto',
-    padding: '10px 15px',
-    borderRadius: '5px'
-  },
-
-  buttons: {
     display: 'flex',
-    alignItems: 'center',
+    justifyContent: 'center',
 
-    margin: '5px 15px'
-  },
+    color: opacity(colors.blackText, 0.5),
+    backgroundColor: opacity(colors.roomBackground, 0.95),
 
-  social: {
-    cursor: 'pointer',
+    padding: '15px',
+    margin: '10px 0',
 
-    color: colors.blackText,
+    '> svg': {
+      color: colors.blackText,
+      animation: waitingAnimation,
 
-    width: '16px',
-    height: '16px',
-
-    padding: '10px',
-    margin: '0 5px',
-    borderRadius: '100%',
-
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+      width: '26px',
+      height: '26px'
     },
 
-    ':active': {
-      transform: 'scale(0.9)'
+    ':not([data-value=""])': {
+      display: 'block',
+      
+      userSelect: 'all',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+
+      '> svg': {
+        display: 'none'
+      }
     }
   },
 
-  close: {
+  buttons:
+  {
+    display: 'grid',
+    
+    gridTemplateAreas: '. .',
+    gridTemplateRows: '1fr',
+    gridTemplateColumns: '1fr 1fr',
+
+    gap: '15px',
+
+    '@media screen and (max-width: 700px)': {
+      gridTemplateAreas: '"." "."',
+      gridTemplateRows: '1fr 1fr',
+      gridTemplateColumns: '1fr'
+    }
+  },
+
+  button: {
     display: 'flex',
     cursor: 'pointer',
-    
-    userSelect: 'none',
-    textAlign: 'center',
 
-    justifyContent: 'center',
+    flexGrow: 1,
     alignItems: 'center',
 
-    width: '100%',
-    padding: '5px 0',
+    color: colors.blackText,
+    border: '1px solid',
+    borderColor: opacity(colors.roomBackground, 0.95),
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+    padding: '15px 10px',
+
+    '> :nth-child(1)': {
+      flexGrow: 1,
+      margin: '0 10px'
+    },
+
+    '> :nth-child(2)': {
+      width: '16px',
+      height: '16px',
+      margin: '0 10px'
+    },
+
+    ':active': {
+      transform: 'scale(0.95)'
     }
   }
 });

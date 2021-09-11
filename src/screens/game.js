@@ -575,7 +575,6 @@ const optionsStyles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    borderRadius: '5px',
     border: `1px ${colors.blackText} solid`,
 
     cursor: 'pointer',
