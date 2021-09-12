@@ -16,7 +16,7 @@ const Error = ({ error }) =>
   const { locale } = useTranslation();
 
   return <div className={ styles.container } style={ { direction: locale.direction } }>
-    <p className={ styles.error }>{error}</p>
+    <p className={ styles.error }>{ error }</p>
   </div>;
 };
 

@@ -16,8 +16,8 @@ import { setFeatures } from './flags.js';
 
 import { createStore, getStore } from './store.js';
 
-import Error from './components/error.js';
-import Loading from './components/loading.js';
+import LoadingScreen from './components/loading.js';
+import ErrorScreen from './components/error.js';
 
 import NotFound from './screens/404.js';
 import Homepage from './screens/homepage.js';
@@ -60,7 +60,7 @@ export function holdLoadingScreen()
 
 export function remountLoadingScreen()
 {
-  ReactDOM.render(<Loading/>, placeholder);
+  ReactDOM.render(<LoadingScreen/>, placeholder);
 }
 
 export function hideLoadingScreen()
@@ -81,7 +81,7 @@ navigator.serviceWorker?.register('sw.js')
 createStore();
 
 // show a loading screen until the promises resolve
-ReactDOM.render(<Loading splash/>, placeholder);
+ReactDOM.render(<LoadingScreen splash/>, placeholder);
 
 // set the endpoint to the production server
 // istanbul ignore if
@@ -161,9 +161,15 @@ const ipCheckPromise = async() =>
       timeout: 15000
     });
   
+    // server unavailable
     if (status !== 200)
     {
       throw new Error(translation(data) ?? data);
+    }
+    // all flags are turned off
+    else if (Object.values(data.features).every(f => f !== 'true'))
+    {
+      throw new Error(translation('server-mismatch'));
     }
     else
     {
@@ -172,10 +178,12 @@ const ipCheckPromise = async() =>
       setLocale(data.country, data.language);
     }
   }
-  catch (e)
+  catch (err)
   {
-    if (e.response)
-      throw new Error(translation(e.response.data?.message) ?? e.response.data?.message);
+    if (err.response)
+      throw new Error(translation(err.response.data?.message) ?? err.response.data?.message);
+    else if (err.message)
+      throw new Error(translation(err.message));
   }
 };
 
@@ -183,4 +191,4 @@ const ipCheckPromise = async() =>
 Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
   .then(loaded)
   // eslint-disable-next-line react/no-render-return-value
-  .catch(err => ReactDOM.render(<Error error={ err }/>, placeholder));
+  .catch(err => ReactDOM.render(<ErrorScreen error={ err.message ?? err }/>, placeholder));
