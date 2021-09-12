@@ -365,7 +365,7 @@ class Game extends React.Component
           <Brightness5Icon className={ optionsStyles.theme } onClick={ () => this.switchTheme(true) }/>
       }
 
-      <RefreshIcon className={ optionsStyles.refresh } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
+      <RefreshIcon className={ optionsStyles.refresh } data-allowed={ this.state.loadingHidden } onClick={ this.requestRooms }/>
     </div>;
 
     const Rooms = () => <div className={ roomsStyles.container }>
@@ -616,7 +616,7 @@ const optionsStyles = createStyle({
 
     transition: 'transform 0.25s',
 
-    '[allowed="false"]': {
+    '[data-allowed="false"]': {
       pointerEvents: 'none',
       color: colors.greyText
     },

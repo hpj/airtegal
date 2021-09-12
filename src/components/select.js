@@ -125,7 +125,7 @@ class Select extends React.Component
     }, () =>
     {
       // scroll to the new highlighted option
-      document.body.querySelector(`.${styles.option}[highlighted="true"]`).scrollIntoView({
+      document.body.querySelector(`.${styles.option}[data-highlighted="true"]`).scrollIntoView({
         block: 'nearest'
       });
     });
@@ -165,7 +165,7 @@ class Select extends React.Component
   {
     const { shown, value, options, index } = this.state;
 
-    return <div shown={ shown.toString() } id={ this.props.id } className={ `${styles.container} ${this.props.className ?? ''}` } onClick={ this.toggle }>
+    return <div data-shown={ shown } id={ this.props.id } className={ `${styles.container} ${this.props.className ?? ''}` } onClick={ this.toggle }>
       <div className={ styles.current }>
         { value.label }
         {/* <input ref={ inputRef } defaultValue= spellCheck={ false } autoComplete={ 'off' } onInput={ this.onSearch }/> */}
@@ -173,9 +173,9 @@ class Select extends React.Component
 
       <DownIcon className={ styles.extend }/>
 
-      <div shown={ shown.toString() } className={ styles.block } onClick={ this.toggle }/>
+      <div data-shown={ shown } className={ styles.block } onClick={ this.toggle }/>
 
-      <div shown={ shown.toString() } className={ styles.menu }>
+      <div data-shown={ shown } className={ styles.menu }>
 
         <div className={ styles.options }>
           {
@@ -186,7 +186,7 @@ class Select extends React.Component
               return <div key={ i }>
                 { opt.group ? <div className={ styles.group }>{ opt.group }</div> : undefined }
                 <div
-                  highlighted={ highlighted.toString() }
+                  data-highlighted={ highlighted }
                   id={ (this.props.optionsIdPrefix) ? `${this.props.optionsIdPrefix}-${i + 1}` : '' }
                   className={ styles.option }
                   onMouseOver={ () => this.hover(i) }
@@ -234,7 +234,7 @@ const styles = createStyle({
     userSelect: 'none',
     borderRadius: '5px',
 
-    '[shown="true"]': {
+    '[data-shown="true"]': {
       color: colors.whiteText,
       backgroundColor: colors.blackBackground,
       border: 0
@@ -283,7 +283,7 @@ const styles = createStyle({
     width: '100vw',
     height: '100vh',
 
-    '[shown="true"]': {
+    '[data-shown="true"]': {
       display: 'block'
     }
   },
@@ -310,7 +310,7 @@ const styles = createStyle({
     
     boxShadow: `0 0 25px -5px ${colors.greyText}`,
 
-    '[shown="true"]': {
+    '[data-shown="true"]': {
       display: 'block'
     }
   },
@@ -352,7 +352,7 @@ const styles = createStyle({
     height: '50px',
     padding: '0 15px',
 
-    '[highlighted="true"]': {
+    '[data-highlighted="true"]': {
       color: colors.whiteText,
       backgroundColor: colors.greyText
     }

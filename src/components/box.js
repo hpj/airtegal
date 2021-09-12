@@ -27,11 +27,12 @@ const Box = ({ value, description, allowed, onSubmit }) =>
   
   return <div
     className={ styles.container }
-    waiting={ (!allowed && description !== undefined).toString() }
+    data-waiting={ !allowed && description !== undefined }
     style={ {
       direction: locale.direction,
       rowGap: allowed && !value ? '10px' : 0
-    } }>
+    } }
+  >
     {
       allowed && !value ? <div
         className={ styles.items }
@@ -104,7 +105,7 @@ const styles = createStyle({
     margin: '25px',
     borderRadius: '10px',
 
-    '[waiting="true"] > svg': {
+    '[data-waiting="true"] > svg': {
       width: '20px',
       height: '20px',
       padding: '15px'
