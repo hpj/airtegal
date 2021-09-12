@@ -3,7 +3,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { createStyle } from 'flcss';
 
 import CloseIcon from 'mdi-react/CloseBoldIcon';
-import ArrowIcon from 'mdi-react/ArrowLeftBoldIcon';
 
 import DiscordIcon from 'mdi-react/DiscordIcon';
 
@@ -87,35 +86,30 @@ const Tutorial = () =>
             <div>{ translation('adults-only-title') }</div>
             <img src={ '/assets/adults-only.png' }/>
             <div>{ translation('adults-only') }</div>
-            <ArrowIcon className={ styles.left }/>
           </div>
 
           <div className={ styles.item }>
-            <div>{ translation('perfer-voice-chat-title') }</div>
-            <img src={ '/assets/perfer-voice-chat.png' }/>
-            <div>{ translation('perfer-voice-chat') }</div>
-            <ArrowIcon className={ styles.left }/>
+            <div>{ translation('prefer-voice-chat-title') }</div>
+            <img src={ '/assets/prefer-voice-chat.png' }/>
+            <div>{ translation('prefer-voice-chat') }</div>
           </div>
 
           <div className={ styles.item }>
             <div>{ translation('pick-a-card-title') }</div>
             <img src={ '/assets/pick-a-card.png' }/>
             <div>{ translation('pick-a-card') }</div>
-            <ArrowIcon className={ styles.left }/>
           </div>
 
           <div className={ styles.item }>
             <div>{ translation('write-a-card-title') }</div>
             <img src={ '/assets/write-a-card.png' }/>
             <div>{ translation('write-a-card') }</div>
-            <ArrowIcon className={ styles.left }/>
           </div>
 
           <div className={ styles.item }>
             <div>{ translation('judge-a-card-title') }</div>
             <img src={ '/assets/judge-a-card.png' }/>
             <div>{ translation('judge-a-card') }</div>
-            <ArrowIcon className={ styles.left }/>
           </div>
 
           <div className={ styles.item }>
@@ -188,19 +182,6 @@ const styles = createStyle({
     {
       borderRadius: '6px',
       boxShadow: `inset 0 0 6px 6px ${colors.handScrollbar}`
-    }
-  },
-
-  left: {
-    position: 'absolute',
-    color: colors.blackText,
-
-    left: '0',
-    top: 'calc(50% - 12px)',
-
-    '> svg': {
-      width: '24px',
-      height: '24px'
     }
   },
 

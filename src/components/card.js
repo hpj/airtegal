@@ -251,7 +251,7 @@ const styles = createStyle({
       boxShadow: `5px 5px 0px 0px ${colors.blackCardHover}`
     },
 
-    '[data-type="white"][data-allowed="true"][winner="false"]:hover': {
+    '[data-type="white"][data-allowed="true"][data-winner="false"]:hover': {
       boxShadow: `5px 5px 0px 0px ${colors.whiteCardHover}`
     },
 

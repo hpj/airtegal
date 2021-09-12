@@ -385,11 +385,11 @@ const styles = createStyle({
       
       margin: '20px',
 
-      '> [type="white"]': {
+      '> [data-type="white"]': {
         border: `1px solid ${colors.whiteCardHover}`
       },
       
-      '> [type="black"]': {
+      '> [data-type="black"]': {
         border: `1px solid ${colors.blackCardHover}`
       },
 

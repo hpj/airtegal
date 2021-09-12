@@ -411,6 +411,7 @@ const styles = createStyle({
 
     padding: '8px',
     margin: '0 auto 0 0',
+    
     borderBottom: '0',
     borderRadius: '100%',
 
@@ -422,8 +423,7 @@ const styles = createStyle({
   counter: {
     gridArea: 'counter',
     fontSize: 'calc(8px + 0.5vw + 0.5vh)',
-
-    margin: 'auto 0'
+    margin: '0 auto 0 0'
   },
 
   state: {

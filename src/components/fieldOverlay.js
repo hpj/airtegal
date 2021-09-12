@@ -265,15 +265,10 @@ const styles = createStyle({
     left: '10px',
     height: '100%',
 
-    borderTopLeftRadius: '10px',
-    borderBottomLeftRadius: '10px',
-    borderRadius: 'calc(10px + 1.5vw) 0 0 calc(10px + 1.5vw)',
-
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
       left: '0',
-      width: '100%',
-      borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0'
+      width: '100%'
     },
 
     '::-webkit-scrollbar':
