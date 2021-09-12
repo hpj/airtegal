@@ -1,24 +1,31 @@
-import React from 'react';
+import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import CloseIcon from 'mdi-react/CloseBoldIcon';
-import WaitingIcon from 'mdi-react/LoadingIcon';
+import LoadingIcon from 'mdi-react/LoadingIcon';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 import CopyIcon from 'mdi-react/ClipboardTextIcon';
-
 import DownloadIcon from 'mdi-react/DownloadIcon';
+
+import CheckIcon from 'mdi-react/CheckIcon';
 
 import { createAnimation, createStyle } from 'flcss';
 
 import { sendMessage } from '../utils.js';
+
+import Interactable from './interactable.js';
 
 import getTheme, { opacity } from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
 const colors = getTheme();
+
+/**
+* @type { React.RefObject<Interactable> }
+*/
+const interactableRef = createRef();
 
 class ShareOverlay extends React.Component
 {
@@ -27,7 +34,9 @@ class ShareOverlay extends React.Component
     super();
 
     this.state = {
-      url: ''
+      url: '',
+      copied: false,
+      visible: false
     };
 
     this.download = this.download.bind(this);
@@ -52,10 +61,16 @@ class ShareOverlay extends React.Component
   */
   async shareEntry(data)
   {
+    this.setState({
+      visible: true
+    }, () => interactableRef.current?.snapTo({ index: 1 }));
+    
     const response = await sendMessage('share', { data });
 
     this.setState({
-      url: `${process.env.API_ENDPOINT}/share/${response}`
+      url: process.env.NODE_ENV !== 'test' ?
+        `${process.env.API_ENDPOINT}/share/${response}`
+        : '/assets/card.png'
     });
   }
 
@@ -63,86 +78,130 @@ class ShareOverlay extends React.Component
   {
     if (e instanceof KeyboardEvent && e.key !== 'Escape')
       return;
-    
+      
     this.setState({
-      url: undefined
-    });
+      url: '',
+      copied: false,
+      visible: false
+    }, () => interactableRef.current?.snapTo({ index: 0 }));
   }
 
   // istanbul ignore next
   download()
   {
-    //
+    const { url } = this.state;
+
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(`${url}?download`, '_blank');
   }
 
   // istanbul ignore next
   share()
   {
-    // navigator.share({
-    //   title: 'Share Room URL',
-    //   text: translation('join-me'),
-    //   url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`
-    // }).catch(console.warn);
+    const { url } = this.state;
+
+    navigator.share?.({
+      url,
+      title: 'Share'
+    }).catch(console.warn);
   }
 
   // istanbul ignore next
   copy()
   {
-    // navigator.clipboard?.writeText(this.props.share.url)
-    //   .then(() => addNotification(gettranslation('share-copied-to-clipboard')))
-    //   .catch(console.warn);
+    const { url } = this.state;
 
-    try
-    {
-      // if (document.execCommand('copy'))
-      // addNotification(translation('share-copied-to-clipboard'));
-    }
-    catch
-    {
-      //
-    }
+    navigator.clipboard?.writeText(url)
+      .then(() => this.setState({ copied: true }))
+      .catch(console.warn);
   }
 
   render()
   {
-    const { url } = this.state;
+    const { visible, copied, url } = this.state;
     
-    const { translation, locale } = this.props;
+    const { size, translation, locale } = this.props;
 
-    // TODO add a close fucking button
+    // if size is not calculated yet
+    if (!size.height)
+      return <div/>;
 
-    return url ? <div className={ styles.wrapper }>
+    return <div className={ styles.wrapper } data-visible={ visible }>
 
-      <div className={ styles.container }>
-        <img src={ process.env.NODE_ENV === 'test' ? '/assets/card.png' : url }className={ styles.image }/>
+      <Interactable
+        ref={ interactableRef }
+        
+        style={ {
+          display: 'flex',
+          position: 'fixed',
 
-        <div className={ styles.url } data-value={ url }>
-          { url }
-          <WaitingIcon/>
-        </div>
+          alignItems: 'center',
+          justifyContent: 'center',
 
-        <div className={ styles.buttons } style={ { direction: locale.direction } }>
-          {
-            navigator.share ? <div className={ styles.button } onClick={ this.share }>
-              <div>Share</div>
-              <ShareIcon/>
-            </div> : <div className={ styles.button } onClick={ this.copy }>
-              <div>Copy</div>
+          width: '100vw',
+          height: '100vh'
+        } }
+
+        dragEnabled={ true }
+        
+        verticalOnly={ true }
+
+        frame={ { pixels: Math.round(size.height * 0.05), every: 8 } }
+        
+        boundaries={ {
+          top: 0,
+          bottom: size.height
+        } }
+        
+        initialPosition={ { y: size.height } }
+
+        snapPoints={ [ { y: size.height }, { y: 0 } ] }
+
+        triggers={ [ { y: size.height * 0.1, index: 0 } ] }
+
+        onSnapEnd={ i => i === 0 ? this.hide() : undefined }
+      >
+        <div className={ styles.container }>
+          
+          <div className={ styles.handler }>
+            <div/>
+          </div>
+
+          <img src={ url } className={ styles.image }/>
+
+          <div className={ styles.url } data-value={ url }>
+            { url }
+            <LoadingIcon/>
+          </div>
+
+          <div className={ styles.buttons } style={ { direction: locale.direction } } data-active={ url.length > 0 }>
+              
+            <div className={ styles.button } onClick={ this.copy } data-copied={ copied }>
+              <div>{ translation('copy') }</div>
               <CopyIcon/>
+              <CheckIcon/>
             </div>
-          }
-     
-          <div className={ styles.button } onClick={ this.download }>
-            <div>Download</div>
-            <DownloadIcon/>
+
+            {
+              navigator.share ?
+                <div className={ styles.button } onClick={ this.share }>
+                  <div>{ translation('share') }</div>
+                  <ShareIcon/>
+                </div> :
+                <div className={ styles.button } onClick={ this.download }>
+                  <div>{ translation('download') }</div>
+                  <DownloadIcon/>
+                </div>
+            }
           </div>
         </div>
-      </div>
-    </div> : <div/>;
+      </Interactable>
+    </div>;
   }
 }
 
 ShareOverlay.propTypes = {
+  size: PropTypes.object,
   translation: PropTypes.func,
   locale: PropTypes.object
 };
@@ -165,24 +224,45 @@ const styles = createStyle({
   wrapper: {
     zIndex: 4,
 
-    display: 'flex',
     position: 'fixed',
-
-    alignItems: 'center',
-    justifyContent: 'center',
-
+    
     backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
     width: '100vw',
     height: '100vh',
 
     fontWeight: 700,
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
+
+    '[data-visible="false"]': {
+      opacity: 0,
+      pointerEvents: 'none'
+    },
+
+    '[data-visible="true"]': {
+      opacity: 1,
+      pointerEvents: 'auto'
+    }
   },
 
   container: {
     maxWidth: '640px',
     width: '40vw'
+  },
+
+  handler: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: '15px',
+
+    '> div': {
+      cursor: 'pointer',
+      backgroundColor: opacity(colors.blackText, 0.5),
+  
+      width: 'calc(35px + 2.5%)',
+      height: '6px',
+      borderRadius: '6px'
+    }
   },
 
   image: {
@@ -213,7 +293,6 @@ const styles = createStyle({
     ':not([data-value=""])': {
       display: 'block',
       
-      userSelect: 'all',
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
@@ -238,6 +317,11 @@ const styles = createStyle({
       gridTemplateAreas: '"." "."',
       gridTemplateRows: '1fr 1fr',
       gridTemplateColumns: '1fr'
+    },
+
+    '[data-active="false"]': {
+      opacity: 0.25,
+      pointerEvents: 'none'
     }
   },
 
@@ -262,7 +346,28 @@ const styles = createStyle({
     '> :nth-child(2)': {
       width: '16px',
       height: '16px',
+
       margin: '0 10px'
+    },
+
+    '> :nth-child(3)': {
+      display: 'none',
+
+      width: '22px',
+      height: '22px',
+      margin: '0 auto'
+    },
+
+    '[data-copied="true"]': {
+      '> :nth-child(1)': {
+        display: 'none'
+      },
+      '> :nth-child(2)': {
+        display: 'none'
+      },
+      '> :nth-child(3)': {
+        display: 'unset'
+      }
     },
 
     ':active': {

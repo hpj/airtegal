@@ -147,16 +147,14 @@
   "you-won-the-round": "",
   "won-this-round": "",
 
-  // share overlay
-  
-  "hashtag-airtegal": "",
-
-  "share-copied-to-clipboard": "",
-
-  "close": "",
-
   "limited:match-ended": "",
   "timer:match-ended": "",
+
+  // sharing
+
+  "copy": "",
+  "share": "",
+  "download": "",
 
   // homepage
 
@@ -169,6 +167,8 @@
   "terms-and-conditions": "Terms",
   "privacy-policy": "Privacy",
   
+  // the tutorial
+
   "adults-only-title": "",
   "perfer-voice-chat-title": "",
   "pick-a-card-title": "",

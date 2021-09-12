@@ -81,7 +81,7 @@
 
   // room id sharing
 
-  "room-copied-to-clipboard": "تم نسخ رابط الروم!",
+  "room-copied-to-clipboard": "عملت كوبي للينك الروم!",
   "join-me": "يسطي افتح نلعب ارتجال",
 
   // room master changes
@@ -163,16 +163,14 @@
   "you-won-the-round": "انت الي كسبت الجولة.",
   "won-this-round": "%0 كسب الجولة.",
 
-  // share overlay
-  
-  "hashtag-airtegal": "#ارتجال_هتسيطر_علي_العالم",
-
-  "share-copied-to-clipboard": "تم نسخ اللينك لجهازك!",
-
-  "close": "الغاء",
-
   "limited:match-ended": "انتهت الجولات! %0",
   "timer:match-ended": "انتهي الوقت! %0",
+
+  // sharing
+
+  "copy": "كوبي",
+  "share": "شير",
+  "download": "حمل",
 
   // homepage
 
@@ -188,6 +186,8 @@
   "play": "العب",
   "terms-and-conditions": "الشروط والاحكام",
   "privacy-policy": "سياسة الخصوصية",
+
+  // the tutorial
 
   "adults-only-title": "1. خلي بالك!!",
   "perfer-voice-chat-title": "2. ازاي تلعب كروت؟",
