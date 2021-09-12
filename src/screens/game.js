@@ -5,13 +5,15 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
-import OptionsIcon from 'mdi-react/CogIcon';
+
+import Brightness2Icon from 'mdi-react/Brightness2Icon';
+import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
 import { io } from 'socket.io-client';
 
 import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
-import getTheme from '../colors.js';
+import getTheme, { detectDeviceIsDark } from '../colors.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
@@ -28,8 +30,6 @@ import TutorialKuruit from '../components/tutorialKuruit';
 import ShareOverlay from '../components/shareOverlay.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
-
-import OptionsOverlay from '../components/optionsOverlay.js';
 
 import { locale, translation, withTranslation } from '../i18n.js';
 
@@ -270,6 +270,15 @@ class Game extends React.Component
       });
   }
 
+  switchTheme(value)
+  {
+    // reverse current setting
+    localStorage.setItem('forceDark', value ? 'true' : 'false');
+
+    // refresh page
+    location.reload();
+  }
+
   /**
   * @param { UIEvent } e
   */
@@ -350,9 +359,13 @@ class Game extends React.Component
 
       <div className={ optionsStyles.title }> { translation('available-rooms') }</div>
 
-      <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
+      {
+        detectDeviceIsDark() ?
+          <Brightness2Icon className={ optionsStyles.theme } onClick={ () => this.switchTheme(false) }/> :
+          <Brightness5Icon className={ optionsStyles.theme } onClick={ () => this.switchTheme(true) }/>
+      }
 
-      <OptionsIcon className={ optionsStyles.icon } onClick={ () => this.setState({ options: { active: true } }) }/>
+      <RefreshIcon className={ optionsStyles.refresh } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
     </div>;
 
     const Rooms = () => <div className={ roomsStyles.container }>
@@ -446,11 +459,6 @@ class Game extends React.Component
       <TutorialKuruit/>
 
       <ShareOverlay ref={ shareRef } size={ this.state.size }/>
-
-      <OptionsOverlay
-        options={ this.state.options }
-        hide={ () => this.setState({ options: { active: false } }) }
-      />
 
       <div className={ mainStyles.container }>
 
@@ -593,23 +601,20 @@ const optionsStyles = createStyle({
   title: {
     gridArea: 'title',
     fontWeight: '700',
-
     margin: 'auto 0'
   },
 
-  icon: {
-    width: 'calc(12px + 0.55vw + 0.55vh)',
-    height: 'calc(12px + 0.55vw + 0.55vh)',
+  refresh: {
+    width: '24px',
+    height: '24px',
 
     color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
 
-    cursor: 'pointer',
     padding: '5px',
+    cursor: 'pointer',
     borderRadius: '50%',
 
-    transform: 'rotateZ(0deg) scale(1)',
-    transition: 'transform 0.25s, background-color 0.25s, color 0.25s',
+    transition: 'transform 0.25s',
 
     '[allowed="false"]': {
       pointerEvents: 'none',
@@ -617,8 +622,13 @@ const optionsStyles = createStyle({
     },
 
     ':active': {
-      transform: 'scale(0.95) rotateZ(22deg)'
+      transform: 'rotateZ(22deg)'
     }
+  },
+
+  theme: {
+    extend: 'refresh',
+    width: '20px'
   }
 });
 
