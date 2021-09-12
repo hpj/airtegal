@@ -285,31 +285,16 @@ class RoomState extends StoreComponent
     document.getSelection().addRange(range);
   }
 
-  /**
-  * @param { { nativeEvent: MouseEvent } } e
-  */
   // istanbul ignore next
-  copyRoomURL(e)
+  copyRoomURL()
   {
     const { addNotification } = this.props;
 
     const value = `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`;
 
-    // navigator.clipboard.writeText(value)
-    //   .then(() => addNotification(translation('room-copied-to-clipboard')))
-    //   .catch(console.warn);
-    
-    try
-    {
-      this.setSelection(e.nativeEvent.target, value);
-
-      if (document.execCommand('copy'))
-        addNotification(translation('room-copied-to-clipboard'));
-    }
-    finally
-    {
-      e.nativeEvent.target.innerHTML = this.state.roomData?.id;
-    }
+    navigator.clipboard.writeText(value)
+      .then(() => addNotification(translation('room-copied-to-clipboard')))
+      .catch(console.warn);
   }
 
   formatMs(milliseconds)
@@ -327,21 +312,23 @@ class RoomState extends StoreComponent
 
     const isMatch = this.state.roomData?.state === 'match';
 
+    const value = `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`;
+
     return <div className={ styles.wrapper }>
-      <div match={ isMatch.toString() } className={ styles.container } style={ { direction: locale.direction } }>
+      <div data-match={ isMatch } className={ styles.container } style={ { direction: locale.direction } }>
         {
           isMatch ?
             <>
-              <div match={ 'true' } className={ styles.state }>{ this.state.displayMessage }</div>
+              <div data-match={ true } className={ styles.state }>{ this.state.displayMessage }</div>
               <div className={ styles.counter }>{ this.formatted }</div>
             </>
             :
             <>
-              <div match={ 'false' } className={ styles.state }>{ this.formatted }</div>
+              <div data-match={ false } className={ styles.state }>{ this.formatted }</div>
 
               {
                 navigator.share ? <ShareIcon className={ styles.icon } onClick={ this.shareRoomURL }/> :
-                  <div className={ styles.id } onClick={ this.copyRoomURL }>{ this.state.roomData?.id }</div>
+                  <div className={ styles.id } onClick={ this.copyRoomURL }>{ value }</div>
               }
             </>
         }
@@ -385,15 +372,15 @@ const styles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    '[match="false"]': {
-      gridAutoColumns: '1fr auto',
+    '[data-match="false"]': {
+      gridAutoColumns: 'min-content auto',
       gridTemplateAreas: '"state counter"',
       gridColumnGap: '10px'
     },
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      gridAutoColumns: '1fr auto',
+      gridAutoColumns: 'min-content auto',
       gridTemplateAreas: '"state counter"',
       gridColumnGap: '10px'
     }
@@ -401,26 +388,19 @@ const styles = createStyle({
 
   id: {
     cursor: 'text',
+
     userSelect: 'all',
-    
+    wordBreak: 'break-word',
+    direction: 'ltr',
+
     fontSize: 'calc(5px + 0.35vw + 0.35vh)',
 
-    padding: '5px',
-    margin: 'auto 0',
-    borderBottom: '2px solid',
-
-    '[icon="true"]': {
-      cursor: 'pointer',
-      color: colors.blackText,
-      
-      width: 'calc(12px + 0.35vw + 0.35vh)',
-      height: 'calc(12px + 0.35vw + 0.35vh)',
-      borderBottom: '0'
-    }
+    padding: '8px',
+    margin: '0 auto 0 0',
+    borderBottom: '2px solid'
   },
 
   icon: {
-    extend: 'id',
     cursor: 'pointer',
 
     overflow: 'visible',
@@ -430,6 +410,7 @@ const styles = createStyle({
     height: 'calc(12px + 0.35vw + 0.35vh)',
 
     padding: '8px',
+    margin: '0 auto 0 0',
     borderBottom: '0',
     borderRadius: '100%',
 
@@ -453,11 +434,11 @@ const styles = createStyle({
     overflow: 'hidden auto',
     margin: 'auto 0',
     
-    '[match="false"]': {
+    '[data-match="false"]': {
       fontSize: 'calc(8px + 0.5vw + 0.5vh)'
     },
     
-    '[match="true"]': {
+    '[data-match="true"]': {
       textAlign: 'center'
     },
 
@@ -467,7 +448,7 @@ const styles = createStyle({
       overflowY: 'hidden',
       textOverflow: 'ellipsis',
 
-      '[match="true"]': {
+      '[data-match="true"]': {
         textAlign: 'unset'
       }
     },
