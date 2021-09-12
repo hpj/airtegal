@@ -599,6 +599,19 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Offline Page",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/offline.html"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }

@@ -10,9 +10,10 @@
         margin: 0;
       }
 
-      #app
+      #wrapper
       {
         display: flex;
+
         justify-content: center;
         align-items: center;
         
@@ -21,13 +22,30 @@
         background-color: #101010;
       }
 
+      #container
+      {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
       .text
       {
-        direction: rtl;
         color: #ffffff;
 
+        width: 100%;
+
+        font-family: "Montserrat", "Noto Arabic", sans-serif;
         font-size: 14px;
         font-weight: 700;
+
+        margin: 8px;
+      }
+
+      .rtl
+      {
+        direction: rtl;
       }
     </style>
 
@@ -80,9 +98,17 @@
 
   </head>
   <body>
-    <div id="app">
-      <div class="text">
-        ارتجال محتاجة نت علشان تشتغل.
+    <div id="wrapper">
+      <div id="container">
+        <div class="text">
+          インターネットが必要
+        </div>
+        <div class="text rtl">
+          ارتجال محتاجة نت علشان تشتغل.
+        </div>
+        <div class="text">
+          Airtegal needs an internet connection.
+        </div>
       </div>
     </div>
   </body>
