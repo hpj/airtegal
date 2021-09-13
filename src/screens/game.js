@@ -361,8 +361,8 @@ class Game extends React.Component
 
       {
         detectDeviceIsDark() ?
-          <Brightness2Icon className={ optionsStyles.theme } onClick={ () => this.switchTheme(false) }/> :
-          <Brightness5Icon className={ optionsStyles.theme } onClick={ () => this.switchTheme(true) }/>
+          <Brightness2Icon id={ 'switch-theme' } className={ optionsStyles.theme } onClick={ () => this.switchTheme(false) }/> :
+          <Brightness5Icon id={ 'switch-theme' } className={ optionsStyles.theme } onClick={ () => this.switchTheme(true) }/>
       }
 
       <RefreshIcon className={ optionsStyles.refresh } data-allowed={ this.state.loadingHidden } onClick={ this.requestRooms }/>

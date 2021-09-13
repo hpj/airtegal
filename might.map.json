@@ -612,6 +612,65 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Close Share Ovelray",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&highlights"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#match-highlights > :nth-child(2)"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "15v"
+          ]
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Switch To Dark",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&list"
+        },
+        {
+          "action": "wait",
+          "value": "#switch-theme"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }
