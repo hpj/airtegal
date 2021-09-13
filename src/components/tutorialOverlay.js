@@ -24,33 +24,6 @@ const interactableRef = createRef();
 */
 const tutorialRef = createRef();
 
-//   TODO interval effect
-//   useEffect(() =>
-//   {
-//     if (process.env.NODE_ENV === 'test')
-//       return;
-
-//     const interval = setInterval(() =>
-//     {
-//       const length = 5;
-
-//       const next = index + 1;
-
-//       if (next > length || !visible)
-//       {
-//         clearInterval(interval);
-//       }
-//       else
-//       {
-//         tutorialRef.current.childNodes.item(next).scrollIntoView({ behavior: 'smooth' });
-
-//         setIndex(next);
-//       }
-//     }, 1500);
-
-//     return () => clearInterval(interval);
-//   });
-
 class TutorialOverlay extends React.Component
 {
   constructor()
@@ -75,6 +48,27 @@ class TutorialOverlay extends React.Component
       index: 0
     };
 
+    if (process.env.NODE_ENV !== 'test')
+    {
+      this.interval = setInterval(() =>
+      {
+        const length = 5;
+  
+        const index = this.state.index + 1;
+  
+        if (index > length || !visible)
+        {
+          clearInterval(this.interval);
+        }
+        else
+        {
+          tutorialRef.current.childNodes.item(index).scrollIntoView({ behavior: 'smooth' });
+  
+          this.setState({ index });
+        }
+      }, 3500);
+    }
+
     this.hide = this.hide.bind(this);
   }
 
@@ -88,6 +82,8 @@ class TutorialOverlay extends React.Component
 
   componentWillUnmount()
   {
+    clearInterval(this.interval);
+
     window.removeEventListener('keyup', this.hide);
   }
 
