@@ -36,7 +36,8 @@ class ShareOverlay extends React.Component
     this.state = {
       url: '',
       copied: false,
-      visible: false
+      visible: false,
+      opacity: 0
     };
 
     this.download = this.download.bind(this);
@@ -76,14 +77,21 @@ class ShareOverlay extends React.Component
 
   hide(e)
   {
-    if (e instanceof KeyboardEvent && e.key !== 'Escape')
+    if (!this.state.visible)
       return;
-      
-    this.setState({
-      url: '',
-      copied: false,
-      visible: false
-    }, () => interactableRef.current?.snapTo({ index: 0 }));
+    
+    if (e?.key === 'Escape')
+    {
+      interactableRef.current?.snapTo({ index: 0 });
+    }
+    else
+    {
+      this.setState({
+        url: '',
+        copied: false,
+        visible: false
+      });
+    }
   }
 
   // istanbul ignore next
@@ -118,11 +126,25 @@ class ShareOverlay extends React.Component
 
   render()
   {
-    const { visible, copied, url } = this.state;
+    const { visible, opacity, copied, url } = this.state;
     
     const { size, translation, locale } = this.props;
 
+    const onMovement = ({ y }) =>
+    {
+      this.setState({
+        opacity: 1 - (y / size.height)
+      });
+    };
+
+    const onSnapEnd = (index) =>
+    {
+      if (index === 0)
+        this.hide();
+    };
+
     return <div className={ styles.wrapper } data-visible={ visible }>
+      <div style={ { opacity } }/>
 
       <Interactable
         ref={ interactableRef }
@@ -155,7 +177,8 @@ class ShareOverlay extends React.Component
 
         triggers={ [ { y: size.height * 0.1, index: 0 } ] }
 
-        onSnapEnd={ i => i === 0 ? this.hide() : undefined }
+        onMovement={ onMovement }
+        onSnapEnd={ onSnapEnd }
       >
         <div className={ styles.container }>
           
@@ -221,8 +244,6 @@ const styles = createStyle({
     zIndex: 4,
     position: 'fixed',
     
-    backgroundColor: opacity(colors.whiteBackground, '0.95'),
-
     width: '100vw',
     height: '100vh',
 
@@ -230,13 +251,15 @@ const styles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     '[data-visible="false"]': {
-      opacity: 0,
-      pointerEvents: 'none'
+      display: 'none'
     },
 
-    '[data-visible="true"]': {
-      opacity: 1,
-      pointerEvents: 'auto'
+    '> :nth-child(1)': {
+      position: 'absolute',
+      backgroundColor: opacity(colors.whiteBackground, '0.95'),
+
+      width: '100vw',
+      height: '100vh'
     }
   },
 

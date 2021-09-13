@@ -27,7 +27,7 @@
       ]
     },
     {
-      "title": "Kruit Tutorial",
+      "title": "Tutorial Overlay",
       "steps": [
         {
           "action": "goto",
@@ -665,6 +665,48 @@
         {
           "action": "click",
           "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Close Tutorial Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play"
+        },
+        {
+          "action": "wait",
+          "value": "#game"
+        },
+        {
+          "action": "wait",
+          "value": "#kuruit-tutorial"
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-tutorial > div > :nth-child(6)"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "15v"
+          ]
         },
         {
           "action": "wait",

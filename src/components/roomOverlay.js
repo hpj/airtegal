@@ -12,7 +12,7 @@ import { translation } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import Notifications from './notifications.js';
 
@@ -124,8 +124,6 @@ class RoomOverlay extends StoreComponent
 
       overlayHandlerVisible: true
     });
-
-    this.onSnapEnd = this.onSnapEnd.bind(this);
 
     this.onKicked = this.onKicked.bind(this);
     this.onRoomData = this.onRoomData.bind(this);
@@ -372,12 +370,6 @@ class RoomOverlay extends StoreComponent
     this.notificationsTimeout = undefined;
   }
 
-  onSnapEnd(index)
-  {
-    if (index === 1)
-      this.leaveRoom();
-  }
-
   render()
   {
     const { size } = this.props;
@@ -385,13 +377,19 @@ class RoomOverlay extends StoreComponent
     const onMovement = ({ x }) =>
     {
       this.store.set({
-        overlayHolderOpacity: 0.5 - (x / (size.width * 2))
+        overlayHolderOpacity: 1 - (x / (size.width * 2))
       });
 
       // hide the overlay and overlay holder when they are off-screen
       this.store.set({
         overlayHidden: x >= size.width ? true : false
       });
+    };
+
+    const onSnapEnd = (index) =>
+    {
+      if (index === 1)
+        this.leaveRoom();
     };
 
     return <div>
@@ -410,7 +408,7 @@ class RoomOverlay extends StoreComponent
 
       <div style={ {
         zIndex: 1,
-        display: (this.state.overlayHidden) ? 'none' : '',
+        display: this.state.overlayHidden ? 'none' : '',
         opacity: this.state.overlayHolderOpacity || 0
       } } className={ styles.holder }/>
 
@@ -446,7 +444,7 @@ class RoomOverlay extends StoreComponent
         triggers={ [ { x: size.width * 0.25, index: 1 } ] }
 
         onMovement={ onMovement }
-        onSnapEnd={ this.onSnapEnd }
+        onSnapEnd={ onSnapEnd }
       >
         <div className={ styles.wrapper }>
           <div className={ styles.handlerWrapper }>
@@ -517,9 +515,8 @@ const styles = createStyle({
   loading: {
     zIndex: 1,
     position: 'fixed',
-    backgroundColor: colors.holder,
+    backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
-    opacity: 0.5,
     top: 0,
 
     width: '100vw',
@@ -553,7 +550,7 @@ const styles = createStyle({
   holder: {
     position: 'fixed',
     
-    backgroundColor: colors.holder,
+    backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
     top: 0,
     width: '100vw',

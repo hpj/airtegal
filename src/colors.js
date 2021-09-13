@@ -18,8 +18,6 @@ export default function()
   const lightTheme = {
     theme: 'light',
     
-    holder: '#000000',
-
     whiteText: '#ffffff',
     whiteBackground: '#ffffff',
    
@@ -66,8 +64,6 @@ export default function()
     ...lightTheme,
 
     theme: 'dark',
-
-    holder: '#564f4f',
 
     whiteText: '#ffffff',
     whiteBackground: '#211f1f',
