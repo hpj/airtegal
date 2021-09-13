@@ -11,11 +11,11 @@ import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
 import { io } from 'socket.io-client';
 
+import { createStyle, createAnimation } from 'flcss';
+
 import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
 
 import getTheme, { detectDeviceIsDark } from '../colors.js';
-
-import { createStyle, createAnimation } from 'flcss';
 
 import { sendMessage } from '../utils.js';
 
@@ -23,9 +23,9 @@ import * as mocks from '../mocks/io.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
-import Error from '../components/error.js';
+import ErrorScreen from '../components/error.js';
 
-import TutorialKuruit from '../components/tutorialKuruit';
+import TutorialOverlay from '../components/tutorialOverlay';
 
 import ShareOverlay from '../components/shareOverlay.js';
 
@@ -64,7 +64,7 @@ export let socket;
 */
 function errorScreen(error)
 {
-  ReactDOM.render(<Error error={ error }/>, placeholder);
+  ReactDOM.render(<ErrorScreen error={ error }/>, placeholder);
 
   ReactDOM.unmountComponentAtNode(app);
 }
@@ -161,7 +161,11 @@ class Game extends React.Component
       username: localStorage.getItem('username')?.trim(),
       usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names')),
 
-      size: {},
+      size: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      },
+
       rooms: []
     };
 
@@ -208,10 +212,7 @@ class Game extends React.Component
 
   componentDidMount()
   {
-    // auto-size the username input-box
-    this.resize();
-
-    // auto-size the username input-box on resize
+    // update the size state when the app is resized
     window.addEventListener('resize', this.resize);
 
     // disable any dragging functionality in the app
@@ -456,7 +457,7 @@ class Game extends React.Component
     };
 
     return <div id={ 'game' } className={ mainStyles.wrapper }>
-      <TutorialKuruit/>
+      <TutorialOverlay size={ this.state.size }/>
 
       <ShareOverlay ref={ shareRef } size={ this.state.size }/>
 

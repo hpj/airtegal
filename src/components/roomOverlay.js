@@ -394,10 +394,6 @@ class RoomOverlay extends StoreComponent
       });
     };
 
-    // if size is not calculated yet
-    if (!size.width)
-      return <div/>;
-
     return <div>
       <Notifications notifications={ this.state.notifications }/>
 

@@ -122,10 +122,6 @@ class ShareOverlay extends React.Component
     
     const { size, translation, locale } = this.props;
 
-    // if size is not calculated yet
-    if (!size.height)
-      return <div/>;
-
     return <div className={ styles.wrapper } data-visible={ visible }>
 
       <Interactable
@@ -223,7 +219,6 @@ const waitingAnimation = createAnimation({
 const styles = createStyle({
   wrapper: {
     zIndex: 4,
-
     position: 'fixed',
     
     backgroundColor: opacity(colors.whiteBackground, '0.95'),
