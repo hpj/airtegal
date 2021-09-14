@@ -84,7 +84,7 @@ class ShareOverlay extends React.Component
     {
       interactableRef.current?.snapTo({ index: 0 });
     }
-    else
+    else if (!e)
     {
       this.setState({
         url: '',

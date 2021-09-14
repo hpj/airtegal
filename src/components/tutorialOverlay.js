@@ -96,7 +96,7 @@ class TutorialOverlay extends React.Component
     {
       interactableRef.current?.snapTo({ index: 0 });
     }
-    else
+    else if (!e)
     {
       localStorage.setItem(this.storageKey, true);
 
