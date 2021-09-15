@@ -350,7 +350,7 @@ class Game extends React.Component
           <Brightness5Icon id={ 'switch-theme' } className={ optionsStyles.theme } onClick={ () => this.switchTheme(true) }/>
       }
 
-      <RefreshIcon className={ optionsStyles.refresh } data-allowed={ this.state.loadingHidden } onClick={ this.requestRooms }/>
+      <RefreshIcon className={ optionsStyles.refresh } data-allowed={ !loading } onClick={ this.requestRooms }/>
     </div>;
 
     const Rooms = () => <div className={ roomsStyles.container }>
@@ -694,6 +694,8 @@ const roomsStyles = createStyle({
   error: {
     extend: 'loading',
     cursor: 'pointer',
+
+    color: colors.blackText,
     
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'

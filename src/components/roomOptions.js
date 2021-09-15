@@ -46,9 +46,8 @@ class RoomOptions extends StoreComponent
   constructor()
   {
     super({
-      optionsLoadingHidden: true,
-      optionsErrorMessage: '',
-
+      optionsError: '',
+      optionsLoading: false,
       dirtyOptions: undefined
     });
 
@@ -63,8 +62,8 @@ class RoomOptions extends StoreComponent
   {
     if (
       changes?.roomData ||
-      changes?.optionsLoadingHidden ||
-      changes?.optionsErrorMessage ||
+      changes?.optionsError ||
+      changes?.optionsLoading ||
       changes?.dirtyOptions
     )
       return true;
@@ -112,61 +111,49 @@ class RoomOptions extends StoreComponent
     }
   }
 
-  showErrorMessage(err)
-  {
-    this.store.set({ optionsErrorMessage: err });
-  }
-
   editRequest()
   {
-    // show a loading indictor
-    this.loadingVisibility(true);
+    this.store.set({ optionsLoading: true });
 
     sendMessage('edit', { options: this.state.dirtyOptions })
       .then(() =>
       {
         // hide the loading indictor
-        this.loadingVisibility(false);
+        this.store.set({ optionsLoading: false });
       })
       .catch((err) =>
       {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // show an error message
-        this.showErrorMessage(translation(err) || err);
+        this.store.set({
+          optionsLoading: false,
+          optionsError: translation(err) ?? err
+        });
       });
   }
   
   matchRequest()
   {
     // show a loading indictor
-    this.loadingVisibility(true);
+    this.store.set({ optionsLoading: true });
 
     sendMessage('matchRequest', undefined, 60000)
       .then(() =>
       {
-        // hide the loading indictor (after 2.5s to allow animations to end)
+        // hide the loading indictor
+        // but after 2.5s to allow game's overlay animations to end
         setTimeout(() =>
         {
-          this.loadingVisibility(false);
+          this.store.set({ optionsLoading: false });
 
           highlightsRef.current?.clearEntries();
         }, 2500);
       })
       .catch(err =>
       {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // show an error message
-        this.showErrorMessage(translation(err) || err);
+        this.store.set({
+          optionsLoading: false,
+          optionsError: translation(err) ?? err
+        });
       });
-  }
-
-  loadingVisibility(visible)
-  {
-    this.store.set({ optionsLoadingHidden: visible = !visible });
   }
 
   scrollTo(options)
@@ -209,7 +196,12 @@ class RoomOptions extends StoreComponent
   {
     const { locale, translation } = this.props;
 
-    const { roomData, dirtyOptions } = this.state;
+    const {
+      roomData,
+      optionsLoading,
+      optionsError,
+      dirtyOptions
+    } = this.state;
 
     const options = roomData?.options;
 
@@ -523,21 +515,19 @@ class RoomOptions extends StoreComponent
 
     return <div ref={ wrapperRef } className={ styles.wrapper }>
 
-      <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
-        <div className={ styles.loadingSpinner }/>
-      </div>
+      {
+        optionsLoading ? <div className={ styles.loading }>
+          <div/>
+        </div> : undefined
+      }
 
-      <div className={ styles.error } style={ { display: (this.state.optionsErrorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
-        <div>{ this.state.optionsErrorMessage }</div>
-      </div>
+      {
+        optionsError ? <div className={ styles.error } onClick={ () => this.stote.set({ optionsError: '' }) }>
+          { optionsError }
+        </div> : undefined
+      }
 
-      <div
-        className={ styles.container }
-        style={ {
-          direction: locale.direction,
-          display: (this.state.optionsLoadingHidden && !this.state.optionsErrorMessage) ? '' : 'none'
-        } }
-      >
+      <div className={ styles.container } style={ { direction: locale.direction } }>
 
         {
           this.props.children
@@ -653,51 +643,26 @@ const styles = createStyle({
       maxWidth: 'unset'
     }
   },
-
+  
   loading: {
-    zIndex: 1,
-
     display: 'flex',
     position: 'absolute',
 
     alignItems: 'center',
     justifyContent: 'center',
-    
-    backgroundColor: colors.whiteBackground,
 
-    top: 0,
     width: '100%',
     height: '100%',
 
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      top: 'auto',
-      width: 'calc(100% - 30px)',
-      height: 'calc(100% - 60px)'
+    backgroundColor: colors.whiteBackground,
+
+    '> div': {
+      width: '30px',
+      height: '30px',
+
+      border: `10px ${colors.blackText} solid`,
+      animation: waitingAnimation
     }
-  },
-
-  loadingSpinner: {
-    backgroundColor: 'transparent',
-
-    paddingBottom: '30px',
-    width: '30px',
-
-    border: `10px ${colors.blackText} solid`,
-
-    animation: createAnimation({
-      duration: '2s',
-      timingFunction: 'ease',
-      iterationCount: 'infinite',
-      keyframes: {
-        from: {
-          transform: 'rotate(0deg)'
-        },
-        to: {
-          transform: 'rotate(360deg)'
-        }
-      }
-    })
   },
 
   error: {
@@ -705,9 +670,6 @@ const styles = createStyle({
     cursor: 'pointer',
 
     color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
-
-    textTransform: 'capitalize',
 
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
