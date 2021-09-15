@@ -236,7 +236,7 @@ class HandOverlay extends StoreComponent
         ref={ overlayRef }
 
         style={ {
-          zIndex: 4,
+          zIndex: 3,
           width: '100%',
           display: handHidden ? 'none' : ''
         } }

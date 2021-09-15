@@ -870,6 +870,8 @@ const styles = createStyle({
   },
 
   choice: {
+    cursor: 'pointer',
+    
     margin: '0 5px',
     
     '[data-choice="true"]': {

@@ -89,7 +89,6 @@ RoomTrackBar.propTypes =
 
 const styles = createStyle({
   wrapper: {
-    zIndex: 3,
     gridArea: 'trackBar',
 
     backgroundColor: colors.trackBarBackground,

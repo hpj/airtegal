@@ -2,7 +2,9 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { createStyle } from 'flcss';
+import LoadingIcon from 'mdi-react/LoadingIcon';
+
+import { createAnimation, createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
@@ -14,7 +16,7 @@ import { socket } from '../screens/game.js';
 
 import getTheme, { opacity } from '../colors.js';
 
-import Notifications from './notifications.js';
+// import Notifications from './notifications.js';
 
 import Interactable from './interactable.js';
 
@@ -32,7 +34,7 @@ const colors = getTheme();
 /**
 * @type { React.RefObject<Interactable> }
 */
-const overlayRef = createRef();
+const interactableRef = createRef();
 
 /**
 * @type { React.RefObject<RoomOptions> }
@@ -114,22 +116,24 @@ class RoomOverlay extends StoreComponent
   constructor()
   {
     super({
-      overlayLoadingHidden: true,
-      overlayErrorMessage: '',
-
       notifications: [],
 
-      overlayHolderOpacity: 0,
-      overlayHidden: true,
+      overlayError: '',
+      overlayLoading: false,
 
-      overlayHandlerVisible: true
+      overlayHandler: true,
+      overlayVisible: false,
+      overlayOpacity: 0
     });
 
     this.onKicked = this.onKicked.bind(this);
     this.onRoomData = this.onRoomData.bind(this);
+    this.onSnapEnd = this.onSnapEnd.bind(this);
 
     this.addNotification = this.addNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
+
+    this.hide = this.hide.bind(this);
   }
 
   componentDidMount()
@@ -138,6 +142,8 @@ class RoomOverlay extends StoreComponent
 
     socket.on('kicked', this.onKicked);
     socket.on('roomData', this.onRoomData);
+
+    window.addEventListener('keyup', this.hide);
 
     const params = new URL(document.URL).searchParams;
 
@@ -159,18 +165,10 @@ class RoomOverlay extends StoreComponent
     socket.off('kicked', this.onKicked);
     socket.off('roomData', this.onRoomData);
 
+    window.removeEventListener('keyup', this.hide);
+
     // make sure socket is closed before component unmount
     socket.close();
-  }
-
-  onKicked()
-  {
-    // make sure overlay is closed
-    overlayRef.current?.snapTo({ index: 1 });
-
-    this.addNotification(translation('you-were-kicked'));
-    
-    this.closeOverlay();
   }
 
   /**
@@ -178,9 +176,6 @@ class RoomOverlay extends StoreComponent
   */
   onRoomData(roomData)
   {
-    // handler is only visible if user is on the match's lobby screen
-    this.handlerVisibility(roomData.state === 'lobby');
-
     if (roomData.state === 'lobby')
     {
       // send notification if the room's master changes
@@ -201,13 +196,42 @@ class RoomOverlay extends StoreComponent
     
     // show that the round ended
     if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing'&& roomData.phase !== 'transaction')
-    {
       this.addNotification(translation(roomData.phase));
-    }
 
     this.store.set({
-      roomData
+      roomData,
+      // handler is only visible if user is on the match's lobby screen
+      overlayHandler: roomData.state === 'lobby'
     });
+  }
+
+  onKicked()
+  {
+    // hide the room overlay
+    interactableRef.current?.snapTo({ index: 0 });
+  }
+
+  onSnapEnd(index)
+  {
+    if (index === 1)
+    {
+      // request a screen-wake lock
+      navigator.wakeLock?.request('screen')
+        .then(wl => this.wakeLock = wl)
+        .catch(console.warn);
+
+      this.store.set({
+        overlayError: '',
+        overlayLoading: false
+      });
+    }
+    else
+    {
+      // release screen-wake lock
+      this.wakeLock?.release();
+
+      this.hide();
+    }
   }
 
   createRoom()
@@ -216,32 +240,19 @@ class RoomOverlay extends StoreComponent
 
     const params = new URL(document.URL).searchParams;
 
-    // show a loading indictor
-    this.loadingVisibility(true);
+    this.store.set({ overlayLoading: true });
 
     sendMessage('create', { username }).then(() =>
     {
-      // hide the loading indictor
-      this.loadingVisibility(false);
-
+      // spoof a match request for testing purposes
       if (params.has('match'))
         setTimeout(() => optionsRef.current?.matchRequest(), 1500);
 
-      // request a screen wake lock
-      navigator.wakeLock?.request('screen')
-        .then(wl => this.wakeLock = wl)
-        .catch(e => e);
-
       // show the room overlay
-      overlayRef.current.snapTo({ index: 0 });
-    }).catch((err) =>
-    {
-      // hide the loading indictor
-      this.loadingVisibility(false);
-
-      // show an error message
-      this.showErrorMessage(translation(err) || err);
-    });
+      this.store.set({
+        overlayVisible: true
+      }, () => interactableRef.current?.snapTo({ index: 1 }));
+    }).catch(err => this.errorScreen(translation(err) ?? err));
   }
 
   joinRoom(id)
@@ -251,75 +262,58 @@ class RoomOverlay extends StoreComponent
     if (typeof id !== 'string')
       id = undefined;
 
-    // show a loading indictor
-    this.loadingVisibility(true);
+    this.store.set({ overlayLoading: true });
 
     sendMessage('join', { id, username }).then(() =>
     {
-      // hide the loading indictor
-      this.loadingVisibility(false);
-
-      // request a screen wake lock.
-      navigator.wakeLock?.request('screen')
-        .then(wl => this.wakeLock = wl)
-        .catch(e => e);
-      
       // show the room overlay
-      overlayRef.current.snapTo({ index: 0 });
-    }).catch((err) =>
-    {
-      // hide the loading indictor
-      this.loadingVisibility(false);
-
-      // show an error message
-      this.showErrorMessage(translation(err) || err);
-    });
+      this.store.set({
+        overlayVisible: true
+      }, () => interactableRef.current?.snapTo({ index: 1 }));
+    }).catch(err => this.errorScreen(translation(err) ?? err));
   }
 
-  leaveRoom()
+  errorScreen(overlayError)
   {
-    sendMessage('leave').then(() => this.closeOverlay)
-      .catch(console.error);
-  }
-
-  closeOverlay()
-  {
-    // refresh rooms list
-    this.props.requestRooms();
-
-    // release screen wake lock
-    this.wakeLock?.release();
-
-    this.wakeLock = undefined;
-
-    // reset room options scroll
-    optionsRef.current?.scrollTo({ top: 0 });
-
-    // after leaving the room
     this.store.set({
-      blanks: [],
-      entries: [],
-      matchState: undefined,
-      dirtyOptions: undefined,
-      roomData: undefined
+      overlayLoading: false,
+      overlayError: overlayError
     });
   }
 
-  showErrorMessage(err)
+  hide(e)
   {
-    this.store.set({ overlayErrorMessage: err });
-  }
+    if (!this.state.overlayVisible)
+      return;
 
-  loadingVisibility(visible)
-  {
-    this.store.set({ overlayLoadingHidden: visible = !visible });
-  }
+    if (e?.key === 'Escape')
+    {
+      interactableRef.current?.snapTo({ index: 0 });
+    }
+    else if (!e)
+    {
+      sendMessage('leave').catch(console.warn);
 
-  handlerVisibility(visible)
-  {
-    // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
-    this.store.set({ overlayHandlerVisible: visible },
-      () => requestAnimationFrame(() => this.forceUpdate(() => overlayRef.current.snapTo({ index: 0 }))));
+      // refresh rooms list
+      this.props.requestRooms();
+  
+      // reset room options scroll
+      optionsRef.current?.scrollTo({ top: 0 });
+  
+      // after leaving the room
+      this.store.set({
+        blanks: [],
+        entries: [],
+
+        overlayError: '',
+        overlayLoading: false,
+        overlayVisible: false,
+        
+        matchState: undefined,
+        dirtyOptions: undefined,
+        roomData: undefined
+      });
+    }
   }
   
   /**
@@ -374,85 +368,80 @@ class RoomOverlay extends StoreComponent
   {
     const { size } = this.props;
 
+    const {
+      overlayError,
+      overlayLoading,
+      overlayHandler,
+      overlayOpacity,
+      overlayVisible
+    } = this.state;
+
     const onMovement = ({ x }) =>
     {
       this.store.set({
-        overlayHolderOpacity: 1 - (x / (size.width * 2))
-      });
-
-      // hide the overlay and overlay holder when they are off-screen
-      this.store.set({
-        overlayHidden: x >= size.width ? true : false
+        overlayOpacity: 1 - (x / size.width)
       });
     };
 
-    const onSnapEnd = (index) =>
-    {
-      if (index === 1)
-        this.leaveRoom();
-    };
+    // <Notifications notifications={ this.state.notifications }/>
 
-    return <div>
-      <Notifications notifications={ this.state.notifications }/>
+    return <>
+      {
+        overlayLoading ? <div className={ styles.loading }>
+          <LoadingIcon/>
+        </div> : undefined
+      }
 
-      <div style={ {
-        display: this.state.overlayLoadingHidden ? 'none' : ''
-      } } className={ styles.loading }
-      />
+      {
+        overlayError ? <div className={ styles.error } onClick={ () => this.errorScreen() }>
+          { overlayError }
+        </div> : undefined
+      }
 
-      <div className={ styles.error } style={ {
-        display: (this.state.overlayErrorMessage) ? '' : 'none'
-      } } onClick={ () => this.showErrorMessage('') }>
-        <div>{ this.state.overlayErrorMessage }</div>
-      </div>
+      <div className={ styles.wrapper } data-visible={ overlayVisible }>
 
-      <div style={ {
-        zIndex: 1,
-        display: this.state.overlayHidden ? 'none' : '',
-        opacity: this.state.overlayHolderOpacity || 0
-      } } className={ styles.holder }/>
+        <div style={ { opacity: overlayOpacity } }/>
 
-      <Interactable
-        ref={ overlayRef }
+        <Interactable
+          ref={ interactableRef }
 
-        style={ {
-          zIndex: 1,
+          style={ {
+            display: 'flex',
+            position: 'fixed',
 
-          position: 'fixed',
-          display: this.state.overlayHidden ? 'none' : '',
+            width: '100vw',
+            height: '100vh'
+          } }
 
-          backgroundColor: colors.whiteBackground,
-          
-          width: this.state.overlayHandlerVisible ? '100vw' : 'calc(100vw + 18px)'
-        } }
+          dragEnabled={ overlayHandler }
 
-        horizontalOnly={ true }
-        
-        dragEnabled={ this.state.overlayHandlerVisible }
+          horizontalOnly={ true }
 
-        frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
+          frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
-        initialPosition={ { x: size.width } }
-          
-        boundaries={ {
-          left: this.state.overlayHandlerVisible ? 0 : -18,
-          right: size.width
-        } }
+          boundaries={ {
+            left: 0,
+            right: size.width
+          } }
 
-        snapPoints={ [ { x: this.state.overlayHandlerVisible ? 0 : -18 }, { x: size.width } ] }
+          initialPosition={ { x: size.width } }
 
-        triggers={ [ { x: size.width * 0.25, index: 1 } ] }
+          snapPoints={ [ { x: size.width }, { x: 0 } ] }
 
-        onMovement={ onMovement }
-        onSnapEnd={ onSnapEnd }
-      >
-        <div className={ styles.wrapper }>
-          <div className={ styles.handlerWrapper }>
-            <div className={ styles.handler }/>
+          triggers={ [ { x: size.width * 0.25, index: 0 } ] }
+
+          onMovement={ onMovement }
+          onSnapEnd={ this.onSnapEnd }
+        >
+
+          <div className={ styles.handler } data-visible={ overlayHandler }>
+            <div/>
           </div>
 
           <div className={ styles.container }>
+
             <RoomState addNotification={ this.addNotification }/>
+
             <RoomTrackBar/>
 
             <HandOverlay size={ size }/>
@@ -462,9 +451,9 @@ class RoomOverlay extends StoreComponent
               <RoomOptions ref={ optionsRef } addNotification={ this.addNotification }/>
             </div>
           </div>
-        </div>
-      </Interactable>
-    </div>;
+        </Interactable>
+      </div>
+    </>;
   }
 }
 
@@ -474,117 +463,132 @@ RoomOverlay.propTypes = {
   username: PropTypes.string
 };
 
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
+
 const styles = createStyle({
   wrapper: {
-    display: 'grid',
-    
-    backgroundColor: colors.trackBarBackground,
+    zIndex: 4,
+    position: 'fixed',
 
-    gridTemplateColumns: '18px 1fr',
-    gridTemplateRows: '100vh',
-    gridTemplateAreas: '"handler ."',
+    width: '100vw',
+    height: '100vh',
 
-    width: '100%',
-    height: '100%',
-    
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      gridTemplateColumns: '18px calc(100% - 18px)',
-      gridTemplateAreas: '"handler ."',
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-      backgroundColor: colors.whiteBackground
-    }
-  },
+    '[data-visible="false"]': {
+      display: 'none'
+    },
 
-  container: {
-    display: 'grid',
+    '> :nth-child(1)': {
+      position: 'absolute',
+      backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
-    gridTemplateColumns: '15vw 1fr',
-    gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"state content" "trackBar content"',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      gridTemplateColumns: '100%',
-
-      gridTemplateRows: 'auto auto 1fr',
-      gridTemplateAreas: '"state" "trackBar" "content"'
+      width: '100vw',
+      height: '100vh'
     }
   },
 
   loading: {
     zIndex: 1,
+
+    display: 'flex',
     position: 'fixed',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    color: opacity(colors.blackText, 0.5),
     backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
-    top: 0,
-
     width: '100vw',
-    height: '100vh'
+    height: '100vh',
+
+    '> svg': {
+      color: colors.blackText,
+      animation: waitingAnimation,
+
+      minWidth: '32px',
+      minHeight: '32px',
+      maxWidth: '64px',
+      maxHeight: '64px',
+      width: '5vw',
+      height: '5vw'
+    }
   },
 
   error: {
     extend: 'loading',
-    display: 'flex',
+    cursor: 'pointer',
 
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    textTransform: 'capitalize',
+    color: opacity(colors.error, 0.95),
 
     fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
-    cursor: 'pointer',
-    opacity: 0.85,
-
-    '> div': {
-      backgroundColor: colors.error,
-      color: colors.whiteText,
-  
-      padding: '6px',
-      borderRadius: '5px'
-    }
-  },
-
-  holder: {
-    position: 'fixed',
-    
-    backgroundColor: opacity(colors.whiteBackground, '0.95'),
-
-    top: 0,
-    width: '100vw',
-    height: '100vh'
-  },
-
-  handlerWrapper: {
-    gridArea: 'handler',
-
-    padding: '0 0 0 10px',
-    height: '100vh'
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   handler: {
-    cursor: 'pointer',
+    gridArea: 'handler',
 
-    position: 'relative',
-    backgroundColor: colors.handler,
+    backgroundColor: colors.whiteBackground,
 
-    top: 'calc(50vh - (5px + 5vh) / 2)',
-    width: '8px',
-    height: 'calc(5px + 5vh)',
+    height: '100vh',
+    padding: '0 0 0 10px',
 
-    minHeight: '32px',
-    maxHeight: '64px',
+    '[data-visible="false"]': {
+      display: 'none'
+    },
 
-    borderRadius: '8px'
+    '> div': {
+      cursor: 'pointer',
+  
+      position: 'relative',
+      backgroundColor: colors.handler,
+  
+      top: 'calc(50vh - (5px + 5vh) / 2)',
+      width: '8px',
+      height: 'calc(5px + 5vh)',
+  
+      minHeight: '32px',
+      maxHeight: '64px',
+  
+      borderRadius: '8px'
+    }
+  },
+
+  container: {
+    flexGrow: 1,
+
+    display: 'grid',
+
+    backgroundColor: colors.whiteBackground,
+
+    gridTemplateAreas: '"state content" "trackBar content"',
+    gridTemplateColumns: '15vw 1fr',
+    gridTemplateRows: 'auto 1fr',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 1080px)': {
+      gridTemplateAreas: '"state" "trackBar" "content"',
+      gridTemplateColumns: '100%',
+      gridTemplateRows: 'auto auto 1fr'
+    }
   },
 
   content: {
     position: 'relative',
-    gridArea: 'content',
-
-    backgroundColor: colors.whiteBackground
+    gridArea: 'content'
   }
 });
 

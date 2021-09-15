@@ -345,7 +345,6 @@ RoomState.propTypes = {
 
 const styles = createStyle({
   wrapper: {
-    zIndex: 3,
     gridArea: 'state',
 
     backgroundColor: colors.trackBarBackground,
@@ -368,7 +367,7 @@ const styles = createStyle({
     userSelect: 'none',
 
     color: colors.blackText,
-    
+
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
