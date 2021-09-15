@@ -13,7 +13,7 @@ import { io } from 'socket.io-client';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
+import { holdSplashScreen, hideSplashScreen } from '../index.js';
 
 import getTheme, { detectDeviceIsDark } from '../colors.js';
 
@@ -148,15 +148,11 @@ class Game extends React.Component
   {
     super();
 
-    // check if loading screen is visible
-    // if true then hold it
-    // if false then remount it
-    if (!holdLoadingScreen())
-      remountLoadingScreen();
+    holdSplashScreen();
 
     this.state = {
-      loadingHidden: true,
-      errorMessage: '',
+      error: '',
+      loading: true,
 
       username: localStorage.getItem('username')?.trim(),
       usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names')),
@@ -191,7 +187,7 @@ class Game extends React.Component
       {
         this.requestRooms();
         
-        hideLoadingScreen();
+        hideSplashScreen();
       })
       .catch(err => errorScreen(translation(err?.message ?? err)));
   }
@@ -249,25 +245,21 @@ class Game extends React.Component
   requestRooms()
   {
     // show a loading indictor
-    this.loadingVisibility(true);
+    this.setState({ loading: true });
 
     sendMessage('list', 60000)
       .then(rooms =>
       {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // update the UI
         this.setState({
-          rooms: rooms
+          rooms,
+          loading: false
         });
       }).catch(err =>
       {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // show an error message
-        this.showErrorMessage(translation(err) || err);
+        this.setState({
+          loading: false,
+          error: translation(err) ?? err
+        });
       });
   }
 
@@ -312,19 +304,11 @@ class Game extends React.Component
     socket.hidden = document.hidden;
   }
 
-  showErrorMessage(err)
-  {
-    this.setState({ errorMessage: err });
-  }
-
-  loadingVisibility(visible)
-  {
-    this.setState({ loadingHidden: visible = !visible });
-  }
-
   render()
   {
     const { locale, translation } = this.props;
+
+    const { loading, error } = this.state;
 
     const Header = () => <div className={ headerStyles.container } style={ { direction: locale.direction } }>
       { translation('username-prefix') }
@@ -370,55 +354,44 @@ class Game extends React.Component
     </div>;
 
     const Rooms = () => <div className={ roomsStyles.container }>
-      <div className={ roomsStyles.roomsWrapper }>
-        <div style={ {
-          display: this.state.loadingHidden ? 'none' : ''
-        } } className={ roomsStyles.loading }
-        >
-          <div className={ roomsStyles.loadingSpinner }/>
-        </div>
+      <div className={ roomsStyles.wrapper }>
 
-        <div className={ roomsStyles.error } style={ {
-          display: this.state.errorMessage ? '' : 'none'
-        } } >
-          { this.state.errorMessage }
-        </div>
+        {
+          loading ? <div className={ roomsStyles.loading }>
+            <div/>
+          </div> : undefined
+        }
 
-        <div
-          className={ roomsStyles.roomsContainer }
-          style={ {
-            direction: locale.direction,
-            display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none'
-          } }
-        >
+        {
+          error ? <div className={ roomsStyles.error }>
+            { error }
+          </div> : undefined
+        }
+
+        <div className={ roomsStyles.rooms } style={ { direction: locale.direction } } data-empty={ translation('no-rooms-available') }>
           {
-            this.state.rooms.length <= 0 ?
-              <div className={ roomsStyles.indicator }>
-                { translation('no-rooms-available') }
-              </div>
-              :
-              this.state.rooms.map((room, i) =>
-              {
-                return <div key={ i } className={ roomsStyles.room } onClick={ () => overlayRef.current.joinRoom(room.id) }>
-                  <div className={ roomsStyles.highlights } style={ { direction: locale.direction } }>
+            this.state.rooms.map((room, i) =>
+            {
+              return <div key={ i } className={ roomsStyles.room } onClick={ () => overlayRef.current.joinRoom(room.id) }>
+                <div className={ roomsStyles.highlights } style={ { direction: locale.direction } }>
                     
-                    <div className={ roomsStyles.counter }>
-                      <div>{ room.players }</div>
-                      <div>/</div>
-                      <div>{ room.options.maxPlayers }</div>
-                    </div>
-
-                    { Highlights(room) }
+                  <div className={ roomsStyles.counter }>
+                    <div>{ room.players }</div>
+                    <div>/</div>
+                    <div>{ room.options.maxPlayers }</div>
                   </div>
 
-                  <div className={ roomsStyles.cover }>
-                    <div className={ roomsStyles.coverShadow }/>
-                    <div className={ roomsStyles.coverBackground }>
-                      <div className={ roomsStyles.coverTitle }>{ room.master }</div>
-                    </div>
+                  { Highlights(room) }
+                </div>
+
+                <div className={ roomsStyles.cover }>
+                  <div className={ roomsStyles.coverShadow }/>
+                  <div className={ roomsStyles.coverBackground }>
+                    <div className={ roomsStyles.coverTitle }>{ room.master }</div>
                   </div>
-                </div>;
-              })
+                </div>
+              </div>;
+            })
           }
         </div>
       </div>
@@ -461,20 +434,18 @@ class Game extends React.Component
 
       <ShareOverlay ref={ shareRef } size={ this.state.size }/>
 
-      <div className={ mainStyles.container }>
-
-        { Header() }
-        { Options() }
-        { Rooms() }
-
-      </div>
-
       <RoomOverlay
         ref={ overlayRef }
         size={ this.state.size }
         requestRooms={ this.requestRooms }
         username={ this.state.username ?? this.state.usernameRandomized }
       />
+
+      <div className={ mainStyles.container }>
+        { Header() }
+        { Options() }
+        { Rooms() }
+      </div>
     </div>;
   }
 }
@@ -484,6 +455,20 @@ Game.propTypes =
   translation: PropTypes.func,
   locale: PropTypes.object
 };
+
+const waitingAnimation = createAnimation({
+  duration: '2s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const mainStyles = createStyle({
   wrapper: {
@@ -639,7 +624,7 @@ const roomsStyles = createStyle({
     padding: '10px 3vw 0 3vw'
   },
 
-  roomsWrapper: {
+  wrapper: {
     position: 'relative',
     
     overflowX: 'hidden',
@@ -659,69 +644,56 @@ const roomsStyles = createStyle({
     }
   },
 
-  roomsContainer: {
+  rooms: {
     display: 'grid',
 
     gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
     gridTemplateRows: 'min-content',
     justifyContent: 'space-around',
 
-    rowGap: 'calc(15px + 2.5vh)'
-  },
+    rowGap: 'calc(15px + 2.5vh)',
 
-  indicator: {
-    display: 'flex',
-    position: 'absolute',
+    ':empty': {
+      display: 'block',
+      height: '100%',
 
-    justifyContent: 'center',
-    alignItems: 'center',
+      ':after': {
+        content: 'attr(data-empty)',
 
-    width: '100%',
-    height: '100%',
-    
-    fontWeight: 700
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        height: '100%',
+        fontWeight: '700'
+      }
+    }
   },
 
   loading: {
-    zIndex: 1,
     display: 'flex',
     position: 'absolute',
 
     alignItems: 'center',
     justifyContent: 'center',
 
+    width: '100%',
+    height: '100%',
+
     backgroundColor: colors.whiteBackground,
 
-    top: 0,
-    width: '100%',
-    height: '100%'
-  },
+    '> div': {
+      width: '30px',
+      height: '30px',
 
-  loadingSpinner: {
-    backgroundColor: 'transparent',
-
-    paddingBottom: '30px',
-    width: '30px',
-
-    border: `10px ${colors.blackText} solid`,
-
-    animation: createAnimation({
-      duration: '2s',
-      timingFunction: 'ease',
-      iterationCount: 'infinite',
-      keyframes: {
-        from: {
-          transform: 'rotate(0deg)'
-        },
-        to: {
-          transform: 'rotate(360deg)'
-        }
-      }
-    })
+      border: `10px ${colors.blackText} solid`,
+      animation: waitingAnimation
+    }
   },
 
   error: {
     extend: 'loading',
+    cursor: 'pointer',
     
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'

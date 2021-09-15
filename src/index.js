@@ -16,7 +16,7 @@ import { setFeatures } from './flags.js';
 
 import { createStore, getStore } from './store.js';
 
-import LoadingScreen from './components/loading.js';
+import SplashScreen from './components/splash.js';
 import ErrorScreen from './components/error.js';
 
 import NotFound from './screens/404.js';
@@ -24,8 +24,8 @@ import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
 
-let visibleLoading = true;
-let keepLoading = false;
+let holdSplash = false;
+let splashVisibility = true;
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
@@ -46,31 +46,23 @@ function loaded()
       </Switch>
     </Router>;
 
-  ReactDOM.render(pages, app, () =>
-  {
-    if (!keepLoading)
-      hideLoadingScreen();
-  });
+  ReactDOM.render(pages, app, holdSplash ? undefined : hideSplashScreen);
 }
 
-export function holdLoadingScreen()
+export function holdSplashScreen()
 {
-  return visibleLoading ? keepLoading = true : false;
+  if (splashVisibility)
+    holdSplash = true;
+  else
+    ReactDOM.render(<SplashScreen onlyText/>, placeholder);
+
 }
 
-export function remountLoadingScreen()
+export function hideSplashScreen()
 {
-  ReactDOM.render(<LoadingScreen/>, placeholder);
-}
-
-export function hideLoadingScreen()
-{
-  // will cause an issue if more than one component are holding the loading
-  // incase that happens an ID system for every hold will be the most efficient
-
+  splashVisibility = false;
+  
   ReactDOM.unmountComponentAtNode(placeholder);
-
-  visibleLoading = false;
 }
 
 // register the service worker
@@ -81,7 +73,7 @@ navigator.serviceWorker?.register('sw.js')
 createStore();
 
 // show a loading screen until the promises resolve
-ReactDOM.render(<LoadingScreen splash/>, placeholder);
+ReactDOM.render(<SplashScreen/>, placeholder);
 
 // set the endpoint to the production server
 // istanbul ignore if

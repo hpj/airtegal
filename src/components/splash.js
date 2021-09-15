@@ -10,21 +10,21 @@ import { useTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
-const Loading = ({ splash }) =>
+const SplashScreen = ({ onlyText }) =>
 {
   const { translation } = useTranslation();
 
   return <div className={ styles.container }>
     {
-      splash ?
-        <div className={ styles.splash }><div/></div> :
-        <div className={ styles.loading }>{ translation('airtegal') }</div>
+      onlyText ?
+        <div className={ styles.text }>{ translation('airtegal') }</div> :
+        <div className={ styles.splash }><div/></div>
     }
   </div>;
 };
 
-Loading.propTypes = {
-  splash: PropTypes.bool
+SplashScreen.propTypes = {
+  onlyText: PropTypes.bool
 };
 
 const styles = createStyle({
@@ -63,7 +63,7 @@ const styles = createStyle({
     }
   },
 
-  loading: {
+  text: {
     fontWeight: '700',
     fontSize: 'calc(18px + 0.8vw + 0.8vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
@@ -75,5 +75,5 @@ const styles = createStyle({
   }
 });
 
-export default Loading;
+export default SplashScreen;
 
