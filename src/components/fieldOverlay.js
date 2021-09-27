@@ -182,6 +182,15 @@ class FieldOverlay extends StoreComponent
         snapPoints={ [ { x: size.width }, { x: 0 } ] }
       >
         <div className={ styles.wrapper }>
+
+          <div className={ styles.indicator } style={ { direction: locale.direction } }>
+            {
+              !playerState ? translation('spectating') :
+                roomData?.phase === 'picking' && playerState === 'judging' ? translation('judging') :
+                  undefined
+            }
+          </div>
+          
           {
             gameMode === 'kuruit' ?
               <div id={ 'kuruit-field-overlay' } className={ styles.container } style={ { direction: locale.direction } }>
@@ -262,18 +271,43 @@ const styles = createStyle({
     position: 'relative',
     backgroundColor: colors.fieldBackground,
 
-    left: '10px',
     height: '100%',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      left: '0',
       width: '100%'
     },
 
     '::-webkit-scrollbar':
     {
       width: 0
+    }
+  },
+
+  indicator: {
+    display: 'flex',
+    position: 'relative',
+    justifyContent: 'center',
+
+    userSelect: 'none',
+
+    color: colors.blackText,
+    backgroundColor: colors.trackBarBackground,
+  
+    fontSize: 'calc(6px + 0.35vw + 0.35vh)',
+
+    padding: '10px',
+
+    transition: 'padding 0.25s ease-in-out',
+
+    ':empty': {
+      height: 0,
+      padding: 0
+    },
+  
+    // for the portrait overlay
+    '@media screen and (max-width: 1080px)': {
+      padding: '10px 15px'
     }
   },
 
@@ -294,7 +328,7 @@ const styles = createStyle({
     ':after': {
       content: '""',
       position: 'absolute',
-      backgroundColor: colors.entryLine,
+      backgroundColor: colors.fieldGroupLine,
       left: '2.5vw',
       top: 'calc(50% - 1px)',
       width: 'calc(100% - 5vw)',

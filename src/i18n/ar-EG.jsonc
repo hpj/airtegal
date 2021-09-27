@@ -32,8 +32,6 @@
   "create-room": "اعمل روم",
   "random-room": "روم عشؤئية",
   
-  "spectating": "أنت بتتفرج بس",
-
   "available-rooms": "الرومات المتاحة",
 
   // app options
@@ -41,8 +39,6 @@
   "theme": "المظهر",
   "region": "المنطقة",
   "save": "حفظ",
-
-  "no-options": "لا يوجد نتائج",
 
   // random usernames
 
@@ -102,7 +98,6 @@
   "co-op": "فرق",
   
   "kuruit": "كروت",
-  "king": "ملك العشوئيات 2: العودة الديمقراطية",
   "qassa": "قصة",
 
   "match-options": "اعدادات الماتش",
@@ -151,20 +146,12 @@
   "judge-left": "الجولة أتلغت علشان القاضي خرج من الماتش.",
   "judge-timeout": "الجولة أتلغت علشان الوقت خلص.",
   
-  // match state
+  // states
 
-  "picking-phase": "اختر كرت من ايدك.",
-  "judging-phase": "اختر اكثر كرت خلاك تتضحك.",
-  "writing-phase": "املي الخانات مع فريقك.",
-
-  "wait-for-your-turn": "أستني دورك.",
-  "wait-until-judged": "أستني حكم القاضي.",
-
-  "you-won-the-round": "انت الي كسبت الجولة.",
-  "won-this-round": "%0 كسب الجولة.",
-
-  "limited:match-ended": "انتهت الجولات! %0",
-  "timer:match-ended": "انتهي الوقت! %0",
+  "judge": "القاضي",
+  "players": "باقي اللعيبة",
+  "spectating": "أنت بتتفرج بس.",
+  "judging": "استني دورك.",
 
   // sharing
 
@@ -174,8 +161,8 @@
 
   // homepage
 
-  // last updated 06 Sep, 2021
   "combos": [
+    // last updated 06 Sep, 2021
     {"combos":[{"type":"white","content":"الست الفي اعلانات الزبادي"}],"card":{"content":"عمرو اديب اكل _______ انهاردة علي الغداء.","type":"black"}},{"combos":[{"type":"white","content":"هتلر بيسحمي مع اثنين يهود"},{"type":"white","content":"الجنس مع انثي الفيل"}],"card":{"content":"في فليم أكشن الجديد السبكي بيحط _____ ضد _______.","type":"black"}},{"combos":[{"type":"white","content":"الزرافة بتاعت جنينه الحيوانات"}],"card":{"content":"اقترح حلاً لمشكلة التمييز ضد المراة.","type":"black"}},{"combos":[{"type":"white","content":"ابوة مات وامة تاهت"}],"card":{"content":"حاليا في الاسواق، السيرة الذاتية لـ _______.","type":"black"}},
     {"combos":[{"type":"white","content":"الموت"}],"card":{"content":"اشتري _______ دلوقتي وقول باي باي لكل مشاكلك الجنسية.","type":"black"}},{"combos":[{"type":"white","content":"رئيس بوركينا فاسو"}],"card":{"content":"ابوك مات يا ايهاب وساب ليك _______.","type":"black"}},{"combos":[{"type":"white","content":"كل الناس الي ينفع تتقتل"}],"card":{"content":"في برنامجة الجديد، رامز جلال بيحط الناس في ______.","type":"black"}},{"combos":[{"type":"white","content":"دقن محمد رمضان"}],"card":{"content":"لو سمحت، ممكن ارجع الوجبة بتاعتي، طعمها طعم _______.","type":"black"}},{"combos":[{"type":"white","content":"الشخاخ إلى الأبد"}],"card":{"content":"مصر تمتلك الكثير من ______.","type":"black"}},
     {"combos":[{"type":"white","content":"المخدرات"}],"card":{"content":"انا اسف يا دكتور بس معملتش الواجب علشان _____.","type":"black"}},{"combos":[{"type":"white","content":"بياكل بيبي"},{"type":"white","content":"الفخاد الفشيخة"}],"card":{"content":"قبل ما ______ يظهر، كان في ______.","type":"black"}},{"combos":[{"type":"white","content":"الشواذ"}],"card":{"content":"ايه الريحة دي؟","type":"black"}},{"combos":[{"type":"white","content":"الموت"}],"card":{"content":"لية لسه سهران لحد دلوقتي؟","type":"black"}},{"combos":[{"type":"white","content":"هتلر بيسحمي مع اثنين يهود"},{"type":"white","content":"الجنس مع انثي الفيل"}],"card":{"content":"في فليم أكشن الجديد السبكي بيحط _____ ضد _______.","type":"black"}},

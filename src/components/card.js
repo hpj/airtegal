@@ -244,7 +244,7 @@ const styles = createStyle({
     },
 
     '[data-winner="true"]': {
-      boxShadow: `5px 5px 0 0 ${colors.winner}, 5px 5px 10px 0 ${colors.winner}`
+      boxShadow: `5px 5px 0 0 ${colors.whiteCardHighlight}, 5px 5px 10px 0 ${colors.whiteCardHighlight}`
     },
 
     '[data-type="black"][data-allowed="true"]:hover': {

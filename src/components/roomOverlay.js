@@ -73,19 +73,15 @@ export let requestRoomData;
 * @typedef { Object } RoomOptionsT
 * @property { 'kuruit' | 'qassa' } gameMode
 * @property { 'limited' | 'timer' } endCondition
-* @property { {
-*    maxPlayers: number,
-*    maxRounds: number,
-*    maxTime: number,
-*    blankProbability: number,
-*    startingHandAmount: number,
-*    randos: boolean
-* } } match
-* @property { {
-*    delay: number,
-*    maxDelay: number,
-*    maxTime: number
-* } } round
+* @property { number } maxPlayers
+* @property { number } maxRounds
+* @property { number } maxTime
+* @property { number } blankProbability
+* @property { number } startingHandAmount
+* @property { number } randos
+* @property { number } roundDelay
+* @property { number } roundMaxDelay
+* @property { number } roundTime
 */
 
 /**
@@ -440,14 +436,13 @@ class RoomOverlay extends StoreComponent
 
           <div className={ styles.container }>
 
-            <RoomState addNotification={ this.addNotification }/>
+            <RoomState/>
 
             <RoomTrackBar/>
 
-            <HandOverlay size={ size }/>
-
             <div className={ styles.content }>
               <FieldOverlay size={ size }/>
+              <HandOverlay size={ size }/>
               <RoomOptions ref={ optionsRef } addNotification={ this.addNotification }/>
             </div>
           </div>
@@ -575,7 +570,7 @@ const styles = createStyle({
     backgroundColor: colors.whiteBackground,
 
     gridTemplateAreas: '"state content" "trackBar content"',
-    gridTemplateColumns: '15vw 1fr',
+    gridTemplateColumns: 'minmax(185px, 15vw) 1fr',
     gridTemplateRows: 'auto 1fr',
 
     // for the portrait overlay

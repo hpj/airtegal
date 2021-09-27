@@ -32,8 +32,6 @@
   "create-room": "",
   "random-room": "",
   
-  "spectating": "",
-
   "available-rooms": "",
 
   // app options
@@ -41,8 +39,6 @@
   "theme": "",
   "region": "",
   "save": "",
-
-  "no-options": "",
 
   // random usernames
 
@@ -61,7 +57,6 @@
   
   "user-does-not-have-permission": "",
   "minimal-number-of-players-required": "",
-
 
   // room id sharing
 
@@ -86,7 +81,6 @@
   "co-op": "",
   
   "kuruit": "",
-  "king": "",
   "qassa": "",
 
   "match-options": "",
@@ -134,21 +128,13 @@
   
   "judge-left": "",
   "judge-timeout": "",
-  
-  // match state
 
-  "picking-phase": "",
-  "judging-phase": "",
-  "writing-phase": "",
+  // states
 
-  "wait-for-your-turn": "",
-  "wait-until-judged": "",
-
-  "you-won-the-round": "",
-  "won-this-round": "",
-
-  "limited:match-ended": "",
-  "timer:match-ended": "",
+  "judge": "",
+  "players": "",
+  "spectating": "",
+  "judging": "",
 
   // sharing
 

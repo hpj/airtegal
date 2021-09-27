@@ -416,11 +416,11 @@ class Game extends React.Component
         if (room.options.blankProbability > 0)
           highlights.push(`%${room.options.blankProbability} ${translation('blank-probability-lobby')}.`);
       }
-      else if (gameMode === 'qassa')
-      {
-        highlights.push(`${translation('max-groups', 3, true)}.`);
-        highlights.push(`${translation('max-stories', 3, true)}.`);
-      }
+      // else if (gameMode === 'qassa')
+      // {
+      //   highlights.push(`${translation('max-groups', 3, true)}.`);
+      //   highlights.push(`${translation('max-stories', 3, true)}.`);
+      // }
 
       return <div>
         {

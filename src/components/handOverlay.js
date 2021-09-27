@@ -253,50 +253,46 @@ class HandOverlay extends StoreComponent
 
         initialPosition={ { y: size.height } }
       >
-        <div className={ styles.overlayWrapper }>
-          <div className={ styles.overlayContainer }>
+        <div className={ styles.container }>
               
-            <div id={ 'kuruit-hand-handler' } className={ styles.handler }>
-              <div/>
-            </div>
+          <div id={ 'kuruit-hand-handler' } className={ styles.handler }>
+            <div/>
+          </div>
 
-            <div ref={ wrapperRef } className={ styles.wrapper } style={ {
-              height: !isTouchScreen ? handViewport?.height : undefined
-            } } onScroll={ this.onScroll }>
+          <div ref={ wrapperRef } className={ styles.wrapper } style={ {
+            height: !isTouchScreen ? handViewport?.height : undefined
+          } } onScroll={ this.onScroll }>
 
-              <div id={ 'kuruit-hand-overlay' } className={ styles.container } style={ {
-                direction: locale.direction,
-                flexWrap: miniView ? 'wrap' : undefined
-              } }>
+            <div id={ 'kuruit-hand-overlay' } className={ styles.cards } style={ {
+              direction: locale.direction,
+              flexWrap: miniView ? 'wrap' : undefined
+            } }>
+              {
+                hand?.map((card, i) =>
                 {
-                  hand?.map((card, i) =>
-                  {
-                    const deg = i > hand.length * 0.5 ?
-                      -(hand.length / 2) :
-                      (hand.length / 2);
+                  const deg = i > hand.length * 0.5 ?
+                    -(hand.length / 2) :
+                    (hand.length / 2);
 
-                    const y = i > hand.length * 0.5 ?
-                      (hand.length / 3) :
-                      -(hand.length / 3);
+                  const y = i > hand.length * 0.5 ?
+                    (hand.length / 3) :
+                    -(hand.length / 3);
 
-                    return <Card
-                      key={ card.key }
-                      style={ {
-                        marginLeft: !miniView ? margin : undefined,
-                        marginRight: !miniView ? margin : undefined,
-                        transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
-                      } }
-                      onClick={ (c) => this.activateCard(c, card, i) }
-                      allowed={ true }
-                      type={ card.type }
-                      blank={ card.blank }
-                      content={ card.content }/>;
-                  })
-                }
-              </div>
-            
+                  return <Card
+                    key={ card.key }
+                    style={ {
+                      marginLeft: !miniView ? margin : undefined,
+                      marginRight: !miniView ? margin : undefined,
+                      transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
+                    } }
+                    onClick={ (c) => this.activateCard(c, card, i) }
+                    allowed={ true }
+                    type={ card.type }
+                    blank={ card.blank }
+                    content={ card.content }/>;
+                })
+              }
             </div>
-          
           </div>
         </div>
       </Interactable>
@@ -313,21 +309,11 @@ HandOverlay.propTypes = {
 const styles = createStyle({
   view: {
     position: 'absolute',
-    width: '100vw',
-    height: '100vh'
+    height: '100%',
+    width: '100%'
   },
 
-  overlayWrapper: {
-    // margin to avoid the trackbar
-    margin: '0 0 0 15vw',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      margin: 0
-    }
-  },
-
-  overlayContainer: {
+  container: {
     overflow: 'hidden',
     backgroundColor: colors.handBackground,
 
@@ -351,9 +337,7 @@ const styles = createStyle({
     margin: '15px',
 
     '> div': {
-      cursor: 'pointer',
       backgroundColor: colors.handler,
-  
       width: 'calc(35px + 2.5%)',
       height: '6px',
       borderRadius: '6px'
@@ -376,7 +360,7 @@ const styles = createStyle({
     }
   },
 
-  container: {
+  cards: {
     display: 'flex',
     justifyContent: 'center',
 

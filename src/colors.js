@@ -18,6 +18,10 @@ export default function()
   const lightTheme = {
     theme: 'light',
     
+    transparent: 'transparent',
+
+    error: '#ad1818',
+
     whiteText: '#ffffff',
     whiteBackground: '#ffffff',
    
@@ -38,6 +42,7 @@ export default function()
     optionsScrollbar: '#867878',
 
     fieldBackground: '#2f2e2e',
+    fieldGroupLine: '#ffffff',
     fieldScrollbar: '#262626',
    
     handBackground: '#C4C4C4',
@@ -49,15 +54,8 @@ export default function()
 
     whiteCardBackground: '#ffffff',
     whiteCardForeground: '#000000',
-    whiteCardHover: '#000000',
-    
-    winner: '#d4af37',
-
-    error: '#ad1818',
-    
-    entryLine: '#ffffff',
-
-    transparent: 'transparent'
+    whiteCardHighlight: '#d4af37',
+    whiteCardHover: '#000000'
   };
 
   const darkTheme = {
@@ -82,6 +80,7 @@ export default function()
     optionsScrollbar: '#3d3a3a',
 
     fieldBackground: '#191818',
+    fieldGroupLine: '#696060',
     fieldScrollbar: '#c3c3c3',
 
     handBackground: '#292929',
@@ -93,9 +92,7 @@ export default function()
 
     whiteCardBackground: '#989898',
     whiteCardForeground: '#040404',
-    whiteCardHover: '#696060',
-
-    entryLine: '#696060'
+    whiteCardHover: '#696060'
   };
 
   return dark ? darkTheme : lightTheme;
