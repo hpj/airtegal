@@ -13,9 +13,9 @@ import { io } from 'socket.io-client';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import { holdSplashScreen, hideSplashScreen } from '../index.js';
-
 import getTheme, { detectDeviceIsDark } from '../colors.js';
+
+import { ensureSplashScreen, hideSplashScreen } from '../index.js';
 
 import { sendMessage } from '../utils.js';
 
@@ -77,7 +77,7 @@ function connect()
   {
     try
     {
-      let resolved = false;
+      let connected = false;
 
       socket = process.env.NODE_ENV === 'test' ? mocks.socket :
         io(process.env.API_ENDPOINT, {
@@ -87,33 +87,21 @@ function connect()
             region: locale().value
           } });
 
-      socket.once('connect', () =>
+      socket.once('connected', username =>
       {
-        setTimeout(() =>
-        {
-          if (socket.connected)
-          {
-            resolved = true;
+        connected = true;
 
-            resolve();
-          }
-        }, 100);
+        resolve(username);
       });
 
-      const fail = (err) =>
+      const fail = err =>
       {
-        if (!resolved)
-        {
-          resolved = true;
-
-          reject(err);
-        }
-        else
-        {
-          errorScreen(translation(err));
-        }
+        if (connected)
+          return;
 
         socket.close();
+
+        reject(err);
       };
 
       socket.once('error', fail);
@@ -123,10 +111,8 @@ function connect()
       // connecting timeout
       setTimeout(() =>
       {
-        if (socket.connected)
+        if (connected)
           return;
-        
-        resolved = true;
 
         socket.close();
 
@@ -148,14 +134,11 @@ class Game extends React.Component
   {
     super();
 
-    holdSplashScreen();
-
     this.state = {
       error: '',
       loading: true,
 
-      username: localStorage.getItem('username')?.trim(),
-      usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names')),
+      username: localStorage.getItem('username')?.trim() ?? '',
 
       size: {
         width: window.innerWidth,
@@ -179,31 +162,27 @@ class Game extends React.Component
     // fix the scroll position
     window.scrollTo(0, 0);
 
+    ensureSplashScreen();
+
     // connect to the socket io server
     connect()
       // if app connected successfully
       // hide the loading screen
-      .then(() =>
+      .then(username =>
       {
+        // if user has no saved username
+        // then give them the username the server picked randomly
+        this.setState({
+          username: this.state.username || username
+        }, () =>
+        {
+          usernameRef.current?.resize();
+          hideSplashScreen();
+        });
+
         this.requestRooms();
-        
-        hideSplashScreen();
       })
       .catch(err => errorScreen(translation(err?.message ?? err)));
-  }
-
-  stupidName(firstNames, lastNames)
-  {
-    if (process.env.NODE_ENV === 'test')
-    {
-      firstNames = [ 'اسلام' ];
-      lastNames = [ 'المرج' ];
-    }
-  
-    const first = firstNames[Math.floor(Math.random() * firstNames.length)];
-    const last = lastNames[Math.floor(Math.random() * lastNames.length)];
-  
-    return `${first} ${last}`;
   }
 
   componentDidMount()
@@ -233,13 +212,6 @@ class Game extends React.Component
   {
     window.removeEventListener('resize', this.resize);
     window.removeEventListener('dragstart', this.disableDrag);
-  }
-
-  onLocaleChange(translation)
-  {
-    this.setState({
-      usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names'))
-    }, usernameRef.current?.resize);
   }
 
   requestRooms()
@@ -298,10 +270,8 @@ class Game extends React.Component
 
     // reload the page if we lost connection while
     // the app was in the background
-    if (!document.hidden && socket.hidden && socket.disconnected)
+    if (!document.hidden && !socket.connected)
       window.location.reload();
-    
-    socket.hidden = document.hidden;
   }
 
   render()
@@ -322,7 +292,7 @@ class Game extends React.Component
         style={ { direction: locale.direction } }
         maxLength={ 18 }
         placeholder={ translation('username-placeholder') }
-        value={ this.state.username ?? this.state.usernameRandomized }
+        value={ this.state.username }
         onUpdate={ (value, resize, blur) =>
         {
           const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');

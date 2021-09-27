@@ -72,8 +72,8 @@ function off(event, listener)
 function once(event, listener)
 {
   // mock connecting to the server
-  if (event === 'connect')
-    listener();
+  if (event === 'connected')
+    listener('اسلام المرج');
 
   return socket;
 }

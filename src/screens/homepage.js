@@ -8,6 +8,8 @@ import { createStyle, createAnimation } from 'flcss';
 
 import getTheme from '../colors.js';
 
+import { hideSplashScreen } from '../index.js';
+
 import { withTranslation } from '../i18n.js';
 
 import { shuffle, fillTheBlanks } from '../utils.js';
@@ -34,6 +36,8 @@ class Homepage extends React.Component
 
   componentDidMount()
   {
+    hideSplashScreen();
+    
     // disable any dragging functionality in the app
     window.addEventListener('dragstart', this.disableDrag);
   }

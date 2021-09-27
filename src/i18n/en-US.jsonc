@@ -40,14 +40,6 @@
   "region": "",
   "save": "",
 
-  // random usernames
-
-  "stupid-first-names": [
-  ],
-
-  "stupid-last-names": [
-  ],
-
   // matchmaking errors
 
   "no-rooms-available": " ",

@@ -40,37 +40,12 @@
   "region": "المنطقة",
   "save": "حفظ",
 
-  // random usernames
-
-  "stupid-first-names": [
-    "اسلام",
-    "ابو",
-    "ام",
-    "حمادة",
-    "حمار",
-    "حاحا",
-    "خدام",
-    "فشيخ",
-    "عنتيل"
-  ],
-
-  "stupid-last-names": [
-    "المرج",
-    "السمكة",
-    "الاهبل",
-    "الفقير",
-    "الزبالة",
-    "البقرة",
-    "الشبح",
-    "المزة"
-  ],
-
   // matchmaking errors
 
   "no-rooms-available": "مفيش رومات",
   "room-does-not-exists": "الروم دي مش موجودة",
   
-  "request-has-wrong-parameters": "حطيت اسمك هناك؟",
+  "request-has-wrong-parameters": "حطيت اسمك؟",
   
   "user-does-not-have-permission": "معندكش صلاحية تكمل العمليه دي",
   "minimal-number-of-players-required": "مفيش عدد كفاية من اللعيبة",

@@ -24,8 +24,7 @@ import Homepage from './screens/homepage.js';
 
 import Game from './screens/game.js';
 
-let holdSplash = false;
-let splashVisibility = true;
+let splashVisible = true;
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
@@ -46,21 +45,19 @@ function loaded()
       </Switch>
     </Router>;
 
-  ReactDOM.render(pages, app, holdSplash ? undefined : hideSplashScreen);
+  ReactDOM.render(pages, app);
 }
 
-export function holdSplashScreen()
+export function ensureSplashScreen()
 {
-  if (splashVisibility)
-    holdSplash = true;
-  else
+  if (!splashVisible)
     ReactDOM.render(<SplashScreen onlyText/>, placeholder);
 
 }
 
 export function hideSplashScreen()
 {
-  splashVisibility = false;
+  splashVisible = false;
   
   ReactDOM.unmountComponentAtNode(placeholder);
 }
