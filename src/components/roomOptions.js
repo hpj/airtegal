@@ -515,7 +515,7 @@ class RoomOptions extends StoreComponent
         {
           options ?
             <>
-              {/* <MatchHighlight ref={ highlightsRef }/> */}
+              <MatchHighlight ref={ highlightsRef }/>
 
               { GameModes() }
 
@@ -720,7 +720,7 @@ const styles = createStyle({
   },
 
   title: {
-    color: opacity(colors.greyText, 0.75),
+    opacity: 0.5,
     fontSize: 'calc(8px + 0.15vw + 0.15vh)',
     padding: '20px 25px'
   },

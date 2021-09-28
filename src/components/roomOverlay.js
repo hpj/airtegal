@@ -406,6 +406,8 @@ class RoomOverlay extends StoreComponent
 
           snapPoints={ [ { x: size.width }, { x: 0 } ] }
 
+          resistance={ { x: size.width * 0.05 } }
+
           triggers={ [ { x: size.width * 0.25, index: 0 } ] }
 
           onMovement={ onMovement }

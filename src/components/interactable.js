@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 *
 * @property { { x: number, y: number } } initialPosition
 * @property { { left: number, right: number, top: number, bottom: number } } boundaries
+* @property { { x: number, y: number} } resistance
 * @property { { x: number, y: number, index: number }[] } triggers
 * @property { { x: number, y: number, draggable: boolean }[] } snapPoints
 *
@@ -42,6 +43,7 @@ class Interactable extends React.Component
     this.lastSnapIndex = 0;
     
     this.isMouseDown = false;
+    
     this.isBeingDragged = false;
 
     this.dragStart = {
@@ -139,25 +141,11 @@ class Interactable extends React.Component
   */
   onDragStart(e)
   {
-    const { x, y } =  this.state;
-
     const { clientX, clientY } =  e.touches[0];
-
-    const dragEnabled = this.props.dragEnabled ?? true;
-    
-    if (!dragEnabled || this.animating)
-      return;
-
-    this.isBeingDragged = true;
 
     this.dragStart = {
       x: clientX,
       y: clientY
-    };
-
-    this.dragDiff = {
-      x: clientX - x,
-      y: clientY - y
     };
   }
 
@@ -166,13 +154,41 @@ class Interactable extends React.Component
   */
   onDrag(e)
   {
-    const { dragEnabled, initialPosition, verticalOnly, horizontalOnly } = this.props;
-    
-    if (!this.isBeingDragged)
-      return;
+    const { initialPosition, resistance, verticalOnly, horizontalOnly } = this.props;
+
+    const { left, right, top, bottom } = this.props.boundaries;
+
+    const { clientX, clientY, pageX, pageY } =  e.touches[0];
+
+    const dragEnabled = this.props.dragEnabled ?? true;
+
+    if (dragEnabled && !this.animating && !this.isBeingDragged)
+    {
+      if (horizontalOnly && resistance?.x && this.lastPoint.clientX - this.dragStart.x >= resistance.x)
+        this.isBeingDragged = true;
+      else if (verticalOnly && resistance?.y && this.lastPoint.clientY - this.dragStart.y >= resistance.y)
+        this.isBeingDragged = true;
+      else if (!resistance?.x && !resistance?.y)
+        this.isBeingDragged = true;
+
+      this.dragDiff = {
+        x: clientX - this.state.x,
+        y: clientY - this.state.y
+      };
+    }
+
+    const x = pageX - this.dragDiff.x;
+    const y = pageY - this.dragDiff.y;
+
+    this.lastPoint = {
+      clientX,
+      clientY,
+      x: verticalOnly ? this.state.x : Math.max(Math.min(x, right ?? x), left ?? x),
+      y: horizontalOnly ? this.state.y : Math.max(Math.min(y, bottom ?? y), top ?? y)
+    };
 
     // handle dragEnabled being false while isBeingDragged
-    if (!dragEnabled)
+    if (this.isBeingDragged && !dragEnabled)
     {
       this.isBeingDragged = false;
 
@@ -180,33 +196,19 @@ class Interactable extends React.Component
         this.snapTo({ index: this.lastSnapIndex });
       else
         this.snapTo({ point: initialPosition });
-
-      return;
     }
-
-    const { left, right, top, bottom } = this.props.boundaries;
-    
-    const { clientX, clientY, pageX, pageY } =  e.touches[0];
-
-    const x = pageX - this.dragDiff.x;
-    const y = pageY - this.dragDiff.y;
-
-    this.setState(this.lastPoint = {
-      clientX,
-      clientY,
-      x: verticalOnly ? this.state.x : Math.max(Math.min(x, right ?? x), left ?? x),
-      y: horizontalOnly ? this.state.y : Math.max(Math.min(y, bottom ?? y), top ?? y)
-    }, () => this.props.onMovement?.({ x: this.state.x, y: this.state.y }));
+    else if (this.isBeingDragged)
+    {
+      this.setState(this.lastPoint, () => this.props.onMovement?.({ x: this.state.x, y: this.state.y }));
+    }
   }
 
   onDragEnd()
   {
     const { verticalOnly, horizontalOnly, triggers, snapPoints } = this.props;
     
-    if (!snapPoints?.length || !this.isBeingDragged || !this.lastPoint)
+    if (!snapPoints?.length || !this.isBeingDragged)
       return;
-
-    this.isBeingDragged = false;
 
     const distance = p =>
     {
@@ -258,6 +260,29 @@ class Interactable extends React.Component
       // trigger a snap to the closest point
       this.snapTo({ index: closetIndex });
     }
+
+    // reset state
+
+    this.isMouseDown = false;
+    
+    this.isBeingDragged = false;
+
+    this.dragStart = {
+      x: 0,
+      y: 0
+    };
+
+    this.dragDiff = {
+      x: 0,
+      y: 0
+    };
+
+    this.lastPoint = {
+      clientX: 0,
+      clientY: 0,
+      x: 0,
+      y: 0
+    };
   }
 
   /**
@@ -297,14 +322,14 @@ class Interactable extends React.Component
     const yDuration = Math.abs((target.y - y) * (frame.every / frame.pixels));
     
     // longest duration
-    const duration = (xDuration >= yDuration) ? xDuration : yDuration;
+    const duration = xDuration >= yDuration ? xDuration : yDuration;
 
     // get pixels per frame based on the longest duration
     const xPerFrame = (target.x - x) / (duration / frame.every);
     const yPerFrame = (target.y - y) / (duration / frame.every);
 
-    const leftRight = (target.x > x) ? 'right' : 'left';
-    const upDown = (target.y > y) ? 'down' : 'up';
+    const leftRight = target.x > x ? 'right' : 'left';
+    const upDown = target.y > y ? 'down' : 'up';
 
     let counter = 0;
 
@@ -316,7 +341,7 @@ class Interactable extends React.Component
       {
         this.setState(target, () =>
         {
-          this.lastPoint = this.animating = false;
+          this.animating = false;
 
           this.props.onMovement?.(target);
 
@@ -345,8 +370,8 @@ class Interactable extends React.Component
 
     this.props.onSnapStart?.(index);
 
-    if (process.env.NODE_ENV === 'test')
-      counter = duration * 2;
+    // if (process.env.NODE_ENV === 'test')
+    //   counter = duration * 2;
 
     animate();
   }
@@ -395,6 +420,7 @@ Interactable.propTypes = {
 
   initialPosition: PropTypes.object,
   boundaries: PropTypes.object,
+  resistance: PropTypes.object,
   triggers: PropTypes.arrayOf(PropTypes.object),
   snapPoints: PropTypes.arrayOf(PropTypes.object),
 
