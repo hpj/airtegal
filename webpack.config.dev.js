@@ -24,7 +24,8 @@ module.exports = {
   plugins: [
     new DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.API_ENDPOINT': JSON.stringify('http://localhost:3000')
+      'process.env.API_ENDPOINT': JSON.stringify('http://localhost:3000'),
+      'process.env.RELEASE': JSON.stringify('')
     })
   ],
   devServer: {

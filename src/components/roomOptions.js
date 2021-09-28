@@ -174,15 +174,27 @@ class RoomOptions extends StoreComponent
   }
 
   // istanbul ignore next
-  copy()
+  async copy()
   {
     const { roomData } = this.state;
 
     const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
 
-    navigator.clipboard?.writeText(url)
-      .then(() => this.store.set({ optionsUrlCopied: true }))
-      .catch(console.warn);
+    try
+    {
+      await navigator.clipboard?.writeText(url);
+
+      this.store.set({ optionsUrlCopied: true });
+
+      clearTimeout(this.copyTimeout);
+
+      this.copyTimeout =
+        setTimeout(() => this.store.set({ optionsUrlCopied: false }), 3000);
+    }
+    catch (err)
+    {
+      console.warn(err);
+    }
   }
 
   onGameModeChange(value)
@@ -263,6 +275,33 @@ class RoomOptions extends StoreComponent
             <div className={ styles.gameMode }>{ translation(dirtyOptions.gameMode) }</div>
         }
       </div>;
+    };
+
+    const RoomUrl = () =>
+    {
+      return <>
+        <div className={ styles.title }>{ translation('room-url') }</div>
+
+        <div className={ styles.url }>
+          { url }
+        </div>
+
+        <div className={ styles.buttons }>
+          <div className={ styles.misc } onClick={ this.copy } data-copied={ optionsUrlCopied }>
+            <div>{ translation('copy') }</div>
+            <CopyIcon/>
+            <CheckIcon/>
+          </div>
+
+          {
+            !navigator.share ?
+              <div className={ styles.misc } onClick={ this.share }>
+                <div>{ translation('share') }</div>
+                <ShareIcon/>
+              </div> : undefined
+          }
+        </div>
+      </>;
     };
 
     const KuruitOptions = () =>
@@ -473,55 +512,28 @@ class RoomOptions extends StoreComponent
       }
 
       <div className={ styles.container } style={ { direction: locale.direction } }>
-
-        <MatchHighlight ref={ highlightsRef }/>
-
         {
-          !options ? <div/> :
-            <div>
- 
-              {/* Game Mode Selector */}
+          options ?
+            <>
+              {/* <MatchHighlight ref={ highlightsRef }/> */}
 
               { GameModes() }
 
-              { /* Game Mode Options */ }
-                
+              { RoomUrl() }
+
               { modeOptions() }
 
-              {/* Room Misc */}
+              {/* Start Button */}
 
-              <div className={ styles.misc }>
-                <div className={ styles.url }>
-                  { url }
+              {
+                isMaster ? <div id={ 'room-options-start' } className={ styles.start } onClick={ this.matchRequest }>
+                  <div>{ translation('start') }</div>
+                </div> : <div className={ styles.wait }>
+                  <div>{ translation('wait-for-room-master', master) }</div>
+                  <WaitingIcon/>
                 </div>
-
-                <div className={ styles.buttons } style={ { direction: locale.direction } }>
-              
-                  <div className={ styles.button } onClick={ this.copy } data-copied={ optionsUrlCopied }>
-                    <div>{ translation('copy') }</div>
-                    <CopyIcon/>
-                    <CheckIcon/>
-                  </div>
-
-                  {
-                    navigator.share ?
-                      <div className={ styles.button } onClick={ this.share }>
-                        <div>{ translation('share') }</div>
-                        <ShareIcon/>
-                      </div> : undefined
-                  }
-
-                  {
-                    isMaster ? <div id={ 'room-options-start' } className={ styles.button } onClick={ this.matchRequest }>
-                      <div>{ translation('start') }</div>
-                    </div> : <div className={ styles.wait }>
-                      <div>{ translation('wait-for-room-master', master) }</div>
-                      <WaitingIcon/>
-                    </div>
-                  }
-                </div>
-              </div>
-            </div>
+              }
+            </> : undefined
         }
       </div>
     </div>;
@@ -576,7 +588,6 @@ const styles = createStyle({
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.optionsScrollbar}`
     }
   },
@@ -621,20 +632,25 @@ const styles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
-  misc: {
-    width: '75%',
-    margin: '0 auto'
+  url: {
+    userSelect: 'text',
+
+    color: colors.blackText,
+
+    padding: '10px 25px',
+
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
   },
 
   buttons: {
     display: 'flex',
-    flexWrap: 'wrap',
+    width: 'min-content',
 
     columnGap: '15px',
 
-    '> :last-child': {
-      flexBasis: '100%'
-    }
+    padding: '0px 10px 10px'
   },
 
   button: {
@@ -642,26 +658,35 @@ const styles = createStyle({
     position: 'relative',
     cursor: 'pointer',
 
-    flexGrow: 1,
     alignItems: 'center',
 
     color: colors.blackText,
 
-    border: '1px solid',
-    borderColor: opacity(colors.greyText, 0.25),
+    whiteSpace: 'nowrap',
 
-    padding: '15px 10px',
-    margin: '10px 0',
+    ':active': {
+      transform: 'scale(0.95)'
+    }
+  },
+
+  misc: {
+    'extend': 'button',
+    
+    padding: '10px 0',
+
+    '> *': {
+      opacity: 1,
+      transition: 'opacity 0.15s ease-in'
+    },
 
     '> :nth-child(1)': {
-      flexGrow: 1,
-      margin: '0 10px'
+      padding: '0 15px'
     },
 
     '> :nth-child(2)': {
       width: '16px',
       height: '16px',
-      margin: '0 10px'
+      margin: '0 15px'
     },
 
     '> :nth-child(3)': {
@@ -670,44 +695,33 @@ const styles = createStyle({
 
       left: 0,
       width: '100%',
-      height: '18px',
-
-      transition: 'opacity 0.5s ease'
+      height: '18px'
     },
 
     '[data-copied="true"]': {
-      '> :nth-child(1)': {
-        opacity: 0
-      },
-      '> :nth-child(2)': {
+      '> *': {
         opacity: 0
       },
       '> :nth-child(3)': {
         opacity: 1
       }
-    },
-
-    ':active': {
-      transform: 'scale(0.95)'
     }
   },
 
-  url: {
-    direction: 'ltr',
-    userSelect: 'text',
+  start: {
+    'extend': 'button',
+    justifyContent: 'center',
 
-    color: opacity(colors.blackText, 0.5),
-    backgroundColor: opacity(colors.greyText, 0.25),
+    border: '1px solid',
+    borderColor: opacity(colors.greyText, 0.25),
 
-    padding: '15px',
-    margin: '10px 0',
-
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
+    padding: '15px 10px',
+    margin: '25px 35px 25px'
   },
 
   title: {
+    color: opacity(colors.greyText, 0.75),
+    fontSize: 'calc(8px + 0.15vw + 0.15vh)',
     padding: '20px 25px'
   },
 
@@ -799,7 +813,7 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px 12px',
+    padding: '0 25px 10px',
 
     '[data-dirty="true"]': {
       fontStyle: 'italic',

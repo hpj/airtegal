@@ -93,7 +93,7 @@
 
   "wait-for-room-master": "استني لحد ما %0 يبدأ الماتش",
 
-  "start": "أبدا الماتش",
+  "start": "أبدا",
 
   // match logic
 
@@ -113,11 +113,12 @@
   "judging": "استني دورك.",
 
   // sharing
-
+  
   "copy": "كوبي",
   "share": "شير",
   "download": "حمل",
-
+  
+  "room-url": "لينك الروم",
   "join-me": "يسطي افتح نلعب ارتجال",
 
   // homepage

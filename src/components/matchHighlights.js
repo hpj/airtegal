@@ -74,18 +74,19 @@ class MatchHighlights extends StoreComponent
 
   render()
   {
-    if (!this.state.entries?.length)
-      return <div/>;
+    const { locale } = this.props;
 
-    const { locale, translation } = this.props;
+    const { entries } = this.state;
+
+    if (!entries?.length)
+      return <div/>;
     
     return <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
-      <div className={ styles.title }>{ translation('match-highlights') }</div>
       {
-        this.state.entries.slice(0, 3)
+        entries.slice(0, 3)
           .map(e => fillTheBlanks(e[0], e.slice(1)))
           // eslint-disable-next-line security/detect-object-injection
-          .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(this.state.entries[k]) }>
+          .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(entries[k]) }>
             {
               e.split('\n').map((t, i) =>
                 <span
@@ -119,10 +120,6 @@ const styles = createStyle({
     padding: '0 25px'
   },
 
-  title: {
-    padding: '20px 0'
-  },
-
   entry: {
     cursor: 'pointer',
     display: 'flex',
@@ -148,7 +145,7 @@ const styles = createStyle({
     width: 'calc(12px + 0.2vw + 0.2vh)',
     height: 'calc(12px + 0.2vw + 0.2vh)',
     
-    margin: '0 8px'
+    margin: '0 15px'
   }
 });
 

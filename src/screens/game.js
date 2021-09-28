@@ -13,7 +13,7 @@ import { io } from 'socket.io-client';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import getTheme, { detectDeviceIsDark } from '../colors.js';
+import getTheme, { detectDeviceIsDark, opacity } from '../colors.js';
 
 import { ensureSplashScreen, hideSplashScreen } from '../index.js';
 
@@ -534,7 +534,8 @@ const optionsStyles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    border: `1px ${colors.blackText} solid`,
+    border: '1px solid',
+    borderColor: opacity(colors.greyText, 0.25),
 
     cursor: 'pointer',
     padding: '6px 0',
@@ -604,7 +605,6 @@ const roomsStyles = createStyle({
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.optionsScrollbar}`
     }
   },

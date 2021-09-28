@@ -528,8 +528,6 @@ const styles = createStyle({
     },
 
     '> div': {
-      cursor: 'pointer',
-  
       position: 'relative',
       backgroundColor: colors.handler,
   

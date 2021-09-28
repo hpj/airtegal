@@ -115,13 +115,25 @@ class ShareOverlay extends React.Component
   }
 
   // istanbul ignore next
-  copy()
+  async copy()
   {
     const { url } = this.state;
 
-    navigator.clipboard?.writeText(url)
-      .then(() => this.setState({ copied: true }))
-      .catch(console.warn);
+    try
+    {
+      await navigator.clipboard?.writeText(url);
+
+      this.setState({ copied: true });
+
+      clearTimeout(this.copyTimeout);
+
+      this.copyTimeout =
+        setTimeout(() => this.setState({ copied: false }), 3000);
+    }
+    catch (err)
+    {
+      console.warn(err);
+    }
   }
 
   render()
@@ -346,6 +358,11 @@ const styles = createStyle({
 
     padding: '15px 10px',
 
+    '> *': {
+      opacity: 1,
+      transition: 'opacity 0.15s ease-in'
+    },
+
     '> :nth-child(1)': {
       flexGrow: 1,
       margin: '0 10px'
@@ -363,16 +380,11 @@ const styles = createStyle({
 
       left: 0,
       width: '100%',
-      height: '18px',
-
-      transition: 'opacity 0.5s ease'
+      height: '18px'
     },
 
     '[data-copied="true"]': {
-      '> :nth-child(1)': {
-        opacity: 0
-      },
-      '> :nth-child(2)': {
+      '> *': {
         opacity: 0
       },
       '> :nth-child(3)': {

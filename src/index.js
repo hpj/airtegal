@@ -64,7 +64,7 @@ export function hideSplashScreen()
 
 // register the service worker
 navigator.serviceWorker?.register('sw.js')
-  .catch((err) => console.error('Service worker registration failed:', err));
+  .catch(err => console.error('Service worker registration failed:', err));
 
 // create app-wide store
 createStore();
@@ -72,46 +72,41 @@ createStore();
 // show a loading screen until the promises resolve
 ReactDOM.render(<SplashScreen/>, placeholder);
 
-// set the endpoint to the production server
-// istanbul ignore if
-if (process.env.NODE_ENV === 'production')
-{
-  // sentry for error monitoring
-  Sentry.init({
-    release: process.env.RELEASE,
-    dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
-    // send the app state with each error
-    beforeSend: event =>
-    {
-      event.tags = event.tags ?? {};
-      
-      event.tags['locale'] = locale().label;
-      event.tags['language'] = locale().locale;
+// sentry error monitoring
+Sentry.init({
+  release: process.env.RELEASE,
+  enabled: process.env.NODE_ENV === 'production',
+  dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
+  // send the app state with each error
+  beforeSend: event =>
+  {
+    event.tags = event.tags ?? {};
+    
+    event.tags['locale'] = locale().label;
+    event.tags['language'] = locale().locale;
 
-      event.extra = {
-        ...getStore().state
-      };
+    event.extra = {
+      ...getStore().state
+    };
 
-      return event;
-    },
-    integrations: [
-      new Tracing.Integrations.BrowserTracing()
-    ],
-    tracesSampleRate: 0.65
-  });
-}
+    return event;
+  },
+  integrations: [
+    new Tracing.Integrations.BrowserTracing()
+  ],
+  tracesSampleRate: 0.65
+});
 
 // request the promises
 
 const webFontPromise = () =>
 {
-  return new Promise((resolve) =>
+  return new Promise(resolve =>
   {
     WebFont.load({
       classes: false,
       active: resolve,
       inactive: resolve,
-
       custom: {
         families: [ 'Montserrat:n4,n7', 'Noto Arabic:n4,n7' ]
       }
@@ -119,13 +114,7 @@ const webFontPromise = () =>
   });
 };
 
-const connectivityPromise = async() =>
-{
-  if (process.env.NODE_ENV === 'production' && !navigator.onLine)
-    throw new Error('You Are Offline');
-};
-
-const ipCheckPromise = async() =>
+const checkPromise = async() =>
 {
   // bypass check if on a development or testing environments
   if (process.env.NODE_ENV !== 'production')
@@ -175,8 +164,12 @@ const ipCheckPromise = async() =>
   }
 };
 
+// make sure to go to 'offline.html' if user is offline
+if (!navigator.onLine)
+  window.location.assign('/offline.html');
+
 // remove the loading screen if all the promises resolve
-Promise.all([ webFontPromise(), connectivityPromise(), ipCheckPromise() ])
+Promise.all([ webFontPromise(), checkPromise() ])
   .then(loaded)
   // eslint-disable-next-line react/no-render-return-value
   .catch(err => ReactDOM.render(<ErrorScreen error={ err.message ?? err }/>, placeholder));

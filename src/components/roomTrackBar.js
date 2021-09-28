@@ -141,7 +141,6 @@ const styles = createStyle({
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
     },
 

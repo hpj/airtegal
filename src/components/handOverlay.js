@@ -355,7 +355,6 @@ const styles = createStyle({
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '6px',
       boxShadow: `inset 0 0 6px 6px ${colors.handScrollbar}`
     }
   },
