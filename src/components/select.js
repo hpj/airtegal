@@ -222,7 +222,6 @@ const styles = createStyle({
     cursor: 'pointer',
 
     position: 'relative',
-    boxSizing: 'border-box',
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
@@ -232,12 +231,10 @@ const styles = createStyle({
     transition: 'all 0.15s',
     
     userSelect: 'none',
-    borderRadius: '5px',
 
     '[data-shown="true"]': {
       color: colors.whiteText,
-      backgroundColor: colors.blackBackground,
-      border: 0
+      backgroundColor: colors.blackBackground
     }
   },
 
@@ -303,7 +300,6 @@ const styles = createStyle({
     height: 'auto',
 
     border: `${colors.greyText} 2px solid`,
-    borderRadius: '5px',
 
     margin: '8px 0',
     padding: '8px 0',

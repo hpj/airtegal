@@ -29,7 +29,7 @@ SplashScreen.propTypes = {
 
 const styles = createStyle({
   container: {
-    zIndex: 30,
+    zIndex: 99,
     position: 'absolute',
     display: 'flex',
 

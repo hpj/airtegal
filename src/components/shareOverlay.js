@@ -68,6 +68,8 @@ class ShareOverlay extends React.Component
     
     const response = await sendMessage('share', { data });
 
+    console.log(response);
+
     this.setState({
       url: process.env.NODE_ENV !== 'test' ?
         `${process.env.API_ENDPOINT}/share/${response}`
@@ -323,19 +325,8 @@ const styles = createStyle({
 
   buttons:
   {
-    display: 'grid',
-    
-    gridTemplateAreas: '. .',
-    gridTemplateRows: '1fr',
-    gridTemplateColumns: '1fr 1fr',
-
+    display: 'flex',
     gap: '15px',
-
-    '@media screen and (max-width: 700px)': {
-      gridTemplateAreas: '"." "."',
-      gridTemplateRows: '1fr 1fr',
-      gridTemplateColumns: '1fr'
-    },
 
     '[data-active="false"]': {
       opacity: 0.25,
@@ -345,6 +336,7 @@ const styles = createStyle({
 
   button: {
     display: 'flex',
+    position: 'relative',
     cursor: 'pointer',
 
     flexGrow: 1,
@@ -364,27 +356,29 @@ const styles = createStyle({
     '> :nth-child(2)': {
       width: '16px',
       height: '16px',
-
       margin: '0 10px'
     },
 
     '> :nth-child(3)': {
-      display: 'none',
+      opacity: 0,
+      position: 'absolute',
 
-      width: '22px',
-      height: '22px',
-      margin: '0 auto'
+      left: 0,
+      width: '100%',
+      height: '18px',
+
+      transition: 'opacity 0.5s ease'
     },
 
     '[data-copied="true"]': {
       '> :nth-child(1)': {
-        display: 'none'
+        opacity: 0
       },
       '> :nth-child(2)': {
-        display: 'none'
+        opacity: 0
       },
       '> :nth-child(3)': {
-        display: 'unset'
+        opacity: 1
       }
     },
 

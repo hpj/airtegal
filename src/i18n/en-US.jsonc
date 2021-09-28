@@ -50,11 +50,6 @@
   "user-does-not-have-permission": "",
   "minimal-number-of-players-required": "",
 
-  // room id sharing
-
-  "room-copied-to-clipboard": "",
-  "join-me": "",
-
   // room master changes
 
   "you-are-now-master": "",
@@ -74,7 +69,7 @@
   
   "kuruit": "",
 
-  "match-options": "",
+  "options": "",
 
   "end-condition": "",
   
@@ -94,16 +89,10 @@
   "blank-probability": "",
   "blank-probability-lobby": "",
 
-  "room-options": "",
-
   "randos": "",
-
-  "yes": "",
-  "no": "",
 
   "wait-for-room-master": "",
 
-  "apply": "",
   "start": "",
 
   // match logic
@@ -128,6 +117,8 @@
   "copy": "",
   "share": "",
   "download": "",
+
+  "join-me": "",
 
   // homepage
 

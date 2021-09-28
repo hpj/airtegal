@@ -2,6 +2,9 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import ShareIcon from 'mdi-react/ShareVariantIcon';
+import CopyIcon from 'mdi-react/ClipboardTextIcon';
+
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
@@ -48,10 +51,12 @@ class RoomOptions extends StoreComponent
     super({
       optionsError: '',
       optionsLoading: false,
+      optionsUrlCopied: false,
       dirtyOptions: undefined
     });
 
-    this.editRequest = this.editRequest.bind(this);
+    this.copy = this.copy.bind(this);
+
     this.matchRequest = this.matchRequest.bind(this);
   }
 
@@ -64,6 +69,7 @@ class RoomOptions extends StoreComponent
       changes?.roomData ||
       changes?.optionsError ||
       changes?.optionsLoading ||
+      changes?.optionsUrlCopied ||
       changes?.dirtyOptions
     )
       return true;
@@ -88,6 +94,14 @@ class RoomOptions extends StoreComponent
     if (!master)
       state.dirtyOptions = roomData.options;
 
+    // reset a few states on room state changes
+    if (this.state.roomData?.state !== roomData.state)
+    {
+      wrapperRef.current?.scrollTo({ top: 0 });
+      
+      state.optionsUrlCopied = false;
+    }
+
     return state;
   }
 
@@ -111,55 +125,64 @@ class RoomOptions extends StoreComponent
     }
   }
 
-  editRequest()
-  {
-    this.store.set({ optionsLoading: true });
-
-    sendMessage('edit', { options: this.state.dirtyOptions })
-      .then(() =>
-      {
-        // hide the loading indictor
-        this.store.set({ optionsLoading: false });
-      })
-      .catch((err) =>
-      {
-        this.store.set({
-          optionsLoading: false,
-          optionsError: translation(err) ?? err
-        });
-      });
-  }
-  
-  matchRequest()
+  async matchRequest()
   {
     // show a loading indictor
     this.store.set({ optionsLoading: true });
 
-    sendMessage('matchRequest', undefined, 60000)
-      .then(() =>
-      {
-        // hide the loading indictor
-        // but after 2.5s to allow game's overlay animations to end
-        setTimeout(() =>
-        {
-          this.store.set({ optionsLoading: false });
+    const { roomData, dirtyOptions } = this.state;
 
-          highlightsRef.current?.clearEntries();
-        }, 2500);
-      })
-      .catch(err =>
+    const dirty = JSON.stringify(dirtyOptions) !== JSON.stringify(roomData?.options);
+
+    try
+    {
+      if (dirty)
+        await sendMessage('edit', { options: dirtyOptions });
+
+      await sendMessage('matchRequest', undefined, 60000);
+
+      // hide the loading indictor
+      // but after 2.5s to allow game's overlay animations to end
+      setTimeout(() =>
       {
-        this.store.set({
-          optionsLoading: false,
-          optionsError: translation(err) ?? err
-        });
+        this.store.set({ optionsLoading: false });
+
+        highlightsRef.current?.clearEntries();
+      }, 2500);
+    }
+    catch (err)
+    {
+      this.store.set({
+        optionsLoading: false,
+        optionsError: translation(err) ?? err
       });
+    }
   }
 
-  scrollTo(options)
+  // istanbul ignore next
+  share()
   {
-    if (wrapperRef.current)
-      wrapperRef.current.scrollTo(options);
+    const { roomData } = this.state;
+
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
+
+    navigator.share({
+      url,
+      title: 'Share Room URL',
+      text: translation('join-me')
+    }).catch(console.warn);
+  }
+
+  // istanbul ignore next
+  copy()
+  {
+    const { roomData } = this.state;
+
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
+
+    navigator.clipboard?.writeText(url)
+      .then(() => this.store.set({ optionsUrlCopied: true }))
+      .catch(console.warn);
   }
 
   onGameModeChange(value)
@@ -197,21 +220,19 @@ class RoomOptions extends StoreComponent
     const { locale, translation } = this.props;
 
     const {
-      roomData,
-      optionsLoading,
-      optionsError,
-      dirtyOptions
+      roomData, dirtyOptions,
+      optionsLoading, optionsError,
+      optionsUrlCopied
     } = this.state;
 
     const options = roomData?.options;
 
     const isMaster = roomData?.master === socket.id;
-    const isPlayer = roomData?.playerProperties[socket.id] !== undefined;
-
-    const isDirty = JSON.stringify(dirtyOptions) !== JSON.stringify(options);
 
     const master = roomData?.playerProperties[roomData?.master ?? roomData?.players[0]]?.username;
     
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
+
     if (!dirtyOptions)
       return <div/>;
 
@@ -247,7 +268,7 @@ class RoomOptions extends StoreComponent
     const KuruitOptions = () =>
     {
       return <div>
-        <div className={ styles.title }>{ translation('match-options') }</div>
+        <div className={ styles.title }>{ `${translation('options')} ${translation('kuruit')}` }</div>
 
         <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds) }>
           <div
@@ -317,6 +338,22 @@ class RoomOptions extends StoreComponent
 
           <div>{ translation('max-time', dirtyOptions.maxTime / 60 / 1000) }</div>
         </div>
+
+        {
+          features.randos ?
+            <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.randos !== options.randos }>
+              <div
+                id={ 'room-options-randos' }
+                className={ styles.checkbox }
+                data-ticked={ dirtyOptions.randos }
+                onClick={ () => this.onRandosChange(!dirtyOptions.randos) }
+              >
+                <CheckIcon className={ styles.mark }/>
+              </div>
+
+              <div>{ translation('randos') }</div>
+            </div> : undefined
+        }
 
         <div style={ { margin: '5px 35px 5px' } }>
           <div className={ styles.field } data-dirty={ dirtyOptions.maxPlayers !== options.maxPlayers }>
@@ -409,20 +446,9 @@ class RoomOptions extends StoreComponent
                 }
               }, resize) }
             />
-
-            <div suffix={ 'true' } style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } }>%</div>
+            <div style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } } data-suffix={ true }>%</div>
             <div>{ translation('blank-probability') }</div>
           </div>
-        
-          {
-            features.randos ?
-              <div className={ styles.field } style={ { margin: '0 5px' } } data-dirty={ dirtyOptions.randos !== options.randos }>
-                <div>{ translation('randos') }</div>
-
-                <div id={ 'room-options-rando-yes' } className={ styles.choice } data-choice={ dirtyOptions.randos === true } data-master={ isMaster } onClick={ () => this.onRandosChange(true) }>{ translation('yes') }</div>
-                <div id={ 'room-options-rando-no' } className={ styles.choice } data-choice={ dirtyOptions.randos === false } data-master={ isMaster } onClick={ () => this.onRandosChange(false) }>{ translation('no') }</div>
-              </div> : undefined
-          }
         </div>
       </div>;
     };
@@ -448,14 +474,10 @@ class RoomOptions extends StoreComponent
 
       <div className={ styles.container } style={ { direction: locale.direction } }>
 
-        {
-          this.props.children
-        }
-
         <MatchHighlight ref={ highlightsRef }/>
 
         {
-          (!options) ? <div/> :
+          !options ? <div/> :
             <div>
  
               {/* Game Mode Selector */}
@@ -466,34 +488,39 @@ class RoomOptions extends StoreComponent
                 
               { modeOptions() }
 
-              {/* Apply Button */}
+              {/* Room Misc */}
 
-              {
-                !isMaster && isPlayer ? <div className={ styles.wait }>
-                  <div>{ translation('wait-for-room-master', master) }</div>
-                  <WaitingIcon/>
-                </div> : undefined
-              }
+              <div className={ styles.misc }>
+                <div className={ styles.url }>
+                  { url }
+                </div>
 
-              {
-                isDirty && isMaster ? <div
-                  id={ 'room-options-apply' }
-                  className={ styles.button }
-                  onClick={ this.editRequest }>
-                  { translation('apply') }
-                </div> : undefined
-              }
+                <div className={ styles.buttons } style={ { direction: locale.direction } }>
+              
+                  <div className={ styles.button } onClick={ this.copy } data-copied={ optionsUrlCopied }>
+                    <div>{ translation('copy') }</div>
+                    <CopyIcon/>
+                    <CheckIcon/>
+                  </div>
 
-              {/* Start Button */}
+                  {
+                    navigator.share ?
+                      <div className={ styles.button } onClick={ this.share }>
+                        <div>{ translation('share') }</div>
+                        <ShareIcon/>
+                      </div> : undefined
+                  }
 
-              {
-                !isDirty && isMaster ? <div
-                  id={ 'room-options-start' }
-                  className={ styles.button }
-                  onClick={ this.matchRequest }>
-                  { translation('start') }
-                </div> : undefined
-              }
+                  {
+                    isMaster ? <div id={ 'room-options-start' } className={ styles.button } onClick={ this.matchRequest }>
+                      <div>{ translation('start') }</div>
+                    </div> : <div className={ styles.wait }>
+                      <div>{ translation('wait-for-room-master', master) }</div>
+                      <WaitingIcon/>
+                    </div>
+                  }
+                </div>
+              </div>
             </div>
         }
       </div>
@@ -594,23 +621,90 @@ const styles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
+  misc: {
+    width: '75%',
+    margin: '0 auto'
+  },
+
+  buttons: {
+    display: 'flex',
+    flexWrap: 'wrap',
+
+    columnGap: '15px',
+
+    '> :last-child': {
+      flexBasis: '100%'
+    }
+  },
+
   button: {
     display: 'flex',
-    
+    position: 'relative',
     cursor: 'pointer',
-    justifyContent: 'center',
-    
-    width: '50%',
 
-    padding: '10px',
-    margin: '25px auto 25px',
+    flexGrow: 1,
+    alignItems: 'center',
 
     color: colors.blackText,
-    border: `1px solid ${colors.blackText}`,
+
+    border: '1px solid',
+    borderColor: opacity(colors.greyText, 0.25),
+
+    padding: '15px 10px',
+    margin: '10px 0',
+
+    '> :nth-child(1)': {
+      flexGrow: 1,
+      margin: '0 10px'
+    },
+
+    '> :nth-child(2)': {
+      width: '16px',
+      height: '16px',
+      margin: '0 10px'
+    },
+
+    '> :nth-child(3)': {
+      opacity: 0,
+      position: 'absolute',
+
+      left: 0,
+      width: '100%',
+      height: '18px',
+
+      transition: 'opacity 0.5s ease'
+    },
+
+    '[data-copied="true"]': {
+      '> :nth-child(1)': {
+        opacity: 0
+      },
+      '> :nth-child(2)': {
+        opacity: 0
+      },
+      '> :nth-child(3)': {
+        opacity: 1
+      }
+    },
 
     ':active': {
       transform: 'scale(0.95)'
     }
+  },
+
+  url: {
+    direction: 'ltr',
+    userSelect: 'text',
+
+    color: opacity(colors.blackText, 0.5),
+    backgroundColor: opacity(colors.greyText, 0.25),
+
+    padding: '15px',
+    margin: '10px 0',
+
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
   },
 
   title: {
@@ -635,7 +729,6 @@ const styles = createStyle({
       margin: '10px'
     }
   },
-
 
   pick: {
     display: 'flex',
@@ -668,7 +761,6 @@ const styles = createStyle({
     width: '20px',
     height: '20px',
 
-    borderRadius: '3px',
     margin: '0 10px',
 
     '[data-ticked="false"] > svg':
@@ -723,25 +815,6 @@ const styles = createStyle({
     margin: '0 25px 8px 25px'
   },
 
-  choice: {
-    cursor: 'pointer',
-    
-    margin: '0 5px',
-    
-    '[data-choice="true"]': {
-      borderColor: colors.blackText,
-      borderBottom: '2px solid',
-      pointerEvents: 'none',
-
-      margin: '0 5px -2px 5px'
-    },
-
-    '[data-master="false"]':
-    {
-      pointerEvents: 'none'
-    }
-  },
-
   input: {
     MozAppearance: 'textfield',
     appearance: 'textfield',
@@ -751,11 +824,11 @@ const styles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     fontWeight: '700',
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    margin: '0 5px -2px 5px',
+    margin: '0 5px 0',
     padding: 0,
     border: 0,
 
@@ -782,12 +855,18 @@ const styles = createStyle({
       pointerEvents: 'none'
     },
 
-    ':not(:valid) + div[suffix]': {
+    '+ [data-suffix]': {
+      fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+      borderColor: colors.blackText,
+      borderBottom: '2px solid'
+    },
+
+    ':not(:valid) + [data-suffix]': {
       color: colors.error,
       borderColor: colors.error
     },
 
-    '[data-master="false"] + div[suffix]':
+    '[data-master="false"] + [data-suffix]':
     {
       borderBottom: 0
     },

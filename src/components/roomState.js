@@ -30,9 +30,6 @@ class RoomState extends StoreComponent
 
     // this.music = new Audio();
     // this.audio = new Audio();
-
-    this.shareRoomURL = this.shareRoomURL.bind(this);
-    this.copyRoomURL = this.copyRoomURL.bind(this);
   }
 
   componentDidMount()
@@ -199,28 +196,6 @@ class RoomState extends StoreComponent
   //     setTimeout(() => this.gracefullyMuteAudio(audio, step), 100);
   // }
 
-  // istanbul ignore next
-  shareRoomURL()
-  {
-    // navigator.share({
-    //   title: 'Share Room URL',
-    //   text: translation('join-me'),
-    //   url: `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`
-    // }).catch(console.warn);
-  }
-
-  // istanbul ignore next
-  copyRoomURL()
-  {
-    // const { addNotification } = this.props;
-
-    // const value = `${location.protocol}//${location.host}${location.pathname}?join=${this.state.roomData?.id}`;
-
-    // navigator.clipboard.writeText(value)
-    //   .then(() => addNotification(translation('room-copied-to-clipboard')))
-    //   .catch(console.warn);
-  }
-
   formatMs(milliseconds)
   {
     const minutes = Math.floor(milliseconds / 60000);
@@ -235,8 +210,6 @@ class RoomState extends StoreComponent
     const { locale } = this.props;
 
     const { roomData } = this.state;
-
-    // const value = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
 
     return <div className={ styles.wrapper }>
       <div className={ styles.container } style={ { direction: locale.direction } } data-match={ roomData?.state === 'match' }>

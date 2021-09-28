@@ -1,3 +1,6 @@
+/**
+* @type { { randos: boolean, kuruit: boolean } }
+*/
 const features = {};
 
 /**

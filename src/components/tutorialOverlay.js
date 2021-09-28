@@ -228,7 +228,7 @@ TutorialOverlay.propTypes = {
 
 const styles = createStyle({
   wrapper: {
-    zIndex: 99,
+    zIndex: 50,
     position: 'fixed',
 
     width: '100vw',

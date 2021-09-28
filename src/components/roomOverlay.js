@@ -175,12 +175,6 @@ class RoomOverlay extends StoreComponent
       }
     }
 
-    // if client was in a match
-    // and is about to return to room lobby
-    // then reset room options scroll
-    if (this.state.roomData?.state !== roomData.state && this.state.roomData?.state === 'match')
-      optionsRef.current?.scrollTo({ top: 0 });
-    
     // show that the round ended
     if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing'&& roomData.phase !== 'transaction')
       this.addNotification(translation(roomData.phase));
@@ -283,9 +277,6 @@ class RoomOverlay extends StoreComponent
 
       // refresh rooms list
       this.props.requestRooms();
-  
-      // reset room options scroll
-      optionsRef.current?.scrollTo({ top: 0 });
   
       // after leaving the room
       this.store.set({
@@ -465,7 +456,7 @@ const waitingAnimation = createAnimation({
 
 const styles = createStyle({
   wrapper: {
-    zIndex: 4,
+    zIndex: 3,
     position: 'fixed',
 
     width: '100vw',
@@ -543,13 +534,9 @@ const styles = createStyle({
       backgroundColor: colors.handler,
   
       top: 'calc(50vh - (5px + 5vh) / 2)',
-      width: '8px',
-      height: 'calc(5px + 5vh)',
-  
-      minHeight: '32px',
-      maxHeight: '64px',
-  
-      borderRadius: '8px'
+      width: '6px',
+      height: '48px',
+      borderRadius: '6px'
     }
   },
 

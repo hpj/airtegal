@@ -39,7 +39,7 @@ Notifications.propTypes = {
 
 const styles = createStyle({
   notifications: {
-    zIndex: 10,
+    zIndex: 30,
     position: 'absolute',
 
     userSelect: 'none',

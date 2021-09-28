@@ -509,7 +509,7 @@ const optionsStyles = createStyle({
     gridTemplateRows: '1fr auto',
     gridTemplateAreas: '"buttons buttons buttons buttons" "title title . ."',
 
-    gridGap: '15px',
+    gap: '15px',
     margin: '15px 0px',
 
     fontWeight: '700',

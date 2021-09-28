@@ -145,7 +145,7 @@ class HandOverlay extends StoreComponent
     const { size } = this.props;
 
     const handViewport = {
-      height: size.height - y - 36
+      height: (size.height - y) - 36 - 33
     };
 
     // hide the overlay when it goes off-screen

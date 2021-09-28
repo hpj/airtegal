@@ -50,11 +50,6 @@
   "user-does-not-have-permission": "معندكش صلاحية تكمل العمليه دي",
   "minimal-number-of-players-required": "مفيش عدد كفاية من اللعيبة",
 
-  // room id sharing
-
-  "room-copied-to-clipboard": "عملت كوبي للينك الروم!",
-  "join-me": "يسطي افتح نلعب ارتجال",
-
   // room master changes
 
   "you-are-now-master": "انت دلوقتي صاحب الروم.",
@@ -74,7 +69,7 @@
   
   "kuruit": "كروت",
 
-  "match-options": "اعدادات الماتش",
+  "options": "اعدادات",
 
   "end-condition": "النهاية:",
   
@@ -94,17 +89,11 @@
   "blank-probability": "نسبة سحب كرت فاضي",
   "blank-probability-lobby": "كرت فاضي",
 
-  "room-options": "اعدادات الروم:",
-
-  "randos": "غريبي الاطوار",
-
-  "yes": "نعم",
-  "no": "لأ",
+  "randos": "أملي باقي الروم بوتات",
 
   "wait-for-room-master": "استني لحد ما %0 يبدأ الماتش",
 
-  "apply": "طبق",
-  "start": "أبدا",
+  "start": "أبدا الماتش",
 
   // match logic
 
@@ -128,6 +117,8 @@
   "copy": "كوبي",
   "share": "شير",
   "download": "حمل",
+
+  "join-me": "يسطي افتح نلعب ارتجال",
 
   // homepage
 
