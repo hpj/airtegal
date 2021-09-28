@@ -68,8 +68,6 @@ class ShareOverlay extends React.Component
     
     const response = await sendMessage('share', { data });
 
-    console.log(response);
-
     this.setState({
       url: process.env.NODE_ENV !== 'test' ?
         `${process.env.API_ENDPOINT}/share/${response}`
