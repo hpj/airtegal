@@ -118,15 +118,6 @@ function emit(eventName, args)
           randos: true,
           roundTime: 2 * 60 * 1000
         }
-      },
-      {
-        id: 'mika',
-        master: 'Mika',
-        players: 4,
-        options: {
-          gameMode: 'qassa',
-          maxPlayers: 6
-        }
       }
     ];
 
@@ -180,10 +171,6 @@ function emit(eventName, args)
   {
     if (defaultRoom.options.gameMode === 'kuruit')
       startKuruit();
-    // else if (defaultRoom.options.gameMode === 'king')
-    //   startKing();
-    else if (defaultRoom.options.gameMode === 'qassa')
-      startQassa();
   }
   else if (eventName === 'matchLogic')
   {
@@ -578,123 +565,3 @@ function startKuruit()
 //     };
 //   }
 // }
-
-function startQassa()
-{
-  /**
-  * @type { import('../components/roomOverlay').RoomData }
-  */
-  const room = {};
-
-  room.state = 'match';
-
-  room.players = [ 'skye', 'mika', 'mana' ];
-
-  room.playerProperties =
-  {
-    'skye': {
-      username: 'Skye',
-      state: 'waiting'
-    },
-    'mika': {
-      username: 'Mika',
-      state: 'waiting'
-    },
-    'mana': {
-      username: 'Mana',
-      state: 'waiting'
-    }
-  };
-
-  room.field = [ {
-    key: Math.random(),
-    story: {
-      name: 'Test',
-      template: 'Testing The ______,\\n\\nTa ta.',
-      key: Math.random(),
-      items: [
-        { key: Math.random(), description: 'name' },
-        { key: Math.random(), description: 'day of the week' },
-        { key: Math.random(), description: 'verb' }
-      ]
-    }
-  } ];
-
-  if (params.get('mock') === 'spectator')
-  {
-    room.master = '';
-
-    room.phase = 'writing';
-
-    room.players = [ 'mana', 'mika' ];
-    
-    room.playerProperties = {
-      'mana': {
-        username: 'Mana',
-        state: 'writing'
-      },
-      'mika': {
-        username: 'Mika',
-        state: 'waiting'
-      }
-    };
-
-    room.playerSecretProperties = {};
-
-    matchBroadcast(room);
-  }
-  else if (params.get('mock') === 'waiting')
-  {
-    room.phase = 'writing';
-    
-    room.playerProperties['skye'].state = 'waiting';
-    room.playerProperties['mika'].state = 'writing';
-
-    room.field[0].story.items[2].description = undefined;
-  
-    matchBroadcast(room);
-  }
-  else if (params.get('mock') === 'reading')
-  {
-    room.phase = 'transaction';
-    room.playerProperties['skye'].state = 'waiting';
-
-    room.field[0].story.name = 'Test Story';
-    room.field[0].story.template = 'Lorem ipsum dolor sit amet ______.';
-
-    room.field[0].story.composed = {
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend ut urna ac mattis. Suspendisse eleifend eros odio. Proin vulputate est nec tellus venenatis faucibus. In placerat euismod urna, ac fringilla arcu tempus vel. Ut dapibus lacus in blandit posuere.\nAenean vestibulum leo sed tempor pharetra.\n\nVivamus placerat congue placerat. Pellentesque ultricies blandit mauris, at sollicitudin libero ornare non. Duis ultrices faucibus dapibus. Mauris ac nulla erat. Aliquam sed imperdiet sem, quis pharetra dui. Donec quis mi a leo tristique gravida. Pellentesque vehicula leo lobortis, accumsan leo sit amet, ultrices leo. Donec gravida dolor eu purus vehicula lacinia.'
-    };
-
-    matchBroadcast(room);
-  }
-  else
-  {
-    room.phase = 'writing';
-    room.playerProperties['skye'].state = 'writing';
-
-    room.field[0].story.items[1].value = 'hello';
-
-    matchBroadcast(room);
-
-    matchLogic = ({ index, content }) =>
-    {
-      // eslint-disable-next-line security/detect-object-injection
-      room.field[0].story.items[index].value = content;
-
-      matchBroadcast(room);
-
-      if (room.field[0].story.items.every(item => typeof item.value === 'string'))
-      {
-        room.phase = 'transaction';
-        room.playerProperties['skye'].state = 'waiting';
-
-        room.field[0].story.composed = {
-          text: 'Testing The Story Mode,\\n\\nTa ta.'
-        };
-
-        matchBroadcast(room);
-      }
-    };
-  }
-}

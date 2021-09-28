@@ -54,15 +54,6 @@ export let requestRoomData;
 */
 
 /**
-* @typedef { Object } Story
-* @property { string } key
-* @property { string } name
-* @property { string } template
-* @property { { key: string, value: string, description: string }[] } items
-* @property { { text: string, music: ArrayBuffer, audio: ArrayBuffer } } composed
-*/
-
-/**
 * @typedef { Object } PlayerProperties
 * @property { 'waiting' | 'picking' | 'judging' | 'writing' | 'left' } state
 * @property { boolean } rando
@@ -71,7 +62,7 @@ export let requestRoomData;
 
 /**
 * @typedef { Object } RoomOptionsT
-* @property { 'kuruit' | 'qassa' } gameMode
+* @property { 'kuruit' } gameMode
 * @property { 'limited' | 'timer' } endCondition
 * @property { number } maxPlayers
 * @property { number } maxRounds
@@ -99,7 +90,7 @@ export let requestRoomData;
 * @property { Object<string, PlayerProperties> } playerProperties
 * @property { { hand: Card[] } } playerSecretProperties
 * @property { RoomOptionsT } options
-* @property { { id: string, key: string, highlighted: boolean, cards: Card[], story: Story }[] } field
+* @property { { id: string, key: string, highlighted: boolean, cards: Card[] }[] } field
 */
 
 /**

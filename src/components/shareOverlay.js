@@ -58,7 +58,7 @@ class ShareOverlay extends React.Component
   }
 
   /**
-  * @param { { template: string, items: string[], black: string, white: string[] } } data
+  * @param { { black: string, white: string[] } } data
   */
   async shareEntry(data)
   {

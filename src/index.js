@@ -132,8 +132,7 @@ const ipCheckPromise = async() =>
   {
     setFeatures({
       randos: 'true',
-      kuruit: 'true',
-      qassa: 'true'
+      kuruit: 'true'
     });
 
     setLocale('Egypt', 'ar');

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { StoreComponent } from '../store.js';
 
-import { locale, withTranslation } from '../i18n.js';
+import { withTranslation } from '../i18n.js';
 
 import getTheme from '../colors.js';
 

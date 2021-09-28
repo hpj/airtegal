@@ -220,12 +220,6 @@ class RoomOptions extends StoreComponent
     if (features.kuruit)
       gameModes.push({ label: translation('kuruit'), value: 'kuruit', group: translation('free-for-all') });
 
-    // if (features.king)
-    //   gameModes.push({ label: translation('king'), value: 'king' });
-
-    if (features.qassa)
-      gameModes.push({ label: translation('qassa'), value: 'qassa', group: translation('co-op')  });
-
     const GameModes = () =>
     {
       return <div>
@@ -433,85 +427,10 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
-    const QassaOptions = () =>
-    {
-      const players = roomData?.players;
-      const playerProperties = roomData?.playerProperties;
-
-      let groups = [];
-
-      if (players.length < 4)
-      {
-        groups = [ players ];
-      }
-      else if (players.length < 6)
-      {
-        const split = Math.round(players.length / 2);
-
-        groups = [
-          players.slice(0, split),
-          players.slice(split)
-        ];
-      }
-      else
-      {
-        const split = Math.round(players.length / 3);
-
-        groups = [
-          players.slice(0, split),
-          players.slice(split, split * 2),
-          players.slice(split * 2)
-        ];
-      }
-      
-      return <div>
-        <div className={ styles.title }>{ translation('match-options') }</div>
-
-        <div style={ { margin: '5px -5px 5px' } }>
-          <div className={ styles.field } data-dirty={ dirtyOptions.maxPlayers !== options.maxPlayers }>
-            <AutoSizeInput
-              required
-              type={ 'number' }
-              min={ '3' }
-              max={ '16' }
-              maxLength={ 2 }
-              id={ 'room-options-input' }
-              data-master={ isMaster }
-              className={ styles.input }
-              placeholder={ translation('options-placeholder') }
-              value={ dirtyOptions.maxPlayers }
-              onUpdate={ (value, resize) => this.store.set({
-                dirtyOptions: {
-                  ...dirtyOptions,
-                  maxPlayers: value
-                }
-              }, resize) }
-            />
-
-            <div>{ translation('max-players') }</div>
-          </div>
-        </div>
-
-        {
-          groups.map((group, y) => <div className={ styles.group } key={ y }>
-            <div className={ styles.groupName }>{ `${translation('groups')} ${y + 1}` }</div>
-            {
-              group.map((playerId, x) => <div className={ styles.member } key={ x }>
-                {/* eslint-disable-next-line security/detect-object-injection */}
-                { playerProperties[playerId]?.username }
-              </div>)
-            }
-          </div>)
-        }
-      </div>;
-    };
-
     let modeOptions;
 
     if (dirtyOptions.gameMode === 'kuruit')
       modeOptions = KuruitOptions;
-    else
-      modeOptions = QassaOptions;
 
     return <div ref={ wrapperRef } className={ styles.wrapper }>
 
@@ -717,33 +636,6 @@ const styles = createStyle({
     }
   },
 
-  group: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    padding: '20px 25px'
-  },
-
-  groupName: {
-    flexBasis: '100%',
-    fontSize: 'calc(8px + 0.35vw + 0.35vh)',
-    padding: '0 0 15px'
-  },
-
-  member: {
-    display: 'flex',
-    alignItems: 'center',
-    
-    color: colors.whiteText,
-    backgroundColor: colors.blackBackground,
-
-    fontSize: 'calc(8px + 0.25vw + 0.25vh)',
-    padding: '10px 15px',
-    borderRadius: '5px',
-
-    ':not(:nth-child(2))': {
-      margin: '0 10px'
-    }
-  },
 
   pick: {
     display: 'flex',
