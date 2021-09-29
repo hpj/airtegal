@@ -138,7 +138,7 @@ class Game extends React.Component
       error: '',
       loading: true,
 
-      username: localStorage.getItem('username')?.trim() ?? '',
+      username: localStorage.getItem('username')?.trim() || '',
 
       size: {
         width: window.innerWidth,
@@ -285,14 +285,13 @@ class Game extends React.Component
 
       <AutoSizeInput
         required
-        ref={ usernameRef }
         type={ 'text' }
-        id={ 'usrname-input' }
-        className={ headerStyles.usrname }
+        ref={ usernameRef }
+        className={ headerStyles.username }
         style={ { direction: locale.direction } }
         maxLength={ 18 }
-        placeholder={ translation('username-placeholder') }
         value={ this.state.username }
+        placeholder={ translation('placeholder') }
         onUpdate={ (value, resize, blur) =>
         {
           const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
@@ -402,8 +401,8 @@ class Game extends React.Component
       <RoomOverlay
         ref={ overlayRef }
         size={ this.state.size }
+        username={ this.state.username }
         requestRooms={ this.requestRooms }
-        username={ this.state.username ?? this.state.usernameRandomized }
       />
 
       <div className={ mainStyles.container }>
@@ -472,7 +471,7 @@ const headerStyles = createStyle({
     padding: '15px 3vw 5px 3vw'
   },
 
-  usrname: {
+  username: {
     margin: '0 5px -2px 5px',
 
     color: colors.blackText,
@@ -483,19 +482,15 @@ const headerStyles = createStyle({
 
     padding: 0,
     border: 0,
+
     borderBottom: `2px ${colors.blackText} solid`,
 
     '::placeholder': {
-      color: colors.error
+      color: colors.greyText
     },
 
     ':focus': {
       'outline': 'none'
-    },
-
-    ':not(:valid)':
-    {
-      borderColor: colors.error
     }
   }
 });

@@ -6,7 +6,7 @@ import { createStyle } from 'flcss';
 
 import DownIcon from 'mdi-react/ChevronDownIcon';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 const colors = getTheme();
 
@@ -219,8 +219,10 @@ Select.propTypes = {
 const styles = createStyle({
   container: {
     display: 'flex',
-    cursor: 'pointer',
 
+    userSelect: 'none',
+    cursor: 'pointer',
+    
     position: 'relative',
 
     color: colors.blackText,
@@ -228,13 +230,10 @@ const styles = createStyle({
     
     height: '38px',
 
-    transition: 'all 0.15s',
+    transition: 'background-color 0.15s',
     
-    userSelect: 'none',
-
     '[data-shown="true"]': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+      backgroundColor: opacity(colors.greyText, 0.15)
     }
   },
 
@@ -266,6 +265,8 @@ const styles = createStyle({
   },
 
   block: {
+    zIndex: 20,
+
     display: 'none',
     position: 'fixed',
 
@@ -286,6 +287,8 @@ const styles = createStyle({
   },
 
   menu: {
+    zIndex: 30,
+    
     display: 'none',
     position: 'absolute',
     
@@ -299,7 +302,7 @@ const styles = createStyle({
     width: '100%',
     height: 'auto',
 
-    border: `${colors.greyText} 2px solid`,
+    border: `1px ${colors.greyText} solid`,
 
     margin: '8px 0',
     padding: '8px 0',

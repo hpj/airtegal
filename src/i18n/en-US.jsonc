@@ -26,8 +26,9 @@
 
   // lobby
 
+  "placeholder": "",
+  
   "username-prefix": "",
-  "username-placeholder": "",
   
   "create-room": "",
   "random-room": "",

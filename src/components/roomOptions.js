@@ -56,6 +56,7 @@ class RoomOptions extends StoreComponent
     });
 
     this.copy = this.copy.bind(this);
+    this.share = this.share.bind(this);
 
     this.matchRequest = this.matchRequest.bind(this);
   }
@@ -189,7 +190,7 @@ class RoomOptions extends StoreComponent
       clearTimeout(this.copyTimeout);
 
       this.copyTimeout =
-        setTimeout(() => this.store.set({ optionsUrlCopied: false }), 3000);
+        setTimeout(() => this.store.set({ optionsUrlCopied: false }), 1500);
     }
     catch (err)
     {
@@ -294,7 +295,7 @@ class RoomOptions extends StoreComponent
           </div>
 
           {
-            !navigator.share ?
+            navigator.share ?
               <div className={ styles.misc } onClick={ this.share }>
                 <div>{ translation('share') }</div>
                 <ShareIcon/>
@@ -712,8 +713,7 @@ const styles = createStyle({
     'extend': 'button',
     justifyContent: 'center',
 
-    border: '1px solid',
-    borderColor: opacity(colors.greyText, 0.25),
+    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
 
     padding: '15px 10px',
     margin: '25px 35px 25px'

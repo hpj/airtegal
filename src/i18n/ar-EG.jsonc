@@ -26,8 +26,9 @@
 
   // lobby
 
+  "placeholder": "الفراغ",
+
   "username-prefix": "أنا",
-  "username-placeholder": "حط اسمك هنا",
   
   "create-room": "اعمل روم",
   "random-room": "روم عشؤئية",

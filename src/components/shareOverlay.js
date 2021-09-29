@@ -128,7 +128,7 @@ class ShareOverlay extends React.Component
       clearTimeout(this.copyTimeout);
 
       this.copyTimeout =
-        setTimeout(() => this.setState({ copied: false }), 3000);
+        setTimeout(() => this.setState({ copied: false }), 1500);
     }
     catch (err)
     {
