@@ -106,26 +106,6 @@ class RoomOptions extends StoreComponent
     return state;
   }
 
-  /**
-  * @param { { roomData: import('./roomOverlay').RoomData } } state
-  * @param { { roomData: import('./roomOverlay').RoomData } } old
-  */
-  stateDidChange(state, old)
-  {
-    const master = state.roomData?.master === socket.id;
-
-    if (JSON.stringify(state.dirtyOptions) !== JSON.stringify(old.dirtyOptions))
-    {
-      // force all inputs to auto resize
-      const inputs = document.querySelectorAll('#room-options-input');
-
-      inputs.forEach(e => autoSize(e));
-
-      if (!master && state.dirtyOptions && old.dirtyOptions)
-        this.props.addNotification?.(translation('room-edited'));
-    }
-  }
-
   async matchRequest()
   {
     // show a loading indictor
@@ -544,8 +524,7 @@ class RoomOptions extends StoreComponent
 RoomOptions.propTypes = {
   translation: PropTypes.func,
   locale: PropTypes.object,
-  size: PropTypes.object,
-  addNotification: PropTypes.func.isRequired
+  size: PropTypes.object
 };
 
 const waitingAnimation = createAnimation({

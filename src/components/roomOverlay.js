@@ -18,8 +18,6 @@ import { socket } from '../screens/game.js';
 
 import getTheme, { opacity } from '../colors.js';
 
-// import Notifications from './notifications.js';
-
 import Interactable from './interactable.js';
 
 import RoomTrackBar from './roomTrackBar.js';
@@ -57,7 +55,7 @@ export let requestRoomData;
 
 /**
 * @typedef { Object } PlayerProperties
-* @property { 'waiting' | 'picking' | 'judging' | 'writing' | 'left' } state
+* @property { 'waiting' | 'picking' | 'judging' | 'left' } state
 * @property { boolean } rando
 * @property { string } username
 */
@@ -85,7 +83,6 @@ export let requestRoomData;
 * @property { 'lobby' | 'match' } state
 * @property { 'picking' | 'judging' | 'transaction' |
 *          'judge-left' | 'judge-timeout' | 'picking-timeout' |
-*          'writing' |
 *          'not-enough-players' | 'unhandled' } phase
 * @property { number } timestamp
 * @property { string[] } players
@@ -105,8 +102,6 @@ class RoomOverlay extends StoreComponent
   constructor()
   {
     super({
-      notifications: [],
-
       overlayError: '',
       overlayLoading: false,
 
@@ -117,9 +112,6 @@ class RoomOverlay extends StoreComponent
 
     this.onRoomData = this.onRoomData.bind(this);
     this.onSnapEnd = this.onSnapEnd.bind(this);
-
-    this.addNotification = this.addNotification.bind(this);
-    this.removeNotification = this.removeNotification.bind(this);
   }
 
   componentDidMount()
@@ -128,18 +120,6 @@ class RoomOverlay extends StoreComponent
 
     socket.on('kicked', this.leave);
     socket.on('roomData', this.onRoomData);
-
-    const params = new URL(document.URL).searchParams;
-
-    // if testing and there's a match parameter then start a mockup match
-    if (process.env.NODE_ENV === 'test' && params.has('notifications'))
-    {
-      requestAnimationFrame(() =>
-      {
-        this.addNotification('Test 1');
-        this.addNotification('Test 2');
-      });
-    }
   }
 
   componentWillUnmount()
@@ -158,21 +138,23 @@ class RoomOverlay extends StoreComponent
   */
   onRoomData(roomData)
   {
-    if (roomData.state === 'lobby')
-    {
-      // send notification if the room's master changes
-      if (this.state.roomData?.master && this.state.roomData?.master !== roomData.master)
-      {
-        if (roomData.master === socket.id)
-          this.addNotification(translation('you-are-now-master'));
-        else
-          this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${translation('new-master')}`);
-      }
-    }
+    // TODO
+    // if (roomData.state === 'lobby')
+    // {
+    //   // send notification if the room's master changes
+    //   if (this.state.roomData?.master && this.state.roomData?.master !== roomData.master)
+    //   {
+    //     if (roomData.master === socket.id)
+    //       this.addNotification(translation('you-are-now-master'));
+    //     else
+    //       this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${translation('new-master')}`);
+    //   }
+    // }
 
+    // TODO
     // show that the round ended
-    if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing'&& roomData.phase !== 'transaction')
-      this.addNotification(translation(roomData.phase));
+    // if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing' && roomData.phase !== 'transaction')
+    //   this.addNotification(translation(roomData.phase));
 
     this.store.set({
       roomData,
@@ -291,54 +273,6 @@ class RoomOverlay extends StoreComponent
       roomData: undefined
     });
   }
-  
-  /**
-  *  @param { string } content
-  */
-  addNotification(content)
-  {
-    // add delay between notifications
-    if (this.state.notifications.length > 0 && process.env.NODE_ENV !== 'test')
-    {
-      // delta time of when the last notification appeared
-      const delta = Date.now() - this.state.notifications[this.state.notifications.length - 1].timestamp;
-
-      if (delta < 1500)
-      {
-        // add this notifications when 1.5s are passed
-        // from when the last notification was added
-        setTimeout(() => this.addNotification(content), 1500 - delta);
-
-        return;
-      }
-    }
-
-    const item = {
-      content,
-      timestamp: Date.now(),
-      remove: this.removeNotification
-    };
-   
-    this.state.notifications.push(item);
-   
-    this.store.set({ notifications: this.state.notifications });
-
-    // by doing this it makes sure that all the notifications are cleared at once
-    // which is more pleasant to the human eye
-    if (this.notificationsTimeout)
-      clearTimeout(this.notificationsTimeout);
-    
-    // automatically remove the notification after 2.5 seconds
-    if (process.env.NODE_ENV !== 'test')
-      this.notificationsTimeout = setTimeout(this.removeNotification, 2500);
-  }
-
-  removeNotification()
-  {
-    this.store.set({ notifications: [] });
-    
-    this.notificationsTimeout = undefined;
-  }
 
   render()
   {
@@ -358,8 +292,6 @@ class RoomOverlay extends StoreComponent
         overlayOpacity: 1 - (x / size.width)
       });
     };
-
-    // <Notifications notifications={ this.state.notifications }/>
 
     return <>
       {
@@ -425,7 +357,7 @@ class RoomOverlay extends StoreComponent
             <div className={ styles.content }>
               <FieldOverlay size={ size }/>
               <HandOverlay size={ size }/>
-              <RoomOptions ref={ optionsRef } addNotification={ this.addNotification } size={ size }/>
+              <RoomOptions ref={ optionsRef }y size={ size }/>
             </div>
           </div>
         </Interactable>

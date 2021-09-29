@@ -493,23 +493,6 @@
       ]
     },
     {
-      "title": "Notifications",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&join&notifications"
-        },
-        {
-          "action": "wait",
-          "value": ".game-notification"
-        },
-        {
-          "action": "wait",
-          "value": 1
-        }
-      ]
-    },
-    {
       "title": "Match Highlights",
       "steps": [
         {
