@@ -427,7 +427,7 @@ class RoomOverlay extends StoreComponent
             <div className={ styles.content }>
               <FieldOverlay size={ size }/>
               <HandOverlay size={ size }/>
-              <RoomOptions ref={ optionsRef } addNotification={ this.addNotification }/>
+              <RoomOptions ref={ optionsRef } addNotification={ this.addNotification } size={ size }/>
             </div>
           </div>
         </Interactable>

@@ -79,16 +79,12 @@ export default function()
 
     optionsScrollbar: '#3d3a3a',
 
-    fieldBackground: '#191818',
+    fieldBackground: '#1a1a1a',
     fieldGroupLine: '#696060',
     fieldScrollbar: '#c3c3c3',
 
-    handBackground: '#292929',
+    handBackground: '#2e2e2e',
     handScrollbar: '#867878',
-
-    blackCardBackground: '#3c3c3c',
-    blackCardForeground: '#e2e1e1',
-    blackCardHover: '#060606',
 
     whiteCardBackground: '#989898',
     whiteCardForeground: '#040404',

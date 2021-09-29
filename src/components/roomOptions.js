@@ -230,7 +230,7 @@ class RoomOptions extends StoreComponent
 
   render()
   {
-    const { locale, translation } = this.props;
+    const { size, locale, translation } = this.props;
 
     const {
       roomData, dirtyOptions,
@@ -516,7 +516,7 @@ class RoomOptions extends StoreComponent
         {
           options ?
             <>
-              <MatchHighlight ref={ highlightsRef }/>
+              <MatchHighlight ref={ highlightsRef } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
 
               { GameModes() }
 
@@ -544,9 +544,7 @@ class RoomOptions extends StoreComponent
 RoomOptions.propTypes = {
   translation: PropTypes.func,
   locale: PropTypes.object,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node ]),
+  size: PropTypes.object,
   addNotification: PropTypes.func.isRequired
 };
 

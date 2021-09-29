@@ -8,7 +8,7 @@ import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import { shareRef } from '../screens/game.js';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
@@ -37,6 +37,8 @@ class MatchHighlights extends StoreComponent
     {
       const entries = [];
 
+      entries.push([ 'Test?', 'Yes' ]);
+      entries.push([ 'Test?', 'Yes' ]);
       entries.push([ 'Test?', 'Yes' ]);
       entries.push([ 'Green, ______ and ______.', 'Red', 'Blue' ]);
       entries.push([ 'انا وحش مصر ___ رقم خسمة و_____.', 'فشخ', 'عشرين' ]);
@@ -74,7 +76,7 @@ class MatchHighlights extends StoreComponent
 
   render()
   {
-    const { locale } = this.props;
+    const { maxEntries, locale } = this.props;
 
     const { entries } = this.state;
 
@@ -83,22 +85,18 @@ class MatchHighlights extends StoreComponent
     
     return <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
       {
-        entries.slice(0, 3)
+        entries.slice(0, maxEntries)
           .map(e => fillTheBlanks(e[0], e.slice(1)))
           // eslint-disable-next-line security/detect-object-injection
           .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(entries[k]) }>
-            {
-              e.split('\n').map((t, i) =>
-                <span
-                  key={ i }
-                  style = { {
-                    padding: '3px 0',
-                    borderBottom: i % 2 ? '2px solid' : undefined
-                  } }
-                >
-                  { t }
-                </span>)
-            }
+            <div>
+              {
+                e.split('\n').map((t, i) =>
+                  <span key={ i } style = { { borderBottom: i % 2 ? '2px solid' : undefined } }>
+                    { t }
+                  </span>)
+              }
+            </div>
 
             <ShareIcon className={ styles.icon }/>
           </div>)
@@ -109,6 +107,7 @@ class MatchHighlights extends StoreComponent
 
 MatchHighlights.propTypes =
 {
+  maxEntries: PropTypes.number.isRequired,
   translation: PropTypes.func,
   locale: PropTypes.object
 };
@@ -116,23 +115,30 @@ MatchHighlights.propTypes =
 const styles = createStyle({
   container: {
     display: 'flex',
-    flexDirection: 'column',
-    padding: '0 25px'
+    flexWrap: 'wrap',
+
+    gap: '25px',
+    margin: '25px'
   },
 
   entry: {
     cursor: 'pointer',
     display: 'flex',
 
+    alignItems: 'center',
+    
+    color: colors.blackCardForeground,
+    // backgroundColor: colors.blackCardBackground,
+
     width: 'fit-content',
     
-    alignItems: 'center',
-    whiteSpace: 'pre-wrap',
+    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
 
-    color: colors.blackText,
+    padding: '25px',
     
-    margin: '20px 0',
-    transition: 'margin 0.25s ease',
+    '> :first-child > span': {
+      padding: '6px 0'
+    },
     
     ':active': {
       transform: 'scale(0.95)'
@@ -140,11 +146,11 @@ const styles = createStyle({
   },
 
   icon: {
-    color: colors.blackText,
-
-    width: 'calc(12px + 0.2vw + 0.2vh)',
-    height: 'calc(12px + 0.2vw + 0.2vh)',
+    flexGrow: 1,
     
+    minWidth: '16px',
+    height: '16px',
+
     margin: '0 15px'
   }
 });
