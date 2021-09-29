@@ -6,6 +6,8 @@ import { createStyle } from 'flcss';
 
 import DownIcon from 'mdi-react/ChevronDownIcon';
 
+import stack from '../stack.js';
+
 import getTheme, { opacity } from '../colors.js';
 
 const colors = getTheme();
@@ -25,6 +27,7 @@ class Select extends React.Component
       value: options[defaultIndex ?? 0]
     };
 
+    this.hide = this.hide.bind(this);
     this.toggle = this.toggle.bind(this);
     
     this.onKeyDown = this.onKeyDown.bind(this);
@@ -41,15 +44,26 @@ class Select extends React.Component
     window.removeEventListener('keydown', this.onKeyDown);
   }
 
+  hide()
+  {
+    this.toggle(false);
+  }
+
   /**
   * @param { boolean } force
   */
   toggle(force)
   {
-    const { shown, options, value } = this.state;
+    let { shown } = this.state;
+
+    const { options, value } = this.state;
+
+    shown = typeof force === 'boolean' ? force : !shown;
+
+    shown ? stack.register(this.hide) : stack.unregister(this.hide);
     
     this.setState({
-      shown: (typeof force === 'boolean') ? force : !shown,
+      shown,
       // reset index to current value
       index: options.indexOf(value)
 
@@ -96,9 +110,6 @@ class Select extends React.Component
         this.onChange(options[index]);
     }
 
-    else if (e.key === 'Escape')
-      this.toggle(false);
-   
     else if (e.key === 'ArrowUp')
       this.press(index - 1);
    
@@ -120,9 +131,7 @@ class Select extends React.Component
     else if (i <= -1)
       i = length - 1;
 
-    this.setState({
-      index: i
-    }, () =>
+    this.setState({ index: i }, () =>
     {
       // scroll to the new highlighted option
       document.body.querySelector(`.${styles.option}[data-highlighted="true"]`).scrollIntoView({
@@ -133,9 +142,7 @@ class Select extends React.Component
 
   hover(i)
   {
-    this.setState({
-      index: i
-    });
+    this.setState({ index: i });
   }
 
   onSearch()
@@ -156,7 +163,7 @@ class Select extends React.Component
 
     this.setState({
       value: opt
-    }, () => this.toggle(false));
+    }, this.hide);
 
     onChange?.call(undefined, opt.value);
   }
@@ -173,7 +180,7 @@ class Select extends React.Component
 
       <DownIcon className={ styles.extend }/>
 
-      <div data-shown={ shown } className={ styles.block } onClick={ this.toggle }/>
+      <div data-shown={ shown } className={ styles.block } onClick={ this.back }/>
 
       <div data-shown={ shown } className={ styles.menu }>
 

@@ -12,6 +12,8 @@ import CheckIcon from 'mdi-react/CheckIcon';
 
 import { createAnimation, createStyle } from 'flcss';
 
+import stack from '../stack.js';
+
 import { sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
@@ -43,18 +45,6 @@ class ShareOverlay extends React.Component
     this.download = this.download.bind(this);
     this.share = this.share.bind(this);
     this.copy = this.copy.bind(this);
-
-    this.hide = this.hide.bind(this);
-  }
-
-  componentDidMount()
-  {
-    window.addEventListener('keyup', this.hide);
-  }
-
-  componentWillUnmount()
-  {
-    window.removeEventListener('keyup', this.hide);
   }
 
   /**
@@ -64,7 +54,12 @@ class ShareOverlay extends React.Component
   {
     this.setState({
       visible: true
-    }, () => interactableRef.current?.snapTo({ index: 1 }));
+    }, () =>
+    {
+      stack.register(this.back);
+
+      interactableRef.current?.snapTo({ index: 1 });
+    });
     
     const response = await sendMessage('share', { data });
 
@@ -75,23 +70,23 @@ class ShareOverlay extends React.Component
     });
   }
 
-  hide(e)
+  back()
+  {
+    interactableRef.current?.snapTo({ index: 0 });
+  }
+
+  hide()
   {
     if (!this.state.visible)
       return;
+
+    stack.unregister(this.back);
     
-    if (e?.key === 'Escape')
-    {
-      interactableRef.current?.snapTo({ index: 0 });
-    }
-    else if (!e)
-    {
-      this.setState({
-        url: '',
-        copied: false,
-        visible: false
-      });
-    }
+    this.setState({
+      url: '',
+      copied: false,
+      visible: false
+    });
   }
 
   // istanbul ignore next

@@ -153,12 +153,6 @@ class Game extends React.Component
 
     this.requestRooms = this.requestRooms.bind(this);
 
-    // disable back button
-
-    window.history.pushState(undefined, document.title, window.location.href);
-
-    window.addEventListener('popstate', () => window.history.pushState(undefined, document.title,  window.location.href));
-
     // fix the scroll position
     window.scrollTo(0, 0);
 
@@ -249,8 +243,8 @@ class Game extends React.Component
   */
   disableDrag(e)
   {
-    e.stopPropagation();
     e.preventDefault();
+    e.stopPropagation();
   }
 
   resize()

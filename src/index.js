@@ -14,6 +14,8 @@ import { translation, locale, setLocale } from './i18n.js';
 
 import { setFeatures } from './flags.js';
 
+import stack from './stack.js';
+
 import { createStore, getStore } from './store.js';
 
 import SplashScreen from './components/splash.js';
@@ -61,6 +63,9 @@ export function hideSplashScreen()
   
   ReactDOM.unmountComponentAtNode(placeholder);
 }
+
+// create the back stack
+stack.create();
 
 // register the service worker
 navigator.serviceWorker?.register('sw.js')

@@ -6,6 +6,8 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 
 import { createAnimation, createStyle } from 'flcss';
 
+import stack from '../stack.js';
+
 import { StoreComponent } from '../store.js';
 
 import { sendMessage } from '../utils.js';
@@ -113,24 +115,19 @@ class RoomOverlay extends StoreComponent
       overlayOpacity: 0
     });
 
-    this.onKicked = this.onKicked.bind(this);
     this.onRoomData = this.onRoomData.bind(this);
     this.onSnapEnd = this.onSnapEnd.bind(this);
 
     this.addNotification = this.addNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
-
-    this.hide = this.hide.bind(this);
   }
 
   componentDidMount()
   {
     super.componentDidMount();
 
-    socket.on('kicked', this.onKicked);
+    socket.on('kicked', this.leave);
     socket.on('roomData', this.onRoomData);
-
-    window.addEventListener('keyup', this.hide);
 
     const params = new URL(document.URL).searchParams;
 
@@ -149,10 +146,8 @@ class RoomOverlay extends StoreComponent
   {
     super.componentWillUnmount();
 
-    socket.off('kicked', this.onKicked);
+    socket.off('kicked', this.leave);
     socket.off('roomData', this.onRoomData);
-
-    window.removeEventListener('keyup', this.hide);
 
     // make sure socket is closed before component unmount
     socket.close();
@@ -186,7 +181,7 @@ class RoomOverlay extends StoreComponent
     });
   }
 
-  onKicked()
+  leave()
   {
     // hide the room overlay
     interactableRef.current?.snapTo({ index: 0 });
@@ -196,11 +191,6 @@ class RoomOverlay extends StoreComponent
   {
     if (index === 1)
     {
-      // request a screen-wake lock
-      navigator.wakeLock?.request('screen')
-        .then(wl => this.wakeLock = wl)
-        .catch(console.warn);
-
       this.store.set({
         overlayError: '',
         overlayLoading: false
@@ -208,9 +198,6 @@ class RoomOverlay extends StoreComponent
     }
     else
     {
-      // release screen-wake lock
-      this.wakeLock?.release();
-
       this.hide();
     }
   }
@@ -225,6 +212,12 @@ class RoomOverlay extends StoreComponent
 
     sendMessage('create', { username }).then(() =>
     {
+      // enable the wake-lock
+      stack.wakelock();
+
+      // register on the back stack
+      stack.register(this.leave);
+
       // spoof a match request for testing purposes
       if (params.has('match'))
         setTimeout(() => optionsRef.current?.matchRequest(), 1500);
@@ -247,6 +240,12 @@ class RoomOverlay extends StoreComponent
 
     sendMessage('join', { id, username }).then(() =>
     {
+      // enable the wake-lock
+      stack.wakelock();
+
+      // register on the back stack
+      stack.register(this.leave);
+
       // show the room overlay
       this.store.set({
         overlayVisible: true
@@ -262,36 +261,35 @@ class RoomOverlay extends StoreComponent
     });
   }
 
-  hide(e)
+  hide()
   {
     if (!this.state.overlayVisible)
       return;
 
-    if (e?.key === 'Escape')
-    {
-      interactableRef.current?.snapTo({ index: 0 });
-    }
-    else if (!e)
-    {
-      sendMessage('leave').catch(console.warn);
+    // release the wake-lock
+    stack.release();
 
-      // refresh rooms list
-      this.props.requestRooms();
+    // unregister from the back stack
+    stack.unregister(this.leave);
+    
+    sendMessage('leave').catch(console.warn);
+
+    // refresh rooms list
+    this.props.requestRooms();
   
-      // after leaving the room
-      this.store.set({
-        blanks: [],
-        entries: [],
+    // after leaving the room
+    this.store.set({
+      blanks: [],
+      entries: [],
 
-        overlayError: '',
-        overlayLoading: false,
-        overlayVisible: false,
+      overlayError: '',
+      overlayLoading: false,
+      overlayVisible: false,
         
-        matchState: undefined,
-        dirtyOptions: undefined,
-        roomData: undefined
-      });
-    }
+      matchState: undefined,
+      dirtyOptions: undefined,
+      roomData: undefined
+    });
   }
   
   /**

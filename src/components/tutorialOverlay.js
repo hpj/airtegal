@@ -6,6 +6,8 @@ import DiscordIcon from 'mdi-react/DiscordIcon';
 
 import { createStyle } from 'flcss';
 
+import stack from '../stack.js';
+
 import getTheme, { opacity } from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
@@ -68,42 +70,40 @@ class TutorialOverlay extends React.Component
         }
       }, 3500);
     }
-
-    this.hide = this.hide.bind(this);
   }
 
   componentDidMount()
   {
     if (this.state.visible)
+    {
+      stack.register(this.back);
+
       interactableRef.current?.snapTo({ index: 1 });
-    
-    window.addEventListener('keyup', this.hide);
+    }
   }
 
   componentWillUnmount()
   {
     clearInterval(this.interval);
-
-    window.removeEventListener('keyup', this.hide);
   }
 
-  hide(e)
+  back()
+  {
+    interactableRef.current?.snapTo({ index: 0 });
+  }
+
+  hide()
   {
     if (!this.state.visible)
       return;
 
-    if (e?.key === 'Escape')
-    {
-      interactableRef.current?.snapTo({ index: 0 });
-    }
-    else if (!e)
-    {
-      localStorage.setItem(this.storageKey, true);
+    stack.unregister(this.back);
 
-      this.setState({
-        visible: false
-      });
-    }
+    localStorage.setItem(this.storageKey, true);
+
+    this.setState({
+      visible: false
+    });
   }
 
   render()
