@@ -8,8 +8,6 @@ import CopyIcon from 'mdi-react/ClipboardTextIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import autoSize from 'autosize-input';
-
 import features from '../flags.js';
 
 import { sendMessage } from '../utils.js';
@@ -615,6 +613,9 @@ const styles = createStyle({
 
     color: colors.blackText,
 
+    width: 'fit-content',
+
+    margin: '0 0 15px',
     padding: '10px 25px',
 
     overflow: 'hidden',
@@ -626,9 +627,8 @@ const styles = createStyle({
     display: 'flex',
     width: 'min-content',
 
-    columnGap: '15px',
-
-    padding: '0px 10px 10px'
+    gap: '15px',
+    padding: '0 25px'
   },
 
   button: {
@@ -649,6 +649,8 @@ const styles = createStyle({
 
   misc: {
     'extend': 'button',
+    
+    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
     
     padding: '10px 0',
 
@@ -747,7 +749,7 @@ const styles = createStyle({
     justifyContent: 'center',
 
     color: colors.blackText,
-    backgroundColor: opacity(colors.greyText, 0.25),
+    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
 
     width: '20px',
     height: '20px',
@@ -762,8 +764,7 @@ const styles = createStyle({
 
   mark: {
     width: '16px',
-    height: '16px',
-    color: colors.blackText
+    height: '16px'
   },
 
   select: {
