@@ -182,39 +182,6 @@
       ]
     },
     {
-      "title": "Play A Blank Card",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&match&mock=blank"
-        },
-        {
-          "action": "wait",
-          "value": "#kuruit-hand-overlay > div > div > div > textarea"
-        },
-        {
-          "action": "type",
-          "value": "احا"
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-overlay > div > div"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 3
-        }
-      ]
-    },
-    {
       "title": "Room Overlay (Leave)",
       "steps": [
         {
@@ -327,8 +294,20 @@
           "value": "#kuruit-hand-overlay > div > div > div > textarea"
         },
         {
+          "action": "click",
+          "value": "left"
+        },
+        {
           "action": "type",
-          "value": "احا"
+          "value": "هيهيهيه"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
         }
       ]
     },
@@ -346,6 +325,10 @@
         {
           "action": "select",
           "value": "#kuruit-hand-overlay > div > div > div > textarea"
+        },
+        {
+          "action": "click",
+          "value": "left"
         }
       ]
     },
