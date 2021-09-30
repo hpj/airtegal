@@ -312,27 +312,6 @@
       ]
     },
     {
-      "title": "Blank in Hand",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&match&mock=blank"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#kuruit-hand-overlay > div > div > div > textarea"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        }
-      ]
-    },
-    {
       "title": "Groups of Cards",
       "steps": [
         {
