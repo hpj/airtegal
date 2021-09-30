@@ -638,7 +638,9 @@ const styles = createStyle({
 
     alignItems: 'center',
 
-    color: colors.blackText,
+    color: opacity(colors.blackText, 0.5),
+
+    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
 
     whiteSpace: 'nowrap',
 
@@ -649,8 +651,6 @@ const styles = createStyle({
 
   misc: {
     'extend': 'button',
-    
-    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
     
     padding: '10px 0',
 
@@ -691,8 +691,6 @@ const styles = createStyle({
   start: {
     'extend': 'button',
     justifyContent: 'center',
-
-    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
 
     padding: '15px 10px',
     margin: '25px 35px 25px'
@@ -748,7 +746,7 @@ const styles = createStyle({
     alignItems: 'center',
     justifyContent: 'center',
 
-    color: colors.blackText,
+    color: opacity(colors.blackText, 0.75),
     border: `2px ${opacity(colors.greyText, 0.25)} solid`,
 
     width: '20px',

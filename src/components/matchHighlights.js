@@ -116,6 +116,8 @@ const styles = createStyle({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    
+    justifyContent: 'center',
 
     gap: '25px',
     margin: '25px'
@@ -127,7 +129,7 @@ const styles = createStyle({
 
     alignItems: 'center',
     
-    color: colors.blackText,
+    color: opacity(colors.blackText, 0.75),
 
     width: 'fit-content',
     
