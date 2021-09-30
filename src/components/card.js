@@ -9,6 +9,8 @@ import Lottie from 'lottie-react';
 
 import getTheme from '../colors.js';
 
+import stack from '../stack.js';
+
 import { createStyle, createAnimation } from 'flcss';
 
 import { withTranslation } from '../i18n.js';
@@ -33,37 +35,13 @@ class Card extends React.Component
     * @type { React.RefObject<HTMLTextAreaElement>}
     */
     this.textareaRef = createRef();
+
+    this.back = this.back.bind(this);
   }
 
-  componentDidMount()
+  back()
   {
-    this.resize = this.resize.bind(this);
-        
-    // workaround: text area not resizing when card first appears on field
-    setTimeout(this.resize, 10);
-    setTimeout(this.resize, 250);
-    setTimeout(this.resize, 500);
-
-    window.addEventListener('resize', this.resize);
-  }
-
-  componentWillUnmount()
-  {
-    window.removeEventListener('resize', this.resize);
-  }
-
-  resize()
-  {
-    const textarea = this.textareaRef.current;
-
-    if (!textarea)
-      return;
-
-    textarea.style.height = '0';
-    textarea.style.overflowY = 'hidden';
-
-    textarea.style.height = `${textarea.scrollHeight}px`;
-    textarea.style.overflowY = 'auto';
+    this.textareaRef?.current.blur();
   }
 
   onChange(e)
@@ -72,7 +50,7 @@ class Card extends React.Component
 
     this.setState({
       content: e.target.value.replace(locale.blank, '').replace(/\s+/g, ' ')
-    }, () => this.resize());
+    });
   }
 
   render()
@@ -111,6 +89,9 @@ class Card extends React.Component
           e.preventDefault();
           e.stopPropagation();
 
+          if (blank)
+            stack.register(this.back);
+
           onClick(this);
         } }
       >
@@ -124,48 +105,66 @@ class Card extends React.Component
           !hidden ? <div className={ styles.card } data-type={ type } style={ { direction: locale.direction } }>
             <textarea
               ref={ this.textareaRef }
-              className={ blank ? styles.input : styles.content }
-              style={ { textAlign: locale.direction === 'ltr' ? 'left' : 'right' } }
+
+              className={ styles.content }
+
+              style={ {
+                pointerEvents: blank ? 'auto' : 'none',
+                textAlign: locale.direction === 'ltr' ? 'left' : 'right'
+              } }
 
               value={ input ?? content }
 
               maxLength={ 105 }
+
               placeholder={ blank ? translation('blank') : undefined }
+
+              onKeyDown={ e =>
+              {
+                if (!this.focused)
+                  return;
+                
+                if (e.code === 'Enter')
+                  onClick(this);
+              } }
 
               onClick={ e =>
               {
+                this.focused = true;
+
                 e.preventDefault();
                 e.stopPropagation();
 
+                if (blank)
+                  stack.register(this.back);
+
                 onClick(this);
-                
-                this.focused = true;
               } }
 
-              onBlur={ () => this.focused = false }
-
-              onChange={ e =>
+              onBlur={ () =>
               {
-                this.resize();
-                this.onChange(e);
+                this.focused = false;
+
+                this.setState({ content: '' });
+
+                if (blank)
+                  stack.unregister(this.back);
               } }
+
+              onChange={ e => this.onChange(e) }
             />
           </div> : undefined
         }
 
-        <div
-          className={ styles.bottom }
-          style={ { direction: locale.direction } }
-        >
+        <div className={ styles.bottom } style={ { direction: locale.direction } }>
           {
             hidden ? '' :
-              self && type === 'white' ? translation('this-card-is-yours') :
-                owner && type === 'white' ? owner :
-                  blank ? translation('blank') : translation('kuruit')
+              owner && type === 'white' ? owner :
+                blank ? translation('blank') : translation('kuruit')
           }
 
           <ShareIcon className={ styles.share } style={ {
-            width: share ? undefined : 0
+            width: !share ? 0 : undefined
           } } />
         </div>
       </div>
@@ -302,16 +301,16 @@ const styles = createStyle({
     }
   },
 
-  input: {
+  content: {
     cursor: 'pointer',
 
     fontWeight: 700,
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     resize: 'none',
-    overflow: 'hidden auto',
+    overflow: 'hidden',
 
-    minHeight: 'calc((115px + 2vw + 2vh) * 0.985)',
+    height: 'calc((115px + 2vw + 2vh) * 0.985)',
 
     padding: 0,
     border: 0,
@@ -323,11 +322,6 @@ const styles = createStyle({
     ':not(:focus)::selection': {
       backgroundColor: colors.transparent
     }
-  },
-
-  content: {
-    extend: 'input',
-    pointerEvents: 'none'
   },
 
   bottom: {

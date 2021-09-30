@@ -96,16 +96,6 @@
 
   "start": "",
 
-  // match logic
-
-  "this-card-is-yours": "",
-
-  "not-enough-cards": "",
-  "not-enough-players": "",
-  
-  "judge-left": "",
-  "judge-timeout": "",
-
   // states
 
   "judge": "",

@@ -96,22 +96,12 @@
 
   "start": "أبدا",
 
-  // match logic
-
-  "this-card-is-yours": "انت",
-
-  "not-enough-cards": "الجولة أتلغت علشان مفيش كروت كفاية علي الارض",
-  "not-enough-players": "الماتش اتلغي علشان مفيش لعيبة كفاية.",
-  
-  "judge-left": "الجولة أتلغت علشان القاضي خرج من الماتش.",
-  "judge-timeout": "الجولة أتلغت علشان الوقت خلص.",
-  
   // states
 
   "judge": "القاضي",
   "players": "باقي اللعيبة",
-  "spectating": "أنت بتتفرج بس.",
-  "judging": "استني دورك.",
+  "spectating": "أنت بتتفرج بس",
+  "judging": "استني دورك",
 
   // sharing
   
