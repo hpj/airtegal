@@ -13,7 +13,9 @@
   "region-unavailable": "Region is unavailable",
   "you-were-disconnected": "You were disconnected",
 
+  "touch-unavailable": "Touch features are under maintenance.",
   "server-mismatch": "Server is under maintenance.",
+
   "timeout": "Request timed out",
 
   "app-country-block": "This app is blocked in your country for political reasons.",

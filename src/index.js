@@ -12,7 +12,7 @@ import WebFont from 'webfontloader';
 
 import { translation, locale, setLocale } from './i18n.js';
 
-import { setFeatures } from './flags.js';
+import features, { setFeatures } from './flags.js';
 
 import stack from './stack.js';
 
@@ -121,43 +121,49 @@ const webFontPromise = () =>
 
 const checkPromise = async() =>
 {
-  // bypass check if on a development or testing environments
-  if (process.env.NODE_ENV !== 'production')
-  {
-    setFeatures({
-      randos: 'true',
-      kuruit: 'true'
-    });
-
-    setLocale('Egypt', 'ar');
-  
-    return;
-  }
-
   try
   {
-    /**
-    * @type { import('axios').AxiosResponse<{ features: Object<string, string>, country: string, language: string }> }
-    */
-    const { status, data } = await axios.get(`${process.env.API_ENDPOINT}/check`, {
-      timeout: 15000
-    });
-  
-    // server unavailable
-    if (status !== 200)
+    // bypass check if on a development or testing environments
+    if (process.env.NODE_ENV !== 'production')
     {
-      throw new Error(translation(data) ?? data);
-    }
-    // all flags are turned off
-    else if (Object.values(data.features).every(f => f !== 'true'))
-    {
-      throw new Error(translation('server-mismatch'));
+      setFeatures({
+        touch: 'true',
+        randos: 'true',
+        kuruit: 'true'
+      });
+
+      setLocale('Egypt', 'ar');
     }
     else
     {
-      setFeatures(data.features);
+    /**
+    * @type { import('axios').AxiosResponse<{ features: Object<string, string>, country: string, language: string }> }
+    */
+      const { status, data } = await axios.get(`${process.env.API_ENDPOINT}/check`, {
+        timeout: 15000
+      });
+  
+      // server unavailable
+      if (status !== 200)
+      {
+        throw new Error(translation(data) ?? data);
+      }
+      else
+      {
+        setFeatures(data.features);
       
-      setLocale(data.country, data.language);
+        setLocale(data.country, data.language);
+      }
+    }
+
+    // all game-modes are turned off
+    if (!features.kuruit)
+    {
+      throw new Error(translation('server-mismatch'));
+    }
+    else if (isTouchScreen && !features.touch)
+    {
+      throw new Error(translation('touch-unavailable'));
     }
   }
   catch (err)
