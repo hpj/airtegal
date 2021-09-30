@@ -9,7 +9,7 @@
     "height": null
   },
   "titleBasedScreenshots": true,
-  "parallelTests": 6,
+  "parallelTests": 5,
   "defaultTimeout": 25000,
   "tolerance": 2.5,
   "antialiasingTolerance": 3.5,

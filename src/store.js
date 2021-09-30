@@ -149,12 +149,7 @@ export default class Store
   {
     const keys = Object.keys(state);
 
-    // this is temporary addiction to the code
-    // to detect the reason behindd locale being added to the store
-    if (keys.includes('locale'))
-      throw new Error('locale should not be called here');
-
-    keys.forEach((key) => this.changes[key] = this.state[key] = state[key]);
+    keys.forEach(key => this.changes[key] = this.state[key] = state[key]);
 
     // dispatch changes
     this.dispatch().then(callback);
@@ -166,7 +161,7 @@ export default class Store
   {
     /** transform all values of the new state to true
     */
-    const booleanify = (obj) =>
+    const booleanify = obj =>
     {
       const out = {};
 
@@ -190,7 +185,7 @@ export default class Store
     const changesFingerprint = booleanify(this.changes);
 
     // loop though all subscriptions to inform components that state will change
-    this.subscriptions.forEach((component) =>
+    this.subscriptions.forEach(component =>
     {
       const modified = component.stateWillChange?.call(component, this.state);
 

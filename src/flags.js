@@ -1,8 +1,7 @@
-const features = {
-  randos: true,
-  kuruit: true,
-  qassa: false
-};
+/**
+* @type { { randos: boolean, kuruit: boolean } }
+*/
+const features = {};
 
 /**
 * @param { Object<string, string> } flags

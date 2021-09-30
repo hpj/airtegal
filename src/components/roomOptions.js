@@ -2,12 +2,15 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import ShareIcon from 'mdi-react/ShareVariantIcon';
+import CopyIcon from 'mdi-react/ClipboardTextIcon';
+
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import autoSize from 'autosize-input';
-
 import features from '../flags.js';
+
+import { sendMessage } from '../utils.js';
 
 import { StoreComponent } from '../store.js';
 
@@ -44,13 +47,15 @@ class RoomOptions extends StoreComponent
   constructor()
   {
     super({
-      optionsLoadingHidden: true,
-      optionsErrorMessage: '',
-
+      optionsError: '',
+      optionsLoading: false,
+      optionsUrlCopied: false,
       dirtyOptions: undefined
     });
 
-    this.editRequest = this.editRequest.bind(this);
+    this.copy = this.copy.bind(this);
+    this.share = this.share.bind(this);
+
     this.matchRequest = this.matchRequest.bind(this);
   }
 
@@ -61,8 +66,9 @@ class RoomOptions extends StoreComponent
   {
     if (
       changes?.roomData ||
-      changes?.optionsLoadingHidden ||
-      changes?.optionsErrorMessage ||
+      changes?.optionsError ||
+      changes?.optionsLoading ||
+      changes?.optionsUrlCopied ||
       changes?.dirtyOptions
     )
       return true;
@@ -87,94 +93,87 @@ class RoomOptions extends StoreComponent
     if (!master)
       state.dirtyOptions = roomData.options;
 
+    // reset a few states on room state changes
+    if (this.state.roomData?.state !== roomData.state)
+    {
+      wrapperRef.current?.scrollTo({ top: 0 });
+      
+      state.optionsUrlCopied = false;
+    }
+
     return state;
   }
 
-  /**
-  * @param { { roomData: import('./roomOverlay').RoomData } } state
-  * @param { { roomData: import('./roomOverlay').RoomData } } old
-  */
-  stateDidChange(state, old)
+  async matchRequest()
   {
-    const master = state.roomData?.master === socket.id;
+    // show a loading indictor
+    this.store.set({ optionsLoading: true });
 
-    if (JSON.stringify(state.dirtyOptions) !== JSON.stringify(old.dirtyOptions))
+    const { roomData, dirtyOptions } = this.state;
+
+    const dirty = JSON.stringify(dirtyOptions) !== JSON.stringify(roomData?.options);
+
+    try
     {
-      // force all inputs to auto resize
-      const inputs = document.querySelectorAll('#room-options-input');
+      if (dirty)
+        await sendMessage('edit', { options: dirtyOptions });
 
-      inputs.forEach(e => autoSize(e));
+      await sendMessage('matchRequest', undefined, 60000);
 
-      if (!master && state.dirtyOptions && old.dirtyOptions)
-        this.props.addNotification?.(translation('room-edited'));
+      // hide the loading indictor
+      // but after 2.5s to allow game's overlay animations to end
+      setTimeout(() =>
+      {
+        this.store.set({ optionsLoading: false });
+
+        highlightsRef.current?.clearEntries();
+      }, 2500);
+    }
+    catch (err)
+    {
+      this.store.set({
+        optionsLoading: false,
+        optionsError: translation(err) ?? err
+      });
     }
   }
 
-  showErrorMessage(err)
+  // istanbul ignore next
+  share()
   {
-    this.store.set({ optionsErrorMessage: err });
+    const { roomData } = this.state;
+
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
+
+    navigator.share({
+      url,
+      title: 'Share Room URL',
+      text: translation('join-me')
+    }).catch(console.warn);
   }
 
-  editRequest()
+  // istanbul ignore next
+  async copy()
   {
-    const { sendMessage } = this.props;
+    const { roomData } = this.state;
 
-    // show a loading indictor
-    this.loadingVisibility(true);
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
 
-    sendMessage('edit', { options: this.state.dirtyOptions })
-      .then(() =>
-      {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-      })
-      .catch((err) =>
-      {
-        // hide the loading indictor
-        this.loadingVisibility(false);
+    try
+    {
+      await navigator.clipboard?.writeText(url);
 
-        // show an error message
-        this.showErrorMessage(translation(err) || err);
-      });
-  }
-  
-  matchRequest()
-  {
-    const { sendMessage } = this.props;
+      this.store.set({ optionsUrlCopied: true });
 
-    // show a loading indictor
-    this.loadingVisibility(true);
+      clearTimeout(this.copyTimeout);
 
-    sendMessage('matchRequest', undefined, 60000)
-      .then(() =>
-      {
-        // hide the loading indictor (after 2.5s to allow animations to end)
-        setTimeout(() =>
-        {
-          this.loadingVisibility(false);
-
-          highlightsRef.current?.clearEntries();
-        }, 2500);
-      })
-      .catch(err =>
-      {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // show an error message
-        this.showErrorMessage(translation(err) || err);
-      });
-  }
-
-  loadingVisibility(visible)
-  {
-    this.store.set({ optionsLoadingHidden: visible = !visible });
-  }
-
-  scrollTo(options)
-  {
-    if (wrapperRef.current)
-      wrapperRef.current.scrollTo(options);
+      this.copyTimeout =
+        setTimeout(() => this.store.set({ optionsUrlCopied: false }), 1500);
+    }
+    catch (err)
+    {
+      console.warn(err);
+    }
   }
 
   onGameModeChange(value)
@@ -209,19 +208,22 @@ class RoomOptions extends StoreComponent
 
   render()
   {
-    const { locale, translation } = this.props;
+    const { size, locale, translation } = this.props;
 
-    const { roomData, dirtyOptions } = this.state;
+    const {
+      roomData, dirtyOptions,
+      optionsLoading, optionsError,
+      optionsUrlCopied
+    } = this.state;
 
     const options = roomData?.options;
 
     const isMaster = roomData?.master === socket.id;
-    const isPlayer = roomData?.playerProperties[socket.id] !== undefined;
-
-    const isDirty = JSON.stringify(dirtyOptions) !== JSON.stringify(options);
 
     const master = roomData?.playerProperties[roomData?.master ?? roomData?.players[0]]?.username;
     
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
+
     if (!dirtyOptions)
       return <div/>;
 
@@ -229,12 +231,6 @@ class RoomOptions extends StoreComponent
 
     if (features.kuruit)
       gameModes.push({ label: translation('kuruit'), value: 'kuruit', group: translation('free-for-all') });
-
-    // if (features.king)
-    //   gameModes.push({ label: translation('king'), value: 'king' });
-
-    if (features.qassa)
-      gameModes.push({ label: translation('qassa'), value: 'qassa', group: translation('co-op')  });
 
     const GameModes = () =>
     {
@@ -260,16 +256,43 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
+    const RoomUrl = () =>
+    {
+      return <>
+        <div className={ styles.title }>{ translation('room-url') }</div>
+
+        <div className={ styles.url }>
+          { url }
+        </div>
+
+        <div className={ styles.buttons }>
+          <div className={ styles.misc } onClick={ this.copy } data-copied={ optionsUrlCopied }>
+            <div>{ translation('copy') }</div>
+            <CopyIcon/>
+            <CheckIcon/>
+          </div>
+
+          {
+            navigator.share ?
+              <div className={ styles.misc } onClick={ this.share }>
+                <div>{ translation('share') }</div>
+                <ShareIcon/>
+              </div> : undefined
+          }
+        </div>
+      </>;
+    };
+
     const KuruitOptions = () =>
     {
       return <div>
-        <div className={ styles.title }>{ translation('match-options') }</div>
+        <div className={ styles.title }>{ `${translation('options')} ${translation('kuruit')}` }</div>
 
-        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds)).toString() }>
+        <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds) }>
           <div
             id={ 'room-options-kuruit-limited' }
             className={ styles.checkbox }
-            ticked={ (dirtyOptions.endCondition === 'limited').toString() }
+            data-ticked={ dirtyOptions.endCondition === 'limited' }
             onClick={ () => this.onEndCondChange('limited') }
           >
             <CheckIcon className={ styles.mark }/>
@@ -284,7 +307,7 @@ class RoomOptions extends StoreComponent
             max={ '30' }
             maxLength={ 2 }
             id={ 'room-options-input' }
-            master={ isMaster.toString() }
+            data-master={ isMaster }
             className={ styles.input }
             placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxRounds }
@@ -299,11 +322,11 @@ class RoomOptions extends StoreComponent
           <div>{ translation('max-rounds', dirtyOptions.maxRounds) }</div>
         </div>
 
-        <div className={ styles.pick } master={ isMaster.toString() } dirty={ (dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime)).toString() }>
+        <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime) }>
           <div
             id={ 'room-options-kuruit-timer' }
             className={ styles.checkbox }
-            ticked={ (dirtyOptions.endCondition === 'timer').toString() }
+            data-ticked={ dirtyOptions.endCondition === 'timer' }
             onClick={ () => this.onEndCondChange('timer') }
           >
             <CheckIcon className={ styles.mark }/>
@@ -319,7 +342,7 @@ class RoomOptions extends StoreComponent
             max={ '30' }
             maxLength={ 2 }
             id={ 'room-options-input' }
-            master={ isMaster.toString() }
+            data-master={ isMaster }
             className={ styles.input }
             placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxTime }
@@ -334,8 +357,24 @@ class RoomOptions extends StoreComponent
           <div>{ translation('max-time', dirtyOptions.maxTime / 60 / 1000) }</div>
         </div>
 
+        {
+          features.randos ?
+            <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.randos !== options.randos }>
+              <div
+                id={ 'room-options-randos' }
+                className={ styles.checkbox }
+                data-ticked={ dirtyOptions.randos }
+                onClick={ () => this.onRandosChange(!dirtyOptions.randos) }
+              >
+                <CheckIcon className={ styles.mark }/>
+              </div>
+
+              <div>{ translation('randos') }</div>
+            </div> : undefined
+        }
+
         <div style={ { margin: '5px 35px 5px' } }>
-          <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
+          <div className={ styles.field } data-dirty={ dirtyOptions.maxPlayers !== options.maxPlayers }>
             <AutoSizeInput
               required
               type={ 'number' }
@@ -343,7 +382,7 @@ class RoomOptions extends StoreComponent
               max={ '16' }
               maxLength={ 2 }
               id={ 'room-options-input' }
-              master={ isMaster.toString() }
+              data-master={ isMaster }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.maxPlayers }
@@ -358,7 +397,7 @@ class RoomOptions extends StoreComponent
             <div>{ translation('max-players') }</div>
           </div>
 
-          <div className={ styles.field } dirty={ (dirtyOptions.roundTime !== options.roundTime).toString() }>
+          <div className={ styles.field } data-dirty={ dirtyOptions.roundTime !== options.roundTime }>
             <AutoSizeInput
               required
               type={ 'number' }
@@ -367,7 +406,7 @@ class RoomOptions extends StoreComponent
               max={ '5' }
               maxLength={ 1 }
               id={ 'room-options-input' }
-              master={ isMaster.toString() }
+              data-master={ isMaster }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.roundTime }
@@ -382,7 +421,7 @@ class RoomOptions extends StoreComponent
             <div>{ translation('round-countdown') }</div>
           </div>
 
-          <div className={ styles.field } dirty={ (dirtyOptions.startingHandAmount !== options.startingHandAmount).toString() }>
+          <div className={ styles.field } data-dirty={ dirtyOptions.startingHandAmount !== options.startingHandAmount }>
             <AutoSizeInput
               required
               type={ 'number' }
@@ -390,7 +429,7 @@ class RoomOptions extends StoreComponent
               max={ '12' }
               maxLength={ 2 }
               id={ 'room-options-input' }
-              master={ isMaster.toString() }
+              data-master={ isMaster }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.startingHandAmount }
@@ -405,7 +444,7 @@ class RoomOptions extends StoreComponent
             <div>{ translation('hand-cap') }</div>
           </div>
 
-          <div className={ styles.field } dirty={ (dirtyOptions.blankProbability !== options.blankProbability).toString() }>
+          <div className={ styles.field } data-dirty={ dirtyOptions.blankProbability !== options.blankProbability }>
 
             <AutoSizeInput
               required
@@ -414,7 +453,7 @@ class RoomOptions extends StoreComponent
               max={ '25' }
               maxLength={ 2 }
               id={ 'room-options-input' }
-              master={ isMaster.toString() }
+              data-master={ isMaster }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.blankProbability }
@@ -425,126 +464,10 @@ class RoomOptions extends StoreComponent
                 }
               }, resize) }
             />
-
-            <div suffix={ 'true' } style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } }>%</div>
+            <div style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } } data-suffix={ true }>%</div>
             <div>{ translation('blank-probability') }</div>
           </div>
-        
-          {
-            features.randos ?
-              <div className={ styles.field } style={ { margin: '0 5px' } } dirty={ (dirtyOptions.randos !== options.randos).toString() }>
-                <div>{ translation('randos') }</div>
-
-                <div id={ 'room-options-rando-yes' } className={ styles.choice } choice={ (dirtyOptions.randos === true).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(true) }>{ translation('yes') }</div>
-                <div id={ 'room-options-rando-no' } className={ styles.choice } choice={ (dirtyOptions.randos === false).toString() } master={ isMaster.toString() } onClick={ () => this.onRandosChange(false) }>{ translation('no') }</div>
-              </div> : undefined
-          }
         </div>
-      </div>;
-    };
-
-    // const KingOptions = () =>
-    // {
-    //   return <div>
-    //     <div className={ styles.title }>{ translation('match-options') }</div>
-
-    //     <div style={ { margin: '5px -5px 5px' } }>
-    //       <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
-    //         <AutoSizeInput
-    //           required
-    //           type={ 'number' }
-    //           min={ '3' }
-    //           max={ '16' }
-    //           maxLength={ 2 }
-    //           id={ 'room-options-input' }
-    //           master={ isMaster.toString() }
-    //           className={ styles.input }
-    //           placeholder={ translation('options-placeholder') }
-    //           value={ dirtyOptions.maxPlayers }
-    //           onUpdate={ (value, resize) => this.store.set({
-    //             dirtyOptions: {
-    //               ...dirtyOptions,
-    //               maxPlayers: value
-    //             }
-    //           }, resize) }
-    //         />
-
-    //         <div>{ translation('max-players') }</div>
-    //       </div>
-    //     </div>
-    //   </div>;
-    // };
-
-    const QassaOptions = () =>
-    {
-      const players = roomData?.players;
-      const playerProperties = roomData?.playerProperties;
-
-      let groups = [];
-
-      if (players.length < 4)
-      {
-        groups = [ players ];
-      }
-      else if (players.length < 6)
-      {
-        const split = Math.round(players.length / 2);
-
-        groups = [
-          players.slice(0, split),
-          players.slice(split)
-        ];
-      }
-      else
-      {
-        const split = Math.round(players.length / 3);
-
-        groups = [
-          players.slice(0, split),
-          players.slice(split, split * 2),
-          players.slice(split * 2)
-        ];
-      }
-      
-      return <div>
-        <div className={ styles.title }>{ translation('match-options') }</div>
-
-        <div style={ { margin: '5px -5px 5px' } }>
-          <div className={ styles.field } dirty={ (dirtyOptions.maxPlayers !== options.maxPlayers).toString() }>
-            <AutoSizeInput
-              required
-              type={ 'number' }
-              min={ '3' }
-              max={ '16' }
-              maxLength={ 2 }
-              id={ 'room-options-input' }
-              master={ isMaster.toString() }
-              className={ styles.input }
-              placeholder={ translation('options-placeholder') }
-              value={ dirtyOptions.maxPlayers }
-              onUpdate={ (value, resize) => this.store.set({
-                dirtyOptions: {
-                  ...dirtyOptions,
-                  maxPlayers: value
-                }
-              }, resize) }
-            />
-
-            <div>{ translation('max-players') }</div>
-          </div>
-        </div>
-
-        {
-          groups.map((group, y) => <div className={ styles.group } key={ y }>
-            <div className={ styles.groupName }>{ `${translation('groups')} ${y + 1}` }</div>
-            {
-              group.map((playerId, x) => <div className={ styles.member } key={ x }>
-                {/* eslint-disable-next-line security/detect-object-injection */}
-                { playerProperties[playerId]?.username }
-              </div>)
-            }
-          </div>)
-        }
       </div>;
     };
 
@@ -552,76 +475,44 @@ class RoomOptions extends StoreComponent
 
     if (dirtyOptions.gameMode === 'kuruit')
       modeOptions = KuruitOptions;
-    // else if (dirtyOptions.gameMode === 'king')
-    //   modeOptions = KingOptions;
-    else
-      modeOptions = QassaOptions;
 
     return <div ref={ wrapperRef } className={ styles.wrapper }>
 
-      <div style={ { display: (this.state.optionsLoadingHidden) ? 'none' : '' } } className={ styles.loading }>
-        <div className={ styles.loadingSpinner }></div>
-      </div>
+      {
+        optionsLoading ? <div className={ styles.loading }>
+          <div/>
+        </div> : undefined
+      }
 
-      <div className={ styles.error } style={ { display: (this.state.optionsErrorMessage) ? '' : 'none' } } onClick={ () => this.showErrorMessage('') }>
-        <div>{ this.state.optionsErrorMessage }</div>
-      </div>
+      {
+        optionsError ? <div className={ styles.error } onClick={ () => this.stote.set({ optionsError: '' }) }>
+          { optionsError }
+        </div> : undefined
+      }
 
-      <div
-        className={ styles.container }
-        style={ {
-          direction: locale.direction,
-          display: (this.state.optionsLoadingHidden && !this.state.optionsErrorMessage) ? '' : 'none'
-        } }
-      >
-
+      <div className={ styles.container } style={ { direction: locale.direction } }>
         {
-          this.props.children
-        }
-
-        <MatchHighlight ref={ highlightsRef }/>
-
-        {
-          (!options) ? <div/> :
-            <div>
- 
-              {/* Game Mode Selector */}
+          options ?
+            <>
+              <MatchHighlight ref={ highlightsRef } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
 
               { GameModes() }
 
-              { /* Game Mode Options */ }
-                
+              { RoomUrl() }
+
               { modeOptions() }
-
-              {/* Apply Button */}
-
-              {
-                !isMaster && isPlayer ? <div className={ styles.wait }>
-                  <div>{ translation('wait-for-room-master', master) }</div>
-                  <WaitingIcon className={ styles.waiting }/>
-                </div> : undefined
-              }
-
-              {
-                isDirty && isMaster ? <div
-                  id={ 'room-options-apply' }
-                  className={ styles.button }
-                  onClick={ this.editRequest }>
-                  { translation('apply') }
-                </div> : undefined
-              }
 
               {/* Start Button */}
 
               {
-                !isDirty && isMaster ? <div
-                  id={ 'room-options-start' }
-                  className={ styles.button }
-                  onClick={ this.matchRequest }>
-                  { translation('start') }
-                </div> : undefined
+                isMaster ? <div id={ 'room-options-start' } className={ styles.start } onClick={ this.matchRequest }>
+                  <div>{ translation('start') }</div>
+                </div> : <div className={ styles.wait }>
+                  <div>{ translation('wait-for-room-master', master) }</div>
+                  <WaitingIcon/>
+                </div>
               }
-            </div>
+            </> : undefined
         }
       </div>
     </div>;
@@ -631,11 +522,7 @@ class RoomOptions extends StoreComponent
 RoomOptions.propTypes = {
   translation: PropTypes.func,
   locale: PropTypes.object,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node ]),
-  sendMessage: PropTypes.func.isRequired,
-  addNotification: PropTypes.func.isRequired
+  size: PropTypes.object
 };
 
 const waitingAnimation = createAnimation({
@@ -677,7 +564,6 @@ const styles = createStyle({
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.optionsScrollbar}`
     }
   },
@@ -690,51 +576,26 @@ const styles = createStyle({
       maxWidth: 'unset'
     }
   },
-
+  
   loading: {
-    zIndex: 1,
-
     display: 'flex',
     position: 'absolute',
 
     alignItems: 'center',
     justifyContent: 'center',
-    
-    backgroundColor: colors.whiteBackground,
 
-    top: 0,
     width: '100%',
     height: '100%',
 
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      top: 'auto',
-      width: 'calc(100% - 30px)',
-      height: 'calc(100% - 60px)'
+    backgroundColor: colors.whiteBackground,
+
+    '> div': {
+      width: '30px',
+      height: '30px',
+
+      border: `10px ${colors.blackText} solid`,
+      animation: waitingAnimation
     }
-  },
-
-  loadingSpinner: {
-    backgroundColor: 'transparent',
-
-    paddingBottom: '30px',
-    width: '30px',
-
-    border: `10px ${colors.blackText} solid`,
-
-    animation: createAnimation({
-      duration: '2s',
-      timingFunction: 'ease',
-      iterationCount: 'infinite',
-      keyframes: {
-        from: {
-          transform: 'rotate(0deg)'
-        },
-        to: {
-          transform: 'rotate(360deg)'
-        }
-      }
-    })
   },
 
   error: {
@@ -742,37 +603,102 @@ const styles = createStyle({
     cursor: 'pointer',
 
     color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
-
-    textTransform: 'capitalize',
 
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
-  button: {
-    display: 'flex',
-    
-    cursor: 'pointer',
-    justifyContent: 'center',
-    
-    width: '50%',
-
-    padding: '10px',
-    margin: '15px auto 15px auto',
+  url: {
+    userSelect: 'text',
 
     color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
-    
-    borderRadius: '5px',
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+    width: 'fit-content',
+
+    margin: '0 0 15px',
+    padding: '10px 25px',
+
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
+  },
+
+  buttons: {
+    display: 'flex',
+    width: 'min-content',
+
+    gap: '15px',
+    padding: '0 25px'
+  },
+
+  button: {
+    display: 'flex',
+    position: 'relative',
+    cursor: 'pointer',
+
+    alignItems: 'center',
+
+    color: opacity(colors.blackText, 0.5),
+
+    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
+
+    whiteSpace: 'nowrap',
+
+    ':active': {
+      transform: 'scale(0.95)'
     }
   },
 
+  misc: {
+    'extend': 'button',
+    
+    padding: '10px 0',
+
+    '> *': {
+      opacity: 1,
+      transition: 'opacity 0.15s ease-in'
+    },
+
+    '> :nth-child(1)': {
+      padding: '0 15px'
+    },
+
+    '> :nth-child(2)': {
+      width: '16px',
+      height: '16px',
+      margin: '0 15px'
+    },
+
+    '> :nth-child(3)': {
+      opacity: 0,
+      position: 'absolute',
+
+      left: 0,
+      width: '100%',
+      height: '18px'
+    },
+
+    '[data-copied="true"]': {
+      '> *': {
+        opacity: 0
+      },
+      '> :nth-child(3)': {
+        opacity: 1
+      }
+    }
+  },
+
+  start: {
+    'extend': 'button',
+    justifyContent: 'center',
+
+    padding: '15px 10px',
+    margin: '25px 35px 25px'
+  },
+
   title: {
+    opacity: 0.5,
+    fontSize: 'calc(8px + 0.15vw + 0.15vh)',
     padding: '20px 25px'
   },
 
@@ -795,47 +721,21 @@ const styles = createStyle({
     }
   },
 
-  group: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    padding: '20px 25px'
-  },
-
-  groupName: {
-    flexBasis: '100%',
-    fontSize: 'calc(8px + 0.35vw + 0.35vh)',
-    padding: '0 0 15px'
-  },
-
-  member: {
-    color: colors.whiteText,
-    backgroundColor: colors.blackBackground,
-
-    fontSize: 'calc(8px + 0.25vw + 0.25vh)',
-    padding: '10px 15px',
-    borderRadius: '5px',
-
-    ':not(:nth-child(2))': {
-      margin: '0 10px'
-    }
-  },
-
   pick: {
     display: 'flex',
     alignItems: 'center',
 
     padding: '0 25px 15px',
 
-    '[dirty="true"]': {
+    '[data-dirty="true"]': {
       fontStyle: 'italic',
 
       ':after': {
-        display: 'block',
         content: '"*"'
       }
     },
 
-    '[master="false"] > div': {
+    '[data-master="false"] > div': {
       pointerEvents: 'none'
     }
   },
@@ -846,25 +746,15 @@ const styles = createStyle({
     alignItems: 'center',
     justifyContent: 'center',
 
-    color: colors.blackText,
-    backgroundColor: opacity(colors.greyText, 0.25),
+    color: opacity(colors.blackText, 0.75),
+    border: `2px ${opacity(colors.greyText, 0.25)} solid`,
 
     width: '20px',
     height: '20px',
 
-    borderRadius: '3px',
     margin: '0 10px',
 
-    ':hover':
-    {
-      backgroundColor: colors.blackBackground,
-
-      '> svg': {
-        color: colors.whiteText
-      }
-    },
-
-    '[ticked="false"] > svg':
+    '[data-ticked="false"] > svg':
     {
       opacity: 0
     }
@@ -872,8 +762,7 @@ const styles = createStyle({
 
   mark: {
     width: '16px',
-    height: '16px',
-    color: colors.blackText
+    height: '16px'
   },
 
   select: {
@@ -900,13 +789,12 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
 
-    padding: '0 25px 12px',
+    padding: '0 25px 10px',
 
-    '[dirty="true"]': {
+    '[data-dirty="true"]': {
       fontStyle: 'italic',
 
       ':after': {
-        display: 'block',
         content: '"*"'
       }
     }
@@ -915,23 +803,6 @@ const styles = createStyle({
   gameMode: {
     fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     margin: '0 25px 8px 25px'
-  },
-
-  choice: {
-    margin: '0 5px',
-    
-    '[choice="true"]': {
-      borderColor: colors.blackText,
-      borderBottom: '2px solid',
-      pointerEvents: 'none',
-
-      margin: '0 5px -2px 5px'
-    },
-
-    '[master="false"]':
-    {
-      pointerEvents: 'none'
-    }
   },
 
   input: {
@@ -943,11 +814,11 @@ const styles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     fontWeight: '700',
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    margin: '0 5px -2px 5px',
+    margin: '0 5px 0',
     padding: 0,
     border: 0,
 
@@ -955,7 +826,7 @@ const styles = createStyle({
     borderBottom: '2px solid',
 
     '::placeholder': {
-      color: colors.red
+      color: colors.error
     },
 
     ':focus': {
@@ -964,22 +835,28 @@ const styles = createStyle({
 
     ':not(:valid)':
     {
-      color: colors.red,
-      borderColor: colors.red
+      color: colors.error,
+      borderColor: colors.error
     },
 
-    '[master="false"]':
+    '[data-master="false"]':
     {
       borderBottom: 0,
       pointerEvents: 'none'
     },
 
-    ':not(:valid) + div[suffix]': {
-      color: colors.red,
-      borderColor: colors.red
+    '+ [data-suffix]': {
+      fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+      borderColor: colors.blackText,
+      borderBottom: '2px solid'
     },
 
-    '[master="false"] + div[suffix]':
+    ':not(:valid) + [data-suffix]': {
+      color: colors.error,
+      borderColor: colors.error
+    },
+
+    '[data-master="false"] + [data-suffix]':
     {
       borderBottom: 0
     },

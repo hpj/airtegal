@@ -6,9 +6,11 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import Interactable from './Interactable.js';
+import { sendMessage } from '../utils.js';
 
 import { socket } from '../screens/game.js';
+
+import Interactable from './interactable.js';
 
 import Card from './card.js';
 
@@ -46,8 +48,6 @@ class HandOverlay extends StoreComponent
       handVisible: false,
       handBlockDragging: false
     });
-
-    this.active = undefined;
 
     this.onResize = this.onResize.bind(this);
 
@@ -90,13 +90,11 @@ class HandOverlay extends StoreComponent
   */
   stateWillChange({ roomData })
   {
-    const state = {};
-
-    // if in match and and has to pick a card
-    state.handVisible = roomData?.state === 'match' &&
-      roomData?.playerProperties[socket.id]?.state === 'picking';
-
-    return state;
+    return {
+      // if in match and and has to pick a card
+      handVisible: roomData?.state === 'match' &&
+      roomData?.playerProperties[socket.id]?.state === 'picking'
+    };
   }
 
   stateDidChange(state)
@@ -109,8 +107,7 @@ class HandOverlay extends StoreComponent
 
   onResize()
   {
-    // it needs to be updated manually on every resize
-    // or else it can go off-screen
+    // needs to be updated manually on every resize
     overlayRef.current?.snapTo({ index: overlayRef.current.lastSnapIndex });
   }
 
@@ -122,7 +119,7 @@ class HandOverlay extends StoreComponent
     if (!isTouchScreen || !wrapperRef.current)
       return;
 
-    if (overlayRef?.current?.lastSnapIndex !== 2)
+    if (overlayRef.current?.lastSnapIndex !== 2)
     {
       e.preventDefault();
 
@@ -132,6 +129,7 @@ class HandOverlay extends StoreComponent
     {
       const y = wrapperRef.current.scrollTop;
   
+      // block dragging if the user is scrolling through the cards
       this.store.set({
         handBlockDragging: y > 15 ? true : false
       });
@@ -142,15 +140,17 @@ class HandOverlay extends StoreComponent
   {
     const { size } = this.props;
 
+    const { handVisible, handHidden } = this.state;
+
     const handViewport = {
-      height: size.height - y - 36
+      height: (size.height - y) - 36 - (size.width <= 700 ? 33 : 0)
     };
 
     // hide the overlay when it goes off-screen
     if (y >= size.height)
       this.store.set({ handViewport, handHidden: true });
     // only make the overlay handVisible if there's a reason
-    else if (!this.state.handHidden || this.state.handVisible)
+    else if (!handHidden || handVisible)
       this.store.set({ handViewport, handHidden: false });
   }
 
@@ -168,40 +168,16 @@ class HandOverlay extends StoreComponent
 
     const { textareaRef } = element;
 
-    if (isTouchScreen)
-    {
-      if (this.active === element && textareaRef.current.value.trim())
-      {
-        this.active = undefined;
-        this.sendCard(index, textareaRef.current.value);
+    const value =  textareaRef.current?.value.trim();
 
-        return;
-      }
-
-      if (card.blank)
-        textareaRef.current?.focus();
-      
-      this.active = element;
-
-      document.addEventListener('click', () => this.active = undefined, { once: true });
-    }
-    else
-    {
-      if (card.blank && (!element.focused || !textareaRef.current.value.trim()))
-      {
-        textareaRef.current?.focus();
-
-        return;
-      }
-
-      this.sendCard(index, textareaRef.current.value);
-    }
+    if (card.blank && !element.focused)
+      textareaRef.current?.focus();
+    else if (value)
+      this.sendCard(index, value);
   }
 
   sendCard(index, content)
   {
-    const { sendMessage } = this.props;
-    
     sendMessage('matchLogic', { index, content });
   }
 
@@ -236,7 +212,7 @@ class HandOverlay extends StoreComponent
         ref={ overlayRef }
 
         style={ {
-          zIndex: 4,
+          zIndex: 3,
           width: '100%',
           display: handHidden ? 'none' : ''
         } }
@@ -253,50 +229,46 @@ class HandOverlay extends StoreComponent
 
         initialPosition={ { y: size.height } }
       >
-        <div className={ styles.overlayWrapper }>
-          <div className={ styles.overlayContainer }>
+        <div className={ styles.container }>
               
-            <div className={ styles.handlerWrapper }>
-              <div id={ 'kuruit-hand-handler' } className={ styles.handler }/>
-            </div>
+          <div id={ 'kuruit-hand-handler' } className={ styles.handler }>
+            <div/>
+          </div>
 
-            <div ref={ wrapperRef } className={ styles.wrapper } style={ {
-              height: !isTouchScreen ? handViewport?.height : undefined
-            } } onScroll={ this.onScroll }>
+          <div ref={ wrapperRef } className={ styles.wrapper } style={ {
+            height: !isTouchScreen ? handViewport?.height : undefined
+          } } onScroll={ this.onScroll }>
 
-              <div id={ 'kuruit-hand-overlay' } className={ styles.container } style={ {
-                direction: locale.direction,
-                flexWrap: miniView ? 'wrap' : undefined
-              } }>
+            <div id={ 'kuruit-hand-overlay' } className={ styles.cards } style={ {
+              direction: locale.direction,
+              flexWrap: miniView ? 'wrap' : undefined
+            } }>
+              {
+                hand?.map((card, i) =>
                 {
-                  hand?.map((card, i) =>
-                  {
-                    const deg = i > hand.length * 0.5 ?
-                      -(hand.length / 2) :
-                      (hand.length / 2);
+                  const deg = i > hand.length * 0.5 ?
+                    -(hand.length / 2) :
+                    (hand.length / 2);
 
-                    const y = i > hand.length * 0.5 ?
-                      (hand.length / 3) :
-                      -(hand.length / 3);
+                  const y = i > hand.length * 0.5 ?
+                    (hand.length / 3) :
+                    -(hand.length / 3);
 
-                    return <Card
-                      key={ card.key }
-                      style={ {
-                        marginLeft: !miniView ? margin : undefined,
-                        marginRight: !miniView ? margin : undefined,
-                        transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
-                      } }
-                      onClick={ (c) => this.activateCard(c, card, i) }
-                      allowed={ true }
-                      type={ card.type }
-                      blank={ card.blank }
-                      content={ card.content }/>;
-                  })
-                }
-              </div>
-            
+                  return <Card
+                    key={ card.key }
+                    style={ {
+                      marginLeft: !miniView ? margin : undefined,
+                      marginRight: !miniView ? margin : undefined,
+                      transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
+                    } }
+                    onClick={ c => this.activateCard(c, card, i) }
+                    allowed={ true }
+                    type={ card.type }
+                    blank={ card.blank }
+                    content={ card.content }/>;
+                })
+              }
             </div>
-          
           </div>
         </div>
       </Interactable>
@@ -307,28 +279,17 @@ class HandOverlay extends StoreComponent
 HandOverlay.propTypes = {
   translation: PropTypes.func,
   locale: PropTypes.object,
-  size: PropTypes.object,
-  sendMessage: PropTypes.func.isRequired
+  size: PropTypes.object
 };
 
 const styles = createStyle({
   view: {
     position: 'absolute',
-    width: '100vw',
-    height: '100vh'
+    height: '100%',
+    width: '100%'
   },
 
-  overlayWrapper: {
-    // margin to avoid the trackbar
-    margin: '0 0 0 15vw',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      margin: 0
-    }
-  },
-
-  overlayContainer: {
+  container: {
     overflow: 'hidden',
     backgroundColor: colors.handBackground,
 
@@ -346,19 +307,17 @@ const styles = createStyle({
     }
   },
 
-  handlerWrapper: {
+  handler: {
     display: 'flex',
     justifyContent: 'center',
-    margin: '15px'
-  },
+    margin: '15px',
 
-  handler: {
-    cursor: 'pointer',
-    backgroundColor: colors.handler,
-
-    width: 'calc(35px + 2.5%)',
-    height: '6px',
-    borderRadius: '6px'
+    '> div': {
+      backgroundColor: colors.handler,
+      width: 'calc(35px + 2.5%)',
+      height: '6px',
+      borderRadius: '6px'
+    }
   },
 
   wrapper: {
@@ -367,17 +326,16 @@ const styles = createStyle({
 
     '::-webkit-scrollbar':
     {
-      width: '6px'
+      width: '3px'
     },
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '6px',
-      boxShadow: `inset 0 0 6px 6px ${colors.handScrollbar}`
+      boxShadow: `inset 0 0 3px 3px ${colors.handScrollbar}`
     }
   },
 
-  container: {
+  cards: {
     display: 'flex',
     justifyContent: 'center',
 
@@ -386,11 +344,11 @@ const styles = createStyle({
       
       margin: '20px',
 
-      '> [type="white"]': {
+      '> [data-type="white"]': {
         border: `1px solid ${colors.whiteCardHover}`
       },
       
-      '> [type="black"]': {
+      '> [data-type="black"]': {
         border: `1px solid ${colors.blackCardHover}`
       },
 

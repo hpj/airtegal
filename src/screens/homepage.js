@@ -8,9 +8,11 @@ import { createStyle, createAnimation } from 'flcss';
 
 import getTheme from '../colors.js';
 
+import { hideSplashScreen } from '../index.js';
+
 import { withTranslation } from '../i18n.js';
 
-import { fillTheBlanks } from '../utils.js';
+import { shuffle, fillTheBlanks } from '../utils.js';
 
 const colors = getTheme();
 
@@ -21,19 +23,21 @@ class Homepage extends React.Component
     super();
     
     this.state = {
-      item: '',
+      index: 0,
       data: []
     };
 
+    window.scrollTo(0, 0);
+    
     this.interval = undefined;
 
-    window.scrollTo(0, 0);
-
-    this.randomItem = this.randomItem.bind(this);
+    this.updateIndex = this.updateIndex.bind(this);
   }
 
   componentDidMount()
   {
+    hideSplashScreen();
+    
     // disable any dragging functionality in the app
     window.addEventListener('dragstart', this.disableDrag);
   }
@@ -53,42 +57,23 @@ class Homepage extends React.Component
 
   onLocaleChange(translation)
   {
-    const data = [];
-
-    translation('combos')
-      .forEach(({ card, combos }) =>
-        data.push(fillTheBlanks(card.content, combos.map(c => c.content))));
-
-    this.interval = setInterval(this.randomItem, 3500);
+    let data = shuffle(translation('combos'));
     
-    this.randomItem(data);
+    data = data.map(({ card, combos }) => fillTheBlanks(card.content, combos.map(c => c.content)));
+
+    this.setState({ data }, () => this.interval = setInterval(this.updateIndex, 4500));
   }
 
-  randomItem(data)
+  updateIndex()
   {
-    data = data ?? this.state.data;
-
-    // istanbul ignore next
-    if (!data.length)
-    {
-      clearInterval(this.interval);
-    }
-    else if (process.env.NODE_ENV === 'test')
-    {
-      this.setState({ item: data[0], data });
-    }
-    // istanbul ignore next
-    else
-    {
-      const item = data.splice(Math.floor(Math.random() * data.length), 1)[0];
-
-      this.setState({ item, data });
-    }
+    // istanbul ignore if
+    if (process.env.NODE_ENV !== 'test')
+      this.setState({ index: this.state.index + 1 });
   }
 
   render()
   {
-    const { item } = this.state;
+    const { index, data } = this.state;
 
     const { locale, translation } = this.props;
 
@@ -102,7 +87,8 @@ class Homepage extends React.Component
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
           {
-            item?.split('\n')
+            // eslint-disable-next-line security/detect-object-injection
+            data?.[index]?.split('\n')
               .map((t, i) => <span
                 key={ i }
                 className={ styles.content }
@@ -222,8 +208,8 @@ const styles = createStyle({
 
     textDecoration: 'none',
 
-    ':hover': {
-      color: colors.accentColor
+    ':active': {
+      transform: 'scale(0.95)'
     }
   },
 

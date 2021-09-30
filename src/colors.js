@@ -18,8 +18,9 @@ export default function()
   const lightTheme = {
     theme: 'light',
     
+    transparent: 'transparent',
+
     error: '#ad1818',
-    holder: '#000000',
 
     whiteText: '#ffffff',
     whiteBackground: '#ffffff',
@@ -27,35 +28,25 @@ export default function()
     blackText: '#000000',
     blackBackground: '#000000',
    
-    greyText: '#6e6767',
-   
     handler: '#867878',
+    
+    greyText: '#6e6767',
     accentColor: '#454545',
    
-    selectBackground: '#3B5FFF',
-
     roomBackground: '#C4C4C4',
     roomForeground: '#000000',
-
-    pocketHandler: '#ffffff',
 
     trackBarBackground: '#ffffff',
     trackBarScrollbar: '#000000',
    
     optionsScrollbar: '#867878',
 
-    fieldBackground: '#545454',
+    fieldBackground: '#2f2e2e',
+    fieldGroupLine: '#ffffff',
     fieldScrollbar: '#262626',
    
     handBackground: '#C4C4C4',
     handScrollbar: '#949393',
-   
-    headerGradient: [ '#F05F57', '#360940' ],
-   
-    playBackgroundGradient: [ '#000000', '#b9444e' ],
-    playBackgroundText: '#b9444e',
-   
-    playButtonGradient: [ '#ff71e7', '#ff092d' ],
    
     blackCardBackground: '#000000',
     blackCardForeground: '#ffffff',
@@ -63,24 +54,14 @@ export default function()
 
     whiteCardBackground: '#ffffff',
     whiteCardForeground: '#000000',
-    whiteCardHover: '#000000',
-    
-    entryLine: '#ffffff',
-    winner: '#d4af37',
-
-    shareBackground: '#C4C4C4',
-    shareUrlBackground: '#dcdcdc',
-
-    red: 'red',
-    transparent: 'transparent'
+    whiteCardHighlight: '#d4af37',
+    whiteCardHover: '#000000'
   };
 
   const darkTheme = {
     ...lightTheme,
 
     theme: 'dark',
-
-    holder: '#564f4f',
 
     whiteText: '#ffffff',
     whiteBackground: '#211f1f',
@@ -93,41 +74,21 @@ export default function()
     roomBackground: '#3e3d3d',
     roomForeground: '#ffffff',
 
-    pocketHandler: '#867878',
-
     trackBarBackground: '#211f1f',
     trackBarScrollbar: '#c3c3c3',
 
     optionsScrollbar: '#3d3a3a',
 
-    fieldBackground: '#191818',
+    fieldBackground: '#1a1a1a',
+    fieldGroupLine: '#696060',
     fieldScrollbar: '#c3c3c3',
 
-    handBackground: '#292929',
+    handBackground: '#2e2e2e',
     handScrollbar: '#867878',
-
-    headerGradient: [ '#000000', '#8a0e0e' ],
-   
-    playBackgroundGradient: [ '#101010', '#470077' ],
-    playBackgroundText: '#b9444e',
-   
-    playButtonGradient: [ '#46842d', '#306762' ],
-
-    blackCardBackground: '#3c3c3c',
-    blackCardForeground: '#e2e1e1',
-    blackCardHover: '#060606',
 
     whiteCardBackground: '#989898',
     whiteCardForeground: '#040404',
-    whiteCardHover: '#696060',
-
-    client: '#ffffff',
-    error: '#710c0c',
-    red: '#9c0202',
-    
-    entryLine: '#696060',
-    shareBackground: '#292929',
-    shareUrlBackground: '#171717'
+    whiteCardHover: '#696060'
   };
 
   return dark ? darkTheme : lightTheme;

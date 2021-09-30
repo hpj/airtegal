@@ -2,19 +2,23 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
+import LoadingIcon from 'mdi-react/LoadingIcon';
+
+import { createAnimation, createStyle } from 'flcss';
+
+import stack from '../stack.js';
+
 import { StoreComponent } from '../store.js';
+
+import { sendMessage } from '../utils.js';
 
 import { translation } from '../i18n.js';
 
 import { socket } from '../screens/game.js';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
-import { createStyle } from 'flcss';
-
-import Notifications from './notifications.js';
-
-import Interactable from './Interactable.js';
+import Interactable from './interactable.js';
 
 import RoomTrackBar from './roomTrackBar.js';
 import RoomState from './roomState.js';
@@ -22,16 +26,15 @@ import RoomState from './roomState.js';
 import RoomOptions from './roomOptions.js';
 
 import FieldOverlay from './fieldOverlay.js';
-import HandOverlay from './handOverlay.js';
 
-import ShareOverlay from './shareOverlay.js';
+import HandOverlay from './handOverlay.js';
 
 const colors = getTheme();
 
 /**
 * @type { React.RefObject<Interactable> }
 */
-const overlayRef = createRef();
+const interactableRef = createRef();
 
 /**
 * @type { React.RefObject<RoomOptions> }
@@ -51,55 +54,42 @@ export let requestRoomData;
 */
 
 /**
-* @typedef { Object } Story
-* @property { string } key
-* @property { string } name
-* @property { string } template
-* @property { { key: string, value: string, description: string }[] } items
-* @property { { text: string, music: ArrayBuffer, audio: ArrayBuffer } } composed
-*/
-
-/**
 * @typedef { Object } PlayerProperties
-* @property { 'waiting' | 'picking' | 'judging' | 'writing' | 'left' } state
+* @property { 'waiting' | 'picking' | 'judging' | 'left' } state
 * @property { boolean } rando
 * @property { string } username
 */
 
 /**
 * @typedef { Object } RoomOptionsT
-* @property { 'kuruit' | 'qassa' } gameMode
+* @property { 'kuruit' } gameMode
 * @property { 'limited' | 'timer' } endCondition
-* @property { {
-*    maxPlayers: number,
-*    maxRounds: number,
-*    maxTime: number,
-*    blankProbability: number,
-*    startingHandAmount: number,
-*    randos: boolean
-* } } match
-* @property { {
-*    delay: number,
-*    maxDelay: number,
-*    maxTime: number
-* } } round
+* @property { number } maxPlayers
+* @property { number } maxRounds
+* @property { number } maxTime
+* @property { number } blankProbability
+* @property { number } startingHandAmount
+* @property { number } randos
+* @property { number } roundDelay
+* @property { number } roundMaxDelay
+* @property { number } roundTime
 */
 
 /**
 * @typedef { Object } RoomData
 * @property { string } region
+* @property { string } id
 * @property { string } master
 * @property { 'lobby' | 'match' } state
 * @property { 'picking' | 'judging' | 'transaction' |
 *          'judge-left' | 'judge-timeout' | 'picking-timeout' |
-*          'writing' |
 *          'not-enough-players' | 'unhandled' } phase
 * @property { number } timestamp
 * @property { string[] } players
 * @property { Object<string, PlayerProperties> } playerProperties
 * @property { { hand: Card[] } } playerSecretProperties
 * @property { RoomOptionsT } options
-* @property { { id: string, key: string, highlighted: boolean, cards: Card[], story: Story }[] } field
+* @property { { id: string, key: string, highlighted: boolean, cards: Card[] }[] } field
 */
 
 /**
@@ -112,65 +102,35 @@ class RoomOverlay extends StoreComponent
   constructor()
   {
     super({
-      overlayLoadingHidden: true,
-      overlayErrorMessage: '',
+      overlayError: '',
+      overlayLoading: false,
 
-      notifications: [],
-
-      overlayHolderOpacity: 0,
-      overlayHidden: true,
-
-      overlayHandlerVisible: true
+      overlayHandler: true,
+      overlayVisible: false,
+      overlayOpacity: 0
     });
 
-    this.onSnapEnd = this.onSnapEnd.bind(this);
-
-    this.onKicked = this.onKicked.bind(this);
     this.onRoomData = this.onRoomData.bind(this);
-
-    this.addNotification = this.addNotification.bind(this);
-    this.removeNotification = this.removeNotification.bind(this);
+    this.onSnapEnd = this.onSnapEnd.bind(this);
   }
 
   componentDidMount()
   {
     super.componentDidMount();
 
-    socket.on('kicked', this.onKicked);
+    socket.on('kicked', this.leave);
     socket.on('roomData', this.onRoomData);
-
-    const params = new URL(document.URL).searchParams;
-
-    // if testing and there's a match parameter then start a mockup match
-    if (process.env.NODE_ENV === 'test' && params.has('notifications'))
-    {
-      requestAnimationFrame(() =>
-      {
-        this.addNotification('Test 1');
-        this.addNotification('Test 2');
-      });
-    }
   }
 
   componentWillUnmount()
   {
     super.componentWillUnmount();
 
-    socket.off('kicked', this.onKicked);
+    socket.off('kicked', this.leave);
     socket.off('roomData', this.onRoomData);
 
     // make sure socket is closed before component unmount
     socket.close();
-  }
-
-  onKicked()
-  {
-    // make sure overlay is closed
-    overlayRef.current?.snapTo({ index: 1 });
-
-    this.addNotification(translation('you-were-kicked'));
-    
-    this.closeOverlay();
   }
 
   /**
@@ -178,426 +138,360 @@ class RoomOverlay extends StoreComponent
   */
   onRoomData(roomData)
   {
-    // handler is only visible if user is on the match's lobby screen
-    this.handlerVisibility(roomData.state === 'lobby');
+    // TODO
+    // if (roomData.state === 'lobby')
+    // {
+    //   // send notification if the room's master changes
+    //   if (this.state.roomData?.master && this.state.roomData?.master !== roomData.master)
+    //   {
+    //     if (roomData.master === socket.id)
+    //       this.addNotification(translation('you-are-now-master'));
+    //     else
+    //       this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${translation('new-master')}`);
+    //   }
+    // }
 
-    if (roomData.state === 'lobby')
-    {
-      // send notification if the room's master changes
-      if (this.state.roomData?.master && this.state.roomData?.master !== roomData.master)
-      {
-        if (roomData.master === socket.id)
-          this.addNotification(translation('you-are-now-master'));
-        else
-          this.addNotification(`${roomData.playerProperties[roomData.master]?.username} ${translation('new-master')}`);
-      }
-    }
-
-    // if client was in a match
-    // and is about to return to room lobby
-    // then reset room options scroll
-    if (this.state.roomData?.state !== roomData.state && this.state.roomData?.state === 'match')
-      optionsRef.current?.scrollTo({ top: 0 });
-    
+    // TODO
     // show that the round ended
-    if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing'&& roomData.phase !== 'transaction')
-    {
-      this.addNotification(translation(roomData.phase));
-    }
+    // if (roomData.phase && roomData.phase !== 'picking' && roomData.phase !== 'judging' && roomData.phase !== 'writing' && roomData.phase !== 'transaction')
+    //   this.addNotification(translation(roomData.phase));
 
     this.store.set({
-      roomData
+      roomData,
+      // handler is only visible if user is on the match's lobby screen
+      overlayHandler: roomData.state === 'lobby'
     });
+  }
+
+  leave()
+  {
+    // hide the room overlay
+    interactableRef.current?.snapTo({ index: 0 });
+  }
+
+  onSnapEnd(index)
+  {
+    if (index === 1)
+    {
+      this.store.set({
+        overlayError: '',
+        overlayLoading: false
+      });
+    }
+    else
+    {
+      this.hide();
+    }
   }
 
   createRoom()
   {
-    const { username, sendMessage } = this.props;
+    const { username } = this.props;
 
     const params = new URL(document.URL).searchParams;
 
-    // show a loading indictor
-    this.loadingVisibility(true);
+    this.store.set({ overlayLoading: true });
 
     sendMessage('create', { username }).then(() =>
     {
-      // hide the loading indictor
-      this.loadingVisibility(false);
+      // enable the wake-lock
+      stack.wakelock();
 
+      // register on the back stack
+      stack.register(this.leave);
+
+      // spoof a match request for testing purposes
       if (params.has('match'))
         setTimeout(() => optionsRef.current?.matchRequest(), 1500);
 
-      // request a screen wake lock
-      navigator.wakeLock?.request('screen')
-        .then(wl => this.wakeLock = wl)
-        .catch(e => e);
-
       // show the room overlay
-      overlayRef.current.snapTo({ index: 0 });
-    }).catch((err) =>
-    {
-      // hide the loading indictor
-      this.loadingVisibility(false);
-
-      // show an error message
-      this.showErrorMessage(translation(err) || err);
-    });
+      this.store.set({
+        overlayVisible: true
+      }, () => interactableRef.current?.snapTo({ index: 1 }));
+    }).catch(err => this.errorScreen(translation(err) ?? err));
   }
 
   joinRoom(id)
   {
-    const { username, sendMessage } = this.props;
+    const { username } = this.props;
     
     if (typeof id !== 'string')
       id = undefined;
 
-    // show a loading indictor
-    this.loadingVisibility(true);
+    this.store.set({ overlayLoading: true });
 
     sendMessage('join', { id, username }).then(() =>
     {
-      // hide the loading indictor
-      this.loadingVisibility(false);
+      // enable the wake-lock
+      stack.wakelock();
 
-      // request a screen wake lock.
-      navigator.wakeLock?.request('screen')
-        .then(wl => this.wakeLock = wl)
-        .catch(e => e);
-      
+      // register on the back stack
+      stack.register(this.leave);
+
       // show the room overlay
-      overlayRef.current.snapTo({ index: 0 });
-    }).catch((err) =>
-    {
-      // hide the loading indictor
-      this.loadingVisibility(false);
+      this.store.set({
+        overlayVisible: true
+      }, () => interactableRef.current?.snapTo({ index: 1 }));
+    }).catch(err => this.errorScreen(translation(err) ?? err));
+  }
 
-      // show an error message
-      this.showErrorMessage(translation(err) || err);
+  errorScreen(overlayError)
+  {
+    this.store.set({
+      overlayLoading: false,
+      overlayError: overlayError
     });
   }
 
-  leaveRoom()
+  hide()
   {
-    const { sendMessage } = this.props;
+    if (!this.state.overlayVisible)
+      return;
 
-    sendMessage('leave').then(() => this.closeOverlay)
-      .catch(console.error);
-  }
+    // release the wake-lock
+    stack.release();
 
-  closeOverlay()
-  {
+    // unregister from the back stack
+    stack.unregister(this.leave);
+    
+    sendMessage('leave').catch(console.warn);
+
     // refresh rooms list
     this.props.requestRooms();
-
-    // release screen wake lock
-    this.wakeLock?.release();
-
-    this.wakeLock = undefined;
-
-    // reset room options scroll
-    optionsRef.current?.scrollTo({ top: 0 });
-
+  
     // after leaving the room
     this.store.set({
       blanks: [],
       entries: [],
+
+      overlayError: '',
+      overlayLoading: false,
+      overlayVisible: false,
+        
       matchState: undefined,
       dirtyOptions: undefined,
       roomData: undefined
     });
   }
 
-  showErrorMessage(err)
-  {
-    this.store.set({ overlayErrorMessage: err });
-  }
-
-  loadingVisibility(visible)
-  {
-    this.store.set({ overlayLoadingHidden: visible = !visible });
-  }
-
-  handlerVisibility(visible)
-  {
-    // make overlay drag-able or un-drag-able (which in returns controls the handler visibility)
-    this.store.set({ overlayHandlerVisible: visible },
-      () => requestAnimationFrame(() => this.forceUpdate(() => overlayRef.current.snapTo({ index: 0 }))));
-  }
-  
-  /**
-  *  @param { string } content
-  */
-  addNotification(content)
-  {
-    // add delay between notifications
-    if (this.state.notifications.length > 0 && process.env.NODE_ENV !== 'test')
-    {
-      // delta time of when the last notification appeared
-      const delta = Date.now() - this.state.notifications[this.state.notifications.length - 1].timestamp;
-
-      if (delta < 1500)
-      {
-        // add this notifications when 1.5s are passed
-        // from when the last notification was added
-        setTimeout(() => this.addNotification(content), 1500 - delta);
-
-        return;
-      }
-    }
-
-    const item = {
-      content,
-      timestamp: Date.now(),
-      remove: this.removeNotification
-    };
-   
-    this.state.notifications.push(item);
-   
-    this.store.set({ notifications: this.state.notifications });
-
-    // by doing this it makes sure that all the notifications are cleared at once
-    // which is more pleasant to the human eye
-    if (this.notificationsTimeout)
-      clearTimeout(this.notificationsTimeout);
-    
-    // automatically remove the notification after 2.5 seconds
-    if (process.env.NODE_ENV !== 'test')
-      this.notificationsTimeout = setTimeout(this.removeNotification, 2500);
-  }
-
-  removeNotification()
-  {
-    this.store.set({ notifications: [] });
-    
-    this.notificationsTimeout = undefined;
-  }
-
-  onSnapEnd(index)
-  {
-    if (index === 1)
-      this.leaveRoom();
-  }
-
   render()
   {
-    const { size, sendMessage } = this.props;
+    const { size } = this.props;
+
+    const {
+      overlayError,
+      overlayLoading,
+      overlayHandler,
+      overlayOpacity,
+      overlayVisible
+    } = this.state;
 
     const onMovement = ({ x }) =>
     {
       this.store.set({
-        overlayHolderOpacity: 0.5 - (x / (size.width * 2))
-      });
-
-      // hide the overlay and overlay holder when they are off-screen
-      this.store.set({
-        overlayHidden: x >= size.width ? true : false
+        overlayOpacity: 1 - (x / size.width)
       });
     };
 
-    // if size is not calculated yet
-    if (!size.width)
-      return <div/>;
+    return <>
+      {
+        overlayLoading ? <div className={ styles.loading }>
+          <LoadingIcon/>
+        </div> : undefined
+      }
 
-    return <div>
-      <Notifications notifications={ this.state.notifications }/>
+      {
+        overlayError ? <div className={ styles.error } onClick={ () => this.errorScreen() }>
+          { overlayError }
+        </div> : undefined
+      }
 
-      <ShareOverlay
-        addNotification={ this.addNotification }
-        share={ this.state.share }
-        hide={ () => this.store.set({ share: { ...this.state.share, active: false } }) }/>
+      <div className={ styles.wrapper } data-visible={ overlayVisible }>
 
-      <div style={ {
-        display: this.state.overlayLoadingHidden ? 'none' : ''
-      } } className={ styles.loading }
-      />
+        <div style={ { opacity: overlayOpacity } }/>
 
-      <div className={ styles.error } style={ {
-        display: (this.state.overlayErrorMessage) ? '' : 'none'
-      } } onClick={ () => this.showErrorMessage('') }>
-        <div>{ this.state.overlayErrorMessage }</div>
-      </div>
+        <Interactable
+          ref={ interactableRef }
 
-      <div style={ {
-        zIndex: 1,
-        display: (this.state.overlayHidden) ? 'none' : '',
-        opacity: this.state.overlayHolderOpacity || 0
-      } } className={ styles.holder }/>
+          style={ {
+            display: 'flex',
+            position: 'fixed',
 
-      <Interactable
-        ref={ overlayRef }
+            width: '100vw',
+            height: '100vh'
+          } }
 
-        style={ {
-          zIndex: 1,
+          dragEnabled={ overlayHandler }
 
-          position: 'fixed',
-          display: this.state.overlayHidden ? 'none' : '',
+          horizontalOnly={ true }
 
-          backgroundColor: colors.whiteBackground,
-          
-          width: this.state.overlayHandlerVisible ? '100vw' : 'calc(100vw + 18px)'
-        } }
+          frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
-        horizontalOnly={ true }
-        
-        dragEnabled={ this.state.overlayHandlerVisible }
+          boundaries={ {
+            left: 0,
+            right: size.width
+          } }
 
-        // dragArea={ { width: { percent: 25, size: size.width } } }
+          initialPosition={ { x: size.width } }
 
-        frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
+          snapPoints={ [ { x: size.width }, { x: 0 } ] }
 
-        initialPosition={ { x: size.width } }
-          
-        boundaries={ {
-          left: this.state.overlayHandlerVisible ? 0 : -18,
-          right: size.width
-        } }
+          resistance={ { x: size.width * 0.05 } }
 
-        snapPoints={ [ { x: this.state.overlayHandlerVisible ? 0 : -18 }, { x: size.width } ] }
+          triggers={ [ { x: size.width * 0.25, index: 0 } ] }
 
-        onMovement={ onMovement }
-        onSnapEnd={ this.onSnapEnd }
-      >
-        <div className={ styles.wrapper }>
-          <div className={ styles.handlerWrapper }>
-            <div className={ styles.handler }/>
+          onMovement={ onMovement }
+          onSnapEnd={ this.onSnapEnd }
+        >
+
+          <div className={ styles.handler } data-visible={ overlayHandler }>
+            <div/>
           </div>
 
           <div className={ styles.container }>
-            <RoomState addNotification={ this.addNotification }/>
+
+            <RoomState/>
+
             <RoomTrackBar/>
 
-            <HandOverlay sendMessage={ sendMessage } size={ size }/>
-
             <div className={ styles.content }>
-              <FieldOverlay sendMessage={ sendMessage } size={ size }/>
-              <RoomOptions ref={ optionsRef } sendMessage={ sendMessage } addNotification={ this.addNotification }/>
+              <FieldOverlay size={ size }/>
+              <HandOverlay size={ size }/>
+              <RoomOptions ref={ optionsRef }y size={ size }/>
             </div>
           </div>
-        </div>
-      </Interactable>
-    </div>;
+        </Interactable>
+      </div>
+    </>;
   }
 }
 
 RoomOverlay.propTypes = {
-  sendMessage: PropTypes.func.isRequired,
-  requestRooms: PropTypes.func.isRequired,
   size: PropTypes.object,
+  requestRooms: PropTypes.func.isRequired,
   username: PropTypes.string
 };
 
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
+
 const styles = createStyle({
   wrapper: {
-    display: 'grid',
-    
-    backgroundColor: colors.trackBarBackground,
+    zIndex: 3,
+    position: 'fixed',
 
-    gridTemplateColumns: '18px 1fr',
-    gridTemplateRows: '100vh',
-    gridTemplateAreas: '"handler ."',
+    width: '100vw',
+    height: '100vh',
 
-    width: '100%',
-    height: '100%',
-    
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      gridTemplateColumns: '18px calc(100% - 18px)',
-      gridTemplateAreas: '"handler ."',
+    fontWeight: '700',
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-      backgroundColor: colors.whiteBackground
-    }
-  },
+    '[data-visible="false"]': {
+      display: 'none'
+    },
 
-  container: {
-    display: 'grid',
+    '> :nth-child(1)': {
+      position: 'absolute',
+      backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
-    gridTemplateColumns: '15vw 1fr',
-    gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"state content" "trackBar content"',
-
-    // for the portrait overlay
-    '@media screen and (max-width: 1080px)': {
-      gridTemplateColumns: '100%',
-
-      gridTemplateRows: 'auto auto 1fr',
-      gridTemplateAreas: '"state" "trackBar" "content"'
+      width: '100vw',
+      height: '100vh'
     }
   },
 
   loading: {
     zIndex: 1,
-    position: 'fixed',
-    backgroundColor: colors.holder,
 
-    opacity: 0.5,
-    top: 0,
+    display: 'flex',
+    position: 'fixed',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    color: opacity(colors.blackText, 0.5),
+    backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
     width: '100vw',
-    height: '100vh'
+    height: '100vh',
+
+    '> svg': {
+      color: colors.blackText,
+      animation: waitingAnimation,
+
+      minWidth: '32px',
+      minHeight: '32px',
+      maxWidth: '64px',
+      maxHeight: '64px',
+      width: '5vw',
+      height: '5vw'
+    }
   },
 
   error: {
     extend: 'loading',
-    display: 'flex',
+    cursor: 'pointer',
 
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    textTransform: 'capitalize',
+    color: opacity(colors.error, 0.95),
 
     fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
-    cursor: 'pointer',
-    opacity: 0.85,
-
-    '> div': {
-      backgroundColor: colors.error,
-      color: colors.whiteText,
-  
-      padding: '6px',
-      borderRadius: '5px'
-    }
-  },
-
-  holder: {
-    position: 'fixed',
-    
-    backgroundColor: colors.holder,
-
-    top: 0,
-    width: '100vw',
-    height: '100vh'
-  },
-
-  handlerWrapper: {
-    gridArea: 'handler',
-
-    padding: '0 0 0 10px',
-    height: '100vh'
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
   },
 
   handler: {
-    cursor: 'pointer',
+    gridArea: 'handler',
 
-    position: 'relative',
-    backgroundColor: colors.handler,
+    backgroundColor: colors.whiteBackground,
 
-    top: 'calc(50vh - (5px + 5vh) / 2)',
-    width: '8px',
-    height: 'calc(5px + 5vh)',
+    height: '100vh',
+    padding: '0 0 0 10px',
 
-    minHeight: '32px',
-    maxHeight: '64px',
+    '[data-visible="false"]': {
+      display: 'none'
+    },
 
-    borderRadius: '8px'
+    '> div': {
+      position: 'relative',
+      backgroundColor: colors.handler,
+  
+      top: 'calc(50vh - (5px + 5vh) / 2)',
+      width: '6px',
+      height: '48px',
+      borderRadius: '6px'
+    }
+  },
+
+  container: {
+    flexGrow: 1,
+
+    display: 'grid',
+
+    backgroundColor: colors.whiteBackground,
+
+    gridTemplateAreas: '"state content" "trackBar content"',
+    gridTemplateColumns: 'minmax(185px, 15vw) 1fr',
+    gridTemplateRows: 'auto 1fr',
+
+    // for the portrait overlay
+    '@media screen and (max-width: 1080px)': {
+      gridTemplateAreas: '"state" "trackBar" "content"',
+      gridTemplateColumns: '100%',
+      gridTemplateRows: 'auto auto 1fr'
+    }
   },
 
   content: {
     position: 'relative',
-    gridArea: 'content',
-
-    backgroundColor: colors.whiteBackground
+    gridArea: 'content'
   }
 });
 

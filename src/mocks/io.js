@@ -72,8 +72,8 @@ function off(event, listener)
 function once(event, listener)
 {
   // mock connecting to the server
-  if (event === 'connect')
-    listener();
+  if (event === 'connected')
+    listener('اسلام المرج');
 
   return socket;
 }
@@ -117,15 +117,6 @@ function emit(eventName, args)
           startingHandAmount: 4,
           randos: true,
           roundTime: 2 * 60 * 1000
-        }
-      },
-      {
-        id: 'mika',
-        master: 'Mika',
-        players: 4,
-        options: {
-          gameMode: 'qassa',
-          maxPlayers: 6
         }
       }
     ];
@@ -172,14 +163,14 @@ function emit(eventName, args)
       }
     });
   }
+  else if (eventName === 'share')
+  {
+    returnValue = 'CxCAeyJ3aGl0ZSI6WyJNYW5hIl0sImJsYWNrIjoiQXF1YSJ9Aw';
+  }
   else if (eventName === 'matchRequest')
   {
     if (defaultRoom.options.gameMode === 'kuruit')
       startKuruit();
-    else if (defaultRoom.options.gameMode === 'king')
-      startKing();
-    else if (defaultRoom.options.gameMode === 'qassa')
-      startQassa();
   }
   else if (eventName === 'matchLogic')
   {
@@ -253,6 +244,7 @@ function startKuruit()
   if (params.get('mock') === 'hidden')
   {
     room.phase = 'picking';
+
     room.playerProperties['skye'].state = 'judging';
 
     room.field.push({
@@ -276,6 +268,7 @@ function startKuruit()
   else if (params.get('mock') === 'group')
   {
     room.phase = 'judging';
+    
     room.playerProperties['skye'].state = 'judging';
 
     room.field.push({
@@ -317,6 +310,7 @@ function startKuruit()
   else if (params.get('mock') === 'judge')
   {
     room.phase = 'judging';
+
     room.playerProperties['skye'].state = 'judging';
 
     room.field.push({
@@ -395,7 +389,9 @@ function startKuruit()
   else
   {
     room.phase = 'picking';
+
     room.playerProperties['skye'].state = 'picking';
+    room.playerProperties['mika'].state = 'judging';
   
     matchBroadcast(room);
   
@@ -419,273 +415,153 @@ function startKuruit()
   }
 }
 
-function startKing()
-{
-  /**
-  * @type { import('../components/roomOverlay').RoomData }
-  */
-  const room = {};
+// function startKing()
+// {
+//   /**
+//   * @type { import('../components/roomOverlay').RoomData }
+//   */
+//   const room = {};
 
-  room.state = 'match';
+//   room.state = 'match';
 
-  room.players = [ 'skye', 'mika' ];
+//   room.players = [ 'skye', 'mika' ];
 
-  room.playerProperties =
-  {
-    'skye': {
-      username: 'Skye',
-      state: 'waiting'
-    },
-    'mika': {
-      username: 'Mika',
-      state: 'waiting'
-    }
-  };
+//   room.playerProperties =
+//   {
+//     'skye': {
+//       username: 'Skye',
+//       state: 'waiting'
+//     },
+//     'mika': {
+//       username: 'Mika',
+//       state: 'waiting'
+//     }
+//   };
 
-  room.playerSecretProperties =
-  {
-    hand: (params.get('mock') === 'blank') ?
-      [ { key: Math.random(), type: 'white', blank: true } ] :
-      [
-        { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
-        { key: Math.random(), type: 'white', content: 'Skye\'s Card' }
-      ]
-  };
+//   room.playerSecretProperties =
+//   {
+//     hand: (params.get('mock') === 'blank') ?
+//       [ { key: Math.random(), type: 'white', blank: true } ] :
+//       [
+//         { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
+//         { key: Math.random(), type: 'white', content: 'Skye\'s Card' }
+//       ]
+//   };
 
-  room.field = [];
+//   room.field = [];
 
-  // black card
-  room.field.push({
-    key: Math.random(),
-    cards: [ {
-      key: Math.random(),
-      pick: 1,
-      type: 'black',
-      content: 'This is a Black Card'
-    } ]
-  });
+//   // black card
+//   room.field.push({
+//     key: Math.random(),
+//     cards: [ {
+//       key: Math.random(),
+//       pick: 1,
+//       type: 'black',
+//       content: 'This is a Black Card'
+//     } ]
+//   });
 
-  if (params.get('mock') === 'judge')
-  {
-    room.phase = 'judging';
-    room.playerProperties['skye'].state = 'judging';
+//   if (params.get('mock') === 'judge')
+//   {
+//     room.phase = 'judging';
+//     room.playerProperties['skye'].state = 'judging';
 
-    room.field.push({
-      id: 'mika',
-      key: Math.random(),
-      cards: [ {
-        key: Math.random(),
-        type: 'white',
-        content: 'Option 1'
-      } ]
-    });
+//     room.field.push({
+//       id: 'mika',
+//       key: Math.random(),
+//       cards: [ {
+//         key: Math.random(),
+//         type: 'white',
+//         content: 'Option 1'
+//       } ]
+//     });
 
-    room.field.push({
-      id: 'skye',
-      key: Math.random(),
-      cards: [ {
-        key: Math.random(),
-        type: 'white',
-        content: 'Option 2'
-      } ]
-    });
+//     room.field.push({
+//       id: 'skye',
+//       key: Math.random(),
+//       cards: [ {
+//         key: Math.random(),
+//         type: 'white',
+//         content: 'Option 2'
+//       } ]
+//     });
   
-    matchBroadcast(room);
+//     matchBroadcast(room);
   
-    matchLogic = ({ index }) =>
-    {
-      room.phase = 'transaction';
-      room.playerProperties['skye'].state = 'waiting';
+//     matchLogic = ({ index }) =>
+//     {
+//       room.phase = 'transaction';
+//       room.playerProperties['skye'].state = 'waiting';
 
-      // eslint-disable-next-line security/detect-object-injection
-      room.field[index].highlight = true;
+//       // eslint-disable-next-line security/detect-object-injection
+//       room.field[index].highlight = true;
       
-      matchBroadcast(room);
-    };
-  }
-  else if (params.get('mock') === 'spectator')
-  {
-    room.master = '';
-    room.phase = 'judging';
+//       matchBroadcast(room);
+//     };
+//   }
+//   else if (params.get('mock') === 'spectator')
+//   {
+//     room.master = '';
+//     room.phase = 'judging';
 
-    room.players = [ 'mana', 'mika' ];
+//     room.players = [ 'mana', 'mika' ];
     
-    room.playerProperties = {
-      'mana': {
-        username: 'Mana',
-        state: 'judging'
-      },
-      'mika': {
-        username: 'Mika',
-        state: 'waiting'
-      }
-    };
+//     room.playerProperties = {
+//       'mana': {
+//         username: 'Mana',
+//         state: 'judging'
+//       },
+//       'mika': {
+//         username: 'Mika',
+//         state: 'waiting'
+//       }
+//     };
 
-    room.playerSecretProperties = {};
+//     room.playerSecretProperties = {};
 
-    room.field.push({
-      key: Math.random(),
-      cards: [ {
-        key: Math.random(),
-        type: 'white',
-        content: 'Test'
-      } ]
-    });
+//     room.field.push({
+//       key: Math.random(),
+//       cards: [ {
+//         key: Math.random(),
+//         type: 'white',
+//         content: 'Test'
+//       } ]
+//     });
 
-    room.field.push({
-      key: Math.random(),
-      cards: [ {
-        key: Math.random(),
-        type: 'white',
-        content: 'Test'
-      } ]
-    });
+//     room.field.push({
+//       key: Math.random(),
+//       cards: [ {
+//         key: Math.random(),
+//         type: 'white',
+//         content: 'Test'
+//       } ]
+//     });
 
-    matchBroadcast(room);
-  }
-  else
-  {
-    room.phase = 'picking';
-    room.playerProperties['skye'].state = 'picking';
+//     matchBroadcast(room);
+//   }
+//   else
+//   {
+//     room.phase = 'picking';
+//     room.playerProperties['skye'].state = 'picking';
   
-    matchBroadcast(room);
+//     matchBroadcast(room);
   
-    matchLogic = ({ index, content }) =>
-    {
-      room.playerProperties['skye'].state = 'waiting';
+//     matchLogic = ({ index, content }) =>
+//     {
+//       room.playerProperties['skye'].state = 'waiting';
 
-      const card = room.playerSecretProperties.hand.splice(index, 1)[0];
+//       const card = room.playerSecretProperties.hand.splice(index, 1)[0];
 
-      if (card.blank)
-        card.content = content;
+//       if (card.blank)
+//         card.content = content;
   
-      room.field.push({
-        id: 'skye',
-        key: Math.random(),
-        cards: [ card ]
-      });
+//       room.field.push({
+//         id: 'skye',
+//         key: Math.random(),
+//         cards: [ card ]
+//       });
       
-      matchBroadcast(room);
-    };
-  }
-}
-
-function startQassa()
-{
-  /**
-  * @type { import('../components/roomOverlay').RoomData }
-  */
-  const room = {};
-
-  room.state = 'match';
-
-  room.players = [ 'skye', 'mika', 'mana' ];
-
-  room.playerProperties =
-  {
-    'skye': {
-      username: 'Skye',
-      state: 'waiting'
-    },
-    'mika': {
-      username: 'Mika',
-      state: 'waiting'
-    },
-    'mana': {
-      username: 'Mana',
-      state: 'waiting'
-    }
-  };
-
-  room.field = [ {
-    key: Math.random(),
-    story: {
-      name: 'Test',
-      template: 'Testing The ______,\\n\\nTa ta.',
-      key: Math.random(),
-      items: [
-        { key: Math.random(), description: 'name' },
-        { key: Math.random(), description: 'day of the week' },
-        { key: Math.random(), description: 'verb' }
-      ]
-    }
-  } ];
-
-  if (params.get('mock') === 'spectator')
-  {
-    room.master = '';
-
-    room.phase = 'writing';
-
-    room.players = [ 'mana', 'mika' ];
-    
-    room.playerProperties = {
-      'mana': {
-        username: 'Mana',
-        state: 'writing'
-      },
-      'mika': {
-        username: 'Mika',
-        state: 'waiting'
-      }
-    };
-
-    room.playerSecretProperties = {};
-
-    matchBroadcast(room);
-  }
-  else if (params.get('mock') === 'waiting')
-  {
-    room.phase = 'writing';
-    
-    room.playerProperties['skye'].state = 'waiting';
-    room.playerProperties['mika'].state = 'writing';
-
-    room.field[0].story.items[2].description = undefined;
-  
-    matchBroadcast(room);
-  }
-  else if (params.get('mock') === 'reading')
-  {
-    room.phase = 'transaction';
-    room.playerProperties['skye'].state = 'waiting';
-
-    room.field[0].story.name = 'Test Story';
-    room.field[0].story.template = 'Lorem ipsum dolor sit amet ______.';
-
-    room.field[0].story.composed = {
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend ut urna ac mattis. Suspendisse eleifend eros odio. Proin vulputate est nec tellus venenatis faucibus. In placerat euismod urna, ac fringilla arcu tempus vel. Ut dapibus lacus in blandit posuere.\nAenean vestibulum leo sed tempor pharetra.\n\nVivamus placerat congue placerat. Pellentesque ultricies blandit mauris, at sollicitudin libero ornare non. Duis ultrices faucibus dapibus. Mauris ac nulla erat. Aliquam sed imperdiet sem, quis pharetra dui. Donec quis mi a leo tristique gravida. Pellentesque vehicula leo lobortis, accumsan leo sit amet, ultrices leo. Donec gravida dolor eu purus vehicula lacinia.'
-    };
-
-    matchBroadcast(room);
-  }
-  else
-  {
-    room.phase = 'writing';
-    room.playerProperties['skye'].state = 'writing';
-
-    room.field[0].story.items[1].value = 'hello';
-
-    matchBroadcast(room);
-
-    matchLogic = ({ index, content }) =>
-    {
-      // eslint-disable-next-line security/detect-object-injection
-      room.field[0].story.items[index].value = content;
-
-      matchBroadcast(room);
-
-      if (room.field[0].story.items.every(item => typeof item.value === 'string'))
-      {
-        room.phase = 'transaction';
-        room.playerProperties['skye'].state = 'waiting';
-
-        room.field[0].story.composed = {
-          text: 'Testing The Story Mode,\\n\\nTa ta.'
-        };
-
-        matchBroadcast(room);
-      }
-    };
-  }
-}
+//       matchBroadcast(room);
+//     };
+//   }
+// }

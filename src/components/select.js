@@ -6,7 +6,9 @@ import { createStyle } from 'flcss';
 
 import DownIcon from 'mdi-react/ChevronDownIcon';
 
-import getTheme from '../colors.js';
+import stack from '../stack.js';
+
+import getTheme, { opacity } from '../colors.js';
 
 const colors = getTheme();
 
@@ -25,6 +27,7 @@ class Select extends React.Component
       value: options[defaultIndex ?? 0]
     };
 
+    this.hide = this.hide.bind(this);
     this.toggle = this.toggle.bind(this);
     
     this.onKeyDown = this.onKeyDown.bind(this);
@@ -41,15 +44,26 @@ class Select extends React.Component
     window.removeEventListener('keydown', this.onKeyDown);
   }
 
+  hide()
+  {
+    this.toggle(false);
+  }
+
   /**
   * @param { boolean } force
   */
   toggle(force)
   {
-    const { shown, options, value } = this.state;
+    let { shown } = this.state;
+
+    const { options, value } = this.state;
+
+    shown = typeof force === 'boolean' ? force : !shown;
+
+    shown ? stack.register(this.hide) : stack.unregister(this.hide);
     
     this.setState({
-      shown: (typeof force === 'boolean') ? force : !shown,
+      shown,
       // reset index to current value
       index: options.indexOf(value)
 
@@ -96,9 +110,6 @@ class Select extends React.Component
         this.onChange(options[index]);
     }
 
-    else if (e.key === 'Escape')
-      this.toggle(false);
-   
     else if (e.key === 'ArrowUp')
       this.press(index - 1);
    
@@ -120,12 +131,10 @@ class Select extends React.Component
     else if (i <= -1)
       i = length - 1;
 
-    this.setState({
-      index: i
-    }, () =>
+    this.setState({ index: i }, () =>
     {
       // scroll to the new highlighted option
-      document.body.querySelector(`.${styles.option}[highlighted="true"]`).scrollIntoView({
+      document.body.querySelector(`.${styles.option}[data-highlighted="true"]`).scrollIntoView({
         block: 'nearest'
       });
     });
@@ -133,9 +142,7 @@ class Select extends React.Component
 
   hover(i)
   {
-    this.setState({
-      index: i
-    });
+    this.setState({ index: i });
   }
 
   onSearch()
@@ -156,7 +163,7 @@ class Select extends React.Component
 
     this.setState({
       value: opt
-    }, () => this.toggle(false));
+    }, this.hide);
 
     onChange?.call(undefined, opt.value);
   }
@@ -165,7 +172,7 @@ class Select extends React.Component
   {
     const { shown, value, options, index } = this.state;
 
-    return <div shown={ shown.toString() } id={ this.props.id } className={ `${styles.container} ${this.props.className ?? ''}` } onClick={ this.toggle }>
+    return <div data-shown={ shown } id={ this.props.id } className={ `${styles.container} ${this.props.className ?? ''}` } onClick={ this.toggle }>
       <div className={ styles.current }>
         { value.label }
         {/* <input ref={ inputRef } defaultValue= spellCheck={ false } autoComplete={ 'off' } onInput={ this.onSearch }/> */}
@@ -173,9 +180,9 @@ class Select extends React.Component
 
       <DownIcon className={ styles.extend }/>
 
-      <div shown={ shown.toString() } className={ styles.block } onClick={ this.toggle }/>
+      <div data-shown={ shown } className={ styles.block } onClick={ this.back }/>
 
-      <div shown={ shown.toString() } className={ styles.menu }>
+      <div data-shown={ shown } className={ styles.menu }>
 
         <div className={ styles.options }>
           {
@@ -186,7 +193,7 @@ class Select extends React.Component
               return <div key={ i }>
                 { opt.group ? <div className={ styles.group }>{ opt.group }</div> : undefined }
                 <div
-                  highlighted={ highlighted.toString() }
+                  data-highlighted={ highlighted }
                   id={ (this.props.optionsIdPrefix) ? `${this.props.optionsIdPrefix}-${i + 1}` : '' }
                   className={ styles.option }
                   onMouseOver={ () => this.hover(i) }
@@ -219,25 +226,21 @@ Select.propTypes = {
 const styles = createStyle({
   container: {
     display: 'flex',
-    cursor: 'pointer',
 
+    userSelect: 'none',
+    cursor: 'pointer',
+    
     position: 'relative',
-    boxSizing: 'border-box',
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
     
     height: '38px',
 
-    transition: 'all 0.15s',
+    transition: 'background-color 0.15s',
     
-    userSelect: 'none',
-    borderRadius: '5px',
-
-    '[shown="true"]': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground,
-      border: 0
+    '[data-shown="true"]': {
+      backgroundColor: opacity(colors.greyText, 0.15)
     }
   },
 
@@ -269,6 +272,8 @@ const styles = createStyle({
   },
 
   block: {
+    zIndex: 20,
+
     display: 'none',
     position: 'fixed',
 
@@ -283,12 +288,14 @@ const styles = createStyle({
     width: '100vw',
     height: '100vh',
 
-    '[shown="true"]': {
+    '[data-shown="true"]': {
       display: 'block'
     }
   },
 
   menu: {
+    zIndex: 30,
+    
     display: 'none',
     position: 'absolute',
     
@@ -302,15 +309,14 @@ const styles = createStyle({
     width: '100%',
     height: 'auto',
 
-    border: `${colors.greyText} 2px solid`,
-    borderRadius: '5px',
+    border: `1px ${colors.greyText} solid`,
 
     margin: '8px 0',
     padding: '8px 0',
     
     boxShadow: `0 0 25px -5px ${colors.greyText}`,
 
-    '[shown="true"]': {
+    '[data-shown="true"]': {
       display: 'block'
     }
   },
@@ -352,7 +358,7 @@ const styles = createStyle({
     height: '50px',
     padding: '0 15px',
 
-    '[highlighted="true"]': {
+    '[data-highlighted="true"]': {
       color: colors.whiteText,
       backgroundColor: colors.greyText
     }
