@@ -242,6 +242,8 @@ const styles = createStyle({
   container: {
     userSelect: 'none',
 
+    opacity: 0.65,
+
     color: colors.blackText,
 
     fontWeight: '700',

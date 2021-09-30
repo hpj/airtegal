@@ -152,6 +152,8 @@ const styles = createStyle({
   container: {
     position: 'relative',
     userSelect: 'none',
+
+    opacity: 0.65,
     
     color: colors.blackText,
 
@@ -163,15 +165,16 @@ const styles = createStyle({
   },
 
   title: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: 'calc(6px + 0.35vw + 0.35vh)',
+    fontSize: 'calc(8px + 0.15vw + 0.15vh)',
     padding: '15px 10px'
   },
 
   player: {
-    extend: 'title',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
+
+    padding: '15px 10px',
 
     '> svg': {
       width: 'calc(7px + 0.25vw + 0.25vh)',
@@ -183,7 +186,9 @@ const styles = createStyle({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
+
     padding: '0 15px'
   },
 
