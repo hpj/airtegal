@@ -127,8 +127,7 @@ const styles = createStyle({
 
     alignItems: 'center',
     
-    color: colors.blackCardForeground,
-    // backgroundColor: colors.blackCardBackground,
+    color: colors.blackText,
 
     width: 'fit-content',
     

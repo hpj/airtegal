@@ -182,55 +182,6 @@
       ]
     },
     {
-      "title": "Room Options (Apply)",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-input"
-        },
-        {
-          "action": "type",
-          "value": "5"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-randos"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-kuruit-timer"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#room-options-apply"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
       "title": "Play A Blank Card",
       "steps": [
         {

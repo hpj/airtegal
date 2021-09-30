@@ -5,8 +5,8 @@
     "start": "webpack serve --config webpack.config.dev.js --mode development",
     "start:testing": "npm run start -- --node-env test",
     "build": "webpack --config webpack.config.prod.js --node-env production",
-    "test": "docker-compose -f docker-compose.yml up --build test",
-    "update-tests": "docker-compose -f docker-compose.yml up --build update-tests"
+    "test": "docker compose -f docker-compose.yml up --build test",
+    "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
   },
   "dependencies": {
     "@sentry/react": "^6.13.2",
@@ -32,7 +32,7 @@
     "eslint-plugin-security": "^1.4.0",
     "git-revision-webpack-plugin": "^5.0.0",
     "json5-loader": "^4.0.1",
-    "might-cli": "^3.1.3",
+    "might-cli": "^3.1.4",
     "might-ui": "^1.1.8",
     "webpack": "^5.55.1",
     "webpack-cli": "^4.8.0",
