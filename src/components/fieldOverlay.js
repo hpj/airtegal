@@ -1,28 +1,22 @@
 import React, { createRef } from 'react';
 
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-
 import PropTypes from 'prop-types';
 
 import { createStyle } from 'flcss';
 
-import ShareIcon from 'mdi-react/ShareVariantIcon';
-
 import { StoreComponent } from '../store.js';
 
-import { socket } from '../screens/game.js';
+import { sendMessage } from '../utils.js';
+
+import { socket, shareRef } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
-import Interactable from './Interactable.js';
+import Interactable from './interactable.js';
 
 import Card from './card.js';
-
-import Box from './box.js';
-
-import { shareEntry } from './shareOverlay.js';
 
 const colors = getTheme();
 
@@ -84,8 +78,6 @@ class FieldOverlay extends StoreComponent
     if (!allowed)
       return;
       
-    const { sendMessage } = this.props;
-
     const { options, field } = this.state.roomData;
     
     sendMessage('matchLogic', { index, content }).then(() =>
@@ -114,16 +106,9 @@ class FieldOverlay extends StoreComponent
   {
     const { options, field } = this.state.roomData;
 
-    if (options.gameMode === 'qassa')
+    if (options.gameMode === 'kuruit')
     {
-      shareEntry({
-        template: field[0]?.story?.template?.replace(/\\n/g, '\n'),
-        items: field[0]?.story?.items?.map(i => i.value)
-      });
-    }
-    else if (options.gameMode === 'kuruit')
-    {
-      shareEntry({
+      shareRef.current?.shareEntry({
         black: field[0]?.cards[0]?.content,
         // eslint-disable-next-line security/detect-object-injection
         white: field[index]?.cards?.map(c => c.content)
@@ -138,8 +123,6 @@ class FieldOverlay extends StoreComponent
     const { roomData, fieldHidden, fieldVisible } = this.state;
 
     const field = roomData?.field ?? [];
-
-    const gameMode = roomData?.options.gameMode;
 
     const playerState = roomData?.playerProperties[socket.id]?.state;
     
@@ -167,74 +150,57 @@ class FieldOverlay extends StoreComponent
         } }
 
         dragEnabled={ false }
+
         horizontalOnly={ true }
 
         onMovement={ onMovement }
+
         frame={ { pixels: Math.round(size.width * 0.05), every: 8 } }
 
         boundaries={ {
           left: 0,
           right: size.width
         } }
-        snapPoints={ [ { x: size.width }, { x: 0 } ] }
+
         initialPosition={ { x: size.width } }
+        
+        snapPoints={ [ { x: size.width }, { x: 0 } ] }
       >
         <div className={ styles.wrapper }>
-          {
-            gameMode === 'kuruit' ?
-              <div id={ 'kuruit-field-overlay' } className={ styles.container } style={ { direction: locale.direction } }>
-                {
-                  field.map((entry, entryIndex) =>
-                  {
-                    const allowed = playerState === 'judging' && entryIndex > 0;
 
-                    return <div className={ styles.entry } key={ entry.key }>
-                      {
-                        entry.cards?.map((card, cardIndex) => <Card
-                          key={ card.key }
-                          type={ card.type }
-                          content={ card.content }
-                          hidden={ !card.content }
-                          allowed={ allowed }
-                          self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
-                          owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
-                          winner= { entry.highlight }
-                          share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
-                          onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
-                        />)
-                      }
-                    </div>;
-                  })
-                }
-              </div>
-              :
-              <TransitionGroup id={ 'qassa-field-overlay' } className={ styles.container }>
-                {
-                  field[0]?.story?.composed ?
-                    <CSSTransition key={ field[0].story.key } timeout={ 250 }>
-                      <div className={ styles.qassa }>
-                        <div className={ styles.content } style={ { direction: locale.direction } } onClick={ () => this.share() }>
-                          { field[0].story.composed?.text.replace(/\\n/g, '\n') }
-                          <div className={ styles.bottom }>
-                            { translation('qassa') }
-                            <ShareIcon className={ styles.share }/>
-                          </div>
-                        </div>
-                      </div>
-                    </CSSTransition>
-                    :
-                    field[0]?.story?.items.map((item, index) =>
-                      <CSSTransition key={ item.key } timeout={ 250 }>
-                        <Box
-                          value={ item.value }
-                          description={ item.description }
-                          allowed={ playerState === 'writing' }
-                          onSubmit={ content => this.submit(index, content, playerState === 'writing') }
-                        />
-                      </CSSTransition>)
-                }
-              </TransitionGroup>
-          }
+          <div className={ styles.indicator } style={ { direction: locale.direction } }>
+            {
+              !playerState ? translation('spectating') :
+                roomData?.phase === 'picking' && playerState === 'judging' ? translation('judging') :
+                  undefined
+            }
+          </div>
+          
+          <div id={ 'kuruit-field-overlay' } className={ styles.container } style={ { direction: locale.direction } }>
+            {
+              field.map((entry, entryIndex) =>
+              {
+                const allowed = playerState === 'judging' && entryIndex > 0;
+
+                return <div className={ styles.entry } key={ entry.key }>
+                  {
+                    entry.cards?.map((card, cardIndex) => <Card
+                      key={ card.key }
+                      type={ card.type }
+                      content={ card.content }
+                      hidden={ !card.content }
+                      allowed={ allowed }
+                      self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
+                      owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
+                      winner= { entry.highlight }
+                      share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
+                      onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                    />)
+                  }
+                </div>;
+              })
+            }
+          </div>
         </div>
       </Interactable>
     </div>;
@@ -244,7 +210,6 @@ class FieldOverlay extends StoreComponent
 FieldOverlay.propTypes = {
   translation: PropTypes.func,
   locale: PropTypes.object,
-  sendMessage: PropTypes.func.isRequired,
   size: PropTypes.object
 };
 
@@ -261,23 +226,43 @@ const styles = createStyle({
     position: 'relative',
     backgroundColor: colors.fieldBackground,
 
-    left: '10px',
     height: '100%',
-
-    borderTopLeftRadius: '10px',
-    borderBottomLeftRadius: '10px',
-    borderRadius: 'calc(10px + 1.5vw) 0 0 calc(10px + 1.5vw)',
 
     // for the portrait overlay
     '@media screen and (max-width: 1080px)': {
-      left: '0',
-      width: '100%',
-      borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0'
+      width: '100%'
     },
 
     '::-webkit-scrollbar':
     {
       width: 0
+    }
+  },
+
+  indicator: {
+    display: 'flex',
+    position: 'relative',
+    justifyContent: 'center',
+
+    userSelect: 'none',
+
+    color: colors.blackText,
+    backgroundColor: colors.trackBarBackground,
+  
+    fontSize: 'calc(6px + 0.35vw + 0.35vh)',
+
+    padding: '10px',
+
+    transition: 'padding 0.25s ease-in-out',
+
+    ':empty': {
+      height: 0,
+      padding: 0
+    },
+  
+    // for the portrait overlay
+    '@media screen and (max-width: 1080px)': {
+      padding: '10px 15px'
     }
   },
 
@@ -298,78 +283,12 @@ const styles = createStyle({
     ':after': {
       content: '""',
       position: 'absolute',
-      backgroundColor: colors.entryLine,
+      backgroundColor: colors.fieldGroupLine,
       left: '2.5vw',
       top: 'calc(50% - 1px)',
       width: 'calc(100% - 5vw)',
       height: '2px'
     }
-  },
-
-  qassa: {
-    position: 'absolute',
-    display: 'flex',
-    justifyContent: 'center',
-
-    width: '100%',
-    height: 'auto',
-    minHeight: '100%',
-
-    '.enter': {
-      left: '100vw'
-    },
-    
-    '.enter-active': {
-      left: 0,
-      transition: 'left 0.25s'
-    },
-
-    '.exit': {
-      left: 0
-    },
-
-    '.exit-active': {
-      left: '100vw',
-      transition: 'left 0.25s'
-    }
-  },
-
-  content: {
-    cursor: 'pointer',
-    userSelect: 'none',
-    
-    color: colors.whiteText,
-    backgroundColor: colors.blackCardBackground,
-    
-    fontWeight: 700,
-    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-    
-    whiteSpace: 'pre-wrap',
-    lineHeight: '2em',
-
-    maxWidth: '480px',
-    width: '100%',
-    height: 'min-content',
-
-    margin: '25px',
-    padding: '45px 35px 0',
-    borderRadius: '10px'
-  },
-
-  bottom: {
-    display: 'grid',
-    gridTemplateColumns: '1fr auto',
-    padding: '15px 0px 15px'
-  },
-
-  share: {
-    color: colors.blackCardForeground,
-
-    width: 'calc(14px + 0.3vw + 0.3vh)',
-    height: 'calc(14px + 0.3vw + 0.3vh)',
-
-    margin: 'auto 0'
   }
 });
 

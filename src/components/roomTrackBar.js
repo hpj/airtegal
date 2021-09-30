@@ -22,6 +22,11 @@ const colors = getTheme();
 */
 class RoomTrackBar extends StoreComponent
 {
+  constructor()
+  {
+    super();
+  }
+
   /**
   * @param { { roomData: import('./roomOverlay').RoomData } } changes
   */
@@ -33,30 +38,69 @@ class RoomTrackBar extends StoreComponent
 
   render()
   {
-    const { locale } = this.props;
+    const { locale, translation } = this.props;
+
+    const { roomData } = this.state;
+
+    const match = roomData?.state === 'match';
+
+    // eslint-disable-next-line react/prop-types
+    const Player = ({ turn, username }) => <div className={ styles.player }>
+
+      {
+        match ? <>{ turn ? <WaitingIcon className={ styles.waiting }/> : <CheckIcon/> }</> : undefined
+      }
+
+      <div className={ styles.name }>{ username }</div>
+    </div>;
+
+    //  separate the judge from the rest of the players
+
+    // eslint-disable-next-line security/detect-object-injection
+    const judges = roomData?.players.filter(id => roomData?.playerProperties[id].state === 'judging');
+
+    // eslint-disable-next-line security/detect-object-injection
+    const players = roomData?.players.filter(id => roomData?.playerProperties[id].state !== 'judging');
 
     return <div className={ styles.wrapper }>
-      <div className={ styles.container }>
-        <div className={ styles.players }>
-          {
-            this.state.roomData?.players.map((playerId) =>
-            {
-              const match = this.state.roomData?.state === 'match';
-              // eslint-disable-next-line security/detect-object-injection
-              const player = this.state.roomData?.playerProperties[playerId];
-              
-              const turn = player?.state === 'judging' || player?.state === 'picking' || player?.state === 'writing';
 
-              return <div key={ playerId } className={ styles.player } style={ { direction: locale.direction } }>
-                {
-                  turn ? <WaitingIcon className={ styles.waiting } style={ { display: !match ? 'none' : undefined } }/> :
-                    <CheckIcon className={ styles.played } style={ { display: !match ? 'none' : undefined } }/>
-                }
-                <div className={ styles.name }>{ player?.username }</div>
-              </div>;
-            })
-          }
-        </div>
+      <div className={ styles.container } style={ { direction: locale.direction } }>
+
+        {
+          judges?.length ? <div className={ styles.title }>
+            { translation('judge') }
+          </div> : undefined
+        }
+
+        {
+          judges?.map(id =>
+          {
+            // eslint-disable-next-line security/detect-object-injection
+            const player = roomData?.playerProperties[id];
+
+            const turn = roomData?.phase === 'judging';
+
+            return <Player key={ id } turn={ turn } username={ player?.username }/>;
+          })
+        }
+
+        {
+          judges?.length ? <div className={ styles.title }>
+            { translation('players') }
+          </div> : undefined
+        }
+
+        {
+          players?.map(id =>
+          {
+            // eslint-disable-next-line security/detect-object-injection
+            const player = roomData?.playerProperties[id];
+            
+            const turn = player?.state === 'picking';
+
+            return <Player key={ id } turn={ turn } username={ player?.username }/>;
+          })
+        }
       </div>
     </div>;
   }
@@ -84,15 +128,12 @@ RoomTrackBar.propTypes =
 
 const styles = createStyle({
   wrapper: {
-    zIndex: 3,
     gridArea: 'trackBar',
 
     backgroundColor: colors.trackBarBackground,
     
     overflow: 'hidden auto',
     
-    margin: '0px 0px 0px 10px',
-
     '::-webkit-scrollbar':
     {
       width: '8px'
@@ -100,7 +141,6 @@ const styles = createStyle({
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.trackBarScrollbar}`
     },
 
@@ -113,6 +153,8 @@ const styles = createStyle({
     position: 'relative',
     userSelect: 'none',
     
+    color: colors.blackText,
+
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
     
@@ -120,37 +162,32 @@ const styles = createStyle({
     height: 'min-content'
   },
 
-  players: {
-    gridArea: 'players',
-    
-    height: 'min-content'
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: 'calc(6px + 0.35vw + 0.35vh)',
+    padding: '15px 10px'
   },
 
   player: {
-    display: 'flex',
-    alignItems: 'center',
-    color: colors.blackText,
+    extend: 'title',
+    justifyContent: 'center',
 
-    padding: '0 10px'
+    '> svg': {
+      width: 'calc(7px + 0.25vw + 0.25vh)',
+      height: 'calc(7px + 0.25vw + 0.25vh)'
+    }
   },
 
   name: {
     overflow: 'hidden',
+    whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
-    padding: '15px'
-  },
-
-  played: {
-    width: 'calc(7px + 0.25vw + 0.25vh)',
-    height: 'calc(7px + 0.25vw + 0.25vh)',
-    
-    color: colors.blackText
+    padding: '0 15px'
   },
 
   waiting: {
-    extend: 'played',
     animation: waitingAnimation
   }
 });

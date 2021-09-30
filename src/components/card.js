@@ -102,9 +102,9 @@ class Card extends React.Component
       }
 
       <div
-        type={ type }
-        allowed={ ((allowed || share) && !hidden).toString() }
-        winner={ winner.toString() }
+        data-type={ type }
+        data-allowed={ (allowed || share) && !hidden }
+        data-winner={ winner }
         className={ styles.container }
         onClick={ e =>
         {
@@ -115,13 +115,13 @@ class Card extends React.Component
         } }
       >
         {
-          hidden ? <div className={ styles.hidden } type={ type } style={ { direction: locale.direction } }>
+          hidden ? <div className={ styles.hidden } style={ { direction: locale.direction } }>
             <div>{ translation('kuruit') }</div>
           </div> : undefined
         }
 
         {
-          !hidden ? <div className={ styles.card } type={ type } style={ { direction: locale.direction } }>
+          !hidden ? <div className={ styles.card } data-type={ type } style={ { direction: locale.direction } }>
             <textarea
               ref={ this.textareaRef }
               className={ blank ? styles.input : styles.content }
@@ -221,8 +221,6 @@ const styles = createStyle({
   },
 
   container: {
-    borderRadius: '10px',
-
     fontWeight: 700,
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
@@ -231,11 +229,11 @@ const styles = createStyle({
 
     transition: 'box-shadow 0.25s ease',
 
-    '[allowed="true"]': {
+    '[data-allowed="true"]': {
       cursor: 'pointer'
     },
 
-    '[allowed="true"]:hover': {
+    '[data-allowed="true"]:hover': {
       animationName: `${floatAnimation}, ${hoverAnimation}`,
       animationDuration: '.3s, 1.5s',
       animationDelay: '0s, .3s',
@@ -245,24 +243,24 @@ const styles = createStyle({
       animationDirection: 'normal, alternate'
     },
 
-    '[winner="true"]': {
-      boxShadow: `5px 5px 0 0 ${colors.winner}, 5px 5px 10px 0 ${colors.winner}`
+    '[data-winner="true"]': {
+      boxShadow: `5px 5px 0 0 ${colors.whiteCardHighlight}, 5px 5px 10px 0 ${colors.whiteCardHighlight}`
     },
 
-    '[type="black"][allowed="true"]:hover': {
+    '[data-type="black"][data-allowed="true"]:hover': {
       boxShadow: `5px 5px 0px 0px ${colors.blackCardHover}`
     },
 
-    '[type="white"][allowed="true"][winner="false"]:hover': {
+    '[data-type="white"][data-allowed="true"][data-winner="false"]:hover': {
       boxShadow: `5px 5px 0px 0px ${colors.whiteCardHover}`
     },
 
-    '[type="black"]': {
+    '[data-type="black"]': {
       color: colors.blackCardForeground,
       backgroundColor: colors.blackCardBackground
     },
 
-    '[type="white"]': {
+    '[data-type="white"]': {
       color: colors.whiteCardForeground,
       backgroundColor: colors.whiteCardBackground
     }
@@ -293,12 +291,12 @@ const styles = createStyle({
     width: '100%',
     height: 'auto',
 
-    '[type="black"]> textarea': {
+    '[data-type="black"]> textarea': {
       color: colors.blackCardForeground,
       backgroundColor: colors.blackCardBackground
     },
 
-    '[type="white"]> textarea': {
+    '[data-type="white"]> textarea': {
       color: colors.whiteCardForeground,
       backgroundColor: colors.whiteCardBackground
     }

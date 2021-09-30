@@ -1,8 +1,8 @@
 {
-  "short_name": "Airtegal",
-  "name": "Airtegal",
-  "description": "An app about comedy or something...",
   "start_url": "/play",
+  "name": "Airtegal",
+  "short_name": "Airtegal",
+  "description": "HAHAhahahhaHHAhha........",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#000000",
@@ -16,71 +16,54 @@
     }
   ],
   "categories": [ "entertainment", "games" ],
-  "screenshots" : [
-    {
-      "src": "assets/screenshot-1.png",
-      "sizes": "1350x640",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/screenshot-2.png",
-      "sizes": "924x1460",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/screenshot-3.png",
-      "sizes": "924x1288",
-      "type": "image/png"
-    }
-  ],
   "icons": [
     {
       "src": "icons/72.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/96.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/128.png",
       "sizes": "128x128",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/144.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/152.png",
       "sizes": "152x152",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/180.png",
       "sizes": "180x180",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/384.png",
       "sizes": "384x384",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icons/512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

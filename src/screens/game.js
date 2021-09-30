@@ -5,26 +5,31 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
-import OptionsIcon from 'mdi-react/CogIcon';
+
+import Brightness2Icon from 'mdi-react/Brightness2Icon';
+import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
 import { io } from 'socket.io-client';
 
-import { holdLoadingScreen, hideLoadingScreen, remountLoadingScreen } from '../index.js';
-
-import getTheme from '../colors.js';
-
 import { createStyle, createAnimation } from 'flcss';
+
+import getTheme, { detectDeviceIsDark, opacity } from '../colors.js';
+
+import { ensureSplashScreen, hideSplashScreen } from '../index.js';
+
+import { sendMessage } from '../utils.js';
 
 import * as mocks from '../mocks/io.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
-import Error from '../components/error.js';
+import ErrorScreen from '../components/error.js';
 
-import TutorialKuruit from '../components/tutorialKuruit';
+import TutorialOverlay from '../components/tutorialOverlay';
+
+import ShareOverlay from '../components/shareOverlay.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
-import OptionsOverlay from '../components/optionsOverlay.js';
 
 import { locale, translation, withTranslation } from '../i18n.js';
 
@@ -40,7 +45,15 @@ const colors = getTheme();
 */
 const usernameRef = createRef();
 
+/**
+* @type { React.RefObject<RoomOverlay> }
+*/
 const overlayRef = createRef();
+
+/**
+* @type { React.RefObject<ShareOverlay> }
+*/
+export const shareRef = createRef();
 
 /**
 * @type { import('socket.io-client').Socket }
@@ -51,7 +64,7 @@ export let socket;
 */
 function errorScreen(error)
 {
-  ReactDOM.render(<Error error={ error }/>, placeholder);
+  ReactDOM.render(<ErrorScreen error={ error }/>, placeholder);
 
   ReactDOM.unmountComponentAtNode(app);
 }
@@ -64,7 +77,7 @@ function connect()
   {
     try
     {
-      let resolved = false;
+      let connected = false;
 
       socket = process.env.NODE_ENV === 'test' ? mocks.socket :
         io(process.env.API_ENDPOINT, {
@@ -74,33 +87,21 @@ function connect()
             region: locale().value
           } });
 
-      socket.once('connect', () =>
+      socket.once('connected', username =>
       {
-        setTimeout(() =>
-        {
-          if (socket.connected)
-          {
-            resolved = true;
+        connected = true;
 
-            resolve();
-          }
-        }, 100);
+        resolve(username);
       });
 
-      const fail = (err) =>
+      const fail = err =>
       {
-        if (!resolved)
-        {
-          resolved = true;
-
-          reject(err);
-        }
-        else
-        {
-          errorScreen(translation(err));
-        }
+        if (connected)
+          return;
 
         socket.close();
+
+        reject(err);
       };
 
       socket.once('error', fail);
@@ -110,10 +111,8 @@ function connect()
       // connecting timeout
       setTimeout(() =>
       {
-        if (socket.connected)
+        if (connected)
           return;
-        
-        resolved = true;
 
         socket.close();
 
@@ -135,20 +134,17 @@ class Game extends React.Component
   {
     super();
 
-    // check if loading screen is visible
-    // if true then hold it
-    // if false then remount it
-    if (!holdLoadingScreen())
-      remountLoadingScreen();
-
     this.state = {
-      loadingHidden: true,
-      errorMessage: '',
+      error: '',
+      loading: true,
 
-      username: localStorage.getItem('username')?.trim(),
-      usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names')),
+      username: localStorage.getItem('username')?.trim() || '',
 
-      size: {},
+      size: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      },
+
       rooms: []
     };
 
@@ -157,48 +153,35 @@ class Game extends React.Component
 
     this.requestRooms = this.requestRooms.bind(this);
 
-    // disable back button
-
-    window.history.pushState(undefined, document.title, window.location.href);
-
-    window.addEventListener('popstate', () => window.history.pushState(undefined, document.title,  window.location.href));
-
     // fix the scroll position
     window.scrollTo(0, 0);
+
+    ensureSplashScreen();
 
     // connect to the socket io server
     connect()
       // if app connected successfully
       // hide the loading screen
-      .then(() =>
+      .then(username =>
       {
+        // if user has no saved username
+        // then give them the username the server picked randomly
+        this.setState({
+          username: this.state.username || username
+        }, () =>
+        {
+          usernameRef.current?.resize();
+          hideSplashScreen();
+        });
+
         this.requestRooms();
-        
-        hideLoadingScreen();
       })
       .catch(err => errorScreen(translation(err?.message ?? err)));
   }
 
-  stupidName(firstNames, lastNames)
-  {
-    if (process.env.NODE_ENV === 'test')
-    {
-      firstNames = [ 'اسلام' ];
-      lastNames = [ 'المرج' ];
-    }
-  
-    const first = firstNames[Math.floor(Math.random() * firstNames.length)];
-    const last = lastNames[Math.floor(Math.random() * lastNames.length)];
-  
-    return `${first} ${last}`;
-  }
-
   componentDidMount()
   {
-    // auto-size the username input-box
-    this.resize();
-
-    // auto-size the username input-box on resize
+    // update the size state when the app is resized
     window.addEventListener('resize', this.resize);
 
     // disable any dragging functionality in the app
@@ -225,100 +208,34 @@ class Game extends React.Component
     window.removeEventListener('dragstart', this.disableDrag);
   }
 
-  onLocaleChange(translation)
-  {
-    this.setState({
-      usernameRandomized: this.stupidName(translation('stupid-first-names'), translation('stupid-last-names'))
-    }, usernameRef.current?.resize);
-  }
-
-  /**
-  * @param { string } eventName
-  * @param  { {} } args
-  * @param  { number } [timeout]
-  */
-  sendMessage(eventName, args, timeout)
-  {
-    return new Promise((resolve, reject) =>
-    {
-      let timeoutRef;
-
-      // nonce is a bunch of random numbers
-      const nonce = [
-        Math.random() * 32,
-        Math.random() * 8
-      ].join('.');
-
-      function errListen(n, err)
-      {
-        if (n !== nonce)
-          return;
-
-        clearTimeout(timeoutRef);
-
-        socket.off('done', doneListen);
-        socket.off('err', errListen);
-
-        reject(err);
-      }
-
-      function doneListen(n, data)
-      {
-        if (n !== nonce)
-          return;
-
-        clearTimeout(timeoutRef);
-
-        socket.off('done', doneListen);
-        socket.off('err', errListen);
-
-        resolve(data);
-      }
-
-      // emit the message
-      socket.emit(eventName, { nonce, ...args });
-
-      // setup the timeout
-      if (typeof timeout === 'number' && timeout > 0)
-      {
-        timeoutRef = setTimeout(() =>
-        {
-          socket.off('done', doneListen);
-          socket.off('err', errListen);
-
-          errListen(nonce, translation('timeout'));
-        }, timeout ?? 15000);
-      }
-
-      // assign the callbacks
-      socket.on('done', doneListen);
-      socket.on('err', errListen);
-    });
-  }
-
   requestRooms()
   {
     // show a loading indictor
-    this.loadingVisibility(true);
+    this.setState({ loading: true });
 
-    this.sendMessage('list', 60000)
+    sendMessage('list', 60000)
       .then(rooms =>
       {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // update the UI
         this.setState({
-          rooms: rooms
+          rooms,
+          loading: false
         });
       }).catch(err =>
       {
-        // hide the loading indictor
-        this.loadingVisibility(false);
-
-        // show an error message
-        this.showErrorMessage(translation(err) || err);
+        this.setState({
+          loading: false,
+          error: translation(err) ?? err
+        });
       });
+  }
+
+  switchTheme(value)
+  {
+    // reverse current setting
+    localStorage.setItem('forceDark', value ? 'true' : 'false');
+
+    // refresh page
+    location.reload();
   }
 
   /**
@@ -326,8 +243,8 @@ class Game extends React.Component
   */
   disableDrag(e)
   {
-    e.stopPropagation();
     e.preventDefault();
+    e.stopPropagation();
   }
 
   resize()
@@ -347,39 +264,28 @@ class Game extends React.Component
 
     // reload the page if we lost connection while
     // the app was in the background
-    if (!document.hidden && socket.hidden && socket.disconnected)
+    if (!document.hidden && !socket.connected)
       window.location.reload();
-    
-    socket.hidden = document.hidden;
-  }
-
-  showErrorMessage(err)
-  {
-    this.setState({ errorMessage: err });
-  }
-
-  loadingVisibility(visible)
-  {
-    this.setState({ loadingHidden: visible = !visible });
   }
 
   render()
   {
     const { locale, translation } = this.props;
 
+    const { loading, error } = this.state;
+
     const Header = () => <div className={ headerStyles.container } style={ { direction: locale.direction } }>
       { translation('username-prefix') }
 
       <AutoSizeInput
         required
-        ref={ usernameRef }
         type={ 'text' }
-        id={ 'usrname-input' }
-        className={ headerStyles.usrname }
+        ref={ usernameRef }
+        className={ headerStyles.username }
         style={ { direction: locale.direction } }
         maxLength={ 18 }
-        placeholder={ translation('username-placeholder') }
-        value={ this.state.username ?? this.state.usernameRandomized }
+        value={ this.state.username }
+        placeholder={ translation('placeholder') }
         onUpdate={ (value, resize, blur) =>
         {
           const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
@@ -401,61 +307,54 @@ class Game extends React.Component
 
       <div className={ optionsStyles.title }> { translation('available-rooms') }</div>
 
-      <RefreshIcon className={ optionsStyles.icon } allowed={ this.state.loadingHidden.toString() } onClick={ this.requestRooms }/>
+      {
+        detectDeviceIsDark() ?
+          <Brightness2Icon id={ 'switch-theme' } className={ optionsStyles.theme } onClick={ () => this.switchTheme(false) }/> :
+          <Brightness5Icon id={ 'switch-theme' } className={ optionsStyles.theme } onClick={ () => this.switchTheme(true) }/>
+      }
 
-      <OptionsIcon className={ optionsStyles.icon } onClick={ () => this.setState({ options: { active: true } }) }/>
+      <RefreshIcon className={ optionsStyles.refresh } data-allowed={ !loading } onClick={ this.requestRooms }/>
     </div>;
 
     const Rooms = () => <div className={ roomsStyles.container }>
-      <div className={ roomsStyles.roomsWrapper }>
-        <div style={ {
-          display: this.state.loadingHidden ? 'none' : ''
-        } } className={ roomsStyles.loading }
-        >
-          <div className={ roomsStyles.loadingSpinner }/>
-        </div>
+      <div className={ roomsStyles.wrapper }>
 
-        <div className={ roomsStyles.error } style={ {
-          display: this.state.errorMessage ? '' : 'none'
-        } } >
-          { this.state.errorMessage }
-        </div>
+        {
+          loading ? <div className={ roomsStyles.loading }>
+            <div/>
+          </div> : undefined
+        }
 
-        <div
-          className={ roomsStyles.roomsContainer }
-          style={ {
-            direction: locale.direction,
-            display: (this.state.loadingHidden && !this.state.errorMessage) ? '' : 'none'
-          } }
-        >
+        {
+          error ? <div className={ roomsStyles.error }>
+            { error }
+          </div> : undefined
+        }
+
+        <div className={ roomsStyles.rooms } style={ { direction: locale.direction } } data-empty={ translation('no-rooms-available') }>
           {
-            this.state.rooms.length <= 0 ?
-              <div className={ roomsStyles.indicator }>
-                { translation('no-rooms-available') }
-              </div>
-              :
-              this.state.rooms.map((room, i) =>
-              {
-                return <div key={ i } className={ roomsStyles.room } onClick={ () => overlayRef.current.joinRoom(room.id) }>
-                  <div className={ roomsStyles.highlights } style={ { direction: locale.direction } }>
+            this.state.rooms.map((room, i) =>
+            {
+              return <div key={ i } className={ roomsStyles.room } onClick={ () => overlayRef.current.joinRoom(room.id) }>
+                <div className={ roomsStyles.highlights } style={ { direction: locale.direction } }>
                     
-                    <div className={ roomsStyles.counter }>
-                      <div>{ room.players }</div>
-                      <div>/</div>
-                      <div>{ room.options.maxPlayers }</div>
-                    </div>
-
-                    { Highlights(room) }
+                  <div className={ roomsStyles.counter }>
+                    <div>{ room.players }</div>
+                    <div>/</div>
+                    <div>{ room.options.maxPlayers }</div>
                   </div>
 
-                  <div className={ roomsStyles.cover }>
-                    <div className={ roomsStyles.coverShadow }/>
-                    <div className={ roomsStyles.coverBackground }>
-                      <div className={ roomsStyles.coverTitle }>{ room.master }</div>
-                    </div>
+                  { Highlights(room) }
+                </div>
+
+                <div className={ roomsStyles.cover }>
+                  <div className={ roomsStyles.coverShadow }/>
+                  <div className={ roomsStyles.coverBackground }>
+                    <div className={ roomsStyles.coverTitle }>{ room.master }</div>
                   </div>
-                </div>;
-              })
+                </div>
+              </div>;
+            })
           }
         </div>
       </div>
@@ -480,11 +379,6 @@ class Game extends React.Component
         if (room.options.blankProbability > 0)
           highlights.push(`%${room.options.blankProbability} ${translation('blank-probability-lobby')}.`);
       }
-      else if (gameMode === 'qassa')
-      {
-        highlights.push(`${translation('max-groups', 3, true)}.`);
-        highlights.push(`${translation('max-stories', 3, true)}.`);
-      }
 
       return <div>
         {
@@ -494,28 +388,22 @@ class Game extends React.Component
     };
 
     return <div id={ 'game' } className={ mainStyles.wrapper }>
-      <TutorialKuruit/>
+      <TutorialOverlay size={ this.state.size }/>
 
-      <OptionsOverlay
-        options={ this.state.options }
-        hide={ () => this.setState({ options: { active: false } }) }
-      />
-
-      <div className={ mainStyles.container }>
-
-        { Header() }
-        { Options() }
-        { Rooms() }
-
-      </div>
+      <ShareOverlay ref={ shareRef } size={ this.state.size }/>
 
       <RoomOverlay
         ref={ overlayRef }
-        sendMessage={ this.sendMessage.bind(this) }
-        requestRooms={ this.requestRooms }
         size={ this.state.size }
-        username={ this.state.username ?? this.state.usernameRandomized }
+        username={ this.state.username }
+        requestRooms={ this.requestRooms }
       />
+
+      <div className={ mainStyles.container }>
+        { Header() }
+        { Options() }
+        { Rooms() }
+      </div>
     </div>;
   }
 }
@@ -525,6 +413,20 @@ Game.propTypes =
   translation: PropTypes.func,
   locale: PropTypes.object
 };
+
+const waitingAnimation = createAnimation({
+  duration: '2s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const mainStyles = createStyle({
   wrapper: {
@@ -563,7 +465,7 @@ const headerStyles = createStyle({
     padding: '15px 3vw 5px 3vw'
   },
 
-  usrname: {
+  username: {
     margin: '0 5px -2px 5px',
 
     color: colors.blackText,
@@ -574,19 +476,15 @@ const headerStyles = createStyle({
 
     padding: 0,
     border: 0,
+
     borderBottom: `2px ${colors.blackText} solid`,
 
     '::placeholder': {
-      color: colors.red
+      color: colors.greyText
     },
 
     ':focus': {
       'outline': 'none'
-    },
-
-    ':not(:valid)':
-    {
-      borderColor: colors.red
     }
   }
 });
@@ -600,7 +498,7 @@ const optionsStyles = createStyle({
     gridTemplateRows: '1fr auto',
     gridTemplateAreas: '"buttons buttons buttons buttons" "title title . ."',
 
-    gridGap: '15px',
+    gap: '15px',
     margin: '15px 0px',
 
     fontWeight: '700',
@@ -625,8 +523,8 @@ const optionsStyles = createStyle({
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 
-    borderRadius: '5px',
-    border: `1px ${colors.blackText} solid`,
+    border: '1px solid',
+    borderColor: opacity(colors.greyText, 0.25),
 
     cursor: 'pointer',
     padding: '6px 0',
@@ -636,11 +534,6 @@ const optionsStyles = createStyle({
     transform: 'scale(1)',
     transition: 'transform 0.15s, background-color 0.25s, color 0.25s',
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
-    },
-
     ':active': {
       transform: 'scale(0.95)'
     }
@@ -649,39 +542,34 @@ const optionsStyles = createStyle({
   title: {
     gridArea: 'title',
     fontWeight: '700',
-
     margin: 'auto 0'
   },
 
-  icon: {
-    width: 'calc(12px + 0.55vw + 0.55vh)',
-    height: 'calc(12px + 0.55vw + 0.55vh)',
+  refresh: {
+    width: '24px',
+    height: '24px',
 
     color: colors.blackText,
-    backgroundColor: colors.whiteBackground,
 
-    cursor: 'pointer',
     padding: '5px',
+    cursor: 'pointer',
     borderRadius: '50%',
 
-    transform: 'rotateZ(0deg) scale(1)',
-    transition: 'transform 0.25s, background-color 0.25s, color 0.25s',
+    transition: 'transform 0.25s',
 
-    '[allowed="false"]': {
+    '[data-allowed="false"]': {
       pointerEvents: 'none',
       color: colors.greyText
     },
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground,
-
-      transform: 'rotateZ(22deg)'
-    },
-
     ':active': {
-      transform: 'scale(0.95) rotateZ(22deg)'
+      transform: 'rotateZ(22deg)'
     }
+  },
+
+  theme: {
+    extend: 'refresh',
+    width: '20px'
   }
 });
 
@@ -691,7 +579,7 @@ const roomsStyles = createStyle({
     padding: '10px 3vw 0 3vw'
   },
 
-  roomsWrapper: {
+  wrapper: {
     position: 'relative',
     
     overflowX: 'hidden',
@@ -706,74 +594,62 @@ const roomsStyles = createStyle({
 
     '::-webkit-scrollbar-thumb':
     {
-      borderRadius: '8px',
       boxShadow: `inset 0 0 8px 8px ${colors.optionsScrollbar}`
     }
   },
 
-  roomsContainer: {
+  rooms: {
     display: 'grid',
 
     gridTemplateColumns: 'repeat(auto-fill, calc(260px + 1vw + 1vh))',
     gridTemplateRows: 'min-content',
     justifyContent: 'space-around',
 
-    rowGap: 'calc(15px + 2.5vh)'
-  },
+    rowGap: 'calc(15px + 2.5vh)',
 
-  indicator: {
-    display: 'flex',
-    position: 'absolute',
+    ':empty': {
+      display: 'block',
+      height: '100%',
 
-    justifyContent: 'center',
-    alignItems: 'center',
+      ':after': {
+        content: 'attr(data-empty)',
 
-    width: '100%',
-    height: '100%',
-    
-    fontWeight: 700
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        height: '100%',
+        fontWeight: '700'
+      }
+    }
   },
 
   loading: {
-    zIndex: 1,
     display: 'flex',
     position: 'absolute',
 
     alignItems: 'center',
     justifyContent: 'center',
 
+    width: '100%',
+    height: '100%',
+
     backgroundColor: colors.whiteBackground,
 
-    top: 0,
-    width: '100%',
-    height: '100%'
-  },
+    '> div': {
+      width: '30px',
+      height: '30px',
 
-  loadingSpinner: {
-    backgroundColor: 'transparent',
-
-    paddingBottom: '30px',
-    width: '30px',
-
-    border: `10px ${colors.blackText} solid`,
-
-    animation: createAnimation({
-      duration: '2s',
-      timingFunction: 'ease',
-      iterationCount: 'infinite',
-      keyframes: {
-        from: {
-          transform: 'rotate(0deg)'
-        },
-        to: {
-          transform: 'rotate(360deg)'
-        }
-      }
-    })
+      border: `10px ${colors.blackText} solid`,
+      animation: waitingAnimation
+    }
   },
 
   error: {
     extend: 'loading',
+    cursor: 'pointer',
+
+    color: colors.blackText,
     
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif'
@@ -798,10 +674,6 @@ const roomsStyles = createStyle({
     padding: '10px 20px',
     margin: '0px 10px',
     borderRadius: '10px',
-
-    ':hover': {
-      opacity: '0.75'
-    },
 
     ':active': {
       transform: 'scale(0.95)'

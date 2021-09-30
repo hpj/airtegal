@@ -27,7 +27,7 @@
       ]
     },
     {
-      "title": "Kruit Tutorial",
+      "title": "Tutorial Overlay",
       "steps": [
         {
           "action": "goto",
@@ -161,7 +161,7 @@
         },
         {
           "action": "select",
-          "value": "#room-options-rando-yes"
+          "value": "#room-options-randos"
         },
         {
           "action": "click",
@@ -170,55 +170,6 @@
         {
           "action": "select",
           "value": "#room-options-kuruit-timer"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Room Options (Apply)",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-input"
-        },
-        {
-          "action": "type",
-          "value": "5"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-rando-yes"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-kuruit-timer"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#room-options-apply"
         },
         {
           "action": "click",
@@ -493,85 +444,11 @@
       ]
     },
     {
-      "title": "Notifications",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&join&notifications"
-        },
-        {
-          "action": "wait",
-          "value": ".game-notification"
-        },
-        {
-          "action": "wait",
-          "value": 1
-        }
-      ]
-    },
-    {
       "title": "Match Highlights",
       "steps": [
         {
           "action": "goto",
           "value": "/play?quiet&create&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "title": "Room Options (Qassa)",
-      "steps": [
-        {
-          "action": "goto",
-          "value": "/play?quiet&create"
-        },
-        {
-          "action": "wait",
-          "value": "#room-options-input"
-        },
-        {
-          "action": "type",
-          "value": "5"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-rando-yes"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-kuruit-timer"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "wait",
-          "value": 2
-        },
-        {
-          "action": "select",
-          "value": "#room-options-select-game-mode"
-        },
-        {
-          "action": "click",
-          "value": "left"
-        },
-        {
-          "action": "select",
-          "value": "#room-options-game-mode-2"
-        },
-        {
-          "action": "click",
-          "value": "left"
         },
         {
           "action": "wait",
@@ -593,6 +470,120 @@
         {
           "action": "wait",
           "value": "#kuruit-tutorial"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Offline Page",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/offline.html"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Close Share Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&highlights"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#match-highlights > :nth-child(2)"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "15v"
+          ]
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Switch To Dark",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&list"
+        },
+        {
+          "action": "wait",
+          "value": "#switch-theme"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Close Tutorial Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play"
+        },
+        {
+          "action": "wait",
+          "value": "#game"
+        },
+        {
+          "action": "wait",
+          "value": "#kuruit-tutorial"
+        },
+        {
+          "action": "select",
+          "value": "#kuruit-tutorial > div > :nth-child(6)"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "15v"
+          ]
         },
         {
           "action": "wait",

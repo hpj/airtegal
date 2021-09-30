@@ -1,60 +1,33 @@
-import React from 'react';
+import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import RedditIcon from 'mdi-react/RedditIcon';
-import FacebookIcon from 'mdi-react/FacebookIcon';
-import TwitterIcon from 'mdi-react/TwitterIcon';
+import LoadingIcon from 'mdi-react/LoadingIcon';
 
-import getTheme from '../colors.js';
+import ShareIcon from 'mdi-react/ShareVariantIcon';
+import CopyIcon from 'mdi-react/ClipboardTextIcon';
+import DownloadIcon from 'mdi-react/DownloadIcon';
 
-import { createStyle } from 'flcss';
+import CheckIcon from 'mdi-react/CheckIcon';
 
-import { translation, withTranslation } from '../i18n.js';
+import { createAnimation, createStyle } from 'flcss';
 
-import { getStore } from '../store.js';
+import stack from '../stack.js';
+
+import { sendMessage } from '../utils.js';
+
+import Interactable from './interactable.js';
+
+import getTheme, { opacity } from '../colors.js';
+
+import { withTranslation } from '../i18n.js';
 
 const colors = getTheme();
 
-let compress;
-
-import('wasm-brotli')
-  .then(brotli => compress = brotli.compress)
-  .catch(console.warn);
-
 /**
-* @param { { template: string, items: string[], black: string, white: string } } param0
+* @type { React.RefObject<Interactable> }
 */
-export async function shareEntry({ template, items, black, white })
-{
-  if (!compress)
-    return;
-
-  const content = new TextEncoder('utf8')
-    .encode(JSON.stringify({ template, items, black, white }));
-
-  const data = btoa(String.fromCharCode(...compress(content)))
-    // base64 has some characters not compatible with urls
-    .replace(/\//g, '_').replace(/\+/g, '-');
-
-  const shareURL = `${process.env.API_ENDPOINT}/share/${data}`;
-  const pictureURL = `${process.env.API_ENDPOINT}/picture/${data}.png`;
-
-  if (navigator.share)
-  {
-    navigator.share({
-      title: 'Airtegal',
-      text: translation('hashtag-airtegal'),
-      url: shareURL
-    }).catch(console.warn);
-  }
-  else
-  {
-    getStore().set({
-      share: { active: true, url: shareURL, img: pictureURL }
-    });
-  }
-}
+const interactableRef = createRef();
 
 class ShareOverlay extends React.Component
 {
@@ -62,278 +35,360 @@ class ShareOverlay extends React.Component
   {
     super();
 
-    this.copyURL = this.copyURL.bind(this);
+    this.state = {
+      url: '',
+      copied: false,
+      visible: false,
+      opacity: 0
+    };
 
-    this.shareOnFacebook = this.shareOnFacebook.bind(this);
-    this.shareOnTwitter = this.shareOnTwitter.bind(this);
-    this.shareOnReddit = this.shareOnReddit.bind(this);
-
-    this.hide = this.hide.bind(this);
+    this.download = this.download.bind(this);
+    this.share = this.share.bind(this);
+    this.copy = this.copy.bind(this);
   }
 
-  async componentDidMount()
+  /**
+  * @param { { black: string, white: string[] } } data
+  */
+  async shareEntry(data)
   {
-    window.addEventListener('keyup', this.hide);
+    this.setState({
+      visible: true
+    }, () =>
+    {
+      stack.register(this.back);
+
+      interactableRef.current?.snapTo({ index: 1 });
+    });
+    
+    const response = await sendMessage('share', { data });
+
+    this.setState({
+      url: process.env.NODE_ENV !== 'test' ?
+        `${process.env.API_ENDPOINT}/share/${response}`
+        : '/assets/card.png'
+    });
   }
 
-  componentWillUnmount()
+  back()
   {
-    window.removeEventListener('keyup', this.hide);
+    interactableRef.current?.snapTo({ index: 0 });
   }
 
-  hide(e)
+  hide()
   {
-    const { hide } = this.props;
+    if (!this.state.visible)
+      return;
 
-    if (!(e instanceof KeyboardEvent))
-      hide();
-    else if (e.key === 'Escape')
-      hide();
+    stack.unregister(this.back);
+    
+    this.setState({
+      url: '',
+      copied: false,
+      visible: false
+    });
   }
 
   // istanbul ignore next
-  copyURL()
+  download()
   {
-    const { addNotification } = this.props;
+    const { url } = this.state;
 
-    // navigator.clipboard?.writeText(this.props.share.url)
-    //   .then(() => addNotification(gettranslation('share-copied-to-clipboard')))
-    //   .catch(console.warn);
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(`${url}?download`, '_blank');
+  }
+
+  // istanbul ignore next
+  share()
+  {
+    const { url } = this.state;
+
+    navigator.share?.({
+      url,
+      title: 'Share'
+    }).catch(console.warn);
+  }
+
+  // istanbul ignore next
+  async copy()
+  {
+    const { url } = this.state;
 
     try
     {
-      if (document.execCommand('copy'))
-        addNotification(translation('share-copied-to-clipboard'));
+      await navigator.clipboard?.writeText(url);
+
+      this.setState({ copied: true });
+
+      clearTimeout(this.copyTimeout);
+
+      this.copyTimeout =
+        setTimeout(() => this.setState({ copied: false }), 1500);
     }
-    catch
+    catch (err)
     {
-      //
+      console.warn(err);
     }
-  }
-
-  // istanbul ignore next
-  shareOnFacebook()
-  {
-    const { share } = this.props;
-
-    const url = `https://www.facebook.com/dialog/share?app_id=196958018362010&href=${share.url}&hashtag=${encodeURIComponent(translation('hashtag-airtegal'))}`;
-  
-    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
-  
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, 'Share', options);
-  }
-
-  // istanbul ignore next
-  shareOnTwitter()
-  {
-    const { share } = this.props;
-
-    const url = `https://twitter.com/intent/tweet?url=${share.url}&text=${encodeURIComponent(translation('hashtag-airtegal'))}`;
-  
-    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
-  
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, 'Share', options);
-  }
-
-  // istanbul ignore next
-  shareOnReddit()
-  {
-    const { share } = this.props;
-
-    const url = `https://www.reddit.com/submit?url=${share.url}&title=${encodeURIComponent(translation('hashtag-airtegal'))}`;
-  
-    const options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
-  
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, 'Share', options);
   }
 
   render()
   {
-    const { translation } = this.props;
+    const { visible, opacity, copied, url } = this.state;
+    
+    const { size, translation, locale } = this.props;
 
-    let { share } = this.props;
+    const onMovement = ({ y }) =>
+    {
+      this.setState({
+        opacity: 1 - (y / size.height)
+      });
+    };
 
-    if (!share)
-      share = { active: false };
+    const onSnapEnd = (index) =>
+    {
+      if (index === 0)
+        this.hide();
+    };
 
-    if (process.env.NODE_ENV === 'test')
-      share.img = '/assets/card.png';
+    return <div className={ styles.wrapper } data-visible={ visible }>
+      <div style={ { opacity } }/>
 
-    return (
-      <div enabled={ share.active.toString() } className={ styles.wrapper }>
-        <div enabled={ share.active.toString() } className={ styles.holder }/>
+      <Interactable
+        ref={ interactableRef }
+        
+        style={ {
+          display: 'flex',
+          position: 'fixed',
 
-        <div enabled={ share.active.toString() } className={ styles.container }>
-          <img src={ share.img } className={ styles.image }/>
+          alignItems: 'center',
+          justifyContent: 'center',
 
-          <div className={ styles.url } onClick={ this.copyURL }>
-            { share.url }
+          width: '100vw',
+          height: '100vh'
+        } }
+
+        dragEnabled={ true }
+        
+        verticalOnly={ true }
+
+        frame={ { pixels: Math.round(size.height * 0.05), every: 8 } }
+        
+        boundaries={ {
+          top: 0,
+          bottom: size.height
+        } }
+        
+        initialPosition={ { y: size.height } }
+
+        snapPoints={ [ { y: size.height }, { y: 0 } ] }
+
+        triggers={ [ { y: size.height * 0.1, index: 0 } ] }
+
+        onMovement={ onMovement }
+        onSnapEnd={ onSnapEnd }
+      >
+        <div className={ styles.container }>
+          
+          <div className={ styles.handler }>
+            <div/>
           </div>
 
-          <div className={ styles.buttons }>
-            <FacebookIcon onClick={ this.shareOnFacebook } className={ styles.social }/>
-            <TwitterIcon onClick={ this.shareOnTwitter } className={ styles.social }/>
-            <RedditIcon onClick={ this.shareOnReddit } className={ styles.social }/>
+          <img src={ url } className={ styles.image }/>
+
+          <div className={ styles.url } data-value={ url }>
+            { url }
+            <LoadingIcon/>
           </div>
 
-          <div className={ styles.close } onClick={ this.hide }>
-            { translation('close') }
+          <div className={ styles.buttons } style={ { direction: locale.direction } } data-active={ url.length > 0 }>
+              
+            <div className={ styles.button } onClick={ this.copy } data-copied={ copied }>
+              <div>{ translation('copy') }</div>
+              <CopyIcon/>
+              <CheckIcon/>
+            </div>
+
+            {
+              navigator.share ?
+                <div className={ styles.button } onClick={ this.share }>
+                  <div>{ translation('share') }</div>
+                  <ShareIcon/>
+                </div> :
+                <div className={ styles.button } onClick={ this.download }>
+                  <div>{ translation('download') }</div>
+                  <DownloadIcon/>
+                </div>
+            }
           </div>
         </div>
-      </div>
-    );
+      </Interactable>
+    </div>;
   }
 }
 
 ShareOverlay.propTypes = {
+  size: PropTypes.object,
   translation: PropTypes.func,
-  locale: PropTypes.object,
-  addNotification: PropTypes.func.isRequired,
-  share: PropTypes.object,
-  hide: PropTypes.func
+  locale: PropTypes.object
 };
+
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   wrapper: {
     zIndex: 4,
     position: 'fixed',
-    display: 'flex',
-
-    justifyContent: 'center',
-
-    top: 0,
-    left: 0,
-
-    width: 'calc(100vw + 18px)',
+    
+    width: '100vw',
     height: '100vh',
 
-    '[enabled="false"]': {
-      pointerEvents: 'none'
-    }
-  },
+    fontWeight: 700,
+    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-  holder: {
-    opacity: 0.85,
-    backgroundColor: colors.holder,
+    '[data-visible="false"]': {
+      display: 'none'
+    },
 
-    width: '100%',
-    height: '100%',
+    '> :nth-child(1)': {
+      position: 'absolute',
+      backgroundColor: opacity(colors.whiteBackground, '0.95'),
 
-    transition: 'opacity 0.25s ease-in-out',
-
-    '[enabled="false"]': {
-      opacity: 0
+      width: '100vw',
+      height: '100vh'
     }
   },
 
   container: {
-    position: 'absolute',
-    display: 'grid',
+    maxWidth: '640px',
+    width: '40vw'
+  },
 
-    gridTemplateRows: '60% auto 1fr 2fr',
+  handler: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: '15px',
 
-    color: colors.blackText,
-    backgroundColor: colors.shareBackground,
-
-    opacity: 1,
-    borderRadius: '10px',
-
-    maxWidth: '490px',
-
-    top: '25vh',
-    width: '40vw',
-    height: '50vh',
-    
-    overflow: 'hidden',
-
-    fontWeight: '700',
-    fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
-
-    transition: 'top 0.25s, opacity 0.25s',
-    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-
-    '[enabled="false"]': {
-      opacity: 0,
-      top: '100vh'
+    '> div': {
+      cursor: 'pointer',
+      backgroundColor: opacity(colors.blackText, 0.5),
+  
+      width: 'calc(35px + 2.5%)',
+      height: '6px',
+      borderRadius: '6px'
     }
   },
 
   image: {
-    backgroundColor: colors.shareUrlBackground,
-
-    width: '90%',
-    height: '90%',
-
-    objectFit: 'cover',
+    width: '100%',
+    height: 'auto',
     borderRadius: '10px',
-
-    margin: 'auto'
+    objectFit: 'cover'
   },
 
   url: {
-    color: colors.blackText,
-    backgroundColor: colors.shareUrlBackground,
-
-    width: 'calc(100% - 60px)',
-    
-    userSelect: 'all',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-
-    margin: '0 auto',
-    padding: '10px 15px',
-    borderRadius: '5px'
-  },
-
-  buttons: {
     display: 'flex',
-    alignItems: 'center',
+    justifyContent: 'center',
 
-    margin: '5px 15px'
-  },
+    color: opacity(colors.blackText, 0.5),
+    backgroundColor: opacity(colors.roomBackground, 0.95),
 
-  social: {
-    cursor: 'pointer',
+    padding: '15px',
+    margin: '10px 0',
 
-    color: colors.blackText,
+    '> svg': {
+      color: colors.blackText,
+      animation: waitingAnimation,
 
-    width: '16px',
-    height: '16px',
-
-    padding: '10px',
-    margin: '0 5px',
-    borderRadius: '100%',
-
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+      width: '26px',
+      height: '26px'
     },
 
-    ':active': {
-      transform: 'scale(0.9)'
+    ':not([data-value=""])': {
+      display: 'block',
+      
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+
+      '> svg': {
+        display: 'none'
+      }
     }
   },
 
-  close: {
+  buttons:
+  {
     display: 'flex',
-    cursor: 'pointer',
-    
-    userSelect: 'none',
-    textAlign: 'center',
+    gap: '15px',
 
-    justifyContent: 'center',
+    '[data-active="false"]': {
+      opacity: 0.25,
+      pointerEvents: 'none'
+    }
+  },
+
+  button: {
+    display: 'flex',
+    position: 'relative',
+    cursor: 'pointer',
+
+    flexGrow: 1,
     alignItems: 'center',
 
-    width: '100%',
-    padding: '5px 0',
+    color: colors.blackText,
+    border: '1px solid',
+    borderColor: opacity(colors.roomBackground, 0.95),
 
-    ':hover': {
-      color: colors.whiteText,
-      backgroundColor: colors.blackBackground
+    padding: '15px 10px',
+
+    '> *': {
+      opacity: 1,
+      transition: 'opacity 0.15s ease-in'
+    },
+
+    '> :nth-child(1)': {
+      flexGrow: 1,
+      margin: '0 10px'
+    },
+
+    '> :nth-child(2)': {
+      width: '16px',
+      height: '16px',
+      margin: '0 10px'
+    },
+
+    '> :nth-child(3)': {
+      opacity: 0,
+      position: 'absolute',
+
+      left: 0,
+      width: '100%',
+      height: '18px'
+    },
+
+    '[data-copied="true"]': {
+      '> *': {
+        opacity: 0
+      },
+      '> :nth-child(3)': {
+        opacity: 1
+      }
+    },
+
+    ':active': {
+      transform: 'scale(0.95)'
     }
   }
 });

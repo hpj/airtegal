@@ -26,14 +26,13 @@
 
   // lobby
 
+  "placeholder": "الفراغ",
+
   "username-prefix": "أنا",
-  "username-placeholder": "حط اسمك هنا",
   
   "create-room": "اعمل روم",
   "random-room": "روم عشؤئية",
   
-  "spectating": "أنت بتتفرج بس",
-
   "available-rooms": "الرومات المتاحة",
 
   // app options
@@ -42,47 +41,15 @@
   "region": "المنطقة",
   "save": "حفظ",
 
-  "no-options": "لا يوجد نتائج",
-
-  // random usernames
-
-  "stupid-first-names": [
-    "اسلام",
-    "ابو",
-    "ام",
-    "حمادة",
-    "حمار",
-    "حاحا",
-    "خدام",
-    "فشيخ",
-    "عنتيل"
-  ],
-
-  "stupid-last-names": [
-    "المرج",
-    "السمكة",
-    "الاهبل",
-    "الفقير",
-    "الزبالة",
-    "البقرة",
-    "الشبح",
-    "المزة"
-  ],
-
   // matchmaking errors
 
   "no-rooms-available": "مفيش رومات",
   "room-does-not-exists": "الروم دي مش موجودة",
   
-  "request-has-wrong-parameters": "حطيت اسمك هناك؟",
+  "request-has-wrong-parameters": "حطيت اسمك؟",
   
   "user-does-not-have-permission": "معندكش صلاحية تكمل العمليه دي",
   "minimal-number-of-players-required": "مفيش عدد كفاية من اللعيبة",
-
-  // room id sharing
-
-  "room-copied-to-clipboard": "تم نسخ رابط الروم!",
-  "join-me": "يسطي افتح نلعب ارتجال",
 
   // room master changes
 
@@ -102,21 +69,15 @@
   "co-op": "فرق",
   
   "kuruit": "كروت",
-  "king": "ملك العشوئيات 2: العودة الديمقراطية",
-  "qassa": "قصة",
 
-  "match-options": "اعدادات الماتش",
+  "options": "اعدادات",
 
-  "groups": "فريق",
-  "max-groups": "فرق~فريق",
-  
   "end-condition": "النهاية:",
   
   "options-placeholder": "0",
 
   "after": "بعد",
 
-  "max-stories": "قصص~قصة",
   "max-rounds": "جولات~جولة",
   "max-time": "دقائق~دقيقة",
 
@@ -129,16 +90,10 @@
   "blank-probability": "نسبة سحب كرت فاضي",
   "blank-probability-lobby": "كرت فاضي",
 
-  "room-options": "اعدادات الروم:",
-
-  "randos": "غريبي الاطوار",
-
-  "yes": "نعم",
-  "no": "لأ",
+  "randos": "أملي باقي الروم بوتات",
 
   "wait-for-room-master": "استني لحد ما %0 يبدأ الماتش",
 
-  "apply": "طبق",
   "start": "أبدا",
 
   // match logic
@@ -151,56 +106,48 @@
   "judge-left": "الجولة أتلغت علشان القاضي خرج من الماتش.",
   "judge-timeout": "الجولة أتلغت علشان الوقت خلص.",
   
-  // match state
+  // states
 
-  "picking-phase": "اختر كرت من ايدك.",
-  "judging-phase": "اختر اكثر كرت خلاك تتضحك.",
-  "writing-phase": "املي الخانات مع فريقك.",
+  "judge": "القاضي",
+  "players": "باقي اللعيبة",
+  "spectating": "أنت بتتفرج بس.",
+  "judging": "استني دورك.",
 
-  "wait-for-your-turn": "أستني دورك.",
-  "wait-until-judged": "أستني حكم القاضي.",
-
-  "you-won-the-round": "انت الي كسبت الجولة.",
-  "won-this-round": "%0 كسب الجولة.",
-
-  // share overlay
+  // sharing
   
-  "hashtag-airtegal": "#ارتجال_هتسيطر_علي_العالم",
-
-  "share-copied-to-clipboard": "تم نسخ اللينك لجهازك!",
-
-  "close": "الغاء",
-
-  "limited:match-ended": "انتهت الجولات! %0",
-  "timer:match-ended": "انتهي الوقت! %0",
+  "copy": "كوبي",
+  "share": "شير",
+  "download": "حمل",
+  
+  "room-url": "لينك الروم",
+  "join-me": "يسطي افتح نلعب ارتجال",
 
   // homepage
 
-  // last updated 26 May, 2021
   "combos": [
-    {"card":{"content":"ظهور جمعية خيرية جديدة بتدافع عن حقوق _______.","type":"black"},"combos":[{"type":"white","content":"جدي"}]},{"card":{"content":"لية لسه سهران لحد دلوقتي؟","type":"black"},"combos":[{"type":"white","content":"لميس الحديدي"}]},{"card":{"content":"بحب ديما احط _____ في الشاي.","type":"black"},"combos":[{"type":"white","content":"بتاع زنجي"}]},{"card":{"content":"كنت خلاص هسرق البنك بس في اخر لحظة ______.","type":"black"},"combos":[{"type":"white","content":"الزنوج"}]},{"card":{"content":"قريبا في رمضان... مسلسل __________.","type":"black"},"combos":[{"type":"white","content":"بيت دعارة كلة ستات فوق ال60"}]},
-    {"card":{"content":"الزنوج بيحبوا __________.","type":"black"},"combos":[{"type":"white","content":"جنس حيوانات"}]},{"card":{"content":"خلي بالك من _________.","type":"black"},"combos":[{"type":"white","content":"طيازي"}]},{"card":{"content":"اما ابقي مبضون ديما ______ بيضحكني.","type":"black"},"combos":[{"type":"white","content":"صابونة علي شكل زب"}]},{"card":{"content":"اية هي قوتك الخارقة؟","type":"black"},"combos":[{"type":"white","content":"الشخاخ إلى الأبد"}]},{"card":{"content":"قابلت ______ انهاردة وبوست ايدة.","type":"black"},"combos":[{"type":"white","content":"طيازي"}]},
-    {"card":{"content":"عشت حياتي كلها بحلم اعمل ______ بس في الاخر عملت ______.","type":"black"},"combos":[{"type":"white","content":"كشري"},{"type":"white","content":"اشهر ممثلة زنجية"}]},{"card":{"content":"كل ما اشوف ______ بعيط فشخ.","type":"black"},"combos":[{"type":"white","content":"بضان مدحت شلبي"}]},{"card":{"content":"كل مره اكل ________ بيجلي اسهال.","type":"black"},"combos":[{"type":"white","content":"بتاع زنجي"}]},{"card":{"content":"قبل ما اهاجر من مصر لازم اخد __________ معيا.","type":"black"},"combos":[{"type":"white","content":"عيال زنجيه"}]},{"card":{"content":"يمكن هي اتولدت بية او يمكن ______.","type":"black"},"combos":[{"type":"white","content":"بضان مدحت شلبي"}]},
-    {"card":{"content":"ياسعادة البية _________.","type":"black"},"combos":[{"type":"white","content":"انك تبقي خول"}]},{"card":{"content":"بحب ديما احط _____ في الشاي.","type":"black"},"combos":[{"type":"white","content":"بتاع زنجي"}]},{"card":{"content":"ايه الريحة دي؟","type":"black"},"combos":[{"type":"white","content":"الشواذ"}]},{"card":{"content":"لو ______ جريمة، يبقي انا اكبر مجرم.","type":"black"},"combos":[{"type":"white","content":"زبك"}]},{"card":{"content":"الزنوج بيحبوا __________.","type":"black"},"combos":[{"type":"white","content":"جنس حيوانات"}]},
-    {"card":{"content":"البنات بتحبني لما ________.","type":"black"},"combos":[{"type":"white","content":"اقفلة وافتحة"}]},{"card":{"content":"من يتحكم في ______ يتحكم في العالم.","type":"black"},"combos":[{"type":"white","content":"طيز محمد رمضان"}]},{"card":{"content":"متخفيش، ده مش عفريت، ده ________.","type":"black"},"combos":[{"type":"white","content":"صحبة اختي القرعة"}]},{"card":{"content":"في الحملة الجديدة لتشجيع السياحة، مصر بتدعي انها تخلصت من ______.","type":"black"},"combos":[{"type":"white","content":"بيحلب بقرة ببقه"}]},{"card":{"content":"ايوة يا بابا، انا نمت مع ______.","type":"black"},"combos":[{"type":"white","content":"ست عجوزة من غير هدوم"}]},
-    {"card":{"content":"ايوة يا بابا، انا نمت مع ______.","type":"black"},"combos":[{"type":"white","content":"ست عجوزة من غير هدوم"}]},{"card":{"content":"مصر ام الدنيا. مصر جملية. مصر ______.","type":"black"},"combos":[{"type":"white","content":"زب زنجي كبير"}]},{"card":{"content":"مرتضي منصور بيفكر في اية دلوقتي؟","type":"black"},"combos":[{"type":"white","content":"مخالفة ابسط قوانين حقوق الانسان"}]},{"card":{"content":"ده مش كوكب المريخ، ده كوكب ______.","type":"black"},"combos":[{"type":"white","content":"الشراميط"}]},{"card":{"content":"قبل ما اقتلك لازم اوريك _______.","type":"black"},"combos":[{"type":"white","content":"بضان مدحت شلبي"}]},
-    {"card":{"content":"مفيش عزومه غذاء رومانسية تكتمل من غير _________.","type":"black"},"combos":[{"type":"white","content":"صور لبزاز بنات"}]},{"card":{"content":"يمكن هي اتولدت بية او يمكن ______.","type":"black"},"combos":[{"type":"white","content":"بسكلتة"}]},{"card":{"content":"_______ مان.","type":"black"},"combos":[{"type":"white","content":"لحمه من عربية في الشارع"}]},{"card":{"content":"ابويا اضايق لما فتح موبيلي ولقي _______.","type":"black"},"combos":[{"type":"white","content":"كائنات فضائية شواذ"}]},{"card":{"content":"بشتغل وبفشخ نفسي كل يوم علشانك واما ارجع البيت القي ______؟!","type":"black"},"combos":[{"type":"white","content":"اشهر ممثلة زنجية"}]},
-    {"card":{"content":"ساعدوني, ابني _______.","type":"black"},"combos":[{"type":"white","content":"مسك عيل وضربة لحد ما فسي"}]},{"card":{"content":"تحيا مصر، ام ______.","type":"black"},"combos":[{"type":"white","content":"شنطة جلد مليانة جثث كتاكيت"}]},{"card":{"content":"وفجاة ________.","type":"black"},"combos":[{"type":"white","content":"مسك عيل وضربة لحد ما فسي"}]}
+    // last updated 06 Sep, 2021
+    {"combos":[{"type":"white","content":"الست الفي اعلانات الزبادي"}],"card":{"content":"عمرو اديب اكل _______ انهاردة علي الغداء.","type":"black"}},{"combos":[{"type":"white","content":"هتلر بيسحمي مع اثنين يهود"},{"type":"white","content":"الجنس مع انثي الفيل"}],"card":{"content":"في فليم أكشن الجديد السبكي بيحط _____ ضد _______.","type":"black"}},{"combos":[{"type":"white","content":"الزرافة بتاعت جنينه الحيوانات"}],"card":{"content":"اقترح حلاً لمشكلة التمييز ضد المراة.","type":"black"}},{"combos":[{"type":"white","content":"ابوة مات وامة تاهت"}],"card":{"content":"حاليا في الاسواق، السيرة الذاتية لـ _______.","type":"black"}},
+    {"combos":[{"type":"white","content":"الموت"}],"card":{"content":"اشتري _______ دلوقتي وقول باي باي لكل مشاكلك الجنسية.","type":"black"}},{"combos":[{"type":"white","content":"رئيس بوركينا فاسو"}],"card":{"content":"ابوك مات يا ايهاب وساب ليك _______.","type":"black"}},{"combos":[{"type":"white","content":"كل الناس الي ينفع تتقتل"}],"card":{"content":"في برنامجة الجديد، رامز جلال بيحط الناس في ______.","type":"black"}},{"combos":[{"type":"white","content":"دقن محمد رمضان"}],"card":{"content":"لو سمحت، ممكن ارجع الوجبة بتاعتي، طعمها طعم _______.","type":"black"}},{"combos":[{"type":"white","content":"الشخاخ إلى الأبد"}],"card":{"content":"مصر تمتلك الكثير من ______.","type":"black"}},
+    {"combos":[{"type":"white","content":"المخدرات"}],"card":{"content":"انا اسف يا دكتور بس معملتش الواجب علشان _____.","type":"black"}},{"combos":[{"type":"white","content":"بياكل بيبي"},{"type":"white","content":"الفخاد الفشيخة"}],"card":{"content":"قبل ما ______ يظهر، كان في ______.","type":"black"}},{"combos":[{"type":"white","content":"الشواذ"}],"card":{"content":"ايه الريحة دي؟","type":"black"}},{"combos":[{"type":"white","content":"الموت"}],"card":{"content":"لية لسه سهران لحد دلوقتي؟","type":"black"}},{"combos":[{"type":"white","content":"هتلر بيسحمي مع اثنين يهود"},{"type":"white","content":"الجنس مع انثي الفيل"}],"card":{"content":"في فليم أكشن الجديد السبكي بيحط _____ ضد _______.","type":"black"}},
+    {"combos":[{"type":"white","content":"أيتام فقراء"}],"card":{"content":"شيبسي اخيرا عملت طعم _______.","type":"black"}},{"combos":[{"type":"white","content":"بيحط برطمان في طيزة"}],"card":{"content":"عاوز تعمل فلوس كثير؟ اشتغل _______.","type":"black"}},{"combos":[{"type":"white","content":"سلو موشن"}],"card":{"content":"لا يا عم الارض مش بيضاوية، الارض علي شكل ______.","type":"black"}},{"combos":[{"type":"white","content":"بربور"}],"card":{"content":"قابلت ______ انهاردة وبوست ايدة.","type":"black"}},{"combos":[{"type":"white","content":"بتاع زنجي"}],"card":{"content":"مش رادية ترد عليك؟ جربت _______.","type":"black"}},
+    {"combos":[{"type":"white","content":"ضعف جنسي"}],"card":{"content":"ابوك مات يا ايهاب وساب ليك _______.","type":"black"}},{"combos":[{"type":"white","content":"حزلقؤم"}],"card":{"content":"اية اكثر حاجه مصر محتاجها؟","type":"black"}},{"combos":[{"type":"white","content":"الشراميط"}],"card":{"content":"كل سنة وانت طيب، انهاردة عيد _______.","type":"black"}},{"combos":[{"type":"white","content":"راجل فقير"}],"card":{"content":"بنتني بتحب تتناك من _______.","type":"black"}},{"combos":[{"type":"white","content":"ابوك"}],"card":{"content":"مرتضي منصور بيفكر في اية دلوقتي؟","type":"black"}}
   ],
 
   "play": "العب",
   "terms-and-conditions": "الشروط والاحكام",
   "privacy-policy": "سياسة الخصوصية",
 
+  // the tutorial
+
   "adults-only-title": "1. خلي بالك!!",
-  "perfer-voice-chat-title": "2. ازاي تلعب كروت؟",
+  "prefer-voice-chat-title": "2. ازاي تلعب كروت؟",
   "pick-a-card-title": "3. اختار كرتك",
   "write-a-card-title": "4. الكروت الفاضية",
   "judge-a-card-title": "5. أنت القاضي؟",
   "join-our-discord-title": "6.",
 
   "adults-only": "اللعبه دي معموله للكبار بس... لو انت تحت الي 16 فاحنا لازم نقولك تمشي من هنا.",
-  "perfer-voice-chat": "اللعبة احسن لو لعبتها وسط صحابك في مكالمة صوتية مثلا علي ديسكورد أو واتس اب.",
+  "prefer-voice-chat": "اللعبة احسن لو لعبتها وسط صحابك في مكالمة صوتية مثلا علي ديسكورد أو واتس اب.",
   "pick-a-card": "اختار اكثر كرت أبيض بيضحك من ايدك ويكون مناسب مع الكرت الاسود الي علي الارض.",
   "write-a-card": "معاك كرت أبيض فاضي؟ ينفع تكتب فية اي حاجة من مخك.",
   "judge-a-card": "اما يجي دورك تبقي القاضي هتستني باقي اللعيبة كلهم يختاروا كروتهم بعدين هتختار اكثر كرت من الكروت الي علي الارض خلاك تضحك.",

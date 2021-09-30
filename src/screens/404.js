@@ -2,13 +2,17 @@ import React, { useEffect } from 'react';
 
 import { createStyle, createAnimation } from 'flcss';
 
+import { hideSplashScreen } from '../index.js';
+
 const NotFound = () =>
 {
   // on url change
   useEffect(() =>
   {
-    document.title = 'Hi';
+    document.title = '4xx';
     window.scrollTo(0, 0);
+
+    hideSplashScreen();
   });
 
   return (
