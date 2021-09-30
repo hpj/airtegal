@@ -182,6 +182,8 @@ class ShareOverlay extends React.Component
 
         snapPoints={ [ { y: size.height }, { y: 0 } ] }
 
+        resistance={ { y: size.height * 0.05 } }
+
         triggers={ [ { y: size.height * 0.1, index: 0 } ] }
 
         onMovement={ onMovement }

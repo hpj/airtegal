@@ -171,6 +171,18 @@ class Game extends React.Component
         }, () =>
         {
           usernameRef.current?.resize();
+
+          // process url parameters
+
+          const params = new URL(document.URL).searchParams;
+          
+          // join room
+          if (params?.has('join'))
+            overlayRef.current.joinRoom(params.get('join'));
+          // create room
+          else if (params?.has('create') || params?.has('match'))
+            overlayRef.current.createRoom();
+
           hideSplashScreen();
         });
 
@@ -189,23 +201,14 @@ class Game extends React.Component
 
     // detect when the app goes in and out of focus
     document.addEventListener('visibilitychange', this.visibilityChange);
-
-    // process url parameters
-
-    const params = new URL(document.URL).searchParams;
-    
-    // join room
-    if (params?.has('join'))
-      overlayRef.current.joinRoom(params.get('join'));
-    // create room
-    else if (params?.has('create') || params?.has('match'))
-      overlayRef.current.createRoom();
   }
 
   componentWillUnmount()
   {
     window.removeEventListener('resize', this.resize);
     window.removeEventListener('dragstart', this.disableDrag);
+    
+    document.removeEventListener('visibilitychange', this.visibilityChange);
   }
 
   requestRooms()

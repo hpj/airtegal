@@ -271,12 +271,12 @@ const styles = createStyle({
 
       '::-webkit-scrollbar':
       {
-        height: '6px'
+        height: '3px'
       },
   
       '::-webkit-scrollbar-thumb':
       {
-        boxShadow: `inset 0 0 6px 6px ${colors.handScrollbar}`
+        boxShadow: `inset 0 0 3px 3px ${colors.handScrollbar}`
       }
     }
   },

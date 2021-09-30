@@ -145,7 +145,7 @@ class HandOverlay extends StoreComponent
     const { size } = this.props;
 
     const handViewport = {
-      height: (size.height - y) - 36 - 33
+      height: (size.height - y) - 36 - (size.width <= 700 ? 33 : 0)
     };
 
     // hide the overlay when it goes off-screen
@@ -350,12 +350,12 @@ const styles = createStyle({
 
     '::-webkit-scrollbar':
     {
-      width: '6px'
+      width: '3px'
     },
 
     '::-webkit-scrollbar-thumb':
     {
-      boxShadow: `inset 0 0 6px 6px ${colors.handScrollbar}`
+      boxShadow: `inset 0 0 3px 3px ${colors.handScrollbar}`
     }
   },
 
