@@ -1,5 +1,5 @@
 /**
-* @type { { randos: boolean, kuruit: boolean } }
+* @type { { touch: boolean, randos: boolean, kuruit: boolean } }
 */
 const features = {};
 
