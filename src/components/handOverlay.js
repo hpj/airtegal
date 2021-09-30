@@ -49,8 +49,6 @@ class HandOverlay extends StoreComponent
       handBlockDragging: false
     });
 
-    this.active = undefined;
-
     this.onResize = this.onResize.bind(this);
 
     this.onScroll = this.onScroll.bind(this);
@@ -92,13 +90,11 @@ class HandOverlay extends StoreComponent
   */
   stateWillChange({ roomData })
   {
-    const state = {};
-
-    // if in match and and has to pick a card
-    state.handVisible = roomData?.state === 'match' &&
-      roomData?.playerProperties[socket.id]?.state === 'picking';
-
-    return state;
+    return {
+      // if in match and and has to pick a card
+      handVisible: roomData?.state === 'match' &&
+      roomData?.playerProperties[socket.id]?.state === 'picking'
+    };
   }
 
   stateDidChange(state)
@@ -111,8 +107,7 @@ class HandOverlay extends StoreComponent
 
   onResize()
   {
-    // it needs to be updated manually on every resize
-    // or else it can go off-screen
+    // needs to be updated manually on every resize
     overlayRef.current?.snapTo({ index: overlayRef.current.lastSnapIndex });
   }
 
@@ -124,7 +119,7 @@ class HandOverlay extends StoreComponent
     if (!isTouchScreen || !wrapperRef.current)
       return;
 
-    if (overlayRef?.current?.lastSnapIndex !== 2)
+    if (overlayRef.current?.lastSnapIndex !== 2)
     {
       e.preventDefault();
 
@@ -134,6 +129,7 @@ class HandOverlay extends StoreComponent
     {
       const y = wrapperRef.current.scrollTop;
   
+      // block dragging if the user is scrolling through the cards
       this.store.set({
         handBlockDragging: y > 15 ? true : false
       });
@@ -144,6 +140,8 @@ class HandOverlay extends StoreComponent
   {
     const { size } = this.props;
 
+    const { handVisible, handHidden } = this.state;
+
     const handViewport = {
       height: (size.height - y) - 36 - (size.width <= 700 ? 33 : 0)
     };
@@ -152,7 +150,7 @@ class HandOverlay extends StoreComponent
     if (y >= size.height)
       this.store.set({ handViewport, handHidden: true });
     // only make the overlay handVisible if there's a reason
-    else if (!this.state.handHidden || this.state.handVisible)
+    else if (!handHidden || handVisible)
       this.store.set({ handViewport, handHidden: false });
   }
 
@@ -170,34 +168,12 @@ class HandOverlay extends StoreComponent
 
     const { textareaRef } = element;
 
-    if (isTouchScreen)
-    {
-      if (this.active === element && textareaRef.current.value.trim())
-      {
-        this.active = undefined;
-        this.sendCard(index, textareaRef.current.value);
+    const value =  textareaRef.current?.value.trim();
 
-        return;
-      }
-
-      if (card.blank)
-        textareaRef.current?.focus();
-      
-      this.active = element;
-
-      document.addEventListener('click', () => this.active = undefined, { once: true });
-    }
-    else
-    {
-      if (card.blank && (!element.focused || !textareaRef.current.value.trim()))
-      {
-        textareaRef.current?.focus();
-
-        return;
-      }
-
-      this.sendCard(index, textareaRef.current.value);
-    }
+    if (card.blank && !element.focused)
+      textareaRef.current?.focus();
+    else if (value)
+      this.sendCard(index, value);
   }
 
   sendCard(index, content)
@@ -285,7 +261,7 @@ class HandOverlay extends StoreComponent
                       marginRight: !miniView ? margin : undefined,
                       transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
                     } }
-                    onClick={ (c) => this.activateCard(c, card, i) }
+                    onClick={ c => this.activateCard(c, card, i) }
                     allowed={ true }
                     type={ card.type }
                     blank={ card.blank }
