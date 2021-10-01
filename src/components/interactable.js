@@ -154,7 +154,7 @@ class Interactable extends React.Component
   */
   onDrag(e)
   {
-    const { initialPosition, resistance, verticalOnly, horizontalOnly } = this.props;
+    const { resistance, verticalOnly, horizontalOnly } = this.props;
 
     const { left, right, top, bottom } = this.props.boundaries;
 
@@ -162,7 +162,7 @@ class Interactable extends React.Component
 
     const dragEnabled = this.props.dragEnabled ?? true;
 
-    if (dragEnabled && !this.animating && !this.isBeingDragged)
+    if (dragEnabled && !this.isBeingDragged && !this.animating)
     {
       if (horizontalOnly && resistance?.x && this.lastPoint.clientX - this.dragStart.x >= resistance.x)
         this.isBeingDragged = true;
@@ -187,17 +187,7 @@ class Interactable extends React.Component
       y: horizontalOnly ? this.state.y : Math.max(Math.min(y, bottom ?? y), top ?? y)
     };
 
-    // handle dragEnabled being false while isBeingDragged
-    if (this.isBeingDragged && !dragEnabled)
-    {
-      this.isBeingDragged = false;
-
-      if (typeof this.lastSnapIndex === 'number')
-        this.snapTo({ index: this.lastSnapIndex });
-      else
-        this.snapTo({ point: initialPosition });
-    }
-    else if (this.isBeingDragged)
+    if (this.isBeingDragged)
     {
       this.setState(this.lastPoint, () => this.props.onMovement?.({ x: this.state.x, y: this.state.y }));
     }

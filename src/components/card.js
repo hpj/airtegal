@@ -285,6 +285,9 @@ const styles = createStyle({
   card: {
     display: 'flex',
 
+    // override hand overlay pointer events
+    pointerEvents: 'auto',
+
     userSelect: 'none',
   
     width: '100%',

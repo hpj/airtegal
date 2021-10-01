@@ -46,6 +46,7 @@ class HandOverlay extends StoreComponent
     super({
       handHidden: true,
       handVisible: false,
+      handBlockScrolling: true,
       handBlockDragging: false
     });
 
@@ -78,6 +79,7 @@ class HandOverlay extends StoreComponent
       changes?.roomData ||
       changes?.handViewport ||
       changes?.handBlockDragging ||
+      changes?.handBlockScrolling ||
       changes?.handVisible ||
       changes?.handHidden ||
       changes?.pick
@@ -114,44 +116,46 @@ class HandOverlay extends StoreComponent
   /**
   * @param { Event } e
   */
-  onScroll(e)
+  onScroll()
   {
-    if (!isTouchScreen || !wrapperRef.current)
+    if (!isTouchScreen)
       return;
 
-    if (overlayRef.current?.lastSnapIndex !== 2)
-    {
-      e.preventDefault();
+    const y = wrapperRef.current?.scrollTop ?? 0;
 
-      wrapperRef.current.scrollTop = 0;
-    }
-    else
-    {
-      const y = wrapperRef.current.scrollTop;
-  
-      // block dragging if the user is scrolling through the cards
-      this.store.set({
-        handBlockDragging: y > 15 ? true : false
-      });
-    }
+    // block dragging if the user is scrolling through the cards
+
+    this.store.set({
+      handBlockDragging: overlayRef.current?.lastSnapIndex === 2 && y > 0 ? true : false
+    });
   }
 
   onMovement({ y })
   {
     const { size } = this.props;
 
+    const state = {};
+
     const { handVisible, handHidden } = this.state;
 
     const handViewport = {
-      height: (size.height - y) - 36 - (size.width <= 700 ? 33 : 0)
+      // 36px for the handler
+      // 31px for portrait mode state bar
+      height: (size.height - y) - 36 - (size.width <= 700 ? 31 : 0)
     };
+
+    state.handBlockScrolling = y > 0;
 
     // hide the overlay when it goes off-screen
     if (y >= size.height)
-      this.store.set({ handViewport, handHidden: true });
+      state.handHidden = true;
     // only make the overlay handVisible if there's a reason
     else if (!handHidden || handVisible)
-      this.store.set({ handViewport, handHidden: false });
+      state.handHidden = false;
+
+    state.handViewport = handViewport;
+
+    this.store.set(state);
   }
 
   /**
@@ -168,11 +172,9 @@ class HandOverlay extends StoreComponent
 
     const { textareaRef } = element;
 
-    const value =  textareaRef.current?.value.trim();
+    const value = textareaRef.current?.value.trim();
 
-    if (card.blank && !element.focused)
-      textareaRef.current?.focus();
-    else if (value)
+    if ((card.blank && element.focused && value?.length > 0) || !card.blank)
       this.sendCard(index, value);
   }
 
@@ -185,9 +187,15 @@ class HandOverlay extends StoreComponent
   {
     const { locale, size } = this.props;
 
-    const { handViewport, handHidden, handBlockDragging } = this.state;
+    const {
+      roomData,
+      handHidden,
+      handViewport,
+      handBlockScrolling,
+      handBlockDragging
+    } = this.state;
 
-    const hand = this.state.roomData?.playerSecretProperties?.hand ?? [];
+    const hand = roomData?.playerSecretProperties?.hand ?? [];
 
     const miniView = isTouchScreen || size.width < 700;
 
@@ -218,9 +226,11 @@ class HandOverlay extends StoreComponent
         } }
 
         verticalOnly={ true }
+
         dragEnabled={ !handBlockDragging }
         
         onMovement={ this.onMovement }
+
         frame={ { pixels: Math.round(size.height * 0.05), every: 8 } }
 
         boundaries={ { top: isTouchScreen ? 0 : percent(size.height, 15) } }
@@ -236,12 +246,16 @@ class HandOverlay extends StoreComponent
           </div>
 
           <div ref={ wrapperRef } className={ styles.wrapper } style={ {
+            // pointer events are disabled meaning that the user can't scroll through the cards
+            // unless the interactable is fully snapped to the top of the screen
+            // but each cards overrides pointer events so cards still can be picked in any snap point
+            pointerEvents: isTouchScreen && handBlockScrolling ? 'none' : 'auto',
             height: !isTouchScreen ? handViewport?.height : undefined
           } } onScroll={ this.onScroll }>
 
             <div id={ 'kuruit-hand-overlay' } className={ styles.cards } style={ {
-              direction: locale.direction,
-              flexWrap: miniView ? 'wrap' : undefined
+              flexWrap: miniView ? 'wrap' : undefined,
+              direction: locale.direction
             } }>
               {
                 hand?.map((card, i) =>
@@ -303,7 +317,9 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 700px)': {
       width: '100%',
-      margin: '0'
+
+      margin: '0',
+      borderRadius: '0'
     }
   },
 
@@ -322,7 +338,10 @@ const styles = createStyle({
 
   wrapper: {
     overflow: 'hidden overlay',
-    height: 'calc(100vh - 36px)',
+
+    // 36px for the handler
+    // 31px for portrait mode state bar
+    height: 'calc(100vh - 36px - 31px)',
 
     '::-webkit-scrollbar':
     {
