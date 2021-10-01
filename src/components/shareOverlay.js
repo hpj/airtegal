@@ -273,8 +273,9 @@ const styles = createStyle({
   },
 
   container: {
-    maxWidth: '640px',
-    width: '40vw'
+    minWidth: '210px',
+    maxWidth: '420px',
+    width: '80vw'
   },
 
   handler: {
