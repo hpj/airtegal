@@ -15,9 +15,11 @@ import { createStyle, createAnimation } from 'flcss';
 
 import getTheme, { detectDeviceIsDark, opacity } from '../colors.js';
 
-import { ensureSplashScreen, hideSplashScreen } from '../index.js';
+import { ensureSplashScreen, hideSplashScreen, isTouchScreen } from '../index.js';
 
 import { sendMessage } from '../utils.js';
+
+import features from '../flags.js';
 
 import * as mocks from '../mocks/io.js';
 
@@ -87,6 +89,16 @@ function connect()
             region: locale().value
           } });
 
+      // all game-modes are turned off
+      if (!features.kuruit)
+      {
+        throw new Error(translation('server-mismatch'));
+      }
+      else if (isTouchScreen && !features.touch)
+      {
+        throw new Error(translation('touch-unavailable'));
+      }
+      
       socket.once('connected', username =>
       {
         connected = true;
