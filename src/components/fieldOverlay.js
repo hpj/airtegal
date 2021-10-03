@@ -6,9 +6,9 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import { sendMessage } from '../utils.js';
+import { socket, sendMessage } from '../utils.js';
 
-import { socket, shareRef } from '../screens/game.js';
+import { shareRef } from '../screens/game.js';
 
 import getTheme from '../colors.js';
 

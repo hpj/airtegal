@@ -10,13 +10,11 @@ import WaitingIcon from 'mdi-react/LoadingIcon';
 
 import features from '../flags.js';
 
-import { sendMessage } from '../utils.js';
+import { socket, sendMessage } from '../utils.js';
 
 import { StoreComponent } from '../store.js';
 
 import { translation, withTranslation } from '../i18n.js';
-
-import { socket } from '../screens/game.js';
 
 import Select from './select.js';
 

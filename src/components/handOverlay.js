@@ -6,9 +6,7 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import { sendMessage } from '../utils.js';
-
-import { socket } from '../screens/game.js';
+import { socket, sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 

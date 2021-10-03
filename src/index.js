@@ -12,7 +12,7 @@ import WebFont from 'webfontloader';
 
 import { translation, locale, setLocale } from './i18n.js';
 
-import features, { setFeatures } from './flags.js';
+import { setFeatures } from './flags.js';
 
 import stack from './stack.js';
 

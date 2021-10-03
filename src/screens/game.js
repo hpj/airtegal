@@ -9,19 +9,13 @@ import RefreshIcon from 'mdi-react/RefreshIcon';
 import Brightness2Icon from 'mdi-react/Brightness2Icon';
 import Brightness5Icon from 'mdi-react/Brightness5Icon';
 
-import { io } from 'socket.io-client';
-
 import { createStyle, createAnimation } from 'flcss';
 
 import getTheme, { detectDeviceIsDark, opacity } from '../colors.js';
 
-import { ensureSplashScreen, hideSplashScreen, isTouchScreen } from '../index.js';
+import { ensureSplashScreen, hideSplashScreen } from '../index.js';
 
-import { sendMessage } from '../utils.js';
-
-import features from '../flags.js';
-
-import * as mocks from '../mocks/io.js';
+import { socket, connect, sendMessage } from '../utils.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
@@ -33,9 +27,7 @@ import ShareOverlay from '../components/shareOverlay.js';
 
 import RoomOverlay from '../components/roomOverlay.js';
 
-import { locale, translation, withTranslation } from '../i18n.js';
-
-const version = 2.5;
+import { translation, withTranslation } from '../i18n.js';
 
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
@@ -57,11 +49,6 @@ const overlayRef = createRef();
 */
 export const shareRef = createRef();
 
-/**
-* @type { import('socket.io-client').Socket }
-*/
-export let socket;
-
 /** @param { string } error
 */
 function errorScreen(error)
@@ -69,75 +56,6 @@ function errorScreen(error)
   ReactDOM.render(<ErrorScreen error={ error }/>, placeholder);
 
   ReactDOM.unmountComponentAtNode(app);
-}
-
-/** connect the client to the socket io server
-*/
-function connect()
-{
-  return new Promise((resolve, reject) =>
-  {
-    try
-    {
-      let connected = false;
-
-      socket = process.env.NODE_ENV === 'test' ? mocks.socket :
-        io(process.env.API_ENDPOINT, {
-          path: '/io',
-          query: {
-            version,
-            region: locale().value
-          } });
-
-      // all game-modes are turned off
-      if (!features.kuruit)
-      {
-        throw new Error(translation('server-mismatch'));
-      }
-      else if (isTouchScreen && !features.touch)
-      {
-        throw new Error(translation('touch-unavailable'));
-      }
-      
-      socket.once('connected', username =>
-      {
-        connected = true;
-
-        resolve(username);
-      });
-
-      const fail = err =>
-      {
-        if (connected)
-          return;
-
-        socket.close();
-
-        reject(err);
-      };
-
-      socket.once('error', fail);
-  
-      socket.once('disconnect', () => fail('you-were-disconnected'));
-
-      // connecting timeout
-      setTimeout(() =>
-      {
-        if (connected)
-          return;
-
-        socket.close();
-
-        reject('timeout');
-      }, 3000);
-    }
-    catch (e)
-    {
-      socket.close();
-
-      reject(e);
-    }
-  });
 }
 
 class Game extends React.Component
