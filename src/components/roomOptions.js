@@ -116,7 +116,7 @@ class RoomOptions extends StoreComponent
       if (dirty)
         await sendMessage('edit', { options: dirtyOptions });
 
-      await sendMessage('matchRequest', undefined, 60000);
+      await sendMessage('matchRequest', undefined, 25000);
 
       // hide the loading indictor
       // but after 2.5s to allow game's overlay animations to end

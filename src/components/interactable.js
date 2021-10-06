@@ -383,7 +383,7 @@ class Interactable extends React.Component
       } }
 
       onMouseDown={ this.onMouseDown }
-      onDragStart={ (e) => e.preventDefault() }
+      onDragStart={ e => e.preventDefault() }
 
       onTouchStart={ this.onDragStart }
       onTouchMove={ this.onDrag }
