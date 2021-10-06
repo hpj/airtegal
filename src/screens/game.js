@@ -146,7 +146,7 @@ class Game extends React.Component
     // show a loading indictor
     this.setState({ loading: true });
 
-    sendMessage('list', 60000)
+    sendMessage('list', 25000)
       .then(rooms =>
       {
         this.setState({
