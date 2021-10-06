@@ -119,7 +119,7 @@ class TutorialOverlay extends React.Component
       });
     };
 
-    const onSnapEnd = (index) =>
+    const onSnapEnd = index =>
     {
       if (index === 0)
         this.hide();

@@ -360,8 +360,8 @@ class Interactable extends React.Component
 
     this.props.onSnapStart?.(index);
 
-    // if (process.env.NODE_ENV === 'test')
-    //   counter = duration * 2;
+    if (process.env.NODE_ENV === 'test')
+      counter = duration * 2;
 
     animate();
   }
@@ -383,7 +383,7 @@ class Interactable extends React.Component
       } }
 
       onMouseDown={ this.onMouseDown }
-      onDragStart={ (e) => e.preventDefault() }
+      onDragStart={ e => e.preventDefault() }
 
       onTouchStart={ this.onDragStart }
       onTouchMove={ this.onDrag }

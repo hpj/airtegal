@@ -10,13 +10,11 @@ import WaitingIcon from 'mdi-react/LoadingIcon';
 
 import features from '../flags.js';
 
-import { sendMessage } from '../utils.js';
+import { socket, sendMessage } from '../utils.js';
 
 import { StoreComponent } from '../store.js';
 
 import { translation, withTranslation } from '../i18n.js';
-
-import { socket } from '../screens/game.js';
 
 import Select from './select.js';
 
@@ -118,7 +116,7 @@ class RoomOptions extends StoreComponent
       if (dirty)
         await sendMessage('edit', { options: dirtyOptions });
 
-      await sendMessage('matchRequest', undefined, 60000);
+      await sendMessage('matchRequest', undefined, 25000);
 
       // hide the loading indictor
       // but after 2.5s to allow game's overlay animations to end

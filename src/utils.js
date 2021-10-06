@@ -1,6 +1,88 @@
-import { socket } from './screens/game.js';
+import { io } from 'socket.io-client';
 
-import { translation } from './i18n.js';
+import { isTouchScreen } from './index.js';
+
+import { locale, translation } from './i18n.js';
+
+import features from './flags.js';
+
+import * as mocks from './mocks/io.js';
+
+const version = 2.5;
+
+/**
+* @type { import('socket.io-client').Socket }
+*/
+export let socket;
+
+/** connect the client to the socket io server
+*/
+export function connect()
+{
+  return new Promise((resolve, reject) =>
+  {
+    try
+    {
+      let connected = false;
+
+      socket = process.env.NODE_ENV === 'test' ? mocks.socket :
+        io(process.env.API_ENDPOINT, {
+          path: '/io',
+          query: {
+            version,
+            region: locale().value
+          } });
+
+      // all game-modes are turned off
+      if (!features.kuruit)
+      {
+        throw new Error(translation('server-mismatch'));
+      }
+      else if (isTouchScreen && !features.touch)
+      {
+        throw new Error(translation('touch-unavailable'));
+      }
+      
+      socket.once('connected', username =>
+      {
+        connected = true;
+
+        resolve(username);
+      });
+
+      const fail = err =>
+      {
+        if (connected)
+          return;
+
+        socket.close();
+
+        reject(err);
+      };
+
+      socket.once('error', fail);
+  
+      socket.once('disconnect', () => fail('you-were-disconnected'));
+
+      // connecting timeout
+      setTimeout(() =>
+      {
+        if (connected)
+          return;
+
+        socket.close();
+
+        reject('timeout');
+      }, 25000);
+    }
+    catch (e)
+    {
+      socket.close();
+
+      reject(e);
+    }
+  });
+}
 
 /**
 * @param { string } eventName

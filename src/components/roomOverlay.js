@@ -10,11 +10,9 @@ import stack from '../stack.js';
 
 import { StoreComponent } from '../store.js';
 
-import { sendMessage } from '../utils.js';
+import { socket, sendMessage } from '../utils.js';
 
 import { translation } from '../i18n.js';
-
-import { socket } from '../screens/game.js';
 
 import getTheme, { opacity } from '../colors.js';
 
