@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 
 import PropTypes from 'prop-types';
 
+import QrcodeScanIcon from 'mdi-react/QrcodeScanIcon';
+
 import RefreshIcon from 'mdi-react/RefreshIcon';
 
 import Brightness2Icon from 'mdi-react/Brightness2Icon';
@@ -241,8 +243,11 @@ class Game extends React.Component
 
     const Options = () => <div className={ optionsStyles.container } style={ { direction: locale.direction } }>
       <div className={ optionsStyles.buttons }>
-        <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.createRoom() }> { translation('create-room') } </div>
-        <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current.joinRoom() }> { translation('random-room') } </div>
+        <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current?.createRoom() }>{ translation('create-room') }</div>
+        <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current?.joinRoom() }>{ translation('random-room') }</div>
+        <div id={ 'scan-room' } className={ optionsStyles.button } onClick={ () => codeRef.current?.scan() }>
+          <QrcodeScanIcon/>
+        </div>
       </div>
 
       <div className={ optionsStyles.title }> { translation('available-rooms') }</div>
@@ -450,18 +455,31 @@ const optionsStyles = createStyle({
 
   buttons: {
     gridArea: 'buttons',
-    display: 'grid',
+    display: 'flex',
+    gap: '8px',
 
-    gridTemplateAreas: '". ."',
+    '> :nth-child(1)': {
+      flexGrow: 1
+    },
 
-    gridTemplateColumns: '1fr 1fr',
-    gridTemplateRows: '1fr',
-    gap: '8px'
+    '> :nth-child(2)': {
+      flexGrow: 1
+    },
+
+    '> :nth-child(3)': {
+      display: 'flex',
+      alignItems: 'center',
+
+      padding: '8px',
+
+      '> svg': {
+        width: '20px',
+        height: '20px'
+      }
+    }
   },
 
   button: {
-    flexGrow: 1,
-
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
 

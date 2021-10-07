@@ -39,6 +39,11 @@ class CodeOverlay extends React.Component
     interactableRef.current?.snapTo({ index: 0 });
   }
 
+  scan()
+  {
+    //
+  }
+
   async show(url)
   {
     try
