@@ -25,6 +25,8 @@ import TutorialOverlay from '../components/tutorialOverlay';
 
 import ShareOverlay from '../components/shareOverlay.js';
 
+import CodeOverlay from '../components/codeOverlay.js';
+
 import RoomOverlay from '../components/roomOverlay.js';
 
 import { translation, withTranslation } from '../i18n.js';
@@ -48,6 +50,11 @@ const overlayRef = createRef();
 * @type { React.RefObject<ShareOverlay> }
 */
 export const shareRef = createRef();
+
+/**
+* @type { React.RefObject<CodeOverlay> }
+*/
+export const codeRef = createRef();
 
 /** @param { string } error
 */
@@ -324,6 +331,8 @@ class Game extends React.Component
       <TutorialOverlay size={ this.state.size }/>
 
       <ShareOverlay ref={ shareRef } size={ this.state.size }/>
+
+      <CodeOverlay ref={ codeRef } size={ this.state.size }/>
 
       <RoomOverlay
         ref={ overlayRef }

@@ -19,6 +19,7 @@ import getTheme, { opacity } from '../colors.js';
 import Interactable from './interactable.js';
 
 import RoomTrackBar from './roomTrackBar.js';
+
 import RoomState from './roomState.js';
 
 import RoomOptions from './roomOptions.js';
