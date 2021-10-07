@@ -284,14 +284,14 @@ class RoomOptions extends StoreComponent
           </div>
 
           {
-            navigator.share ?
+            !navigator.share ?
               <div className={ styles.misc } onClick={ this.share }>
                 <div>{ translation('share') }</div>
                 <ShareIcon/>
               </div> : undefined
           }
 
-          <div className={ styles.misc } onClick={ this.code }>
+          <div id={ 'room-url-qr' } className={ styles.misc } onClick={ this.code }>
             <div>{ translation('qr-code') }</div>
             <QRCodeIcon/>
           </div>
@@ -632,16 +632,12 @@ const styles = createStyle({
     width: 'fit-content',
 
     margin: '0 0 15px',
-    padding: '10px 25px',
-
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
+    padding: '10px 25px'
   },
 
   buttons: {
     display: 'flex',
-    width: 'min-content',
+    flexWrap: 'wrap',
 
     gap: '15px',
     padding: '0 25px'
