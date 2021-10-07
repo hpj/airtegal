@@ -53,6 +53,7 @@ class ShareOverlay extends React.Component
   async shareEntry(data)
   {
     this.setState({
+      url: '',
       visible: true
     }, () =>
     {
@@ -83,7 +84,6 @@ class ShareOverlay extends React.Component
     stack.unregister(this.back);
     
     this.setState({
-      url: '',
       copied: false,
       visible: false
     });

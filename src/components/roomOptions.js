@@ -284,7 +284,7 @@ class RoomOptions extends StoreComponent
           </div>
 
           {
-            !navigator.share ?
+            navigator.share ?
               <div className={ styles.misc } onClick={ this.share }>
                 <div>{ translation('share') }</div>
                 <ShareIcon/>

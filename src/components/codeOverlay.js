@@ -2,15 +2,15 @@ import React, { createRef } from 'react';
 
 import PropTypes from 'prop-types';
 
-import QRCode from 'qrcode';
+import LoadingIcon from 'mdi-react/LoadingIcon';
 
-import { createStyle } from 'flcss';
+import { createAnimation, createStyle } from 'flcss';
 
 import stack from '../stack.js';
 
 import getTheme, { opacity } from '../colors.js';
 
-import { withTranslation } from '../i18n.js';
+import { sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 
@@ -21,14 +21,14 @@ const colors = getTheme();
 */
 const interactableRef = createRef();
 
-class TutorialOverlay extends React.Component
+class CodeOverlay extends React.Component
 {
   constructor()
   {
     super();
 
     this.state = {
-      dataURL: '',
+      svg: '',
       visible: false,
       opacity: 0
     };
@@ -44,6 +44,7 @@ class TutorialOverlay extends React.Component
     try
     {
       this.setState({
+        svg: '',
         visible: true
       }, () =>
       {
@@ -52,16 +53,11 @@ class TutorialOverlay extends React.Component
         interactableRef.current?.snapTo({ index: 1 });
       });
 
-      const dataURL = await QRCode.toDataURL(url, {
-        color: {
-          light: '#ffffff00',
-          dark: colors.theme === 'dark' ? '#0e0e0e' : colors.blackText
-        },
-        width: 128,
-        margin: 0
-      });
+      const svg = await sendMessage('qr', { text: url });
 
-      this.setState({ dataURL });
+      this.setState({
+        svg: process.env.NODE_ENV !== 'test' ? svg : '<img width="128" src="/icons/128.png"></img>'
+      });
     }
     catch (e)
     {
@@ -83,7 +79,7 @@ class TutorialOverlay extends React.Component
 
   render()
   {
-    const { dataURL, visible, opacity } = this.state;
+    const { svg, visible, opacity } = this.state;
     
     const { size } = this.props;
 
@@ -144,18 +140,34 @@ class TutorialOverlay extends React.Component
             <div/>
           </div>
 
-          <div className={ styles.qr } style={ { backgroundImage: `url(${dataURL})` } }/>
+          <div className={ styles.qr } dangerouslySetInnerHTML={ { __html: svg } }/>
+
+          <div className={ styles.waiting }>
+            <LoadingIcon/>
+          </div>
         </div>
       </Interactable>
     </div>;
   }
 }
 
-TutorialOverlay.propTypes = {
-  size: PropTypes.object,
-  translation: PropTypes.func,
-  locale: PropTypes.object
+CodeOverlay.propTypes = {
+  size: PropTypes.object
 };
+
+const waitingAnimation = createAnimation({
+  duration: '1s',
+  timingFunction: 'ease',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  keyframes: {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   wrapper: {
@@ -207,10 +219,42 @@ const styles = createStyle({
   },
 
   qr: {
+    ':not(:empty)': {
+      width: '128px',
+      height: '128px',
+      margin: '8vh 0'
+    },
+
+    ':empty ~ div': {
+      display: 'flex',
+      justifyContent: 'center'
+    },
+
+    '> svg > :nth-child(1)': {
+      opacity: 0
+    },
+
+    '> svg > :nth-child(2)': {
+      stroke: colors.theme === 'dark' ? '#0e0e0e' : colors.blackText
+    }
+  },
+
+  waiting: {
+    display: 'none',
+
     width: '128px',
     height: '128px',
-    margin: '5vh 0'
+    
+    margin: '8vh 0',
+
+    '> svg': {
+      color: colors.theme === 'dark' ? '#0e0e0e' : colors.blackText,
+      animation: waitingAnimation,
+
+      width: '48px',
+      height: '48px'
+    }
   }
 });
 
-export default withTranslation(TutorialOverlay);
+export default CodeOverlay;
