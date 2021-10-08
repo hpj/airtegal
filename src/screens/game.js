@@ -246,7 +246,7 @@ class Game extends React.Component
         <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current?.createRoom() }>{ translation('create-room') }</div>
         <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current?.joinRoom() }>{ translation('random-room') }</div>
         {
-          hasCamera ? <div id={ 'scan-room' } className={ optionsStyles.button } onClick={ () => codeRef.current?.scan() }>
+          hasCamera ? <div id={ 'scan-room' } className={ optionsStyles.button } onClick={ () => codeRef.current?.show({ scan: true }) }>
             <QrcodeScanIcon/>
           </div> : undefined
         }

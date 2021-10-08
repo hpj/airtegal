@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import LoadingIcon from 'mdi-react/LoadingIcon';
 
+import QrScanner from 'qr-scanner';
+
 import { createAnimation, createStyle } from 'flcss';
 
 import stack from '../stack.js';
@@ -21,6 +23,11 @@ const colors = getTheme();
 */
 const interactableRef = createRef();
 
+/**
+* @type { React.RefObject<HTMLVideoElement> }
+*/
+const videoRef = createRef();
+
 class CodeOverlay extends React.Component
 {
   constructor()
@@ -29,9 +36,28 @@ class CodeOverlay extends React.Component
 
     this.state = {
       svg: '',
+      loading: false,
       visible: false,
+      scan: false,
       opacity: 0
     };
+
+    /**
+    * @type { QrScanner }
+    */
+    this.qrScanner;
+
+    this.decode = this.decode.bind(this);
+  }
+
+  componentDidMount()
+  {
+    this.qrScanner = new QrScanner(videoRef.current, this.decode, undefined, undefined, 'environment');
+  }
+
+  componentWillUnmount()
+  {
+    this.qrScanner.destroy();
   }
 
   back()
@@ -39,17 +65,14 @@ class CodeOverlay extends React.Component
     interactableRef.current?.snapTo({ index: 0 });
   }
 
-  scan()
-  {
-    //
-  }
-
-  async show(url)
+  async show({ url, scan })
   {
     try
     {
       this.setState({
         svg: '',
+        scan: scan ?? false,
+        loading: true,
         visible: true
       }, () =>
       {
@@ -58,11 +81,22 @@ class CodeOverlay extends React.Component
         interactableRef.current?.snapTo({ index: 1 });
       });
 
-      const svg = await sendMessage('qr', { text: url });
+      if (scan && process.env.NODE_ENV !== 'test')
+      {
+        await this.qrScanner.start();
 
-      this.setState({
-        svg: process.env.NODE_ENV !== 'test' ? svg : '<img width="128" src="/icons/128.png"></img>'
-      });
+        // hide loading state when the video feed starts
+        videoRef.current.addEventListener('play', () => this.setState({ loading: false }), { once: true });
+      }
+      else if (url)
+      {
+        const svg = await sendMessage('qr', { text: url });
+  
+        this.setState({
+          loading: false,
+          svg: process.env.NODE_ENV !== 'test' ? svg : '<img width="128" src="/icons/128.png"></img>'
+        });
+      }
     }
     catch (e)
     {
@@ -78,13 +112,19 @@ class CodeOverlay extends React.Component
     stack.unregister(this.back);
 
     this.setState({
+      scan: false,
       visible: false
-    });
+    }, () => this.qrScanner.stop());
+  }
+
+  decode(result)
+  {
+    console.log('decoded qr code:', result);
   }
 
   render()
   {
-    const { svg, visible, opacity } = this.state;
+    const { svg, loading, visible, scan, opacity } = this.state;
     
     const { size } = this.props;
 
@@ -138,6 +178,7 @@ class CodeOverlay extends React.Component
         onMovement={ onMovement }
         onSnapEnd={ onSnapEnd }
       >
+        <video ref={ videoRef } className={ styles.scanner }/>
         
         <div className={ styles.container }>
 
@@ -147,9 +188,15 @@ class CodeOverlay extends React.Component
 
           <div className={ styles.qr } dangerouslySetInnerHTML={ { __html: svg } }/>
 
-          <div className={ styles.waiting }>
-            <LoadingIcon/>
-          </div>
+          {
+            loading ? <div className={ styles.waiting }>
+              <LoadingIcon/>
+            </div> : undefined
+          }
+
+          {
+            scan && !loading ? <div className={ styles.indicator }/> : undefined
+          }
         </div>
       </Interactable>
     </div>;
@@ -198,7 +245,14 @@ const styles = createStyle({
     }
   },
 
+  scanner: {
+    opacity: 0.25,
+    position: 'fixed',
+    height: '100%'
+  },
+
   container: {
+    zIndex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
@@ -223,16 +277,18 @@ const styles = createStyle({
     }
   },
 
+  indicator: {
+    width: '400px',
+    height: '400px',
+    margin: '8vh 0',
+    border: `2px ${colors.theme === 'dark' ? '#0e0e0e' : colors.blackText} dashed`
+  },
+
   qr: {
     ':not(:empty)': {
       width: '128px',
       height: '128px',
       margin: '8vh 0'
-    },
-
-    ':empty ~ div': {
-      display: 'flex',
-      justifyContent: 'center'
     },
 
     '> svg > :nth-child(1)': {
@@ -245,7 +301,8 @@ const styles = createStyle({
   },
 
   waiting: {
-    display: 'none',
+    display: 'flex',
+    justifyContent: 'center',
 
     width: '128px',
     height: '128px',

@@ -182,7 +182,7 @@ class RoomOptions extends StoreComponent
 
     const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
 
-    codeRef.current?.show(url);
+    codeRef.current?.show({ url });
   }
 
   onGameModeChange(value)
