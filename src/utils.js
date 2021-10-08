@@ -1,10 +1,6 @@
 import { io } from 'socket.io-client';
 
-import { isTouchScreen } from './index.js';
-
 import { locale, translation } from './i18n.js';
-
-import features from './flags.js';
 
 import * as mocks from './mocks/io.js';
 
@@ -14,6 +10,16 @@ const version = 2.5;
 * @type { import('socket.io-client').Socket }
 */
 export let socket;
+
+// detect touch screen
+export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+
+/**
+* @type { { touch: boolean, randos: boolean, kuruit: boolean } }
+*/
+export const features = {};
+
+export let hasCamera = false;
 
 /** connect the client to the socket io server
 */
@@ -182,4 +188,18 @@ export function shuffle(array)
   }
 
   return array;
+}
+
+/**
+* @param { Object<string, string> } flags
+*/
+export const setFeatures = flags =>
+{
+  // eslint-disable-next-line security/detect-object-injection
+  Object.keys(flags).forEach(k => features[k] = flags[k] === 'true') ;
+};
+
+export function setCamera(toggle)
+{
+  hasCamera = toggle;
 }

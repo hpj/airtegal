@@ -17,7 +17,7 @@ import getTheme, { detectDeviceIsDark, opacity } from '../colors.js';
 
 import { ensureSplashScreen, hideSplashScreen } from '../index.js';
 
-import { socket, connect, sendMessage } from '../utils.js';
+import { socket, connect, hasCamera, sendMessage } from '../utils.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
@@ -245,9 +245,11 @@ class Game extends React.Component
       <div className={ optionsStyles.buttons }>
         <div id={ 'create-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current?.createRoom() }>{ translation('create-room') }</div>
         <div id={ 'random-room' } className={ optionsStyles.button } onClick={ () => overlayRef.current?.joinRoom() }>{ translation('random-room') }</div>
-        <div id={ 'scan-room' } className={ optionsStyles.button } onClick={ () => codeRef.current?.scan() }>
-          <QrcodeScanIcon/>
-        </div>
+        {
+          hasCamera ? <div id={ 'scan-room' } className={ optionsStyles.button } onClick={ () => codeRef.current?.scan() }>
+            <QrcodeScanIcon/>
+          </div> : undefined
+        }
       </div>
 
       <div className={ optionsStyles.title }> { translation('available-rooms') }</div>

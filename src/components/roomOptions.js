@@ -9,9 +9,7 @@ import QRCodeIcon from 'mdi-react/QrcodeIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import features from '../flags.js';
-
-import { socket, sendMessage } from '../utils.js';
+import { socket, features, sendMessage } from '../utils.js';
 
 import { StoreComponent } from '../store.js';
 
