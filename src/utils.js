@@ -73,7 +73,7 @@ export function connect()
         socket.close();
 
         reject('timeout');
-      }, 25000);
+      }, 3000);
     }
     catch (e)
     {
