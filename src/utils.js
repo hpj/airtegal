@@ -8,7 +8,7 @@ import features from './flags.js';
 
 import * as mocks from './mocks/io.js';
 
-const version = 2.6;
+const version = '2.6';
 
 /**
 * @type { import('socket.io-client').Socket }
@@ -47,6 +47,8 @@ export function connect()
       {
         connected = true;
 
+        socket.once('disconnect', () => fail('you-were-disconnected'));
+
         resolve();
       });
 
@@ -62,8 +64,6 @@ export function connect()
 
       socket.once('error', fail);
   
-      socket.once('disconnect', () => fail('you-were-disconnected'));
-
       // connecting timeout
       setTimeout(() =>
       {

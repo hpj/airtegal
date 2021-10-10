@@ -99,7 +99,6 @@ class Game extends React.Component
         if (!username)
           username = await sendMessage('username') ;
 
-
         this.setState({
           username
         }, () =>
