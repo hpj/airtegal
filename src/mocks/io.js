@@ -73,7 +73,7 @@ function once(event, listener)
 {
   // mock connecting to the server
   if (event === 'connected')
-    listener('اسلام المرج');
+    listener();
 
   return socket;
 }
@@ -166,6 +166,10 @@ function emit(eventName, args)
   else if (eventName === 'share')
   {
     returnValue = '/assets/card.png';
+  }
+  else if (eventName === 'username')
+  {
+    returnValue = 'اسلام المرج';
   }
   else if (eventName === 'matchRequest')
   {
