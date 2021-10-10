@@ -43,11 +43,11 @@ export function connect()
         throw new Error(translation('touch-unavailable'));
       }
       
-      socket.once('connected', username =>
+      socket.once('connected', () =>
       {
         connected = true;
 
-        resolve(username);
+        resolve();
       });
 
       const fail = err =>
