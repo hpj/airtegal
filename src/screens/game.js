@@ -92,18 +92,21 @@ class Game extends React.Component
     connect()
       // if app connected successfully
       // hide the loading screen
-      .then(username =>
+      .then(async() =>
       {
-        // if user has no saved username
-        // then give them the username the server picked randomly
+        let username = this.state.username;
+
+        if (!username)
+          username = await sendMessage('username') ;
+
+
         this.setState({
-          username: this.state.username || username
+          username
         }, () =>
         {
           usernameRef.current?.resize();
 
           // process url parameters
-
           const params = new URL(document.URL).searchParams;
           
           // join room
@@ -146,7 +149,7 @@ class Game extends React.Component
     // show a loading indictor
     this.setState({ loading: true });
 
-    sendMessage('list', 25000)
+    sendMessage('list', 3000)
       .then(rooms =>
       {
         this.setState({

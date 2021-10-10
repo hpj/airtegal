@@ -8,7 +8,7 @@ import features from './flags.js';
 
 import * as mocks from './mocks/io.js';
 
-const version = 2.5;
+const version = 2.6;
 
 /**
 * @type { import('socket.io-client').Socket }
@@ -43,11 +43,11 @@ export function connect()
         throw new Error(translation('touch-unavailable'));
       }
       
-      socket.once('connected', username =>
+      socket.once('connected', () =>
       {
         connected = true;
 
-        resolve(username);
+        resolve();
       });
 
       const fail = err =>
@@ -73,7 +73,7 @@ export function connect()
         socket.close();
 
         reject('timeout');
-      }, 25000);
+      }, 3000);
     }
     catch (e)
     {
