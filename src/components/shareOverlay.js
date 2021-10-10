@@ -61,13 +61,9 @@ class ShareOverlay extends React.Component
       interactableRef.current?.snapTo({ index: 1 });
     });
     
-    const response = await sendMessage('share', { data });
+    const url = await sendMessage('share', { url: process.env.API_ENDPOINT, ...data });
 
-    this.setState({
-      url: process.env.NODE_ENV !== 'test' ?
-        `${process.env.API_ENDPOINT}/share/${response}`
-        : '/assets/card.png'
-    });
+    this.setState({ url });
   }
 
   back()

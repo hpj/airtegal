@@ -165,7 +165,7 @@ function emit(eventName, args)
   }
   else if (eventName === 'share')
   {
-    returnValue = 'CxCAeyJ3aGl0ZSI6WyJNYW5hIl0sImJsYWNrIjoiQXF1YSJ9Aw';
+    returnValue = '/assets/card.png';
   }
   else if (eventName === 'matchRequest')
   {
