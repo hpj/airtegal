@@ -4,21 +4,22 @@ import PropTypes from 'prop-types';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 import CopyIcon from 'mdi-react/ClipboardTextIcon';
+import QRCodeIcon from 'mdi-react/QrcodeIcon';
 
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import features from '../flags.js';
-
-import { socket, sendMessage } from '../utils.js';
+import { socket, features, sendMessage } from '../utils.js';
 
 import { StoreComponent } from '../store.js';
 
 import { translation, withTranslation } from '../i18n.js';
 
-import Select from './select.js';
+import { codeRef } from '../screens/game.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
+
+import Select from './select.js';
 
 import MatchHighlight from './matchHighlights';
 
@@ -53,6 +54,7 @@ class RoomOptions extends StoreComponent
 
     this.copy = this.copy.bind(this);
     this.share = this.share.bind(this);
+    this.code = this.code.bind(this);
 
     this.matchRequest = this.matchRequest.bind(this);
   }
@@ -174,6 +176,15 @@ class RoomOptions extends StoreComponent
     }
   }
 
+  code()
+  {
+    const { roomData } = this.state;
+
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
+
+    codeRef.current?.show({ url });
+  }
+
   onGameModeChange(value)
   {
     this.store.set({
@@ -277,6 +288,11 @@ class RoomOptions extends StoreComponent
                 <ShareIcon/>
               </div> : undefined
           }
+
+          <div id={ 'room-url-qr' } className={ styles.misc } onClick={ this.code }>
+            <div>{ translation('qr-code') }</div>
+            <QRCodeIcon/>
+          </div>
         </div>
       </>;
     };
@@ -614,16 +630,12 @@ const styles = createStyle({
     width: 'fit-content',
 
     margin: '0 0 15px',
-    padding: '10px 25px',
-
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
+    padding: '10px 25px'
   },
 
   buttons: {
     display: 'flex',
-    width: 'min-content',
+    flexWrap: 'wrap',
 
     gap: '15px',
     padding: '0 25px'

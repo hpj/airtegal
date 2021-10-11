@@ -6,13 +6,11 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import { socket, sendMessage } from '../utils.js';
+import { socket, isTouchScreen, sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 
 import Card from './card.js';
-
-import { isTouchScreen } from '../index.js';
 
 import { withTranslation } from '../i18n.js';
 
