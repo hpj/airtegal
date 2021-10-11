@@ -127,7 +127,13 @@ class CodeOverlay extends React.Component
     const split = result.split('?join=');
 
     if (split.length > 1 && split[1])
+    {
+      // close the code overlay
+      this.back();
+      
+      // join the room by using the decoded id
       join(split[1]);
+    }
   }
 
   render()
