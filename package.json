@@ -9,8 +9,8 @@
     "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
   },
   "dependencies": {
-    "@sentry/react": "^6.13.2",
-    "@sentry/tracing": "^6.13.2",
+    "@sentry/react": "^6.13.3",
+    "@sentry/tracing": "^6.13.3",
     "autosize-input": "^1.0.2",
     "axios": "^0.22.0",
     "flcss": "^2.2.7",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "compression-webpack-plugin": "^9.0.0",
-    "esbuild-loader": "^2.15.1",
+    "esbuild-loader": "^2.16.0",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-security": "^1.4.0",
@@ -36,8 +36,8 @@
     "json5-loader": "^4.0.1",
     "might-cli": "^3.1.6",
     "might-ui": "^1.1.8",
-    "webpack": "^5.57.1",
-    "webpack-cli": "^4.8.0",
+    "webpack": "^5.58.1",
+    "webpack-cli": "^4.9.0",
     "webpack-dev-server": "^4.3.1"
   }
 }
