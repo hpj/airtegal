@@ -262,7 +262,11 @@ const styles = createStyle({
 
   scanner: {
     opacity: 0.25,
+
     position: 'fixed',
+    objectFit: 'fill',
+
+    width: '100%',
     height: '100%'
   },
 
@@ -293,8 +297,14 @@ const styles = createStyle({
   },
 
   indicator: {
-    width: '400px',
-    height: '400px',
+    width: '25vw',
+    height: '25vw',
+
+    minWidth: '150px',
+    minHeight: '150px',
+    maxWidth: '300px',
+    maxHeight: '300px',
+
     margin: '8vh 0',
     border: `2px ${colors.theme === 'dark' ? '#0e0e0e' : colors.blackText} dashed`
   },
