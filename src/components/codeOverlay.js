@@ -93,8 +93,8 @@ class CodeOverlay extends React.Component
         const svg = await sendMessage('qr', { text: url });
   
         this.setState({
-          loading: false,
-          svg: process.env.NODE_ENV !== 'test' ? svg : '<img width="128" src="/icons/128.png"></img>'
+          svg,
+          loading: false
         });
       }
     }

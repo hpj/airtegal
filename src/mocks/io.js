@@ -167,6 +167,10 @@ function emit(eventName, args)
   {
     returnValue = 'CxCAeyJ3aGl0ZSI6WyJNYW5hIl0sImJsYWNrIjoiQXF1YSJ9Aw';
   }
+  else if (eventName === 'qr')
+  {
+    returnValue = '<img width="128" src="/icons/128.png"></img>';
+  }
   else if (eventName === 'matchRequest')
   {
     if (defaultRoom.options.gameMode === 'kuruit')
