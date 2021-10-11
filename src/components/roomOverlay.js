@@ -19,6 +19,7 @@ import getTheme, { opacity } from '../colors.js';
 import Interactable from './interactable.js';
 
 import RoomTrackBar from './roomTrackBar.js';
+
 import RoomState from './roomState.js';
 
 import RoomOptions from './roomOptions.js';
@@ -426,12 +427,8 @@ const styles = createStyle({
       color: colors.blackText,
       animation: waitingAnimation,
 
-      minWidth: '32px',
-      minHeight: '32px',
-      maxWidth: '64px',
-      maxHeight: '64px',
-      width: '5vw',
-      height: '5vw'
+      width: '48px',
+      height: '48px'
     }
   },
 

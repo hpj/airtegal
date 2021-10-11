@@ -171,6 +171,10 @@ function emit(eventName, args)
   {
     returnValue = 'اسلام المرج';
   }
+  else if (eventName === 'qr')
+  {
+    returnValue = '<img width="128" src="/icons/128.png"></img>';
+  }
   else if (eventName === 'matchRequest')
   {
     if (defaultRoom.options.gameMode === 'kuruit')

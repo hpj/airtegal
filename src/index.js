@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ReactDOM from 'react-dom';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -10,9 +11,13 @@ import axios from 'axios';
 
 import WebFont from 'webfontloader';
 
+import QrScanner from 'qr-scanner';
+
+import QrScannerWorkerPath from '!!file-loader!../node_modules/qr-scanner/qr-scanner-worker.min.js';
+
 import { translation, locale, setLocale } from './i18n.js';
 
-import { setFeatures } from './flags.js';
+import { setFeatures, setCamera } from './utils.js';
 
 import stack from './stack.js';
 
@@ -31,8 +36,7 @@ let splashVisible = true;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
-// detect touch screen
-export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+QrScanner.WORKER_PATH = QrScannerWorkerPath;
 
 /** when all required assets are loaded
 */
@@ -165,12 +169,24 @@ const checkPromise = async() =>
   }
 };
 
+const camPromise = async() =>
+{
+  try
+  {
+    setCamera(await QrScanner.hasCamera());
+  }
+  catch (err)
+  {
+    console.warn(err);
+  }
+};
+
 // make sure to go to 'offline.html' if user is offline
 if (!navigator.onLine)
   window.location.assign('/offline.html');
 
 // remove the loading screen if all the promises resolve
-Promise.all([ webFontPromise(), checkPromise() ])
+Promise.all([ webFontPromise(), checkPromise(), camPromise() ])
   .then(loaded)
   // eslint-disable-next-line react/no-render-return-value
   .catch(err => ReactDOM.render(<ErrorScreen error={ err.message ?? err }/>, placeholder));
