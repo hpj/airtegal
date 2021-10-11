@@ -37,6 +37,7 @@
     "json5-loader": "^4.0.1",
     "might-cli": "^3.1.6",
     "might-ui": "^1.1.8",
+    "qrcode": "^1.4.4",
     "webpack": "^5.58.1",
     "webpack-cli": "^4.9.0",
     "webpack-dev-server": "^4.3.1"

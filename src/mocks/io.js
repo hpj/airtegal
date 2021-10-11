@@ -1,3 +1,7 @@
+import QRCode from 'qrcode';
+
+import { EventEmitter } from 'events';
+
 export const socket = {
   on,
   once,
@@ -7,8 +11,6 @@ export const socket = {
   connected: true,
   close: () => undefined
 };
-
-import { EventEmitter } from 'events';
 
 const params = new URL(document.URL).searchParams;
 
@@ -78,7 +80,7 @@ function once(event, listener)
   return socket;
 }
 
-function emit(eventName, args)
+async function emit(eventName, args)
 {
   const { nonce } = args;
 
@@ -173,7 +175,13 @@ function emit(eventName, args)
   }
   else if (eventName === 'qr')
   {
-    returnValue = '<img width="128" src="/icons/128.png"></img>';
+    const url = `${location.protocol}//${location.host}${location.pathname}?join=skyeee`;
+
+    returnValue = await QRCode.toString(url, {
+      type: 'svg',
+      width: 128,
+      margin: 0
+    });
   }
   else if (eventName === 'matchRequest')
   {
