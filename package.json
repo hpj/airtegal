@@ -4,7 +4,8 @@
   "scripts": {
     "start": "webpack serve --config webpack.config.dev.js --mode development",
     "start:testing": "npm run start -- --node-env test",
-    "build": "webpack --config webpack.config.prod.js --node-env production",
+    "build": "webpack --config webpack.config.prod.js --mode production",
+    "build:test": "webpack --config webpack.config.prod.js --node-env test",
     "test": "docker compose -f docker-compose.yml up --build test",
     "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
   },
