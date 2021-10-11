@@ -81,7 +81,7 @@ class CodeOverlay extends React.Component
         interactableRef.current?.snapTo({ index: 1 });
       });
 
-      if (scan && process.env.NODE_ENV !== 'test')
+      if (scan)
       {
         await this.qrScanner.start();
 
@@ -117,16 +117,24 @@ class CodeOverlay extends React.Component
     }, () => this.qrScanner.stop());
   }
 
+  /**
+  * @param { string } result
+  */
   decode(result)
   {
-    console.log('decoded qr code:', result);
+    const { join } = this.props;
+
+    const split = result.split('?join=');
+
+    if (split.length > 1 && split[1])
+      join(split[1]);
   }
 
   render()
   {
-    const { svg, loading, visible, scan, opacity } = this.state;
-    
     const { size } = this.props;
+    
+    const { svg, loading, visible, scan, opacity } = this.state;
 
     const onMovement = ({ y }) =>
     {
@@ -204,7 +212,8 @@ class CodeOverlay extends React.Component
 }
 
 CodeOverlay.propTypes = {
-  size: PropTypes.object
+  size: PropTypes.object,
+  join: PropTypes.func.isRequired
 };
 
 const waitingAnimation = createAnimation({

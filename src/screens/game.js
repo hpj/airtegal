@@ -339,7 +339,7 @@ class Game extends React.Component
 
       <ShareOverlay ref={ shareRef } size={ this.state.size }/>
 
-      <CodeOverlay ref={ codeRef } size={ this.state.size }/>
+      <CodeOverlay ref={ codeRef } size={ this.state.size } join={ id => overlayRef.current?.joinRoom(id) }/>
 
       <RoomOverlay
         ref={ overlayRef }
