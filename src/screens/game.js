@@ -117,12 +117,34 @@ class Game extends React.Component
           // process url parameters
           const params = new URL(document.URL).searchParams;
           
+          // store discord auth token
+          if (params?.has('code'))
+            localStorage.setItem('discord-auth-token-identify', params.get('code'));
+
+          // join discord room
+          if (params?.has('join') && params?.get('ref') === 'discord')
+          {
+            const appId = '622201604992401437';
+
+            const url = encodeURIComponent(`${location.protocol}//${location.host}/play`);
+
+            const token = localStorage.getItem('discord-auth-token-identify');
+
+            if (!token)
+              window.location.assign(`https://discord.com/api/oauth2/authorize?client_id=${appId}&redirect_uri=${url}&response_type=code&scope=identify`);
+            
+            overlayRef.current.joinRoom(params.get('join'), token);
+          }
           // join room
-          if (params?.has('join'))
+          else if (params?.has('join'))
+          {
             overlayRef.current.joinRoom(params.get('join'));
+          }
           // create room
           else if (params?.has('create') || params?.has('match'))
+          {
             overlayRef.current.createRoom();
+          }
 
           hideSplashScreen();
         });
