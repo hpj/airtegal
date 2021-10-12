@@ -210,16 +210,16 @@ class RoomOverlay extends StoreComponent
     }).catch(err => this.errorScreen(translation(err) ?? err));
   }
 
-  joinRoom(id)
+  joinRoom(id, token)
   {
     const { username } = this.props;
-    
+
     if (typeof id !== 'string')
       id = undefined;
 
     this.store.set({ overlayLoading: true });
 
-    sendMessage('join', { id, username }).then(() =>
+    sendMessage('join', { id, token, username }).then(() =>
     {
       // enable the wake-lock
       stack.wakelock();
