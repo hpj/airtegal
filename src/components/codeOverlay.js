@@ -122,18 +122,10 @@ class CodeOverlay extends React.Component
   */
   decode(result)
   {
-    const { join } = this.props;
+    const url = `${location.protocol}//${location.host}/play`;
 
-    const split = result.split('?join=');
-
-    if (split.length > 1 && split[1])
-    {
-      // close the code overlay
-      this.back();
-      
-      // join the room by using the decoded id
-      join(split[1]);
-    }
+    if (result.startsWith(url))
+      window.location.assign(result);
   }
 
   render()
