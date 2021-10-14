@@ -116,13 +116,15 @@ class Game extends React.Component
 
           // process url parameters
           const params = new URL(document.URL).searchParams;
+
+          const id = params?.get('join') ?? params?.get('state');
           
           // store discord auth token
           if (params?.has('code'))
             localStorage.setItem('discord-auth-token-identify', params.get('code'));
 
           // join discord room
-          if (params?.has('join') && params?.get('ref') === 'discord')
+          if (id && params?.get('ref') === 'discord')
           {
             const appId = '622201604992401437';
 
@@ -131,14 +133,14 @@ class Game extends React.Component
             const token = localStorage.getItem('discord-auth-token-identify');
 
             if (!token)
-              window.location.assign(`https://discord.com/api/oauth2/authorize?client_id=${appId}&redirect_uri=${url}&response_type=code&scope=identify`);
+              window.location.assign(`https://discord.com/api/oauth2/authorize?client_id=${appId}&redirect_uri=${url}&state=${id}&response_type=code&scope=identify`);
             
-            overlayRef.current.joinRoom(params.get('join'), token);
+            overlayRef.current.joinRoom(id, token);
           }
           // join room
-          else if (params?.has('join'))
+          else if (id)
           {
-            overlayRef.current.joinRoom(params.get('join'));
+            overlayRef.current.joinRoom(id);
           }
           // create room
           else if (params?.has('create') || params?.has('match'))
