@@ -210,12 +210,14 @@ class RoomOverlay extends StoreComponent
     }).catch(err => this.errorScreen(translation(err) ?? err));
   }
 
-  joinRoom(id, token)
+  joinRoom(id)
   {
     const { username } = this.props;
 
     if (typeof id !== 'string')
       id = undefined;
+
+    const token = localStorage.getItem('discord-auth-token-identify');
 
     this.store.set({ overlayLoading: true });
 
