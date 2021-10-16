@@ -17,6 +17,7 @@
   "server-mismatch": "السيرفر تحت الصيانة",
 
   "timeout": "فشل الاتصال بالسيرفر بعد مرور الوقت المحدد",
+  "unauthorized": "غير مسموح ليك تعمل الي انت عاوز تعملة دة",
 
   "app-country-block": "تم حذر هذا التطبيق في بلدك بسبب بعض المشاكل السياسية",
   "app-country-haram": "اللعبة دي حرام.",
@@ -47,8 +48,6 @@
 
   "no-rooms-available": "مفيش رومات",
   "room-does-not-exists": "الروم دي مش موجودة",
-  
-  "request-has-wrong-parameters": "حطيت اسمك؟",
   
   "user-does-not-have-permission": "معندكش صلاحية تكمل العمليه دي",
   "minimal-number-of-players-required": "مفيش عدد كفاية من اللعيبة",
