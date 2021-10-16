@@ -17,6 +17,7 @@
   "server-mismatch": "Server is under maintenance.",
 
   "timeout": "Request timed out",
+  "unauthorized": "You are unauthorized to do that thing you tried to do",
 
   "app-country-block": "This app is blocked in your country for political reasons.",
   "app-country-haram": "This app is haram.",
@@ -47,8 +48,6 @@
 
   "no-rooms-available": " ",
   "room-does-not-exists": "   ",
-  
-  "request-has-wrong-parameters": "",
   
   "user-does-not-have-permission": "",
   "minimal-number-of-players-required": "",

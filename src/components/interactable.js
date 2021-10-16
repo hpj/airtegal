@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 * @property { { x: number, y: number } } initialPosition
 * @property { { left: number, right: number, top: number, bottom: number } } boundaries
 * @property { { x: number, y: number} } resistance
-* @property { { x: number, y: number, index: number }[] } triggers
+* @property { (delta: { x: number, y: number }) => number } triggers
 * @property { { x: number, y: number, draggable: boolean }[] } snapPoints
 *
 * @property { ({ x: number, y: number }) => void } onMovement
@@ -210,16 +210,11 @@ class Interactable extends React.Component
         return p.x ?? p.y ?? 0;
     };
     
-    if (triggers?.length)
+    if (typeof triggers === 'function')
     {
-      let index;
-
-      triggers.forEach(trigger =>
-      {
-        if (horizontalOnly && this.lastPoint.clientX - this.dragStart.x >= trigger.x)
-          index = trigger.index;
-        else if (verticalOnly && this.lastPoint.clientY - this.dragStart.y >= trigger.y)
-          index = trigger.index;
+      const index = triggers({
+        x: this.lastPoint.clientX - this.dragStart.x,
+        y: this.lastPoint.clientY - this.dragStart.y
       });
 
       // trigger a snap to the triggered point
@@ -411,8 +406,8 @@ Interactable.propTypes = {
   initialPosition: PropTypes.object,
   boundaries: PropTypes.object,
   resistance: PropTypes.object,
-  triggers: PropTypes.arrayOf(PropTypes.object),
   snapPoints: PropTypes.arrayOf(PropTypes.object),
+  triggers: PropTypes.func,
 
   onMovement: PropTypes.func,
   onSnapStart: PropTypes.func,

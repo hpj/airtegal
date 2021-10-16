@@ -211,6 +211,16 @@ class HandOverlay extends StoreComponent
       { y: percent(size.height, 80) }
     ];
 
+    const triggers = isTouchScreen ? ({ y }) =>
+    {
+      if (y <= size.height * -0.15)
+        return 2;
+      else if (y >= size.height * 0.15)
+        return 1;
+
+      return undefined;
+    } : undefined;
+
     return <div className={ styles.view }>
       <Interactable
         ref={ overlayRef }
@@ -232,6 +242,8 @@ class HandOverlay extends StoreComponent
         boundaries={ { top: isTouchScreen ? 0 : percent(size.height, 15) } }
 
         snapPoints={ snapPoints }
+
+        triggers={ triggers }
 
         initialPosition={ { y: size.height } }
       >
