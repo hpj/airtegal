@@ -40,7 +40,7 @@ function warn(e)
 
 function wakelock()
 {
-  if (process.env.NODE_ENV !== 'production')
+  if (process.env.NODE_ENV === 'test')
     return;
   
   // request a screen-wake lock

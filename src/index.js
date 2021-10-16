@@ -128,7 +128,7 @@ const checkPromise = async() =>
   try
   {
     // bypass check if on a development or testing environments
-    if (process.env.NODE_ENV !== 'production')
+    if (process.env.NODE_ENV === 'test')
     {
       setFeatures({
         touch: 'true',
