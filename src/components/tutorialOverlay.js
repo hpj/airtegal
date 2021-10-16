@@ -157,7 +157,7 @@ class TutorialOverlay extends React.Component
 
         snapPoints={ [ { y: size.height }, { y: 0 } ] }
 
-        triggers={ [ { y: size.height * 0.1, index: 0 } ] }
+        triggers={ ({ y }) => y >= size.height * 0.1 ? 0 : undefined }
 
         onMovement={ onMovement }
         onSnapEnd={ onSnapEnd }
