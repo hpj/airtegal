@@ -198,8 +198,7 @@ class HandOverlay extends StoreComponent
     const width = '(115px + 2vw + 2vh)';
     const overlayWidth = size.width >= 700 ? '(min(100vw, 700px) / 1.45)' : '(min(85vw, 700px) / 1.45)';
 
-    const margin =
-      `calc((${width} - (${overlayWidth} / ${hand?.length})) / -2)`;
+    const margin = `calc((${width} - (${overlayWidth} / ${hand?.length})) / -2)`;
 
     const snapPoints = isTouchScreen ? [
       { y: size.height, draggable: false },
@@ -345,7 +344,7 @@ const styles = createStyle({
   },
 
   wrapper: {
-    overflow: 'hidden overlay',
+    overflow: 'hidden auto',
 
     // 36px for the handler
     // 31px for portrait mode state bar
