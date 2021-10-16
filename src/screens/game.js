@@ -115,23 +115,31 @@ class Game extends React.Component
           usernameRef.current?.resize();
 
           // process url parameters
-          const params = new URL(document.URL).searchParams;
+          const params = new URL(document.URL.replace(/#/g, '?')).searchParams;
 
           const id = params?.get('join') ?? params?.get('state');
           
           // store discord auth token when obtained
-          if (params?.has('code'))
-            localStorage.setItem('discord-auth-token-identify', params.get('code'));
+          if (params?.has('access_token') && params?.has('expires_in'))
+          {
+            localStorage.setItem('discord-expires-on', Math.floor(Date.now() / 1000) + parseInt(params.get('expires_in')));
+            localStorage.setItem('discord-auth-token-identify', params.get('access_token'));
+          }
 
           // auth with discord if refereed
           if (id && params?.get('ref') === 'discord')
           {
             const appId = '622201604992401437';
 
+            const now = parseInt(Math.floor(Date.now() / 1000));
+            const expire = parseInt(localStorage.getItem('discord-expires-on'));
+
+            const token = localStorage.getItem('discord-auth-token-identify');
+
             const url = encodeURIComponent(`${location.protocol}//${location.host}/play`);
 
-            if (!localStorage.getItem('discord-auth-token-identify'))
-              window.location.assign(`https://discord.com/api/oauth2/authorize?client_id=${appId}&redirect_uri=${url}&state=${id}&response_type=code&scope=identify`);
+            if (!token || expire <= now)
+              window.location.assign(`https://discord.com/api/oauth2/authorize?client_id=${appId}&redirect_uri=${url}&state=${id}&response_type=token&scope=identify`);
           }
 
           // join room
