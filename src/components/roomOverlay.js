@@ -217,11 +217,9 @@ class RoomOverlay extends StoreComponent
     if (typeof id !== 'string')
       id = undefined;
 
-    const token = localStorage.getItem('discord-auth-token-identify');
-
     this.store.set({ overlayLoading: true });
 
-    sendMessage('join', { id, token, username }).then(() =>
+    sendMessage('join', { id, username }).then(() =>
     {
       // enable the wake-lock
       stack.wakelock();
