@@ -9,6 +9,11 @@
     "test": "docker compose -f docker-compose.yml up --build test",
     "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
   },
+  "engines": {
+    "npm": "",
+    "node": "16.13.1",
+    "yarn": "1.22.17"
+  },
   "dependencies": {
     "@sentry/react": "^6.13.3",
     "@sentry/tracing": "^6.13.3",
