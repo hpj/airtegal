@@ -16,6 +16,8 @@ import { sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 
+import Icon from '../../public/assets/icon-dark.svg';
+
 const colors = getTheme();
 
 /**
@@ -192,7 +194,12 @@ class CodeOverlay extends React.Component
             <div/>
           </div>
 
-          <div className={ styles.qr } dangerouslySetInnerHTML={ { __html: svg } }/>
+          {
+            !loading && !scan ? <div className={ styles.qr }>
+              <div dangerouslySetInnerHTML={ { __html: svg } }/>
+              <Icon/>
+            </div> : undefined
+          }
 
           {
             loading ? <div className={ styles.waiting }>
@@ -302,18 +309,37 @@ const styles = createStyle({
   },
 
   qr: {
-    ':not(:empty)': {
-      width: '128px',
-      height: '128px',
-      margin: '8vh 0'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    width: '128px',
+    height: '128px',
+
+    margin: '8vh 0',
+
+    '> :nth-child(1)': {
+      position: 'absolute',
+
+      '> svg > :nth-child(1)': {
+        opacity: 0
+      },
+  
+      '> svg > :nth-child(2)': {
+        stroke: colors.theme === 'dark' ? '#0e0e0e' : colors.blackText
+      }
     },
 
-    '> svg > :nth-child(1)': {
-      opacity: 0
-    },
+    '> :nth-child(2)': {
+      zIndex: 2,
+      width: '32px',
+      height: '32px',
 
-    '> svg > :nth-child(2)': {
-      stroke: colors.theme === 'dark' ? '#0e0e0e' : colors.blackText
+      '> g > g > rect': {
+        strokeWidth: '8px !important',
+        stroke: `${colors.theme === 'dark' ? '#0e0e0e' : colors.blackText} !important`,
+        fill: `${opacity(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95)} !important`
+      }
     }
   },
 
