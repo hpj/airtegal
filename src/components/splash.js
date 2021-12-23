@@ -8,6 +8,8 @@ import { createStyle } from 'flcss';
 
 import { useTranslation } from '../i18n.js';
 
+import { Light, Dark } from '../icons/airtegal.js';
+
 const colors = getTheme();
 
 const SplashScreen = ({ onlyText }) =>
@@ -18,7 +20,9 @@ const SplashScreen = ({ onlyText }) =>
     {
       onlyText ?
         <div className={ styles.text }>{ translation('airtegal') }</div> :
-        <div className={ styles.splash }><div/></div>
+        <div className={ styles.splash }>
+          { colors.theme === 'dark' ? <Dark/> : <Light/> }
+        </div>
     }
   </div>;
 };
@@ -47,19 +51,15 @@ const styles = createStyle({
   splash: {
     display: 'flex',
 
+    alignItems: 'center',
+    justifyContent: 'center',
+
     width: '100vw',
     height: '100vh',
 
     '> :nth-child(1)': {
       width: '128px',
-      height: '128px',
-      
-      background: `url(./assets/icon-${colors.theme}.svg)`,
-      backgroundSize: 'contain',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-
-      margin: 'auto'
+      height: '128px'
     }
   },
 
