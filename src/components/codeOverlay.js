@@ -10,7 +10,7 @@ import { createAnimation, createStyle } from 'flcss';
 
 import stack from '../stack.js';
 
-import getTheme, { opacity } from '../colors.js';
+import getTheme, { opacity as alpha } from '../colors.js';
 
 import { sendMessage } from '../utils.js';
 
@@ -252,7 +252,7 @@ const styles = createStyle({
 
     '> :nth-child(1)': {
       position: 'absolute',
-      backgroundColor: opacity(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95),
+      backgroundColor: alpha(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95),
 
       width: '100vw',
       height: '100vh'
@@ -338,7 +338,7 @@ const styles = createStyle({
       '> g > rect': {
         strokeWidth: '8px !important',
         stroke: `${colors.theme === 'dark' ? '#0e0e0e' : colors.blackText} !important`,
-        fill: `${opacity(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95)} !important`
+        fill: `${alpha(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95)} !important`
       }
     }
   },
