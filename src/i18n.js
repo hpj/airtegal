@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
+import enUS from './i18n/en-US.json5';
+import arEG from './i18n/ar-EG.json5';
+
 const locales = [
   {
     value: 'united states',
@@ -9,7 +12,7 @@ const locales = [
     direction: 'ltr',
     blank: /[^A-z0-9 /!؟_\-.]/g,
     // eslint-disable-next-line no-undef
-    json: require('./i18n/en-US.jsonc').default
+    json: enUS
   },
   {
     value: 'egypt',
@@ -19,7 +22,7 @@ const locales = [
     direction: 'rtl',
     blank: /[^\u0621-\u064A0-9 /!؟_\-.]/g,
     // eslint-disable-next-line no-undef
-    json: require('./i18n/ar-EG.jsonc').default
+    json: arEG
   }
 ];
 
