@@ -16,7 +16,7 @@ import { sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 
-import Icon from '../../public/assets/icon-dark.svg';
+import { Dark } from '../icons/airtegal.js';
 
 const colors = getTheme();
 
@@ -47,7 +47,7 @@ class CodeOverlay extends React.Component
     /**
     * @type { QrScanner }
     */
-    this.qrScanner;
+    this.qrScanner = null;
 
     this.decode = this.decode.bind(this);
   }
@@ -197,7 +197,7 @@ class CodeOverlay extends React.Component
           {
             !loading && !scan ? <div className={ styles.qr }>
               <div dangerouslySetInnerHTML={ { __html: svg } }/>
-              <Icon/>
+              <Dark/>
             </div> : undefined
           }
 
@@ -335,7 +335,7 @@ const styles = createStyle({
       width: '32px',
       height: '32px',
 
-      '> g > g > rect': {
+      '> g > rect': {
         strokeWidth: '8px !important',
         stroke: `${colors.theme === 'dark' ? '#0e0e0e' : colors.blackText} !important`,
         fill: `${opacity(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95)} !important`

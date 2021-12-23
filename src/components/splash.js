@@ -16,14 +16,17 @@ const SplashScreen = ({ onlyText }) =>
 {
   const { translation } = useTranslation();
 
+  if (onlyText)
+  {
+    return <div className={ styles.container }>
+      <div className={ styles.text }>{ translation('airtegal') }</div>
+    </div>;
+  }
+
   return <div className={ styles.container }>
-    {
-      onlyText ?
-        <div className={ styles.text }>{ translation('airtegal') }</div> :
-        <div className={ styles.splash }>
-          { colors.theme === 'dark' ? <Dark/> : <Light/> }
-        </div>
-    }
+    <div className={ styles.splash }>
+      { colors.theme === 'dark' ? <Dark/> : <Light/> }
+    </div>
   </div>;
 };
 

@@ -13,8 +13,6 @@ import WebFont from 'webfontloader';
 
 import QrScanner from 'qr-scanner';
 
-import QrScannerWorkerPath from '!!file-loader!../node_modules/qr-scanner/qr-scanner-worker.min.js';
-
 import { translation, locale, setLocale } from './i18n.js';
 
 import { setFeatures, setCamera } from './utils.js';
@@ -36,7 +34,7 @@ let splashVisible = true;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
-QrScanner.WORKER_PATH = QrScannerWorkerPath;
+QrScanner.WORKER_PATH = './_snowpack/pkg/qr-scanner.qr-scanner-worker.min.v1.3.0.js';
 
 /** when all required assets are loaded
 */

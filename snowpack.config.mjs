@@ -20,7 +20,8 @@ export default {
   ],
   packageOptions: {
     knownEntrypoints: [
-      'regenerator-runtime'
+      'regenerator-runtime',
+      'qr-scanner/qr-scanner-worker.min.js'
     ]
   },
   buildOptions: {},
