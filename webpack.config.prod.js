@@ -23,6 +23,10 @@ module.exports = {
         }
       },
       {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      },
+      {
         test: /\.jsonc$/,
         use: 'json5-loader',
         type: 'javascript/auto'

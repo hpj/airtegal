@@ -9,6 +9,11 @@
     "test": "docker compose -f docker-compose.yml up --build test",
     "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
   },
+  "engines": {
+    "npm": "",
+    "node": "16.13.1",
+    "yarn": "1.22.17"
+  },
   "dependencies": {
     "@sentry/react": "^6.13.3",
     "@sentry/tracing": "^6.13.3",
@@ -27,6 +32,7 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
+    "@svgr/webpack": "^6.1.2",
     "compression-webpack-plugin": "^9.0.0",
     "esbuild-loader": "^2.16.0",
     "eslint": "^7.32.0",

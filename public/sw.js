@@ -5,6 +5,7 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox
 const CACHE = "airtegal-app";
 
 const offlineFallbackPage = "offline.html";
+const assetLinksPage = ".well-known/assetlinks.json";
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -15,7 +16,11 @@ self.addEventListener("message", (event) => {
 self.addEventListener('install', async (event) => {
   event.waitUntil(
     caches.open(CACHE)
-      .then((cache) => cache.add(offlineFallbackPage))
+      .then((cache) =>
+      {
+        cache.add(offlineFallbackPage);
+        cache.add(assetLinksPage);
+      })
   );
 });
 
@@ -34,11 +39,21 @@ self.addEventListener('fetch', (event) => {
         }
 
         const networkResp = await fetch(event.request);
+        
         return networkResp;
       } catch (error) {
+        let cachedResp;
 
         const cache = await caches.open(CACHE);
-        const cachedResp = await cache.match(offlineFallbackPage);
+
+        const url = new URL(event.request.url);
+      
+        if (url.pathname.startsWith('/.well-known/assetlinks.json')) {
+          cachedResp = await cache.match(assetLinksPage)
+        } else {
+          cachedResp = await cache.match(offlineFallbackPage)
+        }
+
         return cachedResp;
       }
     })());
