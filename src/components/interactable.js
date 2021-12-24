@@ -318,6 +318,21 @@ class Interactable extends React.Component
 
     let counter = 0;
 
+    if (process.env.NODE_ENV === 'test')
+    {
+      this.setState({
+        x: target.x,
+        y: target.y
+      }, () =>
+      {
+        this.props.onMovement?.(target);
+  
+        this.props.onSnapEnd?.call(undefined, index);
+      });
+
+      return;
+    }
+
     const animate = () =>
     {
       const { x, y } = this.state;
@@ -354,9 +369,6 @@ class Interactable extends React.Component
     this.lastSnapIndex = index;
 
     this.props.onSnapStart?.(index);
-
-    if (process.env.NODE_ENV === 'test')
-      counter = duration * 2;
 
     animate();
   }
