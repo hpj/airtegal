@@ -10,12 +10,12 @@ on:
 jobs:
   Might:
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:focal
     steps:
       - uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
           node-version: '16.13.1'
-      - uses: microsoft/playwright-github-action@v1
       - name: Install Dependencies
         run: yarn install
       - name: Run Tests
