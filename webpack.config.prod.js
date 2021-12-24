@@ -17,9 +17,16 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'esbuild-loader',
+        /** @type { import('esbuild').TransformOptions } */
         options: {
           loader: 'jsx',
-          target: [ 'chrome90', 'safari12', 'firefox88' ]
+
+          minify: true,
+          minifyWhitespace: true,
+          minifyIdentifiers: true,
+          minifySyntax: true,
+
+          target: [ 'chrome92', 'safari13', 'firefox92' ]
         }
       },
       {
@@ -61,8 +68,8 @@ module.exports = {
     })
   ],
   output: {
-    path: __dirname + '/public',
     publicPath: '/',
+    path: __dirname + '/public',
     filename: 'bundle.js'
   }
 };

@@ -11,7 +11,7 @@ module.exports = {
         loader: 'esbuild-loader',
         options: {
           loader: 'jsx',
-          target: [ 'chrome92' ]
+          target: [ 'chrome96' ]
         }
       },
       {

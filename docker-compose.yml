@@ -7,7 +7,7 @@ services:
     volumes:
       - "./__might__:/__might__"
     command: "might --quiet"
-  update-tests:
+  tests-update:
     build:
       context: .
       dockerfile: Dockerfile.test

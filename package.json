@@ -7,7 +7,7 @@
     "build": "webpack --config webpack.config.prod.js --mode production",
     "build:test": "webpack --config webpack.config.prod.js --node-env test",
     "test": "docker compose -f docker-compose.yml up --build test",
-    "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
+    "tests:update": "docker compose -f docker-compose.yml up --build tests-update"
   },
   "engines": {
     "npm": "",
