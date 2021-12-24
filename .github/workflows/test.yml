@@ -19,7 +19,7 @@ jobs:
       - name: Install Dependencies
         run: yarn install
       - name: Run Tests
-        run: yarn might --coverage
+        run: yarn might -p 3 --coverage
       - name: Upload any errors
         if: failure()
         uses: actions/upload-artifact@v2
