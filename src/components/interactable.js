@@ -320,6 +320,10 @@ class Interactable extends React.Component
 
     if (process.env.NODE_ENV === 'test')
     {
+      this.lastSnapIndex = index;
+
+      this.props.onSnapStart?.(index);
+      
       this.setState({
         x: target.x,
         y: target.y
