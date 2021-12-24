@@ -1,17 +1,18 @@
 /**
 * @type {import("snowpack").SnowpackUserConfig }
 */
-export default {
+const config = {
   mount: {
     src: '/',
     public: { url: '/', static: true, resolve: false }
   },
   env: {
-    RELEASE: 'development',
+    RELEASE: process.env.COMMIT_REF ?? 'development',
     API_ENDPOINT: process.env.NODE_ENV === 'production' ? 'https://api.airtegal.me': 'http://localhost:3000'
   },
   plugins: [
-    'snowpack-plugin-json5',
+    [ 'snowpack-plugin-json5' ],
+    [ '@snowpack/plugin-webpack' ],
     [
       'snowpack-plugin-swc', {
         'input': [ '.js' ]
@@ -25,8 +26,14 @@ export default {
     ]
   },
   buildOptions: {},
+  // optimize: {
+  //   bundle: true,
+  //   minify: true,
+  //   target: 'es2018'
+  // },
   devOptions: {
-    open: 'none'
+    open: 'none',
+    hmr: false
   },
   routes: [
     {
@@ -36,3 +43,5 @@ export default {
     }
   ]
 };
+
+export default config;

@@ -1,6 +1,6 @@
 [build]
-  publish = "public"
-  command = "npm run build"
+  publish = "__build__"
+  command = "yarn build"
 
 [build.environment]
   SENTRY_ORG = "herpproject"
@@ -8,10 +8,10 @@
   SENTRY_AUTH_TOKEN = "6c95c196504d49eaa220ca3558f5a5fbdbb4c4ac03c344a4b3dc4f937c7e5d39"
 
 [context.development]
-  command = "npm run build:test"
+  command = "yarn build:test"
 
 [context.deploy-preview]
-  command = "npm run build:test"
+  command = "yarn build:test"
 
 [[plugins]]
   package = "@sentry/netlify-build-plugin"
