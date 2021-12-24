@@ -36,18 +36,19 @@ const placeholder = document.body.querySelector('#placeholder');
 
 QrScanner.WORKER_PATH = './_snowpack/pkg/qr-scanner.qr-scanner-worker.min.v1.3.0.js';
 
+
 /** when all required assets are loaded
 */
 function loaded()
 {
   const pages =
-    <Router>
-      <Switch>
-        <Route exact path={ '/' } component={ Homepage }/>
-        <Route path={ '/play' } component={ Game }/>
-        <Route path={ '*' } component={ NotFound }/>
-      </Switch>
-    </Router>;
+  <Router>
+    <Switch>
+      <Route exact path={ '/' } component={ Homepage }/>
+      <Route path={ '/play' } component={ Game }/>
+      <Route path={ '*' } component={ NotFound }/>
+    </Switch>
+  </Router>;
 
   ReactDOM.render(pages, app);
 }
@@ -56,7 +57,6 @@ export function ensureSplashScreen()
 {
   if (!splashVisible)
     ReactDOM.render(<SplashScreen onlyText/>, placeholder);
-
 }
 
 export function hideSplashScreen()
