@@ -19,6 +19,7 @@ const config = {
         /** @type { import('esbuild').TransformOptions } */
         options: {
           loader: 'jsx',
+          sourcemap: 'inline',
           target: process.env.NODE_ENV === 'production' ? [ 'chrome93', 'safari12', 'firefox92' ] : [ 'chrome96' ]
         }
       }
