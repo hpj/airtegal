@@ -41,6 +41,11 @@ const config = {
   routes: [
     {
       match: 'routes',
+      dest: '/offline.html',
+      src: '/offline'
+    },
+    {
+      match: 'routes',
       dest: '/index.html',
       src: '.*'
     }
