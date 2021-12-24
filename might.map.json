@@ -444,7 +444,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/offline.html"
+          "value": "/offline"
         },
         {
           "action": "wait",
