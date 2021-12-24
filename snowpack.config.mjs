@@ -1,3 +1,5 @@
+import replace from '@rollup/plugin-replace';
+
 /**
 * @type { import("snowpack").SnowpackUserConfig }
 */
@@ -29,7 +31,14 @@ const config = {
     knownEntrypoints: [
       'regenerator-runtime',
       'qr-scanner/qr-scanner-worker.min.js'
-    ]
+    ],
+    rollup: {
+      plugins: [
+        replace({
+          'import.meta.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
+      ]
+    }
   },
   buildOptions: {
     out: '__build__'
