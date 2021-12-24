@@ -1,6 +1,0 @@
-babel.config.js
-
-webpack.config.dev.js
-webpack.config.prod.js
-
-workbox-config.js
