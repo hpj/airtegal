@@ -1,5 +1,5 @@
 /**
-* @type {import("snowpack").SnowpackUserConfig }
+* @type { import("snowpack").SnowpackUserConfig }
 */
 const config = {
   mount: {
@@ -12,10 +12,15 @@ const config = {
   },
   plugins: [
     [ 'snowpack-plugin-json5' ],
-    [ '@snowpack/plugin-webpack' ],
     [
-      'snowpack-plugin-swc', {
-        'input': [ '.js' ]
+      'snowpack-plugin-esbuild', {
+        input: [ '.js' ],
+        sourcemap: true,
+        /** @type { import('esbuild').TransformOptions } */
+        options: {
+          loader: 'jsx',
+          target: process.env.NODE_ENV === 'production' ? [ 'chrome93', 'safari12', 'firefox92' ] : [ 'chrome96' ]
+        }
       }
     ]
   ],
@@ -25,12 +30,9 @@ const config = {
       'qr-scanner/qr-scanner-worker.min.js'
     ]
   },
-  buildOptions: {},
-  // optimize: {
-  //   bundle: true,
-  //   minify: true,
-  //   target: 'es2018'
-  // },
+  buildOptions: {
+    out: '__build__'
+  },
   devOptions: {
     open: 'none',
     hmr: false

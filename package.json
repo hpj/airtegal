@@ -2,12 +2,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --config webpack.config.dev.js --mode development",
-    "start:testing": "npm run start -- --node-env test",
-    "build": "webpack --config webpack.config.prod.js --mode production",
-    "build:test": "webpack --config webpack.config.prod.js --node-env test",
+    "start": "snowpack dev",
+    "build": "snowpack build ",
+    "start:testing": "NODE_ENV=test yarn start",
+    "build:test": "NODE_ENV=test yarn build",
     "test": "docker compose -f docker-compose.yml up --build test",
-    "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
+    "tests:update": "docker compose -f docker-compose.yml up --build tests-update"
   },
   "engines": {
     "npm": "",
@@ -32,6 +32,7 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
+    "@snowpack/plugin-webpack": "^3.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-security": "^1.4.0",
@@ -40,7 +41,7 @@
     "might-ui": "^1.1.8",
     "qrcode": "^1.4.4",
     "snowpack": "^3.8.8",
-    "snowpack-plugin-json5": "^1.0.0",
-    "snowpack-plugin-swc": "^1.1.1"
+    "snowpack-plugin-esbuild": "^1.0.0",
+    "snowpack-plugin-json5": "^1.0.0"
   }
 }
