@@ -3077,7 +3077,7 @@ is-callable@^1.1.4, is-callable@^1.2.4:
   resolved "https://registry.yarnpkg.com/is-callable/-/is-callable-1.2.4.tgz#47301d58dd0259407865547853df6d61fe471945"
   integrity sha512-nsuwtxZfMX67Oryl9LCQ+upnC0Z0BgpwntpS89m1H/TLF0zNfzfLMV/9Wa/6MZsj0acpEjAO0KF1xT6ZdLl95w==
 
-is-ci@^3.0.0:
+is-ci@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/is-ci/-/is-ci-3.0.1.tgz#db6ecbed1bd659c43dac0f45661e7674103d1867"
   integrity sha512-ZYvCgrefwqoQ6yTyYUbQu64HsITZ3NfKX1lzaEYdkTDcfKzzCI/wthRRYKkdjHKFVgNiXKAKm65Zo1pk2as/QQ==
@@ -3344,7 +3344,7 @@ isstream@~0.1.2:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
-istanbul-lib-coverage@^3.0.0:
+istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.0.tgz#189e7909d0a39fa5a3dfad5b03f71947770191d3"
   integrity sha512-eOeJ5BHCmHYvQK7xt9GkdHuzuCGS1Y6g9Gvnx3Ym33fz/HpLRYxiS0wHNr+m/MBC8B647Xt608vCDEvhl9c6Mw==
@@ -3358,10 +3358,10 @@ istanbul-lib-report@^3.0.0:
     make-dir "^3.0.0"
     supports-color "^7.1.0"
 
-istanbul-reports@^3.0.3:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-3.1.1.tgz#7085857f17d2441053c6ce5c3b8fdf6882289397"
-  integrity sha512-q1kvhAXWSsXfMjCdNHNPKZZv94OlspKnoGv+R9RGbnqOOQ0VbNfLFgQDVgi7hHenKsndGq3/o0OBdzDXthWcNw==
+istanbul-reports@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-3.1.2.tgz#b80e13cbab0120e1c367ebaa099862361aed5ead"
+  integrity sha512-0gHxuT1NNC0aEIL1zbJ+MTgPbbHhU77eJPuU35WKA7TgXiSNlCAx4PENoMrH0Or6M2H80TaZcWKhM0IK6V8gRw==
   dependencies:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
@@ -3805,29 +3805,29 @@ micromark@~2.11.0:
     debug "^4.0.0"
     parse-entities "^2.0.0"
 
-might-cli@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/might-cli/-/might-cli-3.1.6.tgz#988f504a5fc9b7bcc06c4e4beeb8ae410b234f6f"
-  integrity sha512-2phhbN8eJMPEWJHaFf70YplD1jvdo97XBVgtEpcfM679CK9Xl2JOUzE0oqvaWgVwl2enKlGDlhLyt6Y6v1Kz7Q==
+might-cli@3.2.0-pre.2:
+  version "3.2.0-pre.2"
+  resolved "https://registry.yarnpkg.com/might-cli/-/might-cli-3.2.0-pre.2.tgz#ad5f827643a338152ea3f3483db5c081ec7d225d"
+  integrity sha512-TKUNyrqiEzwIdlcwCGuU69eEysfDQamH+H3CIv3FjDP1ktaOMw1zAcobN1Sz9LZdkd6BetnqUae8EZ6RB4ZCag==
   dependencies:
     ansi-colors "^4.1.1"
     convert-source-map "^1.8.0"
     draftlog "1.0.12"
     exit "^0.1.2"
     fs-extra "^10.0.0"
-    is-ci "^3.0.0"
-    istanbul-lib-coverage "^3.0.0"
+    is-ci "^3.0.1"
+    istanbul-lib-coverage "^3.2.0"
     istanbul-lib-report "^3.0.0"
-    istanbul-reports "^3.0.3"
+    istanbul-reports "^3.1.2"
     jimp "^0.16.1"
     looks-same "^7.3.0"
     md5 "^2.3.0"
     might-core "^1.0.2"
     minimist "^1.2.5"
     nanomatch "^1.2.13"
-    node-fetch "^3.0.0"
+    node-fetch "^3.1.0"
     p-limit "^4.0.0"
-    playwright "^1.15.2"
+    playwright "^1.17.1"
     prompts "^2.4.2"
     ps-tree "^1.2.0"
     sanitize-filename "^1.6.3"
@@ -4061,7 +4061,7 @@ nested-error-stacks@^2.1.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-node-fetch@^3.0.0:
+node-fetch@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.1.0.tgz#714f4922dc270239487654eaeeab86b8206cb52e"
   integrity sha512-QU0WbIfMUjd5+MUzQOYhenAazakV7Irh1SGkWCsRzBwvm4fAhzEUaHMJ6QLP7gWT6WO9/oH2zhKMMGMuIrDyKw==
@@ -4657,7 +4657,7 @@ playwright-core@=1.17.1:
     yauzl "^2.10.0"
     yazl "^2.5.1"
 
-playwright@^1.15.2:
+playwright@^1.17.1:
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.17.1.tgz#a6d63302ee40f41283c4bf869de261c4743a787c"
   integrity sha512-DisCkW9MblDJNS3rG61p8LiLA2WA7IY/4A4W7DX4BphWe/HuWjKmGQptuk4NVIh5UuSwXpW/jaH2+ZgjHs3GMA==
