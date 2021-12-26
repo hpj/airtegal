@@ -41,7 +41,7 @@ class TutorialOverlay extends React.Component
     if (!localStorage.getItem(this.storageKey))
       visible = true;
 
-    if (process.env.NODE_ENV === 'test' && params?.has('quiet'))
+    if (import.meta.env.MODE === 'test' && params?.has('quiet'))
       visible = false;
 
     this.state = {
@@ -50,7 +50,7 @@ class TutorialOverlay extends React.Component
       index: 0
     };
 
-    if (process.env.NODE_ENV !== 'test')
+    if (import.meta.env.MODE !== 'test')
     {
       this.interval = setInterval(() =>
       {

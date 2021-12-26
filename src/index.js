@@ -13,8 +13,6 @@ import WebFont from 'webfontloader';
 
 import QrScanner from 'qr-scanner';
 
-import QrScannerWorkerPath from '!!file-loader!../node_modules/qr-scanner/qr-scanner-worker.min.js';
-
 import { translation, locale, setLocale } from './i18n.js';
 
 import { setFeatures, setCamera } from './utils.js';
@@ -36,20 +34,21 @@ let splashVisible = true;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
-QrScanner.WORKER_PATH = QrScannerWorkerPath;
+QrScanner.WORKER_PATH = './_snowpack/pkg/qr-scanner.qr-scanner-worker.min.v1.3.0.js';
+
 
 /** when all required assets are loaded
 */
 function loaded()
 {
   const pages =
-    <Router>
-      <Switch>
-        <Route exact path={ '/' } component={ Homepage }/>
-        <Route path={ '/play' } component={ Game }/>
-        <Route path={ '*' } component={ NotFound }/>
-      </Switch>
-    </Router>;
+  <Router>
+    <Switch>
+      <Route exact path={ '/' } component={ Homepage }/>
+      <Route path={ '/play' } component={ Game }/>
+      <Route path={ '*' } component={ NotFound }/>
+    </Switch>
+  </Router>;
 
   ReactDOM.render(pages, app);
 }
@@ -58,7 +57,6 @@ export function ensureSplashScreen()
 {
   if (!splashVisible)
     ReactDOM.render(<SplashScreen onlyText/>, placeholder);
-
 }
 
 export function hideSplashScreen()
@@ -83,8 +81,8 @@ ReactDOM.render(<SplashScreen/>, placeholder);
 
 // sentry error monitoring
 Sentry.init({
-  release: process.env.RELEASE,
-  enabled: process.env.NODE_ENV === 'production',
+  release: import.meta.env.RELEASE,
+  enabled: import.meta.env.MODE === 'production',
   dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
   // send the app state with each error
   beforeSend: event =>
@@ -128,7 +126,7 @@ const checkPromise = async() =>
   try
   {
     // bypass check if on a development or testing environments
-    if (process.env.NODE_ENV === 'test')
+    if (import.meta.env.MODE === 'test')
     {
       setFeatures({
         touch: 'true',
@@ -143,7 +141,7 @@ const checkPromise = async() =>
     /**
     * @type { import('axios').AxiosResponse<{ features: Object<string, string>, country: string, language: string }> }
     */
-      const { status, data } = await axios.get(`${process.env.API_ENDPOINT}/check`, {
+      const { status, data } = await axios.get(`${import.meta.env.API_ENDPOINT}/check`, {
         timeout: 15000
       });
   

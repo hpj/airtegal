@@ -10,25 +10,25 @@ on:
 jobs:
   Might:
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:focal
     steps:
       - uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
           node-version: '16.13.1'
-      - uses: microsoft/playwright-github-action@v1
       - name: Install Dependencies
         run: yarn install
       - name: Run Tests
-        run: yarn might --coverage
+        run: yarn might
       - name: Upload any errors
         if: failure()
         uses: actions/upload-artifact@v2
         with:
           name: errors
-          path: might.error.*.png
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./__coverage__/
-          fail_ci_if_error: false
+          path: might.error.*.*
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v1
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: ./__coverage__/
+      #     fail_ci_if_error: false

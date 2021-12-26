@@ -1,5 +1,5 @@
 {
-	"startCommand": "yarn start:testing",
+	"startCommand": "yarn start:test",
 	"url": "http://localhost:8080",
   "targets": [
     "chromium"
@@ -9,7 +9,7 @@
     "height": null
   },
   "titleBasedScreenshots": true,
-  "parallelTests": 5,
+  "parallelTests": 4,
   "defaultTimeout": 25000,
   "tolerance": 2.5,
   "antialiasingTolerance": 3.5,

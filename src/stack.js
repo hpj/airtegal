@@ -40,7 +40,7 @@ function warn(e)
 
 function wakelock()
 {
-  if (process.env.NODE_ENV === 'test')
+  if (import.meta.env.MODE === 'test')
     return;
   
   // request a screen-wake lock

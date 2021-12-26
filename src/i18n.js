@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
+// import enUS from './i18n/en-US.json5';
+
+import arEG from './i18n/ar-EG.json5';
+
 const locales = [
-  {
-    value: 'united states',
-    label: 'United States',
-    language: 'en',
-    locale: 'en-US',
-    direction: 'ltr',
-    blank: /[^A-z0-9 /!؟_\-.]/g,
-    // eslint-disable-next-line no-undef
-    json: require('./i18n/en-US.jsonc').default
-  },
+  // {
+  //   value: 'united states',
+  //   label: 'United States',
+  //   language: 'en',
+  //   locale: 'en-US',
+  //   direction: 'ltr'
+  //   // blank: /[^A-z0-9 /!؟_\-.]/g
+  // },
   {
     value: 'egypt',
     label: 'مصر',
@@ -18,15 +20,14 @@ const locales = [
     locale: 'ar-EG',
     direction: 'rtl',
     blank: /[^\u0621-\u064A0-9 /!؟_\-.]/g,
-    // eslint-disable-next-line no-undef
-    json: require('./i18n/ar-EG.jsonc').default
+    data: arEG
   }
 ];
 
 const event = new EventTarget();
 
 /**
-* @type { { value: string, label: string, locale: string, direction: string, blank: RegExp, json: {} } }
+* @type { { value: string, label: string, locale: string, direction: string, blank: RegExp } }
 */
 let __locale = getDefault();
 
@@ -138,7 +139,7 @@ export function translation(key, ...args)
   * @type { string }
   */
   // eslint-disable-next-line security/detect-object-injection
-  let value = __locale.json[key];
+  let value = __locale.data[key];
 
   if (!value)
     return key;

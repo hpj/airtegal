@@ -10,13 +10,13 @@ import { createAnimation, createStyle } from 'flcss';
 
 import stack from '../stack.js';
 
-import getTheme, { opacity } from '../colors.js';
+import getTheme, { opacity as alpha } from '../colors.js';
 
 import { sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 
-import Icon from '../../public/assets/icon-dark.svg';
+import { Dark } from '../icons/airtegal.js';
 
 const colors = getTheme();
 
@@ -47,7 +47,7 @@ class CodeOverlay extends React.Component
     /**
     * @type { QrScanner }
     */
-    this.qrScanner;
+    this.qrScanner = null;
 
     this.decode = this.decode.bind(this);
   }
@@ -197,7 +197,7 @@ class CodeOverlay extends React.Component
           {
             !loading && !scan ? <div className={ styles.qr }>
               <div dangerouslySetInnerHTML={ { __html: svg } }/>
-              <Icon/>
+              <Dark/>
             </div> : undefined
           }
 
@@ -224,7 +224,7 @@ CodeOverlay.propTypes = {
 const waitingAnimation = createAnimation({
   duration: '1s',
   timingFunction: 'ease',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
       transform: 'rotate(0deg)'
@@ -252,7 +252,7 @@ const styles = createStyle({
 
     '> :nth-child(1)': {
       position: 'absolute',
-      backgroundColor: opacity(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95),
+      backgroundColor: alpha(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95),
 
       width: '100vw',
       height: '100vh'
@@ -335,10 +335,10 @@ const styles = createStyle({
       width: '32px',
       height: '32px',
 
-      '> g > g > rect': {
+      '> g > rect': {
         strokeWidth: '8px !important',
         stroke: `${colors.theme === 'dark' ? '#0e0e0e' : colors.blackText} !important`,
-        fill: `${opacity(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95)} !important`
+        fill: `${alpha(colors.theme === 'dark' ? '#404040' : colors.whiteBackground, 0.95)} !important`
       }
     }
   },
