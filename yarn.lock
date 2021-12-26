@@ -3805,10 +3805,10 @@ micromark@~2.11.0:
     debug "^4.0.0"
     parse-entities "^2.0.0"
 
-might-cli@3.2.0-pre.5:
-  version "3.2.0-pre.5"
-  resolved "https://registry.yarnpkg.com/might-cli/-/might-cli-3.2.0-pre.5.tgz#4be866bc264afbed7ac87c45338964de2826af7c"
-  integrity sha512-D9T0lbq89DRx50P08QELvCYRgnXl2kdxHQO//7LRJzMJNgIGoygD1J0cCmJn0B6Lcty1ZEvv/gJjQ2aaeXXA6w==
+might-cli@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/might-cli/-/might-cli-3.2.0.tgz#be8b6705414894db4d427c8682a90d07f2204f75"
+  integrity sha512-pj49Ii2LM7U26T48nejLYe6iPawaNmihY3bJ9+Yyia5U/3rIR1Wz5D7R6oCpZqySzG7Nf9UAzYv410Y8JMIIbA==
   dependencies:
     ansi-colors "^4.1.1"
     convert-source-map "^1.8.0"
