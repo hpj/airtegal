@@ -200,8 +200,8 @@ class RoomOverlay extends StoreComponent
       stack.register(this.leave);
 
       // spoof a match request for testing purposes
-      if (params.has('match'))
-        setTimeout(() => optionsRef.current?.matchRequest(), 1500);
+      if (params.has('match') && process.env.NODE_ENV === 'test')
+        optionsRef.current?.matchRequest();
 
       // show the room overlay
       this.store.set({
