@@ -21,10 +21,6 @@
   ],
   "coverageExclude": [
     "/node_modules/**",
-    "/webpack/**",
-    "/ws '('ignored')'",
-    "/'('webpack')'/**",
-    "/'('webpack')'-dev-server/**",
-    "**/*.jsonc"
+    "**/*.json5"
   ]
 }
