@@ -2,12 +2,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --config webpack.config.dev.js --mode development",
-    "start:testing": "npm run start -- --node-env test",
-    "build": "webpack --config webpack.config.prod.js --mode production",
-    "build:test": "webpack --config webpack.config.prod.js --node-env test",
-    "test": "docker compose -f docker-compose.yml up --build test",
-    "update-tests": "docker compose -f docker-compose.yml up --build update-tests"
+    "start": "snowpack dev",
+    "build": "snowpack build ",
+    "start:test": "NODE_ENV=test yarn start",
+    "build:test": "NODE_ENV=test yarn build",
+    "test": "docker run --rm -it --name airtegal_test_container --mount type=bind,src=`pwd`,dst=/app --volume /app/node_modules airtegal_test:latest",
+    "tests:docker": "docker build --tag airtegal_test:latest --file Dockerfile.test .",
+    "tests:update": "yarn test might -q -u"
   },
   "engines": {
     "npm": "",
@@ -15,37 +16,33 @@
     "yarn": "1.22.17"
   },
   "dependencies": {
-    "@sentry/react": "^6.13.3",
-    "@sentry/tracing": "^6.13.3",
+    "@sentry/react": "^6.16.1",
+    "@sentry/tracing": "^6.16.1",
     "autosize-input": "^1.0.2",
-    "axios": "^0.22.0",
+    "axios": "^0.24.0",
     "flcss": "^2.2.7",
     "lottie-react": "^2.1.0",
-    "mdi-react": "^7.5.0",
-    "prop-types": "^15.7.2",
+    "mdi-react": "^8.2.0",
+    "prop-types": "~15.7.2",
     "qr-scanner": "^1.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.3.0",
     "react-transition-group": "^4.4.2",
-    "socket.io-client": "^4.2.0",
+    "socket.io-client": "^4.4.0",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
-    "@svgr/webpack": "^6.1.2",
-    "compression-webpack-plugin": "^9.0.0",
-    "esbuild-loader": "^2.16.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-react": "^7.26.1",
+    "@rollup/plugin-replace": "^3.0.0",
+    "eslint": "^8.5.0",
+    "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-security": "^1.4.0",
-    "file-loader": "^6.2.0",
-    "git-revision-webpack-plugin": "^5.0.0",
-    "json5-loader": "^4.0.1",
-    "might-cli": "^3.1.6",
+    "events": "^3.3.0",
+    "might-cli": "^3.2.0",
     "might-ui": "^1.1.8",
-    "qrcode": "^1.4.4",
-    "webpack": "^5.58.1",
-    "webpack-cli": "^4.9.0",
-    "webpack-dev-server": "^4.3.1"
+    "qrcode": "^1.5.0",
+    "snowpack": "^3.8.8",
+    "snowpack-plugin-esbuild": "^1.0.0",
+    "snowpack-plugin-json5": "^1.0.0"
   }
 }

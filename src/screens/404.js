@@ -28,7 +28,7 @@ const noiseAnimation = createAnimation({
   duration: '1s',
   fillMode: 'both',
   timingFunction: 'steps(8)',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
   keyframes: {
     '0%': {
       transform: 'translateX(0px,0px)'

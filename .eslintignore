@@ -2,6 +2,6 @@
 
 __coverage__
 
-webpack.config.*.js
+__build__
 
-/public
+public

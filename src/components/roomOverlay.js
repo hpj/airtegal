@@ -200,8 +200,8 @@ class RoomOverlay extends StoreComponent
       stack.register(this.leave);
 
       // spoof a match request for testing purposes
-      if (params.has('match'))
-        setTimeout(() => optionsRef.current?.matchRequest(), 1500);
+      if (params.has('match') && import.meta.env.MODE === 'test')
+        optionsRef.current?.matchRequest();
 
       // show the room overlay
       this.store.set({
@@ -374,7 +374,7 @@ RoomOverlay.propTypes = {
 const waitingAnimation = createAnimation({
   duration: '1s',
   timingFunction: 'ease',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
       transform: 'rotate(0deg)'
