@@ -81,8 +81,8 @@ ReactDOM.render(<SplashScreen/>, placeholder);
 
 // sentry error monitoring
 Sentry.init({
-  release: process.env.RELEASE,
-  enabled: process.env.NODE_ENV === 'production',
+  release: import.meta.env.RELEASE,
+  enabled: import.meta.env.MODE === 'production',
   dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
   // send the app state with each error
   beforeSend: event =>
@@ -126,7 +126,7 @@ const checkPromise = async() =>
   try
   {
     // bypass check if on a development or testing environments
-    if (process.env.NODE_ENV === 'test')
+    if (import.meta.env.MODE === 'test')
     {
       setFeatures({
         touch: 'true',
@@ -141,7 +141,7 @@ const checkPromise = async() =>
     /**
     * @type { import('axios').AxiosResponse<{ features: Object<string, string>, country: string, language: string }> }
     */
-      const { status, data } = await axios.get(`${process.env.API_ENDPOINT}/check`, {
+      const { status, data } = await axios.get(`${import.meta.env.API_ENDPOINT}/check`, {
         timeout: 15000
       });
   

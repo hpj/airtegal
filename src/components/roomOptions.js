@@ -542,7 +542,7 @@ RoomOptions.propTypes = {
 const waitingAnimation = createAnimation({
   duration: '1s',
   timingFunction: 'ease',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
       transform: 'rotate(0deg)'

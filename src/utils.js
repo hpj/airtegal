@@ -31,8 +31,8 @@ export function connect()
     {
       let connected = false;
 
-      socket = process.env.NODE_ENV === 'test' ? mocks.socket :
-        io(process.env.API_ENDPOINT, {
+      socket = import.meta.env.MODE === 'test' ? mocks.socket :
+        io(import.meta.env.API_ENDPOINT, {
           path: '/io',
           query: {
             version,
@@ -176,7 +176,7 @@ export function fillTheBlanks(template, items)
 export function shuffle(array)
 {
   // istanbul ignore if
-  if (process.env.NODE_ENV !== 'test')
+  if (import.meta.env.MODE !== 'test')
   {
     for (let i = array.length - 1; i > 0; i--)
     {

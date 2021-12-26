@@ -62,7 +62,7 @@ class ShareOverlay extends React.Component
       interactableRef.current?.snapTo({ index: 1 });
     });
     
-    const url = await sendMessage('share', { url: process.env.API_ENDPOINT, ...data });
+    const url = await sendMessage('share', { url: import.meta.env.API_ENDPOINT, ...data });
 
     this.setState({ url });
   }
@@ -233,7 +233,7 @@ ShareOverlay.propTypes = {
 const waitingAnimation = createAnimation({
   duration: '1s',
   timingFunction: 'ease',
-  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
+  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
       transform: 'rotate(0deg)'
