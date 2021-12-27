@@ -33,7 +33,7 @@ class MatchHighlights extends StoreComponent
   {
     const params = new URL(document.URL).searchParams;
     
-    if (import.meta.env.MODE === 'test' && params.has('highlights'))
+    if (process.env.NODE_ENV === 'test' && params.has('highlights'))
     {
       const entries = [];
 

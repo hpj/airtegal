@@ -9,7 +9,7 @@
     "height": null
   },
   "titleBasedScreenshots": true,
-  "parallelTests": 4,
+  "parallelTests": 5,
   "defaultTimeout": 25000,
   "tolerance": 2.5,
   "antialiasingTolerance": 3.5,
@@ -21,6 +21,10 @@
   ],
   "coverageExclude": [
     "/node_modules/**",
-    "**/*.json5"
+    "/webpack/**",
+    "/ws '('ignored')'",
+    "/'('webpack')'/**",
+    "/'('webpack')'-dev-server/**",
+    "**/*.jsonc"
   ]
 }

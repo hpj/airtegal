@@ -2,6 +2,8 @@ import { io } from 'socket.io-client';
 
 import { locale, translation } from './i18n.js';
 
+import * as mocks from './mocks/io.js';
+
 const version = '2.6';
 
 /**
@@ -25,76 +27,66 @@ export function connect()
 {
   return new Promise((resolve, reject) =>
   {
-    let connected = false;
-
-    (async() =>
+    try
     {
-      if (import.meta.env.MODE === 'test')
-      {
-        return socket = await import('./mocks/io.js');
-      }
-      else
-      {
-        return socket = io(import.meta.env.API_ENDPOINT, {
+      let connected = false;
+
+      socket = process.env.NODE_ENV === 'test' ? mocks.socket :
+        io(process.env.API_ENDPOINT, {
           path: '/io',
           query: {
             version,
             region: locale().value
           } });
-      }
-    })().then(socket =>
-    {
-      try
+
+      // all game-modes are turned off
+      if (!features.kuruit)
       {
-        // all game-modes are turned off
-        if (!features.kuruit)
-        {
-          throw new Error(translation('server-mismatch'));
-        }
-        else if (isTouchScreen && !features.touch)
-        {
-          throw new Error(translation('touch-unavailable'));
-        }
-        
-        socket.once('connected', () =>
-        {
-          connected = true;
-  
-          socket.once('disconnect', () => fail('you-were-disconnected'));
-  
-          resolve();
-        });
-  
-        const fail = err =>
-        {
-          if (connected)
-            return;
-  
-          socket.close();
-  
-          reject(err);
-        };
-  
-        socket.once('error', fail);
-    
-        // connecting timeout
-        setTimeout(() =>
-        {
-          if (connected)
-            return;
-  
-          socket.close();
-  
-          reject('timeout');
-        }, 3000);
+        throw new Error(translation('server-mismatch'));
       }
-      catch (e)
+      else if (isTouchScreen && !features.touch)
       {
+        throw new Error(translation('touch-unavailable'));
+      }
+      
+      socket.once('connected', () =>
+      {
+        connected = true;
+
+        socket.once('disconnect', () => fail('you-were-disconnected'));
+
+        resolve();
+      });
+
+      const fail = err =>
+      {
+        if (connected)
+          return;
+
         socket.close();
+
+        reject(err);
+      };
+
+      socket.once('error', fail);
   
-        reject(e);
-      }
-    });
+      // connecting timeout
+      setTimeout(() =>
+      {
+        if (connected)
+          return;
+
+        socket.close();
+
+        reject('timeout');
+      }, 3000);
+    }
+    catch (e)
+    {
+      socket.close();
+
+      reject(e);
+    }
   });
 }
 
@@ -184,7 +176,7 @@ export function fillTheBlanks(template, items)
 export function shuffle(array)
 {
   // istanbul ignore if
-  if (import.meta.env.MODE !== 'test')
+  if (process.env.NODE_ENV !== 'test')
   {
     for (let i = array.length - 1; i > 0; i--)
     {

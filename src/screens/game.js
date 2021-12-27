@@ -370,7 +370,7 @@ Game.propTypes =
 const waitingAnimation = createAnimation({
   duration: '2s',
   timingFunction: 'ease',
-  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
       transform: 'rotate(0deg)'
