@@ -1,5 +1,5 @@
 [build]
-  publish = "__build__"
+  publish = "public"
   command = "yarn build"
 
 [build.environment]

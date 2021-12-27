@@ -2,7 +2,7 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import * as Sentry from '@sentry/react';
 import * as Tracing from '@sentry/tracing';
@@ -12,6 +12,8 @@ import axios from 'axios';
 import WebFont from 'webfontloader';
 
 import QrScanner from 'qr-scanner';
+
+import QrScannerWorkerPath from '!!file-loader!../node_modules/qr-scanner/qr-scanner-worker.min.js';
 
 import { translation, locale, setLocale } from './i18n.js';
 
@@ -34,21 +36,20 @@ let splashVisible = true;
 const app = document.body.querySelector('#app');
 const placeholder = document.body.querySelector('#placeholder');
 
-QrScanner.WORKER_PATH = './_snowpack/pkg/qr-scanner.qr-scanner-worker.min.v1.3.0.js';
-
+QrScanner.WORKER_PATH = QrScannerWorkerPath;
 
 /** when all required assets are loaded
 */
 function loaded()
 {
   const pages =
-  <Router>
-    <Switch>
-      <Route exact path={ '/' } component={ Homepage }/>
-      <Route path={ '/play' } component={ Game }/>
-      <Route path={ '*' } component={ NotFound }/>
-    </Switch>
-  </Router>;
+    <BrowserRouter>
+      <Routes>
+        <Route path={ '/' } element={ <Homepage/> }/>
+        <Route path={ '/play' } element={ <Game/> }/>
+        <Route path={ '*' } element={ <NotFound/> }/>
+      </Routes>
+    </BrowserRouter>;
 
   ReactDOM.render(pages, app);
 }
@@ -81,8 +82,8 @@ ReactDOM.render(<SplashScreen/>, placeholder);
 
 // sentry error monitoring
 Sentry.init({
-  release: import.meta.env.RELEASE,
-  enabled: import.meta.env.MODE === 'production',
+  release: process.env.RELEASE,
+  enabled: process.env.NODE_ENV === 'production',
   dsn: 'https://48c0df63377d4467823a29295dbc3c5f@o287619.ingest.sentry.io/1521991',
   // send the app state with each error
   beforeSend: event =>
@@ -126,7 +127,7 @@ const checkPromise = async() =>
   try
   {
     // bypass check if on a development or testing environments
-    if (import.meta.env.MODE === 'test')
+    if (process.env.NODE_ENV === 'test')
     {
       setFeatures({
         touch: 'true',
@@ -141,7 +142,7 @@ const checkPromise = async() =>
     /**
     * @type { import('axios').AxiosResponse<{ features: Object<string, string>, country: string, language: string }> }
     */
-      const { status, data } = await axios.get(`${import.meta.env.API_ENDPOINT}/check`, {
+      const { status, data } = await axios.get(`${process.env.API_ENDPOINT}/check`, {
         timeout: 15000
       });
   

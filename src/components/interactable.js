@@ -318,7 +318,7 @@ class Interactable extends React.Component
 
     let counter = 0;
 
-    if (import.meta.env.MODE === 'test')
+    if (process.env.NODE_ENV === 'test')
     {
       this.lastSnapIndex = index;
 

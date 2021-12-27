@@ -95,7 +95,7 @@ class RoomState extends StoreComponent
           
         // istanbul ignore if
         // intervals are disabled in testing
-        if (import.meta.env.MODE !== 'test')
+        if (process.env.NODE_ENV !== 'test')
         {
           this.formatted = this.formatMs((this.countdown + 500) - Date.now());
 
@@ -160,7 +160,7 @@ class RoomState extends StoreComponent
       //       setTimeout(() => this.music.pause(), 1500);
       //     };
           
-      //     if (import.meta.env.MODE !== 'test')
+      //     if (process.env.NODE_ENV !== 'test')
       //       this.music.play();
       //   }
       //   catch (e)

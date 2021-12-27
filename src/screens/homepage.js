@@ -67,7 +67,7 @@ class Homepage extends React.Component
   updateIndex()
   {
     // istanbul ignore if
-    if (import.meta.env.MODE !== 'test')
+    if (process.env.NODE_ENV !== 'test')
       this.setState({ index: this.state.index + 1 });
   }
 
@@ -125,7 +125,7 @@ const backgroundAnimation = createAnimation({
   duration: '7.5s',
   direction: 'alternate',
   timingFunction: 'ease',
-  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
   keyframes: {
     '0%': {
       backgroundPosition: '0% 50%'
@@ -139,7 +139,7 @@ const backgroundAnimation = createAnimation({
 const enterAnimation = createAnimation({
   duration: '0.85s',
   timingFunction: 'ease-in-out',
-  iterationCount: import.meta.env.MODE === 'test' ? 0 : 1,
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 1,
   keyframes: {
     from: {
       opacity: '0.05'
@@ -154,7 +154,7 @@ const playAnimation = createAnimation({
   duration: '0.8s',
   direction: 'alternate',
   timingFunction: 'ease-in-out',
-  iterationCount: import.meta.env.MODE === 'test' ? 0 : 'infinite',
+  iterationCount: process.env.NODE_ENV === 'test' ? 0 : 'infinite',
   keyframes: {
     from: {
       transform: 'scale(1)'
