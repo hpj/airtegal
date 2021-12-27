@@ -25,12 +25,12 @@ const config = {
           target: process.env.NODE_ENV === 'production' ? [ 'chrome93', 'safari12', 'firefox92' ] : [ 'chrome96' ]
         }
       }
-    ]
+    ],
+    [ '@snowpack/plugin-webpack' ]
   ],
   packageOptions: {
     knownEntrypoints: [
-      'regenerator-runtime',
-      'qr-scanner/qr-scanner-worker.min.js'
+      'regenerator-runtime'
     ],
     rollup: {
       plugins: [

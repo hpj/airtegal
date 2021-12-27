@@ -2,8 +2,6 @@ import { io } from 'socket.io-client';
 
 import { locale, translation } from './i18n.js';
 
-import * as mocks from './mocks/io.js';
-
 const version = '2.6';
 
 /**
@@ -27,66 +25,76 @@ export function connect()
 {
   return new Promise((resolve, reject) =>
   {
-    try
-    {
-      let connected = false;
+    let connected = false;
 
-      socket = import.meta.env.MODE === 'test' ? mocks.socket :
-        io(import.meta.env.API_ENDPOINT, {
+    (async() =>
+    {
+      if (import.meta.env.MODE === 'test')
+      {
+        return socket = await import('./mocks/io.js');
+      }
+      else
+      {
+        return socket = io(import.meta.env.API_ENDPOINT, {
           path: '/io',
           query: {
             version,
             region: locale().value
           } });
-
-      // all game-modes are turned off
-      if (!features.kuruit)
-      {
-        throw new Error(translation('server-mismatch'));
       }
-      else if (isTouchScreen && !features.touch)
-      {
-        throw new Error(translation('touch-unavailable'));
-      }
-      
-      socket.once('connected', () =>
-      {
-        connected = true;
-
-        socket.once('disconnect', () => fail('you-were-disconnected'));
-
-        resolve();
-      });
-
-      const fail = err =>
-      {
-        if (connected)
-          return;
-
-        socket.close();
-
-        reject(err);
-      };
-
-      socket.once('error', fail);
-  
-      // connecting timeout
-      setTimeout(() =>
-      {
-        if (connected)
-          return;
-
-        socket.close();
-
-        reject('timeout');
-      }, 3000);
-    }
-    catch (e)
+    })().then(socket =>
     {
-      socket.close();
-
-      reject(e);
-    }
+      try
+      {
+        // all game-modes are turned off
+        if (!features.kuruit)
+        {
+          throw new Error(translation('server-mismatch'));
+        }
+        else if (isTouchScreen && !features.touch)
+        {
+          throw new Error(translation('touch-unavailable'));
+        }
+        
+        socket.once('connected', () =>
+        {
+          connected = true;
+  
+          socket.once('disconnect', () => fail('you-were-disconnected'));
+  
+          resolve();
+        });
+  
+        const fail = err =>
+        {
+          if (connected)
+            return;
+  
+          socket.close();
+  
+          reject(err);
+        };
+  
+        socket.once('error', fail);
+    
+        // connecting timeout
+        setTimeout(() =>
+        {
+          if (connected)
+            return;
+  
+          socket.close();
+  
+          reject('timeout');
+        }, 3000);
+      }
+      catch (e)
+      {
+        socket.close();
+  
+        reject(e);
+      }
+    });
   });
 }
 
