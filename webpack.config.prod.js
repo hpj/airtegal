@@ -4,11 +4,15 @@ const { DefinePlugin } = require('webpack');
 
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
 
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+
 const CompressionPlugin = require('compression-webpack-plugin');
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 
-module.exports = {
+const smp = new SpeedMeasurePlugin();
+
+const webpackConfig = smp.wrap({
   devtool: 'source-map',
   entry: './src/index.js',
   mode: 'production',
@@ -17,9 +21,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'esbuild-loader',
+        /** @type { import('esbuild').TransformOptions } */
         options: {
           loader: 'jsx',
-          target: [ 'chrome90', 'safari12', 'firefox88' ]
+          target: [ 'chrome93', 'safari12', 'firefox92' ]
         }
       },
       {
@@ -61,8 +66,10 @@ module.exports = {
     })
   ],
   output: {
-    path: __dirname + '/public',
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    path: __dirname + '/public'
   }
-};
+});
+
+module.exports = webpackConfig;

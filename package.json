@@ -45,6 +45,7 @@
     "might-cli": "^3.2.0",
     "might-ui": "^1.1.8",
     "qrcode": "^1.5.0",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.1"

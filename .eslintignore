@@ -4,4 +4,4 @@ __coverage__
 
 webpack.config.*.js
 
-public
+public/**
