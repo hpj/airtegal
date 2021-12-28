@@ -1,7 +1,5 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import { createStyle } from 'flcss';
 
 import DownIcon from 'mdi-react/ChevronDownIcon';
@@ -106,7 +104,6 @@ class Select extends React.Component
     if (e.key === 'Enter')
     {
       if (index < options.length)
-        // eslint-disable-next-line security/detect-object-injection
         this.onChange(options[index]);
     }
 
@@ -209,19 +206,6 @@ class Select extends React.Component
     </div>;
   }
 }
-
-Select.propTypes = {
-  id: PropTypes.string,
-  className: PropTypes.string,
-
-  optionsIdPrefix: PropTypes.string,
-  
-  defaultIndex: PropTypes.number,
-  options: PropTypes.arrayOf(PropTypes.object).isRequired,
-  formatLabel: PropTypes.func,
-
-  onChange: PropTypes.func
-};
 
 const styles = createStyle({
   container: {

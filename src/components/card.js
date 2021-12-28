@@ -1,8 +1,6 @@
 
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import Lottie from 'lottie-react';
@@ -171,23 +169,6 @@ class Card extends React.Component
     </div>;
   }
 }
-
-Card.propTypes = {
-  translation: PropTypes.func,
-  locale: PropTypes.object,
-  style: PropTypes.object,
-  onClick: PropTypes.func,
-  self: PropTypes.bool,
-  owner: PropTypes.string,
-  type: PropTypes.oneOf([ 'white', 'black' ]).isRequired,
-  hidden: PropTypes.bool,
-  allowed: PropTypes.bool,
-  blank: PropTypes.bool,
-  content: PropTypes.string,
-  winner: PropTypes.bool,
-  disabled: PropTypes.bool,
-  share: PropTypes.bool
-};
 
 const hoverAnimation = createAnimation({
   keyframes: {

@@ -2,8 +2,6 @@ import React, { createRef } from 'react';
 
 import ReactDOM from 'react-dom';
 
-import PropTypes from 'prop-types';
-
 import QrcodeScanIcon from 'mdi-react/QrcodeScanIcon';
 
 import RefreshIcon from 'mdi-react/RefreshIcon';
@@ -360,12 +358,6 @@ class Game extends React.Component
     </div>;
   }
 }
-
-Game.propTypes =
-{
-  translation: PropTypes.func,
-  locale: PropTypes.object
-};
 
 const waitingAnimation = createAnimation({
   duration: '2s',

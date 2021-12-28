@@ -1,7 +1,5 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
@@ -44,7 +42,6 @@ class RoomTrackBar extends StoreComponent
 
     const match = roomData?.state === 'match';
 
-    // eslint-disable-next-line react/prop-types
     const Player = ({ turn, username }) => <div className={ styles.player }>
 
       {
@@ -56,10 +53,8 @@ class RoomTrackBar extends StoreComponent
 
     //  separate the judge from the rest of the players
 
-    // eslint-disable-next-line security/detect-object-injection
     const judges = roomData?.players.filter(id => roomData?.playerProperties[id].state === 'judging');
 
-    // eslint-disable-next-line security/detect-object-injection
     const players = roomData?.players.filter(id => roomData?.playerProperties[id].state !== 'judging');
 
     return <div className={ styles.wrapper }>
@@ -75,7 +70,6 @@ class RoomTrackBar extends StoreComponent
         {
           judges?.map(id =>
           {
-            // eslint-disable-next-line security/detect-object-injection
             const player = roomData?.playerProperties[id];
 
             const turn = roomData?.phase === 'judging';
@@ -93,7 +87,6 @@ class RoomTrackBar extends StoreComponent
         {
           players?.map(id =>
           {
-            // eslint-disable-next-line security/detect-object-injection
             const player = roomData?.playerProperties[id];
             
             const turn = player?.state === 'picking';
@@ -119,12 +112,6 @@ const waitingAnimation = createAnimation({
     }
   }
 });
-
-RoomTrackBar.propTypes =
-{
-  translation: PropTypes.func,
-  locale: PropTypes.object
-};
 
 const styles = createStyle({
   wrapper: {

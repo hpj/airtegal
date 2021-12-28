@@ -4,6 +4,8 @@ __coverage__
 
 might.error.*.*
 
+.todo
+
 public/**.js*
 
 !public/sw.js

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import { StoreComponent } from '../store.js';
 
 import { withTranslation } from '../i18n.js';
@@ -218,11 +216,6 @@ class RoomState extends StoreComponent
     </div>;
   }
 }
-
-RoomState.propTypes = {
-  translation: PropTypes.func,
-  locale: PropTypes.object
-};
 
 const styles = createStyle({
   wrapper: {

@@ -138,7 +138,6 @@ export function translation(key, ...args)
   /**
   * @type { string }
   */
-  // eslint-disable-next-line security/detect-object-injection
   let value = __locale.data[key];
 
   if (!value)

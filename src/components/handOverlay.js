@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
@@ -296,12 +294,6 @@ class HandOverlay extends StoreComponent
     </div>;
   }
 }
-
-HandOverlay.propTypes = {
-  translation: PropTypes.func,
-  locale: PropTypes.object,
-  size: PropTypes.object
-};
 
 const styles = createStyle({
   view: {

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import { createStyle } from 'flcss';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
@@ -25,8 +23,6 @@ class MatchHighlights extends StoreComponent
     super({
       entries: []
     });
-
-    this.clearEntries = this.clearEntries.bind(this);
   }
 
   componentDidMount()
@@ -46,7 +42,9 @@ class MatchHighlights extends StoreComponent
       entries.push([ 'Invalid?', 'Invalid' ]);
       entries.push([ 'Invalid?', 'Invalid' ]);
 
-      this.setState({ entries });
+      this.setState({
+        entries
+      });
     }
   }
 
@@ -54,13 +52,6 @@ class MatchHighlights extends StoreComponent
   {
     if (changes?.entries)
       return true;
-  }
-
-  clearEntries()
-  {
-    this.store.set({
-      entries: []
-    });
   }
 
   /**
@@ -82,12 +73,11 @@ class MatchHighlights extends StoreComponent
 
     if (!entries?.length)
       return <div/>;
-    
+
     return <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
       {
         entries.slice(0, maxEntries)
           .map(e => fillTheBlanks(e[0], e.slice(1)))
-          // eslint-disable-next-line security/detect-object-injection
           .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(entries[k]) }>
             <div>
               {
@@ -104,13 +94,6 @@ class MatchHighlights extends StoreComponent
     </div>;
   }
 }
-
-MatchHighlights.propTypes =
-{
-  maxEntries: PropTypes.number.isRequired,
-  translation: PropTypes.func,
-  locale: PropTypes.object
-};
 
 const styles = createStyle({
   container: {

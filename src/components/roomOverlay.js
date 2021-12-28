@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import LoadingIcon from 'mdi-react/LoadingIcon';
 
 import { createAnimation, createStyle } from 'flcss';
@@ -364,12 +362,6 @@ class RoomOverlay extends StoreComponent
     </>;
   }
 }
-
-RoomOverlay.propTypes = {
-  size: PropTypes.object,
-  requestRooms: PropTypes.func.isRequired,
-  username: PropTypes.string
-};
 
 const waitingAnimation = createAnimation({
   duration: '1s',
