@@ -579,8 +579,9 @@ const styles = createStyle({
   },
   
   loading: {
+    zIndex: 1,
     display: 'flex',
-    position: 'absolute',
+    position: 'fixed',
 
     alignItems: 'center',
     justifyContent: 'center',
