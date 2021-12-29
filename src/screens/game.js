@@ -289,7 +289,7 @@ class Game extends React.Component
                     
                   <div className={ roomsStyles.counter }>
                     <div>{ room.players }</div>
-                    <div>/</div>
+                    <div>{'/'}</div>
                     <div>{ room.options.maxPlayers }</div>
                   </div>
 

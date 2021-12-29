@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/playwright:focal
 
+ENV CI="true"
 ENV PATH="${PATH}:/app/node_modules/.bin"
 
 WORKDIR /app
@@ -7,4 +8,4 @@ COPY . /app
 
 RUN cd /app && CI=true yarn install
 
-CMD ["sh", "-c", "yarn might -q"]
+CMD ["yarn", "might"]

@@ -8,7 +8,7 @@
     "build:test": "yarn build --node-env test",
     "test": "docker run --rm -it --name airtegal_test_container --mount type=bind,src=`pwd`,dst=/app --volume /app/node_modules airtegal_test:latest",
     "tests:docker": "docker build --tag airtegal_test:latest --file Dockerfile.test .",
-    "tests:update": "yarn test might -q -u"
+    "tests:update": "yarn test might -u"
   },
   "engines": {
     "npm": "",

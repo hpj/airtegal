@@ -1,19 +1,19 @@
 name: test
 
 on:
+  pull_request:
   push:
     branches:
     - development
     - release
-  pull_request:
     
 jobs:
   Might:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:focal
     steps:
-      - uses: actions/checkout@main
-      - uses: actions/setup-node@main
+      - uses: actions/checkout@2
+      - uses: actions/setup-node@2
         with:
           node-version: '16.13.1'
       - name: Install Dependencies

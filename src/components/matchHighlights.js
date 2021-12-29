@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Lottie from 'lottie-react';
+
 import { createStyle } from 'flcss';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
@@ -10,9 +12,11 @@ import getTheme, { opacity } from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
-import { fillTheBlanks } from '../utils';
+import { socket, fillTheBlanks } from '../utils';
 
 import { StoreComponent } from '../store.js';
+
+import confettiAnimation from '../animations/confetti-2.json';
 
 const colors = getTheme();
 
@@ -21,6 +25,7 @@ class MatchHighlights extends StoreComponent
   constructor()
   {
     super({
+      highScore: 0,
       entries: []
     });
   }
@@ -50,7 +55,7 @@ class MatchHighlights extends StoreComponent
 
   stateWhitelist(changes)
   {
-    if (changes?.entries)
+    if (changes?.entries || changes?.highScore)
       return true;
   }
 
@@ -67,37 +72,63 @@ class MatchHighlights extends StoreComponent
 
   render()
   {
-    const { maxEntries, locale } = this.props;
+    const { maxEntries, playerProperties, translation, locale } = this.props;
 
-    const { entries } = this.state;
+    const { highScore, entries } = this.state;
 
-    if (!entries?.length)
+    if (!entries?.length && !highScore)
       return <div/>;
 
-    return <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
-      {
-        entries.slice(0, maxEntries)
-          .map(e => fillTheBlanks(e[0], e.slice(1)))
-          .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(entries[k]) }>
-            <div>
-              {
-                e.split('\n').map((t, i) =>
-                  <span key={ i } style = { { borderBottom: i % 2 ? '2px solid' : undefined } }>
-                    { t }
-                  </span>)
-              }
-            </div>
+    const highScorers = Object.keys(playerProperties)
+      .filter(id => playerProperties[id].score === highScore);
 
-            <ShareIcon className={ styles.icon }/>
-          </div>)
-      }
-    </div>;
+    return (
+      <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
+        {
+          highScorers.includes(socket.id) && process.env.NODE_ENV !== 'test' ?
+            <Lottie className={ styles.confetti } loop={ true } animationData={ confettiAnimation }/> :
+            undefined
+        }
+        
+        <div className={ styles.highScorers }>
+          {
+            [
+              translation('congrats'),
+              highScorers.map(id => playerProperties[id].username).join(translation('and')),
+              translation('highScorers', highScorers.length),
+              translation('by'),
+              translation('score', highScore, true)
+            ].join(' ')
+          }
+          { '.' }
+        </div>
+          
+        {
+          entries.slice(0, maxEntries)
+            .map(e => fillTheBlanks(e[0], e.slice(1)))
+            .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(entries[k]) }>
+              <div>
+                {
+                  e.split('\n').map((t, i) =>
+                    <span key={ i } style = { { borderBottom: i % 2 ? '2px solid' : undefined } }>
+                      { t }
+                    </span>)
+                }
+              </div>
+
+              <ShareIcon className={ styles.icon }/>
+            </div>)
+        }
+      </div>
+    );
   }
 }
 
 const styles = createStyle({
   container: {
     display: 'flex',
+    overflow: 'hidden',
+    position: 'relative',
     flexWrap: 'wrap',
     
     justifyContent: 'center',
@@ -129,12 +160,25 @@ const styles = createStyle({
     }
   },
 
+  highScorers: {
+    extend: 'entry',
+    flexBasis: '100%',
+    whiteSpace: 'pre',
+    justifyContent: 'center'
+  },
+
+  confetti: {
+    position: 'absolute',
+    pointerEvents: 'none',
+    width: '300%',
+    height: '300%',
+    top: '-100%'
+  },
+
   icon: {
     flexGrow: 1,
-    
     minWidth: '16px',
     height: '16px',
-
     margin: '0 15px'
   }
 });

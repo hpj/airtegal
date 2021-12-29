@@ -91,6 +91,14 @@ class RoomOptions extends StoreComponent
     {
       wrapperRef.current?.scrollTo({ top: 0 });
 
+      state.highScore = 0;
+
+      Object.values(roomData.playerProperties).forEach(({ score }) =>
+      {
+        if (score > state.highScore)
+          state.highScore= score;
+      });
+
       state.optionsUrlCopied = false;
     }
 
@@ -119,6 +127,7 @@ class RoomOptions extends StoreComponent
       {
         this.store.set({
           entries: [],
+          highScore: 0,
           optionsLoading: false
         });
       }, 2500);
@@ -472,7 +481,7 @@ class RoomOptions extends StoreComponent
                 }
               }, resize) }
             />
-            <div style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } } data-suffix={ true }>%</div>
+            <div style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } } data-suffix={ true }>{'%'}</div>
             <div>{ translation('blank-probability') }</div>
           </div>
         </div>
@@ -501,7 +510,7 @@ class RoomOptions extends StoreComponent
         {
           options ?
             <>
-              <MatchHighlight maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
+              <MatchHighlight playerProperties={ roomData?.playerProperties } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
 
               { GameModes() }
 

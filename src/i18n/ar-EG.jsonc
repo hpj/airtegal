@@ -38,7 +38,6 @@
   
   "available-rooms": "الرومات المتاحة",
 
-
   // matchmaking errors
 
   "no-rooms-available": "مفيش رومات",
@@ -56,6 +55,12 @@
   
   "match-highlights": "هاي لايتز",
 
+  "congrats": "عاش",
+
+  "highScorers": "هما الي كسبوا الماتش الفات~هو الي كسب الماتش الفات",
+  
+  "score": "نقط~نقطة",
+
   "room-edited": "تم تعديل اعدادت الروم.",
   "you-were-kicked": "تم طردك من الروم",
 
@@ -72,6 +77,8 @@
   
   "options-placeholder": "0",
 
+  "by": "بـ",
+  "and": " و",
   "after": "بعد",
 
   "max-rounds": "جولات~جولة",

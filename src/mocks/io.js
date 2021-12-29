@@ -28,10 +28,10 @@ const defaultRoom = {
 
   players: [ 'skye', 'mika', 'aqua', 'aire' ],
   playerProperties: {
-    'skye': { username: 'Skye' },
-    'mika': { username: 'Mika' },
-    'aqua': { username: 'Aqua' },
-    'aire': { username: 'Aire' }
+    'skye': { username: 'Skye', score: 0 },
+    'mika': { username: 'Mika', score: 0 },
+    'aqua': { username: 'Aqua', score: 0 },
+    'aire': { username: 'Aire', score: 0 }
   },
   playerSecretProperties: {
     hand: []
@@ -201,10 +201,18 @@ async function emit(eventName, args)
 
 function matchBroadcast(data)
 {
-  setTimeout(() => emitter.emit('roomData', {
+  const message = {
     ...defaultRoom,
     ...data
-  }));
+  };
+
+  if (params.has('highlights'))
+  {
+    message.playerProperties['skye'].score = 3;
+    message.playerProperties['mika'].score = 3;
+  }
+
+  setTimeout(() => emitter.emit('roomData', message));
 }
 
 function startKuruit()
@@ -431,153 +439,3 @@ function startKuruit()
     };
   }
 }
-
-// function startKing()
-// {
-//   /**
-//   * @type { import('../components/roomOverlay').RoomData }
-//   */
-//   const room = {};
-
-//   room.state = 'match';
-
-//   room.players = [ 'skye', 'mika' ];
-
-//   room.playerProperties =
-//   {
-//     'skye': {
-//       username: 'Skye',
-//       state: 'waiting'
-//     },
-//     'mika': {
-//       username: 'Mika',
-//       state: 'waiting'
-//     }
-//   };
-
-//   room.playerSecretProperties =
-//   {
-//     hand: (params.get('mock') === 'blank') ?
-//       [ { key: Math.random(), type: 'white', blank: true } ] :
-//       [
-//         { key: Math.random(), type: 'white', content: 'Skye\'s Card' },
-//         { key: Math.random(), type: 'white', content: 'Skye\'s Card' }
-//       ]
-//   };
-
-//   room.field = [];
-
-//   // black card
-//   room.field.push({
-//     key: Math.random(),
-//     cards: [ {
-//       key: Math.random(),
-//       pick: 1,
-//       type: 'black',
-//       content: 'This is a Black Card'
-//     } ]
-//   });
-
-//   if (params.get('mock') === 'judge')
-//   {
-//     room.phase = 'judging';
-//     room.playerProperties['skye'].state = 'judging';
-
-//     room.field.push({
-//       id: 'mika',
-//       key: Math.random(),
-//       cards: [ {
-//         key: Math.random(),
-//         type: 'white',
-//         content: 'Option 1'
-//       } ]
-//     });
-
-//     room.field.push({
-//       id: 'skye',
-//       key: Math.random(),
-//       cards: [ {
-//         key: Math.random(),
-//         type: 'white',
-//         content: 'Option 2'
-//       } ]
-//     });
-  
-//     matchBroadcast(room);
-  
-//     matchLogic = ({ index }) =>
-//     {
-//       room.phase = 'transaction';
-//       room.playerProperties['skye'].state = 'waiting';
-
-//       room.field[index].highlight = true;
-      
-//       matchBroadcast(room);
-//     };
-//   }
-//   else if (params.get('mock') === 'spectator')
-//   {
-//     room.master = '';
-//     room.phase = 'judging';
-
-//     room.players = [ 'mana', 'mika' ];
-    
-//     room.playerProperties = {
-//       'mana': {
-//         username: 'Mana',
-//         state: 'judging'
-//       },
-//       'mika': {
-//         username: 'Mika',
-//         state: 'waiting'
-//       }
-//     };
-
-//     room.playerSecretProperties = {};
-
-//     room.field.push({
-//       key: Math.random(),
-//       cards: [ {
-//         key: Math.random(),
-//         type: 'white',
-//         content: 'Test'
-//       } ]
-//     });
-
-//     room.field.push({
-//       key: Math.random(),
-//       cards: [ {
-//         key: Math.random(),
-//         type: 'white',
-//         content: 'Test'
-//       } ]
-//     });
-
-//     matchBroadcast(room);
-//   }
-//   else
-//   {
-//     room.phase = 'picking';
-//     room.playerProperties['skye'].state = 'picking';
-  
-//     matchBroadcast(room);
-  
-//     matchLogic = ({ index, content }) =>
-//     {
-//       room.playerProperties['skye'].state = 'waiting';
-
-//       const card = room.playerSecretProperties.hand.splice(index, 1)[0];
-
-//       if (card.blank)
-//         card.content = content;
-  
-//       room.field.push({
-//         id: 'skye',
-//         key: Math.random(),
-//         cards: [ card ]
-//       });
-      
-//       matchBroadcast(room);
-//     };
-//   }
-// }
