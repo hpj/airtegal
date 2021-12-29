@@ -99,7 +99,7 @@ class Game extends React.Component
     connect()
       // if app connected successfully
       // hide the loading screen
-      .then(async() =>
+      .then(async(socket) =>
       {
         let username = this.state.username;
 
@@ -123,6 +123,9 @@ class Game extends React.Component
           // create room
           else if (params?.has('create') || params?.has('match'))
             overlayRef.current.createRoom();
+
+          socket.on('error', () => errorScreen(translation('you-were-disconnected')));
+          socket.on('disconnect', () => errorScreen(translation('you-were-disconnected')));
 
           hideSplashScreen();
         });

@@ -39,6 +39,16 @@ export function connect()
             region: locale().value
           } });
 
+      const fail = err =>
+      {
+        if (connected)
+          return;
+    
+        socket.close();
+    
+        reject(err);
+      };
+
       // all game-modes are turned off
       if (!features.kuruit)
       {
@@ -53,20 +63,12 @@ export function connect()
       {
         connected = true;
 
-        socket.once('disconnect', () => fail('you-were-disconnected'));
+        socket.off('error', fail);
 
-        resolve();
+        resolve(socket);
       });
 
-      const fail = err =>
-      {
-        if (connected)
-          return;
 
-        socket.close();
-
-        reject(err);
-      };
 
       socket.once('error', fail);
   
