@@ -6,6 +6,6 @@ ENV PATH="${PATH}:/app/node_modules/.bin"
 WORKDIR /app
 COPY . /app
 
-RUN cd /app && CI=true yarn install
+RUN cd /app && yarn install
 
-CMD ["yarn", "might"]
+CMD ["might"]
