@@ -4688,10 +4688,10 @@ micromatch@^4.0.2, micromatch@^4.0.4:
     braces "^3.0.1"
     picomatch "^2.2.3"
 
-might-cli@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/might-cli/-/might-cli-3.2.0.tgz#be8b6705414894db4d427c8682a90d07f2204f75"
-  integrity sha512-pj49Ii2LM7U26T48nejLYe6iPawaNmihY3bJ9+Yyia5U/3rIR1Wz5D7R6oCpZqySzG7Nf9UAzYv410Y8JMIIbA==
+might-cli@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/might-cli/-/might-cli-3.2.1.tgz#607128b8f3aa9c580329a3fcd9d9387afd159618"
+  integrity sha512-oiwnuYkahGD3mjfDfELihqS8enPjyOL6CqzJbpTvJELyCIUEVC7bbLq0yFn5eGVKP/IYHb8hyq3HdlAUJB4/RA==
   dependencies:
     ansi-colors "^4.1.1"
     convert-source-map "^1.8.0"
