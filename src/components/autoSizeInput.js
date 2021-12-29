@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import autoSize from 'autosize-input';
 
 class AutoSizeInput extends React.Component
@@ -127,27 +125,5 @@ class AutoSizeInput extends React.Component
     />;
   }
 }
-
-AutoSizeInput.propTypes = {
-  required: PropTypes.bool,
-  type: PropTypes.oneOf([ 'text', 'number' ]).isRequired,
-  minutes: PropTypes.bool,
-
-  min: PropTypes.string,
-  max: PropTypes.string,
-  maxLength: PropTypes.number,
-
-  id: PropTypes.string,
-  master: PropTypes.string,
-  className: PropTypes.string,
-  style: PropTypes.object,
-  
-  disabled: PropTypes.bool,
-  placeholder: PropTypes.string,
-  value: PropTypes.any,
-
-  onUpdate: PropTypes.func,
-  onSubmit: PropTypes.func
-};
 
 export default AutoSizeInput;

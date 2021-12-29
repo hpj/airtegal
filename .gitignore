@@ -2,6 +2,10 @@
 
 __coverage__
 
-*bundle.js*
-
 might.error.*.*
+
+.todo
+
+public/**.js*
+
+!public/sw.js

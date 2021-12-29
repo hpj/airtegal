@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import LoadingIcon from 'mdi-react/LoadingIcon';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
@@ -90,7 +88,6 @@ class ShareOverlay extends React.Component
   {
     const { url } = this.state;
 
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(`${url}?download`, '_blank');
   }
 
@@ -223,12 +220,6 @@ class ShareOverlay extends React.Component
     </div>;
   }
 }
-
-ShareOverlay.propTypes = {
-  size: PropTypes.object,
-  translation: PropTypes.func,
-  locale: PropTypes.object
-};
 
 const waitingAnimation = createAnimation({
   duration: '1s',

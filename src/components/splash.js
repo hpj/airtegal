@@ -1,7 +1,5 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import getTheme from '../colors.js';
 
 import { createStyle } from 'flcss';
@@ -21,10 +19,6 @@ const SplashScreen = ({ onlyText }) =>
         <div className={ styles.splash }><div/></div>
     }
   </div>;
-};
-
-SplashScreen.propTypes = {
-  onlyText: PropTypes.bool
 };
 
 const styles = createStyle({

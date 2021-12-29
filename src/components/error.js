@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import getTheme from '../colors.js';
 
@@ -18,10 +17,6 @@ const Error = ({ error }) =>
   return <div className={ styles.container } style={ { direction: locale.direction } }>
     <p className={ styles.error }>{ error }</p>
   </div>;
-};
-
-Error.propTypes = {
-  error: PropTypes.string
 };
 
 const styles = createStyle({

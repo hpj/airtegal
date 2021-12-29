@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import DiscordIcon from 'mdi-react/DiscordIcon';
 
 import { createStyle } from 'flcss';
@@ -219,12 +217,6 @@ class TutorialOverlay extends React.Component
     </div>;
   }
 }
-
-TutorialOverlay.propTypes = {
-  size: PropTypes.object,
-  translation: PropTypes.func,
-  locale: PropTypes.object
-};
 
 const styles = createStyle({
   wrapper: {

@@ -2,8 +2,6 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-
 import { createStyle, createAnimation } from 'flcss';
 
 import getTheme from '../colors.js';
@@ -87,7 +85,6 @@ class Homepage extends React.Component
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
           {
-            // eslint-disable-next-line security/detect-object-injection
             data?.[index]?.split('\n')
               .map((t, i) => <span
                 key={ i }
@@ -114,12 +111,6 @@ class Homepage extends React.Component
     </div>;
   }
 }
-
-Homepage.propTypes =
-{
-  translation: PropTypes.func,
-  locale: PropTypes.object
-};
 
 const backgroundAnimation = createAnimation({
   duration: '7.5s',

@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
@@ -90,7 +88,6 @@ class FieldOverlay extends StoreComponent
   
         entries.push([
           field[0].cards[0].content,
-          // eslint-disable-next-line security/detect-object-injection
           ...field[index].cards.map(c => c.content)
         ]);
 
@@ -110,7 +107,6 @@ class FieldOverlay extends StoreComponent
     {
       shareRef.current?.shareEntry({
         black: field[0]?.cards[0]?.content,
-        // eslint-disable-next-line security/detect-object-injection
         white: field[index]?.cards?.map(c => c.content)
       });
     }
@@ -206,12 +202,6 @@ class FieldOverlay extends StoreComponent
     </div>;
   }
 }
-
-FieldOverlay.propTypes = {
-  translation: PropTypes.func,
-  locale: PropTypes.object,
-  size: PropTypes.object
-};
 
 const styles = createStyle({
   view: {

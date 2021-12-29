@@ -1,7 +1,5 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 /**
 * @typedef { Object } Props
 * @property { React.HTMLAttributes<HTMLDivElement> } style
@@ -278,25 +276,20 @@ class Interactable extends React.Component
     const { snapPoints } = this.props;
 
     if (this.props.verticalOnly && index === this.lastSnapIndex &&
-      // eslint-disable-next-line security/detect-object-injection
       this.state.y === snapPoints[index].y)
       return;
 
     if (this.props.horizontalOnly && index === this.lastSnapIndex &&
-      // eslint-disable-next-line security/detect-object-injection
       this.state.x === snapPoints[index].x)
       return;
     
-    // eslint-disable-next-line security/detect-object-injection
     if ((!snapPoints?.[index] && !point) || this.animating)
       return;
     
     const { x, y } = this.state;
 
     const target = {
-      // eslint-disable-next-line security/detect-object-injection
       x: Math.round(snapPoints[index]?.x ?? point?.x ?? x),
-      // eslint-disable-next-line security/detect-object-injection
       y: Math.round(snapPoints[index]?.y ?? point?.y ?? y)
     };
 
@@ -404,30 +397,5 @@ class Interactable extends React.Component
     </div>;
   }
 }
-
-Interactable.propTypes = {
-  style: PropTypes.object,
-  
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node ]),
-  
-  dragEnabled: PropTypes.bool,
-
-  verticalOnly: PropTypes.bool,
-  horizontalOnly: PropTypes.bool,
-
-  frame: PropTypes.object,
-
-  initialPosition: PropTypes.object,
-  boundaries: PropTypes.object,
-  resistance: PropTypes.object,
-  snapPoints: PropTypes.arrayOf(PropTypes.object),
-  triggers: PropTypes.func,
-
-  onMovement: PropTypes.func,
-  onSnapStart: PropTypes.func,
-  onSnapEnd: PropTypes.func
-};
 
 export default Interactable;

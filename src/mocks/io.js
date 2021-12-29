@@ -358,7 +358,6 @@ function startKuruit()
       room.phase = 'transaction';
       room.playerProperties['skye'].state = 'waiting';
 
-      // eslint-disable-next-line security/detect-object-injection
       room.field[index].highlight = true;
       
       matchBroadcast(room);
@@ -511,7 +510,6 @@ function startKuruit()
 //       room.phase = 'transaction';
 //       room.playerProperties['skye'].state = 'waiting';
 
-//       // eslint-disable-next-line security/detect-object-injection
 //       room.field[index].highlight = true;
       
 //       matchBroadcast(room);

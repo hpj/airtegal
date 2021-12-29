@@ -39,6 +39,16 @@ export function connect()
             region: locale().value
           } });
 
+      const fail = err =>
+      {
+        if (connected)
+          return;
+    
+        socket.close();
+    
+        reject(err);
+      };
+
       // all game-modes are turned off
       if (!features.kuruit)
       {
@@ -53,20 +63,12 @@ export function connect()
       {
         connected = true;
 
-        socket.once('disconnect', () => fail('you-were-disconnected'));
+        socket.off('error', fail);
 
-        resolve();
+        resolve(socket);
       });
 
-      const fail = err =>
-      {
-        if (connected)
-          return;
 
-        socket.close();
-
-        reject(err);
-      };
 
       socket.once('error', fail);
   
@@ -182,7 +184,6 @@ export function shuffle(array)
     {
       const j = Math.floor(Math.random() * (i + 1));
   
-      // eslint-disable-next-line security/detect-object-injection
       [ array[i], array[j] ] = [ array[j], array[i] ];
     }
   }
@@ -195,7 +196,6 @@ export function shuffle(array)
 */
 export const setFeatures = flags =>
 {
-  // eslint-disable-next-line security/detect-object-injection
   Object.keys(flags).forEach(k => features[k] = flags[k] === 'true') ;
 };
 

@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 import CopyIcon from 'mdi-react/ClipboardTextIcon';
 import QRCodeIcon from 'mdi-react/QrcodeIcon';
@@ -30,11 +28,6 @@ import { createStyle, createAnimation } from 'flcss';
 const colors = getTheme();
 
 const wrapperRef = createRef();
-
-/**
-* @type { React.RefObject<MatchHighlight> }
-*/
-const highlightsRef = createRef();
 
 /**
 * @typedef { object } State
@@ -97,7 +90,7 @@ class RoomOptions extends StoreComponent
     if (this.state.roomData?.state !== roomData.state)
     {
       wrapperRef.current?.scrollTo({ top: 0 });
-      
+
       state.optionsUrlCopied = false;
     }
 
@@ -124,9 +117,10 @@ class RoomOptions extends StoreComponent
       // but after 2.5s to allow game's overlay animations to end
       setTimeout(() =>
       {
-        this.store.set({ optionsLoading: false });
-
-        highlightsRef.current?.clearEntries();
+        this.store.set({
+          entries: [],
+          optionsLoading: false
+        });
       }, 2500);
     }
     catch (err)
@@ -491,7 +485,6 @@ class RoomOptions extends StoreComponent
       modeOptions = KuruitOptions;
 
     return <div ref={ wrapperRef } className={ styles.wrapper }>
-
       {
         optionsLoading ? <div className={ styles.loading }>
           <div/>
@@ -508,7 +501,7 @@ class RoomOptions extends StoreComponent
         {
           options ?
             <>
-              <MatchHighlight ref={ highlightsRef } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
+              <MatchHighlight maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
 
               { GameModes() }
 
@@ -532,12 +525,6 @@ class RoomOptions extends StoreComponent
     </div>;
   }
 }
-
-RoomOptions.propTypes = {
-  translation: PropTypes.func,
-  locale: PropTypes.object,
-  size: PropTypes.object
-};
 
 const waitingAnimation = createAnimation({
   duration: '1s',
@@ -592,8 +579,9 @@ const styles = createStyle({
   },
   
   loading: {
+    zIndex: 1,
     display: 'flex',
-    position: 'absolute',
+    position: 'fixed',
 
     alignItems: 'center',
     justifyContent: 'center',

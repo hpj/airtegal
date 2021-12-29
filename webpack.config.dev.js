@@ -1,6 +1,10 @@
 const { DefinePlugin } = require('webpack');
 
-module.exports = {
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+
+const smp = new SpeedMeasurePlugin();
+
+const webpackConfig = smp.wrap({
   devtool: 'source-map',
   entry: './src/index.js',
   mode: 'development',
@@ -9,9 +13,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'esbuild-loader',
+        /** @type { import('esbuild').TransformOptions } */
         options: {
           loader: 'jsx',
-          target: [ 'chrome92' ]
+          target: [ 'chrome96' ]
         }
       },
       {
@@ -38,14 +43,15 @@ module.exports = {
     },
     static: [
       __dirname + '/public',
-      __dirname + '/src/mocks',
     ],
     historyApiFallback: true,
     hot: true
   },
   output: {
-    path: __dirname + '/public',
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    path: __dirname + '/public'
   }
-};
+});
+
+module.exports = webpackConfig;

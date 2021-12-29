@@ -1,7 +1,5 @@
 import React, { createRef } from 'react';
 
-import PropTypes from 'prop-types';
-
 import LoadingIcon from 'mdi-react/LoadingIcon';
 
 import QrScanner from 'qr-scanner';
@@ -215,11 +213,6 @@ class CodeOverlay extends React.Component
     </div>;
   }
 }
-
-CodeOverlay.propTypes = {
-  size: PropTypes.object,
-  join: PropTypes.func.isRequired
-};
 
 const waitingAnimation = createAnimation({
   duration: '1s',
