@@ -161,6 +161,22 @@
         },
         {
           "action": "select",
+          "value": "#room-options-select-game-mode"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-game-mode-2"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
           "value": "#room-options-randos"
         },
         {

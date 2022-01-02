@@ -15,7 +15,7 @@ export let socket;
 export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
 
 /**
-* @type { { touch: boolean, randos: boolean, kuruit: boolean } }
+* @type { { touch: boolean, randos: boolean, kuruit: boolean, democracy: boolean } }
 */
 export const features = {};
 
@@ -50,7 +50,7 @@ export function connect()
       };
 
       // all game-modes are turned off
-      if (!features.kuruit)
+      if (!features.kuruit && !features.democracy)
       {
         throw new Error(translation('server-mismatch'));
       }
