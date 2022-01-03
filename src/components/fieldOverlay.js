@@ -201,6 +201,8 @@ class FieldOverlay extends StoreComponent
                           hidden={ !card.content }
                           allowed={ allowed }
                           winner= { highlight }
+                          locale={ locale }
+                          translation={ translation }
                           share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
                           onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }

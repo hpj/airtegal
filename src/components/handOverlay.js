@@ -179,7 +179,7 @@ class HandOverlay extends StoreComponent
 
   render()
   {
-    const { locale, size } = this.props;
+    const { locale, translation, size } = this.props;
 
     const {
       roomData,
@@ -193,10 +193,9 @@ class HandOverlay extends StoreComponent
 
     const miniView = isTouchScreen || size.width < 700;
 
-    const width = '(115px + 2vw + 2vh)';
     const overlayWidth = size.width >= 700 ? '(min(100vw, 700px) / 1.45)' : '(min(85vw, 700px) / 1.45)';
 
-    const margin = `calc((${width} - (${overlayWidth} / ${hand?.length})) / -2)`;
+    const margin = `calc((${Card.width} - (${overlayWidth} / ${hand?.length})) / -2)`;
 
     const snapPoints = isTouchScreen ? [
       { y: size.height, draggable: false },
@@ -284,6 +283,8 @@ class HandOverlay extends StoreComponent
                     allowed={ true }
                     type={ card.type }
                     blank={ card.blank }
+                    locale={ locale }
+                    translation={ translation }
                     content={ card.content }/>;
                 })
               }

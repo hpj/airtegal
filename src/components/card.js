@@ -37,6 +37,11 @@ class Card extends React.Component
     this.back = this.back.bind(this);
   }
 
+  static get width()
+  {
+    return 'calc(115px + 2vw + 2vh)';
+  }
+
   back()
   {
     this.textareaRef?.current.blur();
@@ -201,8 +206,7 @@ const styles = createStyle({
   wrapper: {
     zIndex: 2,
     position: 'relative',
-    flex: '0 0 calc(115px + 2vw + 2vh)',
-    width: 'calc(115px + 2vw + 2vh)'
+    width: Card.width
   },
 
   container: {
@@ -260,7 +264,7 @@ const styles = createStyle({
     fontSize: 'calc(8px + 0.4vw + 0.4vh)',
     
     width: '100%',
-    minHeight: 'calc((115px + 2vw + 2vh) * 0.985)',
+    minHeight: Card.width,
     height: 'auto',
 
     '> div': {
@@ -299,7 +303,7 @@ const styles = createStyle({
     resize: 'none',
     overflow: 'hidden',
 
-    height: 'calc((115px + 2vw + 2vh) * 0.985)',
+    height: Card.width,
 
     padding: 0,
     border: 0,
@@ -349,4 +353,4 @@ const styles = createStyle({
   }
 });
 
-export default withTranslation(Card);
+export default Card;
