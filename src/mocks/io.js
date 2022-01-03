@@ -18,8 +18,9 @@ const params = new URL(document.URL).searchParams;
 * @type { import('../components/roomOverlay').RoomData }
 */
 const defaultRoom = {
+  id: 'roomid',
+  
   master: true,
-  id: 'sskye',
   
   region: 'egypt',
   
