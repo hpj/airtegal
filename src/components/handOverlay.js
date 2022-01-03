@@ -4,7 +4,7 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import { socket, isTouchScreen, sendMessage } from '../utils.js';
+import { isTouchScreen, sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 
@@ -89,7 +89,7 @@ class HandOverlay extends StoreComponent
     return {
       // if in match and and has to pick a card
       handVisible: roomData?.state === 'match' &&
-      roomData?.playerProperties[socket.id]?.state === 'picking'
+      roomData?.playerProperties.state === 'picking'
     };
   }
 
@@ -161,7 +161,7 @@ class HandOverlay extends StoreComponent
   {
     const { playerProperties } = this.state.roomData;
 
-    if (playerProperties[socket.id]?.state !== 'picking')
+    if (playerProperties.state !== 'picking')
       return;
 
     const { textareaRef } = element;

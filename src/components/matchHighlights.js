@@ -72,15 +72,17 @@ class MatchHighlights extends StoreComponent
 
   render()
   {
-    const { maxEntries, playerProperties, translation, locale } = this.props;
+    const { maxEntries, players, translation, locale } = this.props;
 
     const { highScore, entries } = this.state;
 
     if (!entries?.length && !highScore)
       return <div/>;
 
-    const highScorers = Object.keys(playerProperties)
-      .filter(id => playerProperties[id].score === highScore);
+    const highScorers = players
+      .filter(({ score }) => score === highScore)
+      .map(({ username }) => username)
+      .join(translation('and'));
 
     return (
       <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
@@ -94,7 +96,7 @@ class MatchHighlights extends StoreComponent
           {
             [
               translation('congrats'),
-              highScorers.map(id => playerProperties[id].username).join(translation('and')),
+              highScorers,
               translation('highScorers', highScorers.length),
               translation('by'),
               translation('score', highScore, true)

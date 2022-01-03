@@ -120,7 +120,9 @@ class FieldOverlay extends StoreComponent
 
     const field = roomData?.field ?? [];
 
-    const playerState = roomData?.playerProperties[socket.id]?.state;
+    const playerState = roomData?.playerProperties.state;
+
+    const gameMode = roomData?.options.gameMode;
     
     const onMovement = ({ x }) =>
     {
@@ -164,36 +166,43 @@ class FieldOverlay extends StoreComponent
       >
         <div className={ styles.wrapper }>
 
-          <div className={ styles.indicator } style={ { direction: locale.direction } }>
+          <div className={ styles.banner } style={ { direction: locale.direction } }>
             {
-              !playerState ? translation('spectating') :
+              // show spectators a banner that they are only watching
+              playerState === 'spectating' ? translation('spectating') :
+                // show judges a banner that they have to wait
                 roomData?.phase === 'picking' && playerState === 'judging' ? translation('judging') :
                   undefined
             }
           </div>
           
-          <div id={ 'kuruit-field-overlay' } className={ styles.container } style={ { direction: locale.direction } }>
+          <div id={ 'kuruit-field-overlay' } className={ styles[gameMode] } style={ { direction: locale.direction } }>
             {
-              field.map((entry, entryIndex) =>
+              field.map(({ key, id, cards, highlight, votes }, entryIndex) =>
               {
                 const allowed = playerState === 'judging' && entryIndex > 0;
 
-                return <div className={ styles.entry } key={ entry.key }>
-                  {
-                    entry.cards?.map((card, cardIndex) => <Card
-                      key={ card.key }
-                      type={ card.type }
-                      content={ card.content }
-                      hidden={ !card.content }
-                      allowed={ allowed }
-                      self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
-                      owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
-                      winner= { entry.highlight }
-                      share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
-                      onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
-                    />)
-                  }
-                </div>;
+                {
+                  return <div className={ styles.entry } key={ key }>
+                    {
+                      cards?.map((card, cardIndex) =>
+                      {
+                        return <Card
+                          key={ card.key }
+                          type={ card.type }
+                          content={ card.content }
+                          hidden={ !card.content }
+                          allowed={ allowed }
+                          winner= { highlight }
+                          share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
+                          self={ roomData?.phase === 'transaction' && id === socket.id && card.type === 'white' }
+                          owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
+                          onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                        />;
+                      })
+                    }
+                  </div>;
+                }
               })
             }
           </div>
@@ -229,7 +238,7 @@ const styles = createStyle({
     }
   },
 
-  indicator: {
+  banner: {
     display: 'flex',
     position: 'relative',
     justifyContent: 'center',
@@ -256,7 +265,7 @@ const styles = createStyle({
     }
   },
 
-  container: {
+  kuruit: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center'

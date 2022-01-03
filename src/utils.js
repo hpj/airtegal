@@ -4,7 +4,7 @@ import { locale, translation } from './i18n.js';
 
 import * as mocks from './mocks/io.js';
 
-const version = '2.6';
+const version = '2022.1-0';
 
 /**
 * @type { import('socket.io-client').Socket }

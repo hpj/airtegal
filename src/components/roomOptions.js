@@ -7,7 +7,7 @@ import QRCodeIcon from 'mdi-react/QrcodeIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import { socket, features, sendMessage } from '../utils.js';
+import { features, sendMessage } from '../utils.js';
 
 import { StoreComponent } from '../store.js';
 
@@ -72,14 +72,14 @@ class RoomOptions extends StoreComponent
     if (!roomData)
       return;
 
-    const master = roomData.master === socket.id;
+    const { master, players, options } = roomData;
 
     // if dirty options is undefined
     if (master && !this.state.dirtyOptions)
-      state.dirtyOptions = roomData.options;
+      state.dirtyOptions = options;
       
     if (!master)
-      state.dirtyOptions = roomData.options;
+      state.dirtyOptions = options;
 
     // reset a few states on room state changes
     if (this.state.roomData?.state !== roomData.state)
@@ -88,7 +88,7 @@ class RoomOptions extends StoreComponent
 
       state.highScore = 0;
 
-      Object.values(roomData.playerProperties).forEach(({ score }) =>
+      players.forEach(({ score }) =>
       {
         if (score > state.highScore)
           state.highScore= score;
@@ -223,12 +223,11 @@ class RoomOptions extends StoreComponent
       optionsUrlCopied
     } = this.state;
 
-    const options = roomData?.options;
+    if (!roomData)
+      return <div/>;
 
-    const isMaster = roomData?.master === socket.id;
+    const { master, options } = roomData;
 
-    const master = roomData?.playerProperties[roomData?.master ?? roomData?.players[0]]?.username;
-    
     const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
 
     if (!dirtyOptions)
@@ -248,7 +247,7 @@ class RoomOptions extends StoreComponent
         <div className={ styles.title }>{ translation('game-mode') }</div>
 
         {
-          isMaster ?
+          master ?
             <Select
               id={ 'room-options-select-game-mode' }
 
@@ -304,7 +303,7 @@ class RoomOptions extends StoreComponent
       return <div>
         <div className={ styles.title }>{ `${translation('options')} ${translation('kuruit')}` }</div>
 
-        <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds) }>
+        <div className={ styles.pick } data-master={ master } data-dirty={ dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds) }>
           <div
             id={ 'room-options-kuruit-limited' }
             className={ styles.checkbox }
@@ -323,7 +322,7 @@ class RoomOptions extends StoreComponent
             max={ '30' }
             maxLength={ 2 }
             id={ 'room-options-input' }
-            data-master={ isMaster }
+            data-master={ master }
             className={ styles.input }
             placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxRounds }
@@ -338,7 +337,7 @@ class RoomOptions extends StoreComponent
           <div>{ translation('max-rounds', dirtyOptions.maxRounds) }</div>
         </div>
 
-        <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime) }>
+        <div className={ styles.pick } data-master={ master } data-dirty={ dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime) }>
           <div
             id={ 'room-options-kuruit-timer' }
             className={ styles.checkbox }
@@ -358,7 +357,7 @@ class RoomOptions extends StoreComponent
             max={ '30' }
             maxLength={ 2 }
             id={ 'room-options-input' }
-            data-master={ isMaster }
+            data-master={ master }
             className={ styles.input }
             placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxTime }
@@ -375,7 +374,7 @@ class RoomOptions extends StoreComponent
 
         {
           features.randos ?
-            <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.randos !== options.randos }>
+            <div className={ styles.pick } data-master={ master } data-dirty={ dirtyOptions.randos !== options.randos }>
               <div
                 id={ 'room-options-randos' }
                 className={ styles.checkbox }
@@ -398,7 +397,7 @@ class RoomOptions extends StoreComponent
               max={ '16' }
               maxLength={ 2 }
               id={ 'room-options-input' }
-              data-master={ isMaster }
+              data-master={ master }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.maxPlayers }
@@ -422,7 +421,7 @@ class RoomOptions extends StoreComponent
               max={ '5' }
               maxLength={ 1 }
               id={ 'room-options-input' }
-              data-master={ isMaster }
+              data-master={ master }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.roundTime }
@@ -446,7 +445,7 @@ class RoomOptions extends StoreComponent
                 max={ '12' }
                 maxLength={ 2 }
                 id={ 'room-options-input' }
-                data-master={ isMaster }
+                data-master={ master }
                 className={ styles.input }
                 placeholder={ translation('options-placeholder') }
                 value={ dirtyOptions.startingHandAmount }
@@ -464,7 +463,6 @@ class RoomOptions extends StoreComponent
 
           {
             mode === 'kuruit' ? <div className={ styles.field } data-dirty={ dirtyOptions.blankProbability !== options.blankProbability }>
-
               <AutoSizeInput
                 required
                 type={ 'number' }
@@ -472,7 +470,7 @@ class RoomOptions extends StoreComponent
                 max={ '25' }
                 maxLength={ 2 }
                 id={ 'room-options-input' }
-                data-master={ isMaster }
+                data-master={ master }
                 className={ styles.input }
                 placeholder={ translation('options-placeholder') }
                 value={ dirtyOptions.blankProbability }
@@ -513,7 +511,7 @@ class RoomOptions extends StoreComponent
         {
           options ?
             <>
-              <MatchHighlight playerProperties={ roomData?.playerProperties } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
+              <MatchHighlight players={ roomData?.players } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
 
               { GameModeSelect() }
 
@@ -524,10 +522,10 @@ class RoomOptions extends StoreComponent
               {/* Start Button */}
 
               {
-                isMaster ? <div id={ 'room-options-start' } className={ styles.start } onClick={ this.matchRequest }>
+                master ? <div id={ 'room-options-start' } className={ styles.start } onClick={ this.matchRequest }>
                   <div>{ translation('start') }</div>
                 </div> : <div className={ styles.wait }>
-                  <div>{ translation('wait-for-room-master', master) }</div>
+                  <div>{ translation('wait-for-room-master') }</div>
                   <WaitingIcon/>
                 </div>
               }

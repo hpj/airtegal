@@ -55,18 +55,14 @@ class RoomTrackBar extends StoreComponent
 
     //  separate the judge from the rest of the players
 
-    const judges = roomData?.players.filter(id => roomData?.playerProperties[id].state === 'judging').map(id =>
+    const judges = roomData?.players.filter(player => player.state === 'judging').map((player, index) =>
     {
-      const player = roomData?.playerProperties[id];
-
-      return <Player key={ id } turn={ roomData?.phase === 'judging' } username={ player?.username }/>;
+      return <Player key={ index } turn={ roomData?.phase === 'judging' } username={ player?.username }/>;
     });
 
-    const players = roomData?.players.filter(id => roomData?.playerProperties[id].state !== 'judging').map(id =>
+    const players = roomData?.players.filter(player => player.state !== 'judging').map((player, index) =>
     {
-      const player = roomData?.playerProperties[id];
-        
-      return <Player key={ id } turn={ player?.state === 'picking' } username={ player?.username }/>;
+      return <Player key={ index } turn={ player?.state === 'picking' } username={ player?.username }/>;
     });
 
     return <div className={ styles.wrapper }>
