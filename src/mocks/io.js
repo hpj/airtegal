@@ -545,7 +545,7 @@ function startDemocracy()
 
     room.players[0].state = room.playerProperties.state = 'picking';
 
-    room.playerProperties[1].state = 'judging';
+    room.players[1].state = 'judging';
   
     matchBroadcast(room);
   

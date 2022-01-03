@@ -602,6 +602,19 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Democracy (Picking)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }

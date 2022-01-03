@@ -203,6 +203,7 @@ class FieldOverlay extends StoreComponent
                           winner= { highlight }
                           locale={ locale }
                           translation={ translation }
+                          gameMode={ roomData.options.gameMode }
                           share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
                           onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }

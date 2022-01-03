@@ -189,13 +189,15 @@ class HandOverlay extends StoreComponent
       handBlockDragging
     } = this.state;
 
+    const gameMode = roomData?.options.gameMode;
+
     const hand = roomData?.playerSecretProperties?.hand ?? [];
 
     const miniView = isTouchScreen || size.width < 700;
 
     const overlayWidth = size.width >= 700 ? '(min(100vw, 700px) / 1.45)' : '(min(85vw, 700px) / 1.45)';
 
-    const margin = `calc((${Card.width} - (${overlayWidth} / ${hand?.length})) / -2)`;
+    const margin = `calc((${Card.size.width} - (${overlayWidth} / ${hand?.length})) / -2)`;
 
     const snapPoints = isTouchScreen ? [
       { y: size.height, draggable: false },
@@ -274,9 +276,10 @@ class HandOverlay extends StoreComponent
 
                   return <Card
                     key={ card.key }
+                    gameMode={ gameMode }
                     style={ {
-                      marginLeft: !miniView ? margin : undefined,
-                      marginRight: !miniView ? margin : undefined,
+                      marginLeft: !miniView && gameMode === 'kuruit' ? margin : undefined,
+                      marginRight: !miniView && gameMode === 'kuruit' ? margin : undefined,
                       transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
                     } }
                     onClick={ c => this.activateCard(c, card, i) }
@@ -371,7 +374,7 @@ const styles = createStyle({
         border: `1px solid ${colors.blackCardHover}`
       },
 
-      ':hover': {
+      '[data-gamemode="kuruit"]:hover': {
         margin: '20px 10px !important',
         zIndex: 10
       }

@@ -11,8 +11,6 @@ import stack from '../stack.js';
 
 import { createStyle, createAnimation } from 'flcss';
 
-import { withTranslation } from '../i18n.js';
-
 import confettiAnimation from '../animations/confetti.json';
 
 const colors = getTheme();
@@ -37,9 +35,25 @@ class Card extends React.Component
     this.back = this.back.bind(this);
   }
 
-  static get width()
+  static get size()
   {
-    return 'calc(115px + 2vw + 2vh)';
+    const x = 'calc(115px + 2vw + 2vh)';
+
+    return {
+      width: x,
+      height: x
+    };
+  }
+
+  static get wide()
+  {
+    const width = 'calc(325px + 2vw + 2vh)';
+    const height = 'calc(52px + 2vw + 2vh)';
+
+    return {
+      width,
+      height
+    };
   }
 
   back()
@@ -60,7 +74,7 @@ class Card extends React.Component
   {
     const {
       content,
-      style,
+      style, gameMode,
       owner, blank,
       type, onClick,
       locale, translation
@@ -76,7 +90,7 @@ class Card extends React.Component
     winner = winner ?? false;
     share = share ?? false;
 
-    return <div className={ styles.wrapper } style={ style }>
+    return <div className={ styles.wrapper } data-gamemode={ gameMode } style={ style }>
       {
         winner ?
           <Lottie
@@ -104,7 +118,7 @@ class Card extends React.Component
         } }
       >
         {
-          hidden ? <div className={ styles.hidden } style={ { direction: locale.direction } }>
+          hidden ? <div className={ styles.hidden } data-gamemode={ gameMode } style={ { direction: locale.direction } }>
             <div>{ translation('kuruit') }</div>
           </div> : undefined
         }
@@ -126,6 +140,8 @@ class Card extends React.Component
               maxLength={ 105 }
 
               placeholder={ blank ? translation('blank') : undefined }
+
+              data-gamemode={ gameMode }
 
               onKeyDown={ e =>
               {
@@ -164,7 +180,7 @@ class Card extends React.Component
           </div> : undefined
         }
 
-        <div className={ styles.bottom } style={ { direction: locale.direction } }>
+        <div className={ styles.bottom } data-gamemode={ gameMode } style={ { direction: locale.direction } }>
           {
             hidden ? '' :
               owner && type === 'white' ? owner :
@@ -206,7 +222,11 @@ const styles = createStyle({
   wrapper: {
     zIndex: 2,
     position: 'relative',
-    width: Card.width
+    width: Card.size.width,
+
+    '[data-gamemode="democracy"]': {
+      width: Card.wide.width
+    }
   },
 
   container: {
@@ -264,8 +284,12 @@ const styles = createStyle({
     fontSize: 'calc(8px + 0.4vw + 0.4vh)',
     
     width: '100%',
-    minHeight: Card.width,
+    minHeight: Card.size.height,
     height: 'auto',
+
+    '[data-gamemode="democracy"]': {
+      minHeight: Card.size.height
+    },
 
     '> div': {
       margin: '45px 0 0'
@@ -303,10 +327,14 @@ const styles = createStyle({
     resize: 'none',
     overflow: 'hidden',
 
-    height: Card.width,
+    height: Card.size.height,
 
     padding: 0,
     border: 0,
+
+    '[data-gamemode="democracy"]': {
+      height: Card.wide.height
+    },
 
     ':focus': {
       'outline': 'none'
@@ -327,6 +355,10 @@ const styles = createStyle({
 
     userSelect: 'none',
     overflow: 'hidden',
+
+    '[data-gamemode="democracy"]': {
+      display: 'none'
+    },
 
     fontSize: 'calc(5px + 0.4vw + 0.4vh)'
   },

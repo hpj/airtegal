@@ -16,7 +16,7 @@ class Wide extends React.Component
     const { float, content } = this.props;
 
     return <div className={ styles.wrapper }>
-      <div className={ `${styles.container} ${float ? styles.float : undefined}` }>
+      <div className={ `${styles.container} ${float && process.env.NODE_ENV !== 'test' ? styles.float : undefined}` }>
         { content }
       </div>
     </div>;
@@ -69,7 +69,7 @@ const styles = createStyle({
     animationDuration: '.3s, 1.5s',
     animationDelay: '0s, .3s',
     animationTimingFunction: 'ease-out, ease-in-out',
-    animationIterationCount: process.env.NODE_ENV === 'test' ? '0' : '1, infinite',
+    animationIterationCount: '1, infinite',
     animationFillMode: 'forwards',
     animationDirection: 'normal, alternate'
   }
