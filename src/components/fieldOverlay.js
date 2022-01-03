@@ -8,13 +8,14 @@ import { sendMessage } from '../utils.js';
 
 import { shareRef } from '../screens/game.js';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
 import Interactable from './interactable.js';
 
 import Card from './card.js';
+import Wide from './wide.js';
 
 const colors = getTheme();
 
@@ -122,6 +123,7 @@ class FieldOverlay extends StoreComponent
 
     const playerState = roomData?.playerProperties.state;
 
+    const phase = roomData?.phase;
     const gameMode = roomData?.options.gameMode;
     
     const onMovement = ({ x }) =>
@@ -182,6 +184,11 @@ class FieldOverlay extends StoreComponent
               {
                 const allowed = playerState === 'judging' && entryIndex > 0;
 
+                if (gameMode === 'democracy' && entryIndex === 0)
+                {
+                  return <Wide key={ key } content={ cards[0].content } float={ phase === 'picking' }/>;
+                }
+                else
                 {
                   return <div className={ styles.entry } key={ key }>
                     {
@@ -244,7 +251,7 @@ const styles = createStyle({
 
     userSelect: 'none',
 
-    color: colors.blackText,
+    color: opacity(colors.blackText, colors.semitransparent),
     backgroundColor: colors.trackBarBackground,
   
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
@@ -268,6 +275,13 @@ const styles = createStyle({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center'
+  },
+
+  democracy: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%'
   },
 
   entry: {

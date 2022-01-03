@@ -426,7 +426,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
+          "value": "/play?quiet&create&highlights"
         },
         {
           "action": "wait",
@@ -481,7 +481,7 @@
         },
         {
           "action": "select",
-          "value": "#match-highlights > :nth-child(2)"
+          "value": "#match-highlights > :nth-child(3)"
         },
         {
           "action": "click",
@@ -583,6 +583,19 @@
         {
           "action": "click",
           "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Democracy (Spectating Picking)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2&mock=spectating-picking"
         },
         {
           "action": "wait",

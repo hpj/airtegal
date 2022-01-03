@@ -15,6 +15,7 @@ export default function()
     theme: 'light',
     
     transparent: 'transparent',
+    semitransparent: 0.75,
 
     error: '#ad1818',
 

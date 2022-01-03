@@ -135,7 +135,7 @@ const styles = createStyle({
     display: 'flex',
     position: 'relative',
 
-    opacity: 0.65,
+    opacity: colors.semitransparent,
     
     color: colors.blackText,
 
@@ -168,6 +168,8 @@ const styles = createStyle({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+
+    color: colors.blackText,
 
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
 

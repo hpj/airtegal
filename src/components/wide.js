@@ -61,7 +61,7 @@ const styles = createStyle({
     
     textAlign: 'center',
     
-    color: colors.blackText
+    color: colors.blackCardForeground
   },
 
   float: {
