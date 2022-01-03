@@ -76,9 +76,6 @@ class MatchHighlights extends StoreComponent
 
     const { highScore, entries } = this.state;
 
-    if (!entries?.length && !highScore)
-      return <div/>;
-
     const highScorers = players
       .filter(({ score }) => score === highScore)
       .map(({ username }) => username)
@@ -87,24 +84,26 @@ class MatchHighlights extends StoreComponent
     return (
       <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
         {
-          process.env.NODE_ENV !== 'test' ?
+          process.env.NODE_ENV !== 'test' && highScore > 0 ?
             <Lottie className={ styles.confetti } loop={ true } animationData={ confettiAnimation }/> :
             undefined
         }
         
-        <div className={ styles.highScorers }>
-          {
-            [
-              translation('congrats'),
-              highScorers,
-              translation('highScorers', highScorers.length),
-              translation('by'),
-              translation('score', highScore, true)
-            ].join(' ')
-          }
-          { '.' }
-        </div>
-          
+        {
+          highScore > 0 ? <div className={ styles.highScorers }>
+            {
+              [
+                translation('congrats'),
+                highScorers,
+                translation('highScorers', highScorers.length),
+                translation('by'),
+                translation('score', highScore, true)
+              ].join(' ')
+            }
+            { '.' }
+          </div> : undefined
+        }
+        
         {
           entries.slice(0, maxEntries)
             .map(e => fillTheBlanks(e[0], e.slice(1)))
@@ -136,7 +135,10 @@ const styles = createStyle({
     justifyContent: 'center',
 
     gap: '25px',
-    margin: '25px'
+
+    ':not(:empty)': {
+      margin: '25px'
+    }
   },
 
   entry: {
