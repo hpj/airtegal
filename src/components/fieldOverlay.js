@@ -4,7 +4,7 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import { socket, sendMessage } from '../utils.js';
+import { sendMessage } from '../utils.js';
 
 import { shareRef } from '../screens/game.js';
 
@@ -195,7 +195,6 @@ class FieldOverlay extends StoreComponent
                           allowed={ allowed }
                           winner= { highlight }
                           share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
-                          self={ roomData?.phase === 'transaction' && id === socket.id && card.type === 'white' }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
                           onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
                         />;

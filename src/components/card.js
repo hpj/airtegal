@@ -55,7 +55,7 @@ class Card extends React.Component
   {
     const {
       content,
-      style, self,
+      style,
       owner, blank,
       type, onClick,
       locale, translation
@@ -73,7 +73,7 @@ class Card extends React.Component
 
     return <div className={ styles.wrapper } style={ style }>
       {
-        winner && self && process.env.NODE_ENV !== 'test' ?
+        winner && process.env.NODE_ENV !== 'test' ?
           <Lottie className={ styles.confetti } loop={ false } animationData={ confettiAnimation }/> : undefined
       }
 

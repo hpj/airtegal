@@ -12,7 +12,7 @@ import getTheme, { opacity } from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
-import { socket, fillTheBlanks } from '../utils';
+import { fillTheBlanks } from '../utils';
 
 import { StoreComponent } from '../store.js';
 
@@ -87,7 +87,7 @@ class MatchHighlights extends StoreComponent
     return (
       <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
         {
-          highScorers.includes(socket.id) && process.env.NODE_ENV !== 'test' ?
+          process.env.NODE_ENV !== 'test' ?
             <Lottie className={ styles.confetti } loop={ true } animationData={ confettiAnimation }/> :
             undefined
         }
