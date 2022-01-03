@@ -60,7 +60,7 @@ export let requestRoomData;
 
 /**
 * @typedef { Object } RoomOptionsT
-* @property { 'kuruit' } gameMode
+* @property { 'kuruit' | 'democracy' } gameMode
 * @property { 'limited' | 'timer' } endCondition
 * @property { number } maxPlayers
 * @property { number } maxRounds
@@ -71,6 +71,16 @@ export let requestRoomData;
 * @property { number } roundDelay
 * @property { number } roundMaxDelay
 * @property { number } roundTime
+*/
+
+/**
+* @typedef { Object } Entry
+* @property { string } id
+* @property { string } key
+* @property { ArrayBuffer } tts
+* @property { string[] } votes
+* @property { boolean } highlight
+* @property { Card[] } cards
 */
 
 /**
@@ -87,7 +97,7 @@ export let requestRoomData;
 * @property { Object<string, PlayerProperties> } playerProperties
 * @property { { hand: Card[] } } playerSecretProperties
 * @property { RoomOptionsT } options
-* @property { { id: string, key: string, highlighted: boolean, cards: Card[] }[] } field
+* @property { Entry[] } field
 */
 
 /**

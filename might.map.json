@@ -345,7 +345,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&match&mock=spectator"
+          "value": "/play?quiet&match&mock=spectating"
         },
         {
           "action": "wait",
@@ -358,7 +358,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&join=t&mock=spectator"
+          "value": "/play?quiet&join=t&mock=spectating"
         },
         {
           "action": "wait",
