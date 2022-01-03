@@ -84,9 +84,13 @@ class MatchHighlights extends StoreComponent
     return (
       <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
         {
-          process.env.NODE_ENV !== 'test' && highScore > 0 ?
-            <Lottie className={ styles.confetti } loop={ true } animationData={ confettiAnimation }/> :
-            undefined
+          highScore > 0 ?
+            <Lottie
+              className={ styles.confetti }
+              loop={ process.env.NODE_ENV === 'test' ? false : true }
+              initialSegment={ process.env.NODE_ENV === 'test' ? [ 5, 6 ] : undefined }
+              animationData={ confettiAnimation }
+            /> : undefined
         }
         
         {
