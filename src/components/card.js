@@ -1,6 +1,8 @@
 
 import React, { createRef } from 'react';
 
+import TextareaAutosize from 'react-textarea-autosize';
+
 import ShareIcon from 'mdi-react/ShareVariantIcon';
 
 import Lottie from 'lottie-react';
@@ -48,7 +50,7 @@ class Card extends React.Component
   static get wide()
   {
     const width = 'calc(325px + 2vw + 2vh)';
-    const height = 'calc(52px + 2vw + 2vh)';
+    const height = '24px';
 
     return {
       width,
@@ -80,6 +82,8 @@ class Card extends React.Component
       locale, translation
     } = this.props;
 
+    let bottom = '';
+
     const input = this.state.content;
 
     let { allowed, hidden, winner, share } = this.props;
@@ -89,6 +93,15 @@ class Card extends React.Component
     hidden = hidden ?? false;
     winner = winner ?? false;
     share = share ?? false;
+
+    if (owner && type === 'white')
+      bottom = owner;
+    else if (gameMode === 'kuruit' && blank && !hidden)
+      bottom = translation('blank');
+    else if (gameMode === 'kuruit' && !hidden)
+      bottom = translation('kuruit');
+    else if (gameMode === 'democracy')
+      bottom = translation('democracy');
 
     return <div className={ styles.wrapper } data-gamemode={ gameMode } style={ style }>
       {
@@ -103,6 +116,7 @@ class Card extends React.Component
 
       <div
         data-type={ type }
+        data-gamemode={ gameMode }
         data-allowed={ (allowed || share) && !hidden }
         data-winner={ winner }
         className={ styles.container }
@@ -118,14 +132,14 @@ class Card extends React.Component
         } }
       >
         {
-          hidden ? <div className={ styles.hidden } data-gamemode={ gameMode } style={ { direction: locale.direction } }>
+          hidden ? <div className={ styles.hidden } data-gamemode={ gameMode } data-type={ type } style={ { direction: locale.direction } }>
             <div>{ translation('kuruit') }</div>
           </div> : undefined
         }
 
         {
           !hidden ? <div className={ styles.card } data-type={ type } style={ { direction: locale.direction } }>
-            <textarea
+            <TextareaAutosize
               ref={ this.textareaRef }
 
               className={ styles.content }
@@ -140,7 +154,8 @@ class Card extends React.Component
               maxLength={ 105 }
 
               placeholder={ blank ? translation('blank') : undefined }
-
+              
+              data-type={ type }
               data-gamemode={ gameMode }
 
               onKeyDown={ e =>
@@ -180,13 +195,8 @@ class Card extends React.Component
           </div> : undefined
         }
 
-        <div className={ styles.bottom } data-gamemode={ gameMode } style={ { direction: locale.direction } }>
-          {
-            hidden ? '' :
-              owner && type === 'white' ? owner :
-                blank ? translation('blank') : translation('kuruit')
-          }
-
+        <div className={ styles.bottom } data-gamemode={ gameMode } data-type={ type } style={ { direction: locale.direction } }>
+          { bottom }
           <ShareIcon className={ styles.share } style={ {
             width: !share ? 0 : undefined
           } } />
@@ -233,7 +243,7 @@ const styles = createStyle({
     fontWeight: 700,
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    padding: '10px 10px 0',
+    padding: '15px 10px 0',
     boxShadow: '0 0 0 0',
 
     transition: 'box-shadow 0.25s ease',
@@ -272,6 +282,10 @@ const styles = createStyle({
     '[data-type="white"]': {
       color: colors.whiteCardForeground,
       backgroundColor: colors.whiteCardBackground
+    },
+
+    '[data-gamemode="democracy"][data-type="black"]': {
+      padding: '15px 10px'
     }
   },
 
@@ -286,10 +300,6 @@ const styles = createStyle({
     width: '100%',
     minHeight: Card.size.height,
     height: 'auto',
-
-    '[data-gamemode="democracy"]': {
-      minHeight: Card.size.height
-    },
 
     '> div': {
       margin: '45px 0 0'
@@ -327,13 +337,22 @@ const styles = createStyle({
     resize: 'none',
     overflow: 'hidden',
 
-    height: Card.size.height,
+    minHeight: Card.size.height,
 
     padding: 0,
     border: 0,
 
     '[data-gamemode="democracy"]': {
-      height: Card.wide.height
+      textAlign: 'center !important',
+      margin: 'auto'
+    },
+    
+    '[data-gamemode="democracy"][data-type="black"]': {
+      minHeight: 'unset'
+    },
+
+    '[data-gamemode="democracy"][data-type="white"]': {
+      minHeight: Card.wide.height
     },
 
     ':focus': {
@@ -356,11 +375,12 @@ const styles = createStyle({
     userSelect: 'none',
     overflow: 'hidden',
 
-    '[data-gamemode="democracy"]': {
-      display: 'none'
-    },
+    fontSize: 'calc(5px + 0.4vw + 0.4vh)',
 
-    fontSize: 'calc(5px + 0.4vw + 0.4vh)'
+
+    '[data-gamemode="democracy"][data-type="black"]': {
+      display: 'none'
+    }
   },
 
   share: {

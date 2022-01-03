@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 
-import { createStyle } from 'flcss';
+import { createAnimation, createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
@@ -15,7 +15,6 @@ import { withTranslation } from '../i18n.js';
 import Interactable from './interactable.js';
 
 import Card from './card.js';
-import Wide from './wide.js';
 
 const colors = getTheme();
 
@@ -178,18 +177,14 @@ class FieldOverlay extends StoreComponent
             }
           </div>
           
-          <div id={ 'kuruit-field-overlay' } className={ styles[gameMode] } style={ { direction: locale.direction } }>
+          <div id={ 'kuruit-field-overlay' } className={ styles[gameMode] } data-phase={ phase } style={ { direction: locale.direction } }>
             {
-              field.map(({ key, id, cards, highlight, votes }, entryIndex) =>
-              {
-                const allowed = playerState === 'judging' && entryIndex > 0;
+              field
+                .slice(0, gameMode === 'democracy' && phase === 'picking' ? 1 : undefined)
+                .map(({ key, id, cards, highlight, votes }, entryIndex) =>
+                {
+                  const allowed = playerState === 'judging' && entryIndex > 0;
 
-                if (gameMode === 'democracy' && entryIndex === 0)
-                {
-                  return <Wide key={ key } content={ cards[0].content } float={ phase === 'picking' }/>;
-                }
-                else
-                {
                   return <div className={ styles.entry } key={ key }>
                     {
                       cards?.map((card, cardIndex) =>
@@ -200,10 +195,11 @@ class FieldOverlay extends StoreComponent
                           content={ card.content }
                           hidden={ !card.content }
                           allowed={ allowed }
+                          votes={ votes }
                           winner= { highlight }
                           locale={ locale }
                           translation={ translation }
-                          gameMode={ roomData.options.gameMode }
+                          gameMode={ gameMode }
                           share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
                           owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
                           onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
@@ -211,8 +207,7 @@ class FieldOverlay extends StoreComponent
                       })
                     }
                   </div>;
-                }
-              })
+                })
             }
           </div>
         </div>
@@ -220,6 +215,26 @@ class FieldOverlay extends StoreComponent
     </div>;
   }
 }
+
+const hoverAnimation = createAnimation({
+  duration: '1.5s',
+  delay: '0.3s',
+  timingFunction: 'ease-in-out',
+  iterationCount: process.env.NODE_ENV === 'test' ? '0' : 'infinite',
+  fillMode: 'forwards',
+  direction: 'alternate',
+  keyframes: {
+    '0%': {
+      transform: 'translateY(-10px) rotateZ(2deg)'
+    },
+    '50%': {
+      transform: 'translateY(-5px) rotateZ(-2deg)'
+    },
+    '100%': {
+      transform: 'translateY(-10px) rotateZ(2deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   view: {
@@ -284,7 +299,16 @@ const styles = createStyle({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%'
+    height: '100%',
+
+    '[data-phase="picking"]': {
+      height: '50%',
+      
+      '> div': {
+        animation: hoverAnimation,
+        transform: 'translateY(-10px) rotateZ(2deg)'
+      }
+    }
   },
 
   entry: {
