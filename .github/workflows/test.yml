@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:focal
     steps:
-      - uses: actions/checkout@2
-      - uses: actions/setup-node@2
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
         with:
           node-version: '16.13.1'
       - name: Install Dependencies
