@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "start": "webpack serve --config webpack.config.dev.js --mode development",
-    "build": "webpack --config webpack.config.prod.js --mode production",
     "start:test": "yarn start --node-env test",
-    "build:test": "yarn build --node-env test",
+    "build": "webpack --config webpack.config.prod.js --mode production",
+    "build:test": "webpack --config webpack.config.dev.js --mode development --node-env test",
     "test": "docker run --rm -it --name airtegal_test_container --mount type=bind,src=`pwd`,dst=/app --volume /app/node_modules airtegal_test:latest might",
     "tests:docker": "docker build --tag airtegal_test:latest --file Dockerfile.test .",
     "tests:update": "yarn test -u"

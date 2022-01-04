@@ -1,5 +1,3 @@
-import QRCode from 'qrcode';
-
 import { EventEmitter } from 'events';
 
 export const socket = {
@@ -14,10 +12,13 @@ export const socket = {
 
 const params = new URL(document.URL).searchParams;
 
-if (!params.has('reserveLocalStorage'))
+if (process.env.NODE_ENV === 'test')
 {
+  if (!params.has('reserveLocalStorage'))
+  {
   // eslint-disable-next-line no-global-assign
-  localStorage.getItem = null;
+    localStorage.getItem = null;
+  }
 }
 
 /**
@@ -189,6 +190,8 @@ async function emit(eventName, args)
   else if (eventName === 'qr')
   {
     const url = `${location.protocol}//${location.host}${location.pathname}?join=skyeee`;
+
+    const QRCode = await import('qrcode');
 
     returnValue = await QRCode.toString(url, {
       type: 'svg',
