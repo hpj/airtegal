@@ -511,7 +511,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&list"
+          "value": "/play?quiet&list&reserveLocalStorage"
         },
         {
           "action": "wait",

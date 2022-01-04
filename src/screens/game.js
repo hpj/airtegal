@@ -75,7 +75,7 @@ class Game extends React.Component
       error: '',
       loading: true,
 
-      username: localStorage.getItem('username')?.trim() || '',
+      username: localStorage.getItem?.('username')?.trim() || '',
 
       size: {
         width: window.innerWidth,

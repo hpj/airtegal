@@ -14,10 +14,16 @@ export const socket = {
 
 const params = new URL(document.URL).searchParams;
 
+if (!params.has('reserveLocalStorage'))
+{
+  // eslint-disable-next-line no-global-assign
+  localStorage.getItem = null;
+}
+
 /**
 * @type { import('../components/roomOverlay').RoomData }
 */
-const defaultRoom = {
+const defaultRoomData = {
   id: 'roomid',
   
   master: true,
@@ -160,7 +166,7 @@ async function emit(eventName, args)
   {
     matchBroadcast({
       options: {
-        ...defaultRoom.options,
+        ...defaultRoomData.options,
         ...args.options
       }
     });
@@ -171,7 +177,14 @@ async function emit(eventName, args)
   }
   else if (eventName === 'username')
   {
-    returnValue = 'اسلام المرج';
+    if (args.username)
+    {
+      defaultRoomData.playerProperties.username =
+      defaultRoomData.players[0].username =
+      args.username;
+    }
+
+    returnValue = args.username ?? 'اسلام المرج';
   }
   else if (eventName === 'qr')
   {
@@ -185,9 +198,9 @@ async function emit(eventName, args)
   }
   else if (eventName === 'matchRequest')
   {
-    if (defaultRoom.options.gameMode === 'kuruit')
+    if (defaultRoomData.options.gameMode === 'kuruit')
       startKuruit();
-    else if (defaultRoom.options.gameMode === 'democracy')
+    else if (defaultRoomData.options.gameMode === 'democracy')
       startDemocracy();
   }
   else if (eventName === 'matchLogic')
@@ -201,20 +214,20 @@ async function emit(eventName, args)
   return true;
 }
 
-function matchBroadcast(data)
+function matchBroadcast(roomData)
 {
-  const message = {
-    ...defaultRoom,
-    ...data
+  roomData = {
+    ...defaultRoomData,
+    ...roomData
   };
 
   if (params.has('highlights'))
   {
-    message.players[0].score = 3;
-    message.players[1].score = 3;
+    roomData.players[0].score = 3;
+    roomData.players[1].score = 3;
   }
 
-  setTimeout(() => emitter.emit('roomData', message));
+  setTimeout(() => emitter.emit('roomData', roomData));
 }
 
 function startKuruit()
