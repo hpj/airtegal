@@ -17,11 +17,11 @@ import { ensureSplashScreen, hideSplashScreen } from '../index.js';
 
 import { socket, connect, hasCamera, sendMessage } from '../utils.js';
 
-import AutoSizeInput from '../components/autoSizeInput.js';
-
 import ErrorScreen from '../components/error.js';
 
 import TutorialOverlay from '../components/tutorialOverlay';
+
+import UsernameOverlay from '../components/usernameOverlay.js';
 
 import ShareOverlay from '../components/shareOverlay.js';
 
@@ -37,11 +37,6 @@ const placeholder = document.body.querySelector('#placeholder');
 const colors = getTheme();
 
 /**
-* @type { React.RefObject<AutoSizeInput> }
-*/
-const usernameRef = createRef();
-
-/**
 * @type { React.RefObject<RoomOverlay> }
 */
 const overlayRef = createRef();
@@ -50,6 +45,11 @@ const overlayRef = createRef();
 * @type { React.RefObject<ShareOverlay> }
 */
 export const shareRef = createRef();
+
+/**
+* @type { React.RefObject<UsernameOverlay> }
+*/
+export const usernameRef = createRef();
 
 /**
 * @type { React.RefObject<CodeOverlay> }
@@ -110,8 +110,6 @@ class Game extends React.Component
           username
         }, () =>
         {
-          usernameRef.current?.resize();
-
           // process url parameters
           const params = new URL(document.URL).searchParams;
 
@@ -222,28 +220,13 @@ class Game extends React.Component
     const { loading, error } = this.state;
 
     const Header = () => <div className={ headerStyles.container } style={ { direction: locale.direction } }>
-      { translation('username-prefix') }
+      <div id={ 'username' } className={ headerStyles.username } onClick={ () => usernameRef.current?.show(this.state.username) }>
+        { translation('username-prefix') }
 
-      <AutoSizeInput
-        required
-        type={ 'text' }
-        ref={ usernameRef }
-        className={ headerStyles.username }
-        style={ { direction: locale.direction } }
-        maxLength={ 18 }
-        value={ this.state.username }
-        placeholder={ translation('placeholder') }
-        onUpdate={ (value, resize, blur) =>
-        {
-          const trimmed = blur ? value.replace(/\s+/g, ' ').trim() : value.replace(/\s+/g, ' ');
-
-          localStorage.setItem('username', trimmed);
-
-          this.setState({
-            username: trimmed
-          }, resize);
-        } }
-      />
+        <div>
+          { this.state.username }
+        </div>
+      </div>
     </div>;
 
     const Options = () => <div className={ optionsStyles.container } style={ { direction: locale.direction } }>
@@ -344,6 +327,8 @@ class Game extends React.Component
 
       <ShareOverlay ref={ shareRef } size={ this.state.size }/>
 
+      <UsernameOverlay ref={ usernameRef } size={ this.state.size } setUsername={ username => this.setState({ username }) }/>
+
       <CodeOverlay ref={ codeRef } size={ this.state.size } join={ id => overlayRef.current?.joinRoom(id) }/>
 
       <RoomOverlay
@@ -414,7 +399,10 @@ const headerStyles = createStyle({
   },
 
   username: {
-    margin: '0 5px -2px 5px',
+    display: 'flex',
+    flexDirection: 'row',
+
+    cursor: 'text',
 
     color: colors.blackText,
     backgroundColor: colors.whiteBackground,
@@ -422,17 +410,10 @@ const headerStyles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    padding: 0,
-    border: 0,
+    '> div': {
 
-    borderBottom: `2px ${colors.blackText} solid`,
-
-    '::placeholder': {
-      color: colors.greyText
-    },
-
-    ':focus': {
-      'outline': 'none'
+      margin: '0 5px -2px 5px',
+      borderBottom: `2px ${colors.blackText} solid`
     }
   }
 });
