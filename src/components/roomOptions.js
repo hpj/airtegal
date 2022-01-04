@@ -7,13 +7,13 @@ import QRCodeIcon from 'mdi-react/QrcodeIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import WaitingIcon from 'mdi-react/LoadingIcon';
 
-import { socket, features, sendMessage } from '../utils.js';
+import { features, sendMessage } from '../utils.js';
 
 import { StoreComponent } from '../store.js';
 
 import { translation, withTranslation } from '../i18n.js';
 
-import { codeRef } from '../screens/game.js';
+import { codeRef, usernameRef } from '../screens/game.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
@@ -29,11 +29,6 @@ const colors = getTheme();
 
 const wrapperRef = createRef();
 
-/**
-* @typedef { object } State
-* @prop { import('./roomOverlay').RoomData } roomData
-* @extends {React.Component<{}, State>}
-*/
 class RoomOptions extends StoreComponent
 {
   constructor()
@@ -53,7 +48,7 @@ class RoomOptions extends StoreComponent
   }
 
   /**
-  * @param { { roomData: import('./roomOverlay').RoomData } } changes
+  * @param { import('../store.js').State } param0
   */
   stateWhitelist(changes)
   {
@@ -68,7 +63,7 @@ class RoomOptions extends StoreComponent
   }
 
   /**
-  * @param { { roomData: import('./roomOverlay').RoomData } } param0
+  * @param { import('../store.js').State } param0
   */
   stateWillChange({ roomData })
   {
@@ -77,19 +72,27 @@ class RoomOptions extends StoreComponent
     if (!roomData)
       return;
 
-    const master = roomData.master === socket.id;
+    const { master, players, options } = roomData;
 
     // if dirty options is undefined
     if (master && !this.state.dirtyOptions)
-      state.dirtyOptions = roomData.options;
+      state.dirtyOptions = options;
       
     if (!master)
-      state.dirtyOptions = roomData.options;
+      state.dirtyOptions = options;
 
     // reset a few states on room state changes
     if (this.state.roomData?.state !== roomData.state)
     {
       wrapperRef.current?.scrollTo({ top: 0 });
+
+      state.highScore = 0;
+
+      players.forEach(({ score }) =>
+      {
+        if (score > state.highScore)
+          state.highScore= score;
+      });
 
       state.optionsUrlCopied = false;
     }
@@ -119,6 +122,7 @@ class RoomOptions extends StoreComponent
       {
         this.store.set({
           entries: [],
+          highScore: 0,
           optionsLoading: false
         });
       }, 2500);
@@ -179,7 +183,7 @@ class RoomOptions extends StoreComponent
     codeRef.current?.show({ url });
   }
 
-  onGameModeChange(value)
+  onGameModeChange({ value })
   {
     this.store.set({
       dirtyOptions: {
@@ -219,12 +223,11 @@ class RoomOptions extends StoreComponent
       optionsUrlCopied
     } = this.state;
 
-    const options = roomData?.options;
+    if (!roomData)
+      return <div/>;
 
-    const isMaster = roomData?.master === socket.id;
+    const { master, options } = roomData;
 
-    const master = roomData?.playerProperties[roomData?.master ?? roomData?.players[0]]?.username;
-    
     const url = `${location.protocol}//${location.host}${location.pathname}?join=${roomData?.id}`;
 
     if (!dirtyOptions)
@@ -233,15 +236,18 @@ class RoomOptions extends StoreComponent
     const gameModes = [];
 
     if (features.kuruit)
-      gameModes.push({ label: translation('kuruit'), value: 'kuruit', group: translation('free-for-all') });
+      gameModes.push({ label: translation('mode:kuruit'), value: 'kuruit', group: translation('kuruit') });
 
-    const GameModes = () =>
+    if (features.democracy)
+      gameModes.push({ label: translation('mode:democracy'), value: 'democracy' });
+
+    const GameModeSelect = () =>
     {
       return <div>
         <div className={ styles.title }>{ translation('game-mode') }</div>
 
         {
-          isMaster ?
+          master ?
             <Select
               id={ 'room-options-select-game-mode' }
 
@@ -250,11 +256,12 @@ class RoomOptions extends StoreComponent
               optionsIdPrefix={ 'room-options-game-mode' }
           
               defaultIndex={ 0 }
+
               options={ gameModes }
 
               onChange={ mode => this.onGameModeChange(mode) }
             /> :
-            <div className={ styles.gameMode }>{ translation(dirtyOptions.gameMode) }</div>
+            <div className={ styles.gameMode }>{ translation(`mode:${dirtyOptions.gameMode}`) }</div>
         }
       </div>;
     };
@@ -291,12 +298,34 @@ class RoomOptions extends StoreComponent
       </>;
     };
 
-    const KuruitOptions = () =>
+    const RoomMisc = () =>
+    {
+      return <>
+        <div className={ styles.title }>{ translation('room-options') }</div>
+
+        <div className={ styles.buttons }>
+          <div id={ 'room-options-username' } className={ styles.misc } onClick={ () => usernameRef.current?.show(roomData.playerProperties.username) }>
+            <div>{ translation('change-username') }</div>
+          </div>
+          
+          {
+            master ? <div id={ 'room-options-start' } className={ styles.misc } onClick={ this.matchRequest }>
+              <div>{ translation('start') }</div>
+            </div> : <div className={ styles.misc }>
+              <div>{ translation('wait-for-room-master') }</div>
+              <WaitingIcon style={ { animation: waitingAnimation } }/>
+            </div>
+          }
+        </div>
+      </>;
+    };
+
+    const KuruitOptions = ({ mode }) =>
     {
       return <div>
         <div className={ styles.title }>{ `${translation('options')} ${translation('kuruit')}` }</div>
 
-        <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds) }>
+        <div className={ styles.pick } data-master={ master } data-dirty={ dirtyOptions.endCondition === 'limited' && (dirtyOptions.endCondition !== options.endCondition || options.maxRounds !== dirtyOptions.maxRounds) }>
           <div
             id={ 'room-options-kuruit-limited' }
             className={ styles.checkbox }
@@ -315,7 +344,7 @@ class RoomOptions extends StoreComponent
             max={ '30' }
             maxLength={ 2 }
             id={ 'room-options-input' }
-            data-master={ isMaster }
+            data-master={ master }
             className={ styles.input }
             placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxRounds }
@@ -330,7 +359,7 @@ class RoomOptions extends StoreComponent
           <div>{ translation('max-rounds', dirtyOptions.maxRounds) }</div>
         </div>
 
-        <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime) }>
+        <div className={ styles.pick } data-master={ master } data-dirty={ dirtyOptions.endCondition === 'timer' && (dirtyOptions.endCondition !== options.endCondition || options.maxTime !== dirtyOptions.maxTime) }>
           <div
             id={ 'room-options-kuruit-timer' }
             className={ styles.checkbox }
@@ -350,7 +379,7 @@ class RoomOptions extends StoreComponent
             max={ '30' }
             maxLength={ 2 }
             id={ 'room-options-input' }
-            data-master={ isMaster }
+            data-master={ master }
             className={ styles.input }
             placeholder={ translation('options-placeholder') }
             value={ dirtyOptions.maxTime }
@@ -367,7 +396,7 @@ class RoomOptions extends StoreComponent
 
         {
           features.randos ?
-            <div className={ styles.pick } data-master={ isMaster } data-dirty={ dirtyOptions.randos !== options.randos }>
+            <div className={ styles.pick } data-master={ master } data-dirty={ dirtyOptions.randos !== options.randos }>
               <div
                 id={ 'room-options-randos' }
                 className={ styles.checkbox }
@@ -390,7 +419,7 @@ class RoomOptions extends StoreComponent
               max={ '16' }
               maxLength={ 2 }
               id={ 'room-options-input' }
-              data-master={ isMaster }
+              data-master={ master }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.maxPlayers }
@@ -414,7 +443,7 @@ class RoomOptions extends StoreComponent
               max={ '5' }
               maxLength={ 1 }
               id={ 'room-options-input' }
-              data-master={ isMaster }
+              data-master={ master }
               className={ styles.input }
               placeholder={ translation('options-placeholder') }
               value={ dirtyOptions.roundTime }
@@ -429,60 +458,63 @@ class RoomOptions extends StoreComponent
             <div>{ translation('round-countdown') }</div>
           </div>
 
-          <div className={ styles.field } data-dirty={ dirtyOptions.startingHandAmount !== options.startingHandAmount }>
-            <AutoSizeInput
-              required
-              type={ 'number' }
-              min={ '3' }
-              max={ '12' }
-              maxLength={ 2 }
-              id={ 'room-options-input' }
-              data-master={ isMaster }
-              className={ styles.input }
-              placeholder={ translation('options-placeholder') }
-              value={ dirtyOptions.startingHandAmount }
-              onUpdate={ (value, resize) => this.store.set({
-                dirtyOptions: {
-                  ...dirtyOptions,
-                  startingHandAmount: value
-                }
-              }, resize) }
-            />
+          {
+            mode === 'kuruit' ? <div className={ styles.field } data-dirty={ dirtyOptions.startingHandAmount !== options.startingHandAmount }>
+              <AutoSizeInput
+                required
+                type={ 'number' }
+                min={ '3' }
+                max={ '12' }
+                maxLength={ 2 }
+                id={ 'room-options-input' }
+                data-master={ master }
+                className={ styles.input }
+                placeholder={ translation('options-placeholder') }
+                value={ dirtyOptions.startingHandAmount }
+                onUpdate={ (value, resize) => this.store.set({
+                  dirtyOptions: {
+                    ...dirtyOptions,
+                    startingHandAmount: value
+                  }
+                }, resize) }
+              />
 
-            <div>{ translation('hand-cap') }</div>
-          </div>
+              <div>{ translation('hand-cap') }</div>
+            </div> : undefined
+          }
 
-          <div className={ styles.field } data-dirty={ dirtyOptions.blankProbability !== options.blankProbability }>
-
-            <AutoSizeInput
-              required
-              type={ 'number' }
-              min={ '0' }
-              max={ '25' }
-              maxLength={ 2 }
-              id={ 'room-options-input' }
-              data-master={ isMaster }
-              className={ styles.input }
-              placeholder={ translation('options-placeholder') }
-              value={ dirtyOptions.blankProbability }
-              onUpdate={ (value, resize) => this.store.set({
-                dirtyOptions: {
-                  ...dirtyOptions,
-                  blankProbability: value
-                }
-              }, resize) }
-            />
-            <div style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } } data-suffix={ true }>%</div>
-            <div>{ translation('blank-probability') }</div>
-          </div>
+          {
+            mode === 'kuruit' ? <div className={ styles.field } data-dirty={ dirtyOptions.blankProbability !== options.blankProbability }>
+              <AutoSizeInput
+                required
+                type={ 'number' }
+                min={ '0' }
+                max={ '25' }
+                maxLength={ 2 }
+                id={ 'room-options-input' }
+                data-master={ master }
+                className={ styles.input }
+                placeholder={ translation('options-placeholder') }
+                value={ dirtyOptions.blankProbability }
+                onUpdate={ (value, resize) => this.store.set({
+                  dirtyOptions: {
+                    ...dirtyOptions,
+                    blankProbability: value
+                  }
+                }, resize) }
+              />
+              <div style={ { margin: locale.direction === 'ltr' ? '0 5px 0 -5px': '0 -5px 0 5px' } } data-suffix={ true }>{'%'}</div>
+              <div>{ translation('blank-probability') }</div>
+            </div> : undefined
+          }
         </div>
       </div>;
     };
 
-    let modeOptions;
+    let ModeOptions;
 
-    if (dirtyOptions.gameMode === 'kuruit')
-      modeOptions = KuruitOptions;
+    if (dirtyOptions.gameMode === 'kuruit' || dirtyOptions.gameMode === 'democracy')
+      ModeOptions = KuruitOptions;
 
     return <div ref={ wrapperRef } className={ styles.wrapper }>
       {
@@ -492,7 +524,7 @@ class RoomOptions extends StoreComponent
       }
 
       {
-        optionsError ? <div className={ styles.error } onClick={ () => this.stote.set({ optionsError: '' }) }>
+        optionsError ? <div className={ styles.error } onClick={ () => this.store({ optionsError: '' }) }>
           { optionsError }
         </div> : undefined
       }
@@ -501,24 +533,15 @@ class RoomOptions extends StoreComponent
         {
           options ?
             <>
-              <MatchHighlight maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
+              <MatchHighlight players={ roomData?.players } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
 
-              { GameModes() }
+              { GameModeSelect() }
 
               { RoomUrl() }
 
-              { modeOptions() }
+              { RoomMisc() }
 
-              {/* Start Button */}
-
-              {
-                isMaster ? <div id={ 'room-options-start' } className={ styles.start } onClick={ this.matchRequest }>
-                  <div>{ translation('start') }</div>
-                </div> : <div className={ styles.wait }>
-                  <div>{ translation('wait-for-room-master', master) }</div>
-                  <WaitingIcon/>
-                </div>
-              }
+              { ModeOptions({ mode: dirtyOptions.gameMode }) }
             </> : undefined
         }
       </div>
@@ -580,6 +603,7 @@ const styles = createStyle({
   
   loading: {
     zIndex: 1,
+
     display: 'flex',
     position: 'fixed',
 
@@ -686,37 +710,10 @@ const styles = createStyle({
     }
   },
 
-  start: {
-    'extend': 'button',
-    justifyContent: 'center',
-
-    padding: '15px 10px',
-    margin: '25px 35px 25px'
-  },
-
   title: {
     opacity: 0.5,
     fontSize: 'calc(8px + 0.15vw + 0.15vh)',
     padding: '20px 25px'
-  },
-
-  wait: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-
-    width: 'fit-content',
-    
-    margin: '0 auto',
-    padding: '25px 25px 5px',
-
-    '> svg': {
-      width: '24px',
-      height: '24px',
-      color: colors.blackText,
-      animation: waitingAnimation,
-      margin: '10px'
-    }
   },
 
   pick: {

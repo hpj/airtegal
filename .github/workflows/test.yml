@@ -1,11 +1,11 @@
 name: test
 
 on:
+  pull_request:
   push:
     branches:
     - development
     - release
-  pull_request:
     
 jobs:
   Might:
@@ -19,7 +19,7 @@ jobs:
       - name: Install Dependencies
         run: yarn install
       - name: Run Tests
-        run: yarn might
+        run: yarn might -p 4
       - name: Upload any errors
         if: failure()
         uses: actions/upload-artifact@v2

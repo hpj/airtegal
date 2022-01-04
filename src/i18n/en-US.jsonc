@@ -27,92 +27,6 @@
   "forbidden": "Forbidden",
   "internal-server-error": "Internal Server Error",
 
-  // lobby
-
-  "placeholder": "",
-  
-  "username-prefix": "",
-  
-  "create-room": "",
-  "random-room": "",
-  
-  "available-rooms": "",
-
-  // app options
-
-  "theme": "",
-  "region": "",
-  "save": "",
-
-  // matchmaking errors
-
-  "no-rooms-available": " ",
-  "room-does-not-exists": "   ",
-  
-  "user-does-not-have-permission": "",
-  "minimal-number-of-players-required": "",
-
-  // room master changes
-
-  "you-are-now-master": "",
-  "new-master": "",
-
-  // room options
-  
-  "match-highlights": "",
-
-  "room-edited": "",
-  "you-were-kicked": "",
-
-  "game-mode": "",
-
-  "free-for-all": "",
-  "co-op": "",
-  
-  "kuruit": "",
-
-  "options": "",
-
-  "end-condition": "",
-  
-  "options-placeholder": "0",
-
-  "after": "",
-
-  "max-rounds": "",
-  "max-time": "",
-
-  "max-players": "",
-  "round-countdown": "",
-
-  "hand-cap": "",
-  "hand-cap-lobby": "",
-
-  "blank-probability": "",
-  "blank-probability-lobby": "",
-
-  "randos": "",
-
-  "wait-for-room-master": "",
-
-  "start": "",
-
-  // states
-
-  "judge": "",
-  "players": "",
-  "spectating": "",
-  "judging": "",
-
-  // sharing
-
-  "copy": "",
-  "share": "",
-  "qr-code": "",
-  "download": "",
-
-  "join-me": "",
-
   // homepage
 
   // last updated 26 May, 2021
@@ -122,21 +36,5 @@
 
   "play": "Play",
   "terms-and-conditions": "Terms",
-  "privacy-policy": "Privacy",
-  
-  // the tutorial
-
-  "adults-only-title": "",
-  "prefer-voice-chat-title": "",
-  "pick-a-card-title": "",
-  "write-a-card-title": "",
-  "judge-a-card-title": "",
-  "join-our-discord-title": "",
-
-  "adults-only": "",
-  "prefer-voice-chat": "",
-  "pick-a-card": "",
-  "write-a-card": "",
-  "judge-a-card": "",
-  "join-our-discord": ""
+  "privacy-policy": "Privacy"
 }

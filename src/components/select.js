@@ -19,10 +19,10 @@ class Select extends React.Component
     super();
 
     this.state = {
+      options,
       shown: false,
       index: defaultIndex ?? 0,
-      options,
-      value: options[defaultIndex ?? 0]
+      option: options[defaultIndex ?? 0]
     };
 
     this.hide = this.hide.bind(this);
@@ -54,7 +54,7 @@ class Select extends React.Component
   {
     let { shown } = this.state;
 
-    const { options, value } = this.state;
+    const { options, option } = this.state;
 
     shown = typeof force === 'boolean' ? force : !shown;
 
@@ -62,9 +62,8 @@ class Select extends React.Component
     
     this.setState({
       shown,
-      // reset index to current value
-      index: options.indexOf(value)
-
+      // reset index to current option
+      index: options.indexOf(option)
       // reset options incase it was filtered using search
       // options: this.props.options
     }, () =>
@@ -114,7 +113,7 @@ class Select extends React.Component
       this.press(index + 1);
   }
 
-  press(i)
+  press(index)
   {
     const { options } = this.state;
 
@@ -123,12 +122,12 @@ class Select extends React.Component
     if (length <= 0)
       return;
 
-    if (i >= length)
-      i = 0;
-    else if (i <= -1)
-      i = length - 1;
+    if (index >= length)
+      index = 0;
+    else if (index <= -1)
+      index = length - 1;
 
-    this.setState({ index: i }, () =>
+    this.setState({ index }, () =>
     {
       // scroll to the new highlighted option
       document.body.querySelector(`.${styles.option}[data-highlighted="true"]`).scrollIntoView({
@@ -137,9 +136,9 @@ class Select extends React.Component
     });
   }
 
-  hover(i)
+  hover(index)
   {
-    this.setState({ index: i });
+    this.setState({ index });
   }
 
   onSearch()
@@ -154,24 +153,25 @@ class Select extends React.Component
     // });
   }
 
-  onChange(opt)
+  onChange(option)
   {
     const { onChange } = this.props;
 
+
     this.setState({
-      value: opt
+      option
     }, this.hide);
 
-    onChange?.call(undefined, opt.value);
+    onChange?.call(undefined, option);
   }
 
   render()
   {
-    const { shown, value, options, index } = this.state;
+    const { shown, option, options, index } = this.state;
 
     return <div data-shown={ shown } id={ this.props.id } className={ `${styles.container} ${this.props.className ?? ''}` } onClick={ this.toggle }>
       <div className={ styles.current }>
-        { value.label }
+        { option.label }
         {/* <input ref={ inputRef } defaultValue= spellCheck={ false } autoComplete={ 'off' } onInput={ this.onSearch }/> */}
       </div>
 

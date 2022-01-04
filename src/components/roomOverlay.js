@@ -52,14 +52,15 @@ export let requestRoomData;
 
 /**
 * @typedef { Object } PlayerProperties
-* @property { 'waiting' | 'picking' | 'judging' | 'left' } state
+* @property { 'waiting' | 'picking' | 'judging' | 'spectating' | 'left' } state
 * @property { boolean } rando
+* @property { number } score
 * @property { string } username
 */
 
 /**
 * @typedef { Object } RoomOptionsT
-* @property { 'kuruit' } gameMode
+* @property { 'kuruit' | 'democracy' } gameMode
 * @property { 'limited' | 'timer' } endCondition
 * @property { number } maxPlayers
 * @property { number } maxRounds
@@ -73,20 +74,30 @@ export let requestRoomData;
 */
 
 /**
-* @typedef { Object } RoomData
-* @property { string } region
+* @typedef { Object } Entry
 * @property { string } id
-* @property { string } master
+* @property { string } key
+* @property { ArrayBuffer } tts
+* @property { string[] } votes
+* @property { boolean } highlight
+* @property { Card[] } cards
+*/
+
+/**
+* @typedef { Object } RoomData
+* @property { string } id
+* @property { string } region
+* @property { boolean } master
 * @property { 'lobby' | 'match' } state
 * @property { 'picking' | 'judging' | 'transaction' |
 *          'judge-left' | 'judge-timeout' | 'picking-timeout' |
 *          'not-enough-players' | 'unhandled' } phase
 * @property { number } timestamp
-* @property { string[] } players
-* @property { Object<string, PlayerProperties> } playerProperties
+* @property { PlayerProperties[] } players
+* @property { PlayerProperties } playerProperties
 * @property { { hand: Card[] } } playerSecretProperties
 * @property { RoomOptionsT } options
-* @property { { id: string, key: string, highlighted: boolean, cards: Card[] }[] } field
+* @property { Entry[] } field
 */
 
 /**

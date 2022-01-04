@@ -42,6 +42,8 @@ class RoomTrackBar extends StoreComponent
 
     const match = roomData?.state === 'match';
 
+    const gameMode = roomData?.options.gameMode;
+
     const Player = ({ turn, username }) => <div className={ styles.player }>
 
       {
@@ -53,47 +55,38 @@ class RoomTrackBar extends StoreComponent
 
     //  separate the judge from the rest of the players
 
-    const judges = roomData?.players.filter(id => roomData?.playerProperties[id].state === 'judging');
+    const judges = roomData?.players.filter(player => player.state === 'judging').map((player, index) =>
+    {
+      return <Player key={ index } turn={ roomData?.phase === 'judging' } username={ player?.username }/>;
+    });
 
-    const players = roomData?.players.filter(id => roomData?.playerProperties[id].state !== 'judging');
+    const players = roomData?.players.filter(player => player.state !== 'judging').map((player, index) =>
+    {
+      return <Player key={ index } turn={ player?.state === 'picking' } username={ player?.username }/>;
+    });
 
     return <div className={ styles.wrapper }>
-
-      <div className={ styles.container } style={ { direction: locale.direction } }>
-
-        {
-          judges?.length ? <div className={ styles.title }>
-            { translation('judge') }
-          </div> : undefined
-        }
-
-        {
-          judges?.map(id =>
+      <div className={ styles.container } style={ {
+        direction: locale.direction,
+        flexDirection: gameMode === 'kuruit' ? 'column' : 'column-reverse'
+      } }>
+        <div>
           {
-            const player = roomData?.playerProperties[id];
+            judges?.length ? <div className={ styles.title }>
+              { translation(gameMode === 'kuruit' ? 'judge' : 'judges') }
+            </div> : undefined
+          }
+          { judges }
+        </div>
 
-            const turn = roomData?.phase === 'judging';
-
-            return <Player key={ id } turn={ turn } username={ player?.username }/>;
-          })
-        }
-
-        {
-          judges?.length ? <div className={ styles.title }>
-            { translation('players') }
-          </div> : undefined
-        }
-
-        {
-          players?.map(id =>
+        <div>
           {
-            const player = roomData?.playerProperties[id];
-            
-            const turn = player?.state === 'picking';
-
-            return <Player key={ id } turn={ turn } username={ player?.username }/>;
-          })
-        }
+            judges?.length ? <div className={ styles.title }>
+              { translation(gameMode === 'kuruit' ? 'players' : 'competitors') }
+            </div> : undefined
+          }
+          { players }
+        </div>
       </div>
     </div>;
   }
@@ -137,10 +130,12 @@ const styles = createStyle({
   },
 
   container: {
-    position: 'relative',
     userSelect: 'none',
 
-    opacity: 0.65,
+    display: 'flex',
+    position: 'relative',
+
+    opacity: colors.semitransparent,
     
     color: colors.blackText,
 
@@ -173,6 +168,8 @@ const styles = createStyle({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+
+    color: colors.blackText,
 
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
 

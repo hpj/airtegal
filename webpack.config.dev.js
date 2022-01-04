@@ -42,6 +42,7 @@ const webpackConfig = smp.wrap({
       overlay: false,
     },
     static: [
+      __dirname + '/src/mocks',
       __dirname + '/public',
     ],
     historyApiFallback: true,

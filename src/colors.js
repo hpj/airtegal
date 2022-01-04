@@ -15,6 +15,7 @@ export default function()
     theme: 'light',
     
     transparent: 'transparent',
+    semitransparent: 0.75,
 
     error: '#ad1818',
 
@@ -92,9 +93,9 @@ export default function()
 
 export function detectDeviceIsDark()
 {
-  if (localStorage.getItem('forceDark') === 'true')
+  if (localStorage.getItem?.('forceDark') === 'true')
     return true;
-  else if (localStorage.getItem('forceDark') === 'false')
+  else if (localStorage.getItem?.('forceDark') === 'false')
     return false;
   else
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;

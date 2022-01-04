@@ -6,9 +6,9 @@
     "build": "webpack --config webpack.config.prod.js --mode production",
     "start:test": "yarn start --node-env test",
     "build:test": "yarn build --node-env test",
-    "test": "docker run --rm -it --name airtegal_test_container --mount type=bind,src=`pwd`,dst=/app --volume /app/node_modules airtegal_test:latest",
+    "test": "docker run --rm -it --name airtegal_test_container --mount type=bind,src=`pwd`,dst=/app --volume /app/node_modules airtegal_test:latest might",
     "tests:docker": "docker build --tag airtegal_test:latest --file Dockerfile.test .",
-    "tests:update": "yarn test might -q -u"
+    "tests:update": "yarn test -u"
   },
   "engines": {
     "npm": "",
@@ -27,6 +27,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.1",
+    "react-textarea-autosize": "^8.3.3",
     "react-transition-group": "^4.4.2",
     "socket.io-client": "^4.4.0",
     "webfontloader": "^1.6.28"
@@ -40,7 +41,7 @@
     "file-loader": "^6.2.0",
     "git-revision-webpack-plugin": "^5.0.0",
     "json5-loader": "^4.0.1",
-    "might-cli": "^3.2.0",
+    "might-cli": "^3.2.1",
     "might-ui": "^1.1.8",
     "qrcode": "^1.5.0",
     "speed-measure-webpack-plugin": "^1.5.0",

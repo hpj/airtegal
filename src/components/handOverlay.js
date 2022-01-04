@@ -4,7 +4,7 @@ import { createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import { socket, isTouchScreen, sendMessage } from '../utils.js';
+import { isTouchScreen, sendMessage } from '../utils.js';
 
 import Interactable from './interactable.js';
 
@@ -89,7 +89,7 @@ class HandOverlay extends StoreComponent
     return {
       // if in match and and has to pick a card
       handVisible: roomData?.state === 'match' &&
-      roomData?.playerProperties[socket.id]?.state === 'picking'
+      roomData?.playerProperties.state === 'picking'
     };
   }
 
@@ -161,7 +161,7 @@ class HandOverlay extends StoreComponent
   {
     const { playerProperties } = this.state.roomData;
 
-    if (playerProperties[socket.id]?.state !== 'picking')
+    if (playerProperties.state !== 'picking')
       return;
 
     const { textareaRef } = element;
@@ -179,7 +179,7 @@ class HandOverlay extends StoreComponent
 
   render()
   {
-    const { locale, size } = this.props;
+    const { locale, translation, size } = this.props;
 
     const {
       roomData,
@@ -189,14 +189,15 @@ class HandOverlay extends StoreComponent
       handBlockDragging
     } = this.state;
 
+    const gameMode = roomData?.options.gameMode;
+
     const hand = roomData?.playerSecretProperties?.hand ?? [];
 
     const miniView = isTouchScreen || size.width < 700;
 
-    const width = '(115px + 2vw + 2vh)';
     const overlayWidth = size.width >= 700 ? '(min(100vw, 700px) / 1.45)' : '(min(85vw, 700px) / 1.45)';
 
-    const margin = `calc((${width} - (${overlayWidth} / ${hand?.length})) / -2)`;
+    const margin = `calc((${Card.size.width} - (${overlayWidth} / ${hand?.length})) / -2)`;
 
     const snapPoints = isTouchScreen ? [
       { y: size.height, draggable: false },
@@ -275,15 +276,18 @@ class HandOverlay extends StoreComponent
 
                   return <Card
                     key={ card.key }
+                    gameMode={ gameMode }
                     style={ {
-                      marginLeft: !miniView ? margin : undefined,
-                      marginRight: !miniView ? margin : undefined,
+                      marginLeft: !miniView && gameMode === 'kuruit' ? margin : undefined,
+                      marginRight: !miniView && gameMode === 'kuruit' ? margin : undefined,
                       transform: !miniView ? `rotateZ(${deg}deg) translateY(${y}px)` : undefined
                     } }
                     onClick={ c => this.activateCard(c, card, i) }
                     allowed={ true }
                     type={ card.type }
                     blank={ card.blank }
+                    locale={ locale }
+                    translation={ translation }
                     content={ card.content }/>;
                 })
               }
@@ -370,7 +374,7 @@ const styles = createStyle({
         border: `1px solid ${colors.blackCardHover}`
       },
 
-      ':hover': {
+      '[data-gamemode="kuruit"]:hover': {
         margin: '20px 10px !important',
         zIndex: 10
       }

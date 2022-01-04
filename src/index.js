@@ -132,7 +132,8 @@ const checkPromise = async() =>
       setFeatures({
         touch: 'true',
         randos: 'true',
-        kuruit: 'true'
+        kuruit: 'true',
+        democracy: 'true'
       });
 
       setLocale('Egypt', 'ar');
