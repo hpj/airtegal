@@ -561,23 +561,5 @@ function startDemocracy()
     room.players[1].state = 'judging';
   
     matchBroadcast(room);
-  
-    matchLogic = ({ index, content }) =>
-    {
-      room.players[0].state = room.playerProperties.state = 'waiting';
-
-      const card = room.playerSecretProperties.hand.splice(index, 1)[0];
-
-      if (card.blank)
-        card.content = content;
-  
-      room.field.push({
-        id: 'Skye',
-        key: Math.random(),
-        cards: [ card ]
-      });
-      
-      matchBroadcast(room);
-    };
   }
 }
