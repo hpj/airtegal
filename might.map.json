@@ -624,7 +624,7 @@
           "value": "/play?quiet"
         },
         {
-          "action": "select",
+          "action": "wait",
           "value": "#username"
         },
         {
@@ -657,7 +657,7 @@
           "value": "/play?quiet"
         },
         {
-          "action": "select",
+          "action": "wait",
           "value": "#username"
         },
         {
@@ -699,7 +699,7 @@
           "value": "/play?quiet"
         },
         {
-          "action": "select",
+          "action": "wait",
           "value": "#username"
         },
         {

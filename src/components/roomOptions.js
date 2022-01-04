@@ -298,6 +298,24 @@ class RoomOptions extends StoreComponent
       </>;
     };
 
+    const RoomMisc = () =>
+    {
+      return <>
+        <div className={ styles.title }>{ translation('room-options') }</div>
+
+        <div className={ styles.buttons }>
+          {
+            master ? <div id={ 'room-options-start' } className={ styles.misc } onClick={ this.matchRequest }>
+              <div>{ translation('start') }</div>
+            </div> : <div className={ styles.misc }>
+              <div>{ translation('wait-for-room-master') }</div>
+              <WaitingIcon style={ { animation: waitingAnimation } }/>
+            </div>
+          }
+        </div>
+      </>;
+    };
+
     const KuruitOptions = ({ mode }) =>
     {
       return <div>
@@ -489,10 +507,10 @@ class RoomOptions extends StoreComponent
       </div>;
     };
 
-    let modeOptions;
+    let ModeOptions;
 
     if (dirtyOptions.gameMode === 'kuruit' || dirtyOptions.gameMode === 'democracy')
-      modeOptions = KuruitOptions;
+      ModeOptions = KuruitOptions;
 
     return <div ref={ wrapperRef } className={ styles.wrapper }>
       {
@@ -517,18 +535,9 @@ class RoomOptions extends StoreComponent
 
               { RoomUrl() }
 
-              { modeOptions({ mode: dirtyOptions.gameMode }) }
+              { RoomMisc() }
 
-              {/* Start Button */}
-
-              {
-                master ? <div id={ 'room-options-start' } className={ styles.start } onClick={ this.matchRequest }>
-                  <div>{ translation('start') }</div>
-                </div> : <div className={ styles.wait }>
-                  <div>{ translation('wait-for-room-master') }</div>
-                  <WaitingIcon/>
-                </div>
-              }
+              { ModeOptions({ mode: dirtyOptions.gameMode }) }
             </> : undefined
         }
       </div>
@@ -697,37 +706,10 @@ const styles = createStyle({
     }
   },
 
-  start: {
-    'extend': 'button',
-    justifyContent: 'center',
-
-    padding: '15px 10px',
-    margin: '25px 35px 25px'
-  },
-
   title: {
     opacity: 0.5,
     fontSize: 'calc(8px + 0.15vw + 0.15vh)',
     padding: '20px 25px'
-  },
-
-  wait: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-
-    width: 'fit-content',
-    
-    margin: '0 auto',
-    padding: '25px 25px 5px',
-
-    '> svg': {
-      width: '24px',
-      height: '24px',
-      color: colors.blackText,
-      animation: waitingAnimation,
-      margin: '10px'
-    }
   },
 
   pick: {

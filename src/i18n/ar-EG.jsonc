@@ -52,7 +52,9 @@
   "new-master": "هو دلوقتي صاحب الروم.",
 
   // room options
-  
+
+  "room-options": "اعدادات الروم",
+
   "match-highlights": "هاي لايتز",
 
   "congrats": "عاش",
@@ -60,9 +62,6 @@
   "highScorers": "هما الي كسبوا الماتش الفات~هو الي كسب الماتش الفات",
   
   "score": "نقط~نقطة",
-
-  "room-edited": "تم تعديل اعدادت الروم.",
-  "you-were-kicked": "تم طردك من الروم",
 
   "game-mode": "الجيم مود",
 
@@ -74,8 +73,6 @@
 
   "options": "اعدادات",
 
-  "end-condition": "النهاية:",
-  
   "options-placeholder": "0",
 
   "by": "بـ",
