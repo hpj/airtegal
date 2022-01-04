@@ -411,8 +411,9 @@ const headerStyles = createStyle({
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
     '> div': {
-
-      margin: '0 5px -2px 5px',
+      margin: '0 5px',
+      padding: '0 0 5px 0',
+      height: 'min-content',
       borderBottom: `2px ${colors.blackText} solid`
     }
   }

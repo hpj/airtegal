@@ -615,6 +615,102 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Update Username in Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet"
+        },
+        {
+          "action": "select",
+          "value": "#username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#username-input"
+        },
+        {
+          "action": "type",
+          "value": "حسين"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Close Username Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet"
+        },
+        {
+          "action": "select",
+          "value": "#username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#username-input"
+        },
+        {
+          "action": "type",
+          "value": "حسين"
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "50v"
+          ]
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Username Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet"
+        },
+        {
+          "action": "select",
+          "value": "#username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }

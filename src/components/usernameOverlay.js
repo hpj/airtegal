@@ -46,15 +46,15 @@ class UsernameOverlay extends React.Component
   show(username)
   {
     this.setState({
-      username,
-      visible: true
+      visible: true,
+      username
     }, () =>
     {
-      inputRef.current.focus();
-      
       stack.register(this.back);
-    
+      
       interactableRef.current?.snapTo({ index: 1 });
+      
+      inputRef.current?.focus();
     });
   }
 
@@ -142,7 +142,7 @@ class UsernameOverlay extends React.Component
             required
             type={ 'text' }
             ref={ inputRef }
-            id={ 'input-username' }
+            id={ 'username-input' }
             className={ styles.input }
             style={ { direction: locale.direction } }
             maxLength={ 18 }
@@ -223,7 +223,7 @@ const styles = createStyle({
   },
 
   title: {
-    margin: '0 4px'
+    margin: '0 5px'
   },
 
   input: {
@@ -237,8 +237,8 @@ const styles = createStyle({
     fontWeight: '700',
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    margin: '12px 0',
-    padding: '8px 4px',
+    margin: '5px 0',
+    padding: '10px 5px',
     border: 0,
 
     borderBottom: `2px ${colors.blackText} solid`,
