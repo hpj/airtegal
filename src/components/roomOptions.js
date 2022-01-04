@@ -13,7 +13,7 @@ import { StoreComponent } from '../store.js';
 
 import { translation, withTranslation } from '../i18n.js';
 
-import { codeRef } from '../screens/game.js';
+import { codeRef, usernameRef } from '../screens/game.js';
 
 import AutoSizeInput from '../components/autoSizeInput.js';
 
@@ -304,6 +304,10 @@ class RoomOptions extends StoreComponent
         <div className={ styles.title }>{ translation('room-options') }</div>
 
         <div className={ styles.buttons }>
+          <div id={ 'room-options-username' } className={ styles.misc } onClick={ () => usernameRef.current?.show(roomData.playerProperties.username) }>
+            <div>{ translation('change-username') }</div>
+          </div>
+          
           {
             master ? <div id={ 'room-options-start' } className={ styles.misc } onClick={ this.matchRequest }>
               <div>{ translation('start') }</div>

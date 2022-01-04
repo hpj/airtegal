@@ -711,6 +711,44 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Change Username Inside Room",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#username-input"
+        },
+        {
+          "action": "type",
+          "value": "حسين"
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "50v"
+          ]
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
     }
   ]
 }
