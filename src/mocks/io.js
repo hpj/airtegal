@@ -233,7 +233,7 @@ function matchBroadcast(roomData)
   setTimeout(() => emitter.emit('roomData', roomData));
 }
 
-function startKuruit()
+async function startKuruit()
 {
   /**
   * @type { import('../components/roomOverlay').RoomData }
@@ -456,7 +456,7 @@ function startKuruit()
   }
 }
 
-function startDemocracy()
+async function startDemocracy()
 {
   /**
   * @type { import('../components/roomOverlay').RoomData }
@@ -485,10 +485,14 @@ function startDemocracy()
 
   room.field = [];
 
+  const response = await fetch(`${document.location.origin}/audio.mp3`);
+
+  const arrayBuffer = await response.arrayBuffer();
+
   // black card
   room.field.push({
     key: Math.random(),
-    tts: `${document.location.origin}/audio.mp3`,
+    tts: arrayBuffer,
     cards: [ {
       key: Math.random(),
       pick: 1,

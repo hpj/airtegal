@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/react';
+
 import { io } from 'socket.io-client';
 
 import { locale, translation } from './i18n.js';
@@ -189,6 +191,16 @@ export function shuffle(array)
   }
 
   return array;
+}
+
+export function captureException(err, extra)
+{
+  console.error(err);
+
+  Sentry.captureException(err, {
+    extra,
+    level: Sentry.Severity.Error
+  });
 }
 
 /**
