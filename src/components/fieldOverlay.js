@@ -118,7 +118,7 @@ class FieldOverlay extends StoreComponent
 
     const { roomData, fieldHidden, fieldVisible } = this.state;
 
-    const field = roomData?.field ?? [];
+    let field = roomData?.field ?? [];
 
     const playerState = roomData?.playerProperties.state;
 
@@ -133,6 +133,16 @@ class FieldOverlay extends StoreComponent
       else if (!fieldHidden || fieldVisible)
         this.store.set({ fieldHidden: false });
     };
+
+    if (gameMode === 'democracy')
+    {
+      // show only the black card
+      if (phase === 'picking')
+        field = [ field[0] ];
+      // add a separator element
+      else if (phase === 'judging')
+        field = [ field[0], field[1], { type: 'separator' }, field[2] ];
+    }
 
     return <div className={ styles.view }>
       <Interactable
@@ -179,35 +189,39 @@ class FieldOverlay extends StoreComponent
           
           <div id={ 'kuruit-field-overlay' } className={ styles[gameMode] } data-phase={ phase } style={ { direction: locale.direction } }>
             {
-              field
-                .slice(0, gameMode === 'democracy' && phase === 'picking' ? 1 : undefined)
-                .map(({ key, id, cards, highlight, votes }, entryIndex) =>
-                {
-                  const allowed = playerState === 'judging' && entryIndex > 0;
+              field.map(({ key, id, type, cards, highlight, votes }, entryIndex) =>
+              {
+                const allowed = playerState === 'judging' && entryIndex > 0;
 
-                  return <div className={ styles.entry } key={ key }>
-                    {
-                      cards?.map((card, cardIndex) =>
-                      {
-                        return <Card
-                          key={ card.key }
-                          type={ card.type }
-                          content={ card.content }
-                          hidden={ !card.content }
-                          allowed={ allowed }
-                          votes={ votes }
-                          winner= { highlight }
-                          locale={ locale }
-                          translation={ translation }
-                          gameMode={ gameMode }
-                          share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
-                          owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
-                          onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
-                        />;
-                      })
-                    }
+                if (type === 'separator')
+                  return <div className={ styles.separator } key={ entryIndex }>
+                    { translation('or') }
                   </div>;
-                })
+
+                return <div className={ styles.entry } data-gamemode={ gameMode } key={ key }>
+                  {
+                    cards?.map((card, cardIndex) =>
+                    {
+                      return <Card
+                        key={ card.key }
+                        type={ card.type }
+                        content={ card.content }
+                        hidden={ !card.content }
+                        allowed={ allowed }
+                        votes={ votes }
+                        winner= { highlight }
+                        locale={ locale }
+                        translation={ translation }
+                        phase={ phase }
+                        gameMode={ gameMode }
+                        share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
+                        owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
+                        onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                      />;
+                    })
+                  }
+                </div>;
+              })
             }
           </div>
         </div>
@@ -296,19 +310,93 @@ const styles = createStyle({
   },
 
   democracy: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
+    display: 'grid',
+
+    '[data-phase="judging"]': {
+      height: 'auto',
+      maxWidth: '960px',
+
+      margin: '0 auto',
+      
+      alignItems: 'center',
+
+      gridTemplateAreas: '". . ." "title title title" "a or b" ". . ."',
+      gridTemplateRows: '1fr min-content min-content 1fr',
+
+      '@media screen and (max-width: 840px)': {
+        gridTemplateAreas: '"." "title" "a" "or" "b" "."',
+        gridTemplateRows: '1fr min-content min-content min-content min-content 1fr',
+
+        '> :nth-child(1)': {
+          margin: '5vh auto',
+          transform: 'rotateZ(2deg)'
+        },
+
+        '> :nth-child(2)': {
+          transform: 'rotateZ(-2deg)'
+        },
+
+        '> :nth-child(3)': {
+          transform: 'rotateZ(2deg)'
+        },
+
+        '> :nth-child(4)': {
+          transform: 'rotateZ(4deg)'
+        }
+      },
+
+      '> :nth-child(1)': {
+        gridArea: 'title',
+        margin: '10vh auto',
+        transform: 'rotateZ(2deg)'
+      },
+
+      '> :nth-child(2)': {
+        gridArea: 'a',
+        margin: '2.5vh auto',
+        transform: 'rotateZ(4deg)'
+      },
+
+      '> :nth-child(3)': {
+        gridArea: 'or',
+        margin: '15px auto',
+        transform: 'translateY(-10px) rotateZ(8deg)'
+      },
+
+      '> :nth-child(4)': {
+        gridArea: 'b',
+        margin: '2.5vh auto',
+        transform: 'rotateZ(-8deg)'
+      }
+    },
 
     '[data-phase="picking"]': {
       height: '50%',
+
+      alignItems: 'center',
+      justifyContent: 'center',
       
-      '> div': {
+      '> :nth-child(1)': {
         animation: hoverAnimation,
         transform: 'translateY(-10px) rotateZ(2deg)'
       }
     }
+  },
+
+  separator: {
+    display: 'flex',
+    userSelect: 'none',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    width: '42px',
+    height: '42px',
+        
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+
+    color: colors.whiteCardForeground,
+    backgroundColor: colors.whiteCardBackground
   },
 
   entry: {
@@ -319,7 +407,8 @@ const styles = createStyle({
       margin: '20px 2.5vw'
     },
 
-    ':after': {
+    // group lines
+    '[data-gamemode="kuruit"]:after': {
       content: '""',
       position: 'absolute',
       backgroundColor: colors.fieldGroupLine,

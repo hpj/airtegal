@@ -531,16 +531,16 @@ async function startDemocracy()
   
     matchLogic = ({ index }) =>
     {
-      room.phase = 'transaction';
+      room.phase = 'judging';
 
       room.players[0].state = room.playerProperties.state = 'waiting';
-
-      room.field[index].highlight = true;
       
+      room.field[index].votes = [ 'Skye' ];
+
       matchBroadcast(room);
     };
   }
-  else if (params.get('mock') === 'spectating-picking')
+  else if (params.get('mock') === 'spectating')
   {
     room.master = '';
     room.phase = 'picking';
