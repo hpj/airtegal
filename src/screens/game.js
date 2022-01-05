@@ -279,7 +279,7 @@ class Game extends React.Component
                     <div>{ room.options.maxPlayers }</div>
                   </div>
 
-                  { Highlights(room) }
+                  { OptionsPreview(room) }
                 </div>
 
                 <div className={ roomsStyles.cover }>
@@ -295,20 +295,19 @@ class Game extends React.Component
       </div>
     </div>;
 
-    const Highlights = room =>
+    const OptionsPreview = room =>
     {
       const highlights = [];
 
       const gameMode = room.options.gameMode;
 
-      // cards based game modes
+      if (room.options.endCondition === 'limited')
+        highlights.push(`${translation('max-rounds', room.options.maxRounds, true)}.`);
+      else if (room.options.endCondition === 'timer')
+        highlights.push(`${translation('max-time', room.options.maxTime / 60 / 1000, true)}.`);
+
       if (gameMode === 'kuruit')
       {
-        if (room.options.endCondition === 'limited')
-          highlights.push(`${translation('max-rounds', room.options.maxRounds, true)}.`);
-        else if (room.options.endCondition === 'timer')
-          highlights.push(`${translation('max-time', room.options.maxTime / 60 / 1000, true)}.`);
-
         highlights.push(`${translation('hand-cap-lobby', room.options.startingHandAmount, true)}.`);
 
         if (room.options.blankProbability > 0)

@@ -76,23 +76,20 @@ class FieldOverlay extends StoreComponent
     if (!allowed)
       return;
       
-    const { options, field } = this.state.roomData;
+    const { field } = this.state.roomData;
     
     sendMessage('matchLogic', { index, content }).then(() =>
     {
       // store the entry for the match highlights
 
-      if (options.gameMode === 'kuruit')
-      {
-        const { entries } = this.state;
+      const { entries } = this.state;
   
-        entries.push([
-          field[0].cards[0].content,
-          ...field[index].cards.map(c => c.content)
-        ]);
+      entries.push([
+        field[0].cards[0].content,
+        ...field[index].cards.map(c => c.content)
+      ]);
 
-        this.store.set({ entries });
-      }
+      this.store.set({ entries });
     });
   }
 
@@ -101,15 +98,12 @@ class FieldOverlay extends StoreComponent
   */
   share(index)
   {
-    const { options, field } = this.state.roomData;
+    const { field } = this.state.roomData;
 
-    if (options.gameMode === 'kuruit')
-    {
-      shareRef.current?.shareEntry({
-        black: field[0]?.cards[0]?.content,
-        white: field[index]?.cards?.map(c => c.content)
-      });
-    }
+    shareRef.current?.shareEntry({
+      black: field[0]?.cards[0]?.content,
+      white: field[index]?.cards?.map(c => c.content)
+    });
   }
 
   render()
@@ -140,7 +134,7 @@ class FieldOverlay extends StoreComponent
       if (phase === 'picking')
         field = [ field[0] ];
       // add a separator element
-      else if (phase === 'judging')
+      else if (phase === 'judging' || phase === 'transaction')
         field = [ field[0], field[1], { type: 'separator' }, field[2] ];
     }
 
@@ -312,7 +306,7 @@ const styles = createStyle({
   democracy: {
     display: 'grid',
 
-    '[data-phase="judging"]': {
+    ':not([data-phase="picking"])': {
       height: 'auto',
       maxWidth: '960px',
 
