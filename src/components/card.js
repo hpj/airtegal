@@ -87,8 +87,8 @@ class Card extends React.Component
   {
     const {
       content,
-      style,
-      owner, blank,
+      style, blank,
+      owner, votes,
       gameMode, phase,
       type, onClick,
       locale, translation
@@ -125,6 +125,14 @@ class Card extends React.Component
             animationData={ confettiAnimation }
           /> : undefined
       }
+
+      <div className={ styles.top } data-gamemode={ gameMode } data-phase={ phase } data-type={ type } style={ { direction: locale.direction } }>
+        {
+          votes?.map((username, i) => <div className={ styles.vote } key={ i }>
+            { username }
+          </div>)
+        }
+      </div>
 
       <div
         data-type={ type }
@@ -221,14 +229,11 @@ class Card extends React.Component
 
 const hoverAnimation = createAnimation({
   keyframes: {
-    '0%': {
+    from: {
       transform: 'translateY(-10px)'
     },
-    '50%': {
+    to: {
       transform: 'translateY(-5px)'
-    },
-    '100%': {
-      transform: 'translateY(-10px)'
     }
   }
 });
@@ -251,7 +256,7 @@ const styles = createStyle({
       width: Card.wide.width
     },
 
-    '[data-gamemode="democracy"][data-phase="judging"]': {
+    '[data-gamemode="democracy"]': {
       width: Card.preview.width
     }
   },
@@ -271,8 +276,8 @@ const styles = createStyle({
 
     '[data-allowed="true"]:hover': {
       animationName: `${floatAnimation}, ${hoverAnimation}`,
-      animationDuration: '.3s, 1.5s',
-      animationDelay: '0s, .3s',
+      animationDuration: '0.3s, 0.75s',
+      animationDelay: '0s, 0.3s',
       animationTimingFunction: 'ease-out, ease-in-out',
       animationIterationCount: '1, infinite',
       animationFillMode: 'forwards',
@@ -395,6 +400,32 @@ const styles = createStyle({
     }
   },
 
+  top: {
+    display: 'none',
+
+    '[data-gamemode="democracy"]:not([data-phase="picking"])': {
+      pointerEvents: 'none',
+      position: 'absolute',
+
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      
+      width: '110%',
+
+      ':nth-child(1)': {
+        transform: 'rotateZ(10deg)'
+      },
+
+      ':nth-child(2)': {
+        transform: 'rotateZ(-10deg)'
+      },
+
+      left: '-5%',
+      bottom: '90%'
+    }
+  },
+
   bottom: {
     display: 'grid',
     gridTemplateColumns: '1fr auto',
@@ -414,7 +445,24 @@ const styles = createStyle({
 
     '[data-gamemode="democracy"][data-phase="judging"]': {
       display: 'none'
+    },
+
+    '[data-gamemode="democracy"][data-phase="transaction"]': {
+      textAlign: 'center',
+      
+      fontSize: 'calc(12px + 0.25vw + 0.25vh)',
+
+      '> :nth-child(1)': {
+        display: 'none'
+      }
     }
+  },
+
+  vote: {
+    color: colors.blackCardForeground,
+    backgroundColor: colors.blackCardBackground,
+    height: 'fit-content',
+    padding: '10px 20px'
   },
 
   share: {

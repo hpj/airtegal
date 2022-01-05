@@ -501,7 +501,7 @@ async function startDemocracy()
     } ]
   });
 
-  if (params.get('mock') === 'judge')
+  if (params.get('mock') === 'judge' || params.get('mock') === 'votes')
   {
     room.phase = 'judging';
 
@@ -527,18 +527,33 @@ async function startDemocracy()
       } ]
     });
   
-    matchBroadcast(room);
-  
-    matchLogic = ({ index }) =>
+    if (params.get('mock') === 'votes')
     {
-      room.phase = 'judging';
+      room.phase = 'transaction';
 
       room.players[0].state = room.playerProperties.state = 'waiting';
+      room.players[1].state = 'waiting';
       
-      room.field[index].votes = [ 'Skye' ];
+      room.field[1].votes = [ 'Skye', 'Mika', 'Mana', 'Aire', 'Husseen', 'Aly Rabeeee3' ];
+      room.field[1].highlight = true;
 
-      matchBroadcast(room);
-    };
+      room.field[2].votes = [ 'Aire', 'Husseen', 'Aly Rabeeee3' ];
+    }
+    else
+    {
+      matchLogic = ({ index }) =>
+      {
+        room.phase = 'judging';
+  
+        room.players[0].state = room.playerProperties.state = 'waiting';
+        
+        room.field[index].votes = [ 'Skye' ];
+  
+        matchBroadcast(room);
+      };
+    }
+
+    matchBroadcast(room);
   }
   else if (params.get('mock') === 'spectating')
   {

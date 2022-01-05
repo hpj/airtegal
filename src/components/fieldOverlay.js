@@ -225,21 +225,33 @@ class FieldOverlay extends StoreComponent
 }
 
 const hoverAnimation = createAnimation({
-  duration: '1.5s',
-  delay: '0.3s',
+  duration: '0.75s',
   timingFunction: 'ease-in-out',
   iterationCount: process.env.NODE_ENV === 'test' ? '0' : 'infinite',
   fillMode: 'forwards',
   direction: 'alternate',
   keyframes: {
-    '0%': {
+    from: {
       transform: 'translateY(-10px) rotateZ(2deg)'
     },
-    '50%': {
+    to: {
       transform: 'translateY(-5px) rotateZ(-2deg)'
+    }
+  }
+});
+
+const shakeAnimation = createAnimation({
+  duration: '3s',
+  timingFunction: 'cubic-bezier(0.65, 0.05, 0.36, 1)',
+  iterationCount: process.env.NODE_ENV === 'test' ? '0' : 'infinite',
+  fillMode: 'forwards',
+  direction: 'alternate',
+  keyframes: {
+    '0%': {
+      transform: 'translateY(-10px) rotateZ(20deg)'
     },
     '100%': {
-      transform: 'translateY(-10px) rotateZ(2deg)'
+      transform: 'translateY(-10px) rotateZ(-20deg)'
     }
   }
 });
@@ -353,8 +365,8 @@ const styles = createStyle({
 
       '> :nth-child(3)': {
         gridArea: 'or',
-        margin: '15px auto',
-        transform: 'translateY(-10px) rotateZ(8deg)'
+        animation: shakeAnimation,
+        margin: '15px auto'
       },
 
       '> :nth-child(4)': {
