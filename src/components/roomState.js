@@ -1,12 +1,14 @@
 import React from 'react';
 
+import { createStyle } from 'flcss';
+
 import { StoreComponent } from '../store.js';
 
 import { withTranslation } from '../i18n.js';
 
 import getTheme from '../colors.js';
 
-import { createStyle } from 'flcss';
+import { captureException } from '../utils.js';
 
 const colors = getTheme();
 
@@ -26,27 +28,21 @@ class RoomState extends StoreComponent
     this.countdown = undefined;
     this.countdownInterval = undefined;
 
-    // this.music = new Audio();
-    // this.audio = new Audio();
+    this.audio = new Audio();
   }
 
   componentDidMount()
   {
     super.componentDidMount();
 
-    // this.music.loop = true;
-    
-    // this.music.volume = 0;
-    // this.audio.volume = 0.95;
+    this.audio.loop = false;
+    this.audio.volume = 0.95;
   }
 
   componentWillUnmount()
   {
     super.componentWillUnmount();
 
-    // this.music.pause();
-    // this.audio.pause();
-    
     if (this.countdownInterval)
       clearInterval(this.countdownInterval);
   }
@@ -72,6 +68,9 @@ class RoomState extends StoreComponent
     {
       clearInterval(this.countdownInterval);
 
+      // pause audio if it was playing
+      this.audio.pause();
+
       // set state as the players count
       this.formatted = `${roomData.players.length}/${roomData.options.maxPlayers}`;
 
@@ -82,10 +81,33 @@ class RoomState extends StoreComponent
     {
       clearInterval(this.countdownInterval);
 
-      // this.music.pause();
-      // this.audio.pause();
+      if (roomData.options.gameMode === 'democracy' && roomData.phase === 'picking')
+      {
+        try
+        {
+          if (roomData.field[0].tts instanceof ArrayBuffer)
+          {
+            const src = window.URL.createObjectURL(new Blob([ roomData.field[0].tts ], { 'type': 'audio/mp3' }));
 
-      // this.music.currentTime = this.audio.currentTime = 0;
+            if (this.audio.src !== src)
+            {
+              this.audio.src = src;
+              
+              this.audio.currentTime = 0;
+    
+              this.audio.play();
+            }
+          }
+          else
+          {
+            throw new TypeError('text-to-speech data is not an instance of ArrayBuffer');
+          }
+        }
+        catch (err)
+        {
+          captureException(err);
+        }
+      }
 
       if (roomData.phase === 'picking' || roomData.phase === 'judging')
       {
@@ -129,70 +151,8 @@ class RoomState extends StoreComponent
       {
         this.formatted = '';
       }
-
-      // if (roomData.phase === 'transaction' && roomData.options.gameMode === 'qassa')
-      // {
-      //   const { composed } = roomData.field[0].story;
-
-      //   try
-      //   {
-      //     const musicBlob = new Blob([ composed.music ], { 'type': 'audio/mp3' });
-      //     const audioBlob = new Blob([ composed.audio ], { 'type': 'audio/mp3' });
-
-      //     this.music.src = window.URL.createObjectURL(musicBlob);
-      //     this.audio.src = window.URL.createObjectURL(audioBlob);
-
-      //     // play audio after music starts
-      //     this.music.onplaying = () =>
-      //     {
-      //       this.gracefullyStartAudio(this.music, 0.25, 0.02);
-
-      //       setTimeout(() => this.audio.play(), 1500);
-      //     };
-
-      //     // end music after audio ends
-      //     this.audio.onended = () =>
-      //     {
-      //       this.gracefullyMuteAudio(this.music, -0.02);
-
-      //       setTimeout(() => this.music.pause(), 1500);
-      //     };
-          
-      //     if (process.env.NODE_ENV !== 'test')
-      //       this.music.play();
-      //   }
-      //   catch (e)
-      //   {
-      //     console.error(e);
-      //   }
-      // }
     }
   }
-
-  // /**
-  // * @param { HTMLAudioElement } audio
-  // * @param { number } target
-  // * @param { number } step
-  // */
-  // gracefullyStartAudio(audio, target, step)
-  // {
-  //   audio.volume = Math.min(audio.volume + step, target);
-
-  //   if (audio.volume !== target)
-  //     setTimeout(() => this.gracefullyStartAudio(audio, target, step), 100);
-  // }
-
-  // /**
-  // * @param { HTMLAudioElement } audio
-  // * @param { number } step
-  // */
-  // gracefullyMuteAudio(audio, step)
-  // {
-  //   audio.volume = Math.max(audio.volume + step, 0);
-    
-  //   if (audio.volume > 0)
-  //     setTimeout(() => this.gracefullyMuteAudio(audio, step), 100);
-  // }
 
   formatMs(milliseconds)
   {

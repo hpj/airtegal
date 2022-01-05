@@ -47,6 +47,17 @@ class Card extends React.Component
     };
   }
 
+  static get preview()
+  {
+    const width = 'calc(215px + 2vw + 2vh)';
+    const height = 'calc(115px + 2vw + 2vh)';
+
+    return {
+      width,
+      height
+    };
+  }
+
   static get wide()
   {
     const width = 'calc(325px + 2vw + 2vh)';
@@ -65,10 +76,8 @@ class Card extends React.Component
 
   onChange(e)
   {
-    const { locale } = this.props;
-
     this.setState({
-      content: e.target.value.replace(locale.blank, '').replace(/\s+/g, ' ')
+      content: e.target.value.replace(/\s+/g, ' ')
     });
   }
 
@@ -76,8 +85,9 @@ class Card extends React.Component
   {
     const {
       content,
-      style, gameMode,
-      owner, blank,
+      style, blank,
+      owner, votes,
+      gameMode, phase,
       type, onClick,
       locale, translation
     } = this.props;
@@ -103,7 +113,7 @@ class Card extends React.Component
     else if (gameMode === 'democracy')
       bottom = translation('democracy');
 
-    return <div className={ styles.wrapper } data-gamemode={ gameMode } style={ style }>
+    return <div className={ styles.wrapper } data-gamemode={ gameMode } data-phase={ phase } style={ style }>
       {
         winner ?
           <Lottie
@@ -114,8 +124,17 @@ class Card extends React.Component
           /> : undefined
       }
 
+      <div className={ styles.top } data-gamemode={ gameMode } data-phase={ phase } data-type={ type } style={ { direction: locale.direction } }>
+        {
+          votes?.map((username, i) => <div className={ styles.vote } key={ i }>
+            <div>{ username }</div>
+          </div>)
+        }
+      </div>
+
       <div
         data-type={ type }
+        data-phase={ phase }
         data-gamemode={ gameMode }
         data-allowed={ (allowed || share) && !hidden }
         data-winner={ winner }
@@ -132,13 +151,13 @@ class Card extends React.Component
         } }
       >
         {
-          hidden ? <div className={ styles.hidden } data-gamemode={ gameMode } data-type={ type } style={ { direction: locale.direction } }>
+          hidden ? <div className={ styles.hidden } data-type={ type } style={ { direction: locale.direction } }>
             <div>{ translation('kuruit') }</div>
           </div> : undefined
         }
 
         {
-          !hidden ? <div className={ styles.card } data-type={ type } style={ { direction: locale.direction } }>
+          !hidden ? <div className={ styles.card } data-type={ type } data-gamemode={ gameMode } data-phase={ phase } style={ { direction: locale.direction } }>
             <TextareaAutosize
               ref={ this.textareaRef }
 
@@ -195,7 +214,7 @@ class Card extends React.Component
           </div> : undefined
         }
 
-        <div className={ styles.bottom } data-gamemode={ gameMode } data-type={ type } style={ { direction: locale.direction } }>
+        <div className={ styles.bottom } data-gamemode={ gameMode } data-phase={ phase } data-type={ type } style={ { direction: locale.direction } }>
           { bottom }
           <ShareIcon className={ styles.share } style={ {
             width: !share ? 0 : undefined
@@ -208,14 +227,11 @@ class Card extends React.Component
 
 const hoverAnimation = createAnimation({
   keyframes: {
-    '0%': {
+    from: {
       transform: 'translateY(-10px)'
     },
-    '50%': {
+    to: {
       transform: 'translateY(-5px)'
-    },
-    '100%': {
-      transform: 'translateY(-10px)'
     }
   }
 });
@@ -234,8 +250,12 @@ const styles = createStyle({
     position: 'relative',
     width: Card.size.width,
 
-    '[data-gamemode="democracy"]': {
+    '[data-gamemode="democracy"][data-phase="picking"]': {
       width: Card.wide.width
+    },
+
+    '[data-gamemode="democracy"]': {
+      width: Card.preview.width
     }
   },
 
@@ -254,8 +274,8 @@ const styles = createStyle({
 
     '[data-allowed="true"]:hover': {
       animationName: `${floatAnimation}, ${hoverAnimation}`,
-      animationDuration: '.3s, 1.5s',
-      animationDelay: '0s, .3s',
+      animationDuration: '0.3s, 0.75s',
+      animationDelay: '0s, 0.3s',
       animationTimingFunction: 'ease-out, ease-in-out',
       animationIterationCount: '1, infinite',
       animationFillMode: 'forwards',
@@ -286,6 +306,10 @@ const styles = createStyle({
 
     '[data-gamemode="democracy"][data-type="black"]': {
       padding: '15px 10px'
+    },
+
+    '[data-gamemode="democracy"]:not([data-phase="picking"])': {
+      padding: '15px 10px'
     }
   },
 
@@ -309,13 +333,26 @@ const styles = createStyle({
   card: {
     display: 'flex',
 
-    // override hand overlay pointer events
     pointerEvents: 'auto',
 
     userSelect: 'none',
   
     width: '100%',
     height: 'auto',
+
+    minHeight: Card.size.height,
+
+    '[data-gamemode="democracy"][data-type="black"]': {
+      minHeight: 'unset'
+    },
+
+    '[data-gamemode="democracy"][data-type="white"]': {
+      minHeight: Card.preview.height
+    },
+
+    '[data-gamemode="democracy"][data-phase="picking"][data-type="white"]': {
+      minHeight: Card.wide.height
+    },
 
     '[data-type="black"]> textarea': {
       color: colors.blackCardForeground,
@@ -337,22 +374,19 @@ const styles = createStyle({
     resize: 'none',
     overflow: 'hidden',
 
-    minHeight: Card.size.height,
+    width: '100%',
 
     padding: 0,
     border: 0,
 
     '[data-gamemode="democracy"]': {
-      textAlign: 'center !important',
-      margin: 'auto'
-    },
-    
-    '[data-gamemode="democracy"][data-type="black"]': {
-      minHeight: 'unset'
+      margin: 'auto 0',
+      fontSize: 'calc(10px + 0.25vw + 0.25vh)',
+      textAlign: 'center !important'
     },
 
     '[data-gamemode="democracy"][data-type="white"]': {
-      minHeight: Card.wide.height
+      fontSize: 'calc(13px + 0.25vw + 0.25vh)'
     },
 
     ':focus': {
@@ -361,6 +395,32 @@ const styles = createStyle({
 
     ':not(:focus)::selection': {
       backgroundColor: colors.transparent
+    }
+  },
+
+  top: {
+    display: 'none',
+
+    '[data-gamemode="democracy"]:not([data-phase="picking"])': {
+      pointerEvents: 'none',
+      position: 'absolute',
+
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      
+      width: '110%',
+
+      ':nth-child(1)': {
+        transform: 'rotateZ(10deg)'
+      },
+
+      ':nth-child(2)': {
+        transform: 'rotateZ(-10deg)'
+      },
+
+      left: '-5%',
+      bottom: '90%'
     }
   },
 
@@ -377,10 +437,33 @@ const styles = createStyle({
 
     fontSize: 'calc(5px + 0.4vw + 0.4vh)',
 
-
     '[data-gamemode="democracy"][data-type="black"]': {
       display: 'none'
+    },
+
+    '[data-gamemode="democracy"][data-phase="judging"]': {
+      display: 'none'
+    },
+
+    '[data-gamemode="democracy"][data-phase="transaction"]': {
+      padding: '0 10px',
+      fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+
+      '> :nth-child(1)': {
+        padding: '0',
+        transform: 'scale(1.25)'
+      }
     }
+  },
+
+  vote: {
+    display: 'flex',
+    alignItems: 'center',
+    color: colors.blackCardForeground,
+    backgroundColor: colors.blackCardBackground,
+    height: 'auto',
+    margin: '0px -1px',
+    padding: '10px 20px'
   },
 
   share: {

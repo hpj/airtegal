@@ -189,6 +189,7 @@ class HandOverlay extends StoreComponent
       handBlockDragging
     } = this.state;
 
+    const phase = roomData?.phase;
     const gameMode = roomData?.options.gameMode;
 
     const hand = roomData?.playerSecretProperties?.hand ?? [];
@@ -276,6 +277,7 @@ class HandOverlay extends StoreComponent
 
                   return <Card
                     key={ card.key }
+                    phase={ phase }
                     gameMode={ gameMode }
                     style={ {
                       marginLeft: !miniView && gameMode === 'kuruit' ? margin : undefined,

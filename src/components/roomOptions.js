@@ -72,7 +72,7 @@ class RoomOptions extends StoreComponent
     if (!roomData)
       return;
 
-    const { master, players, options } = roomData;
+    const { master, options } = roomData;
 
     // if dirty options is undefined
     if (master && !this.state.dirtyOptions)
@@ -85,14 +85,6 @@ class RoomOptions extends StoreComponent
     if (this.state.roomData?.state !== roomData.state)
     {
       wrapperRef.current?.scrollTo({ top: 0 });
-
-      state.highScore = 0;
-
-      players.forEach(({ score }) =>
-      {
-        if (score > state.highScore)
-          state.highScore= score;
-      });
 
       state.optionsUrlCopied = false;
     }
@@ -123,6 +115,7 @@ class RoomOptions extends StoreComponent
         this.store.set({
           entries: [],
           highScore: 0,
+          highScorers: [],
           optionsLoading: false
         });
       }, 2500);
@@ -533,7 +526,7 @@ class RoomOptions extends StoreComponent
         {
           options ?
             <>
-              <MatchHighlight players={ roomData?.players } maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
+              <MatchHighlight maxEntries={ size?.width >= 1080 ? 5 : 3 }/>
 
               { GameModeSelect() }
 

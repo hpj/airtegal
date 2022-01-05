@@ -142,7 +142,22 @@ async function emit(eventName, args)
   }
   else if (eventName === 'create')
   {
-    matchBroadcast();
+    if (params.has('highscorers'))
+    {
+      defaultRoomData.state = 'match';
+      defaultRoomData.players[0].score = 3;
+      defaultRoomData.players[1].score = 3;
+
+      matchBroadcast();
+
+      defaultRoomData.state = 'lobby';
+      
+      setTimeout(() => matchBroadcast(), 1500);
+    }
+    else
+    {
+      matchBroadcast();
+    }
   }
   else if (eventName === 'join')
   {
@@ -224,16 +239,10 @@ function matchBroadcast(roomData)
     ...roomData
   };
 
-  if (params.has('highlights'))
-  {
-    roomData.players[0].score = 3;
-    roomData.players[1].score = 3;
-  }
-
   setTimeout(() => emitter.emit('roomData', roomData));
 }
 
-function startKuruit()
+async function startKuruit()
 {
   /**
   * @type { import('../components/roomOverlay').RoomData }
@@ -288,7 +297,9 @@ function startKuruit()
   {
     room.phase = 'picking';
 
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+
+    room.players[1].role = 'picking';
 
     room.field.push({
       key: Math.random(),
@@ -312,7 +323,8 @@ function startKuruit()
   {
     room.phase = 'judging';
     
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+    room.players[1].role = 'picking';
 
     room.field.push({
       key: Math.random(),
@@ -354,7 +366,8 @@ function startKuruit()
   {
     room.phase = 'judging';
 
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+    room.players[1].role = 'picking';
 
     room.field.push({
       id: 'Mika',
@@ -396,9 +409,11 @@ function startKuruit()
 
     room.players = [ {
       username: 'Mana',
+      role: 'judging',
       state: 'judging'
     }, {
       username: 'Mika',
+      role: 'picking',
       state: 'waiting'
     } ];
     
@@ -430,14 +445,16 @@ function startKuruit()
   {
     room.phase = 'picking';
 
-    room.players[0].state = room.playerProperties.state = 'picking';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'picking';
 
-    room.players[1].state = 'judging';
+    room.players[1].state = room.players[1].role = 'judging';
   
     matchBroadcast(room);
   
     matchLogic = ({ index, content }) =>
     {
+      room.phase = 'judging';
+
       room.players[0].state = room.playerProperties.state = 'waiting';
 
       const card = room.playerSecretProperties.hand.splice(index, 1)[0];
@@ -456,7 +473,7 @@ function startKuruit()
   }
 }
 
-function startDemocracy()
+async function startDemocracy()
 {
   /**
   * @type { import('../components/roomOverlay').RoomData }
@@ -485,10 +502,14 @@ function startDemocracy()
 
   room.field = [];
 
+  const response = await fetch(`${document.location.origin}/audio.mp3`);
+
+  const arrayBuffer = await response.arrayBuffer();
+
   // black card
   room.field.push({
     key: Math.random(),
-    tts: `${document.location.origin}/audio.mp3`,
+    tts: arrayBuffer,
     cards: [ {
       key: Math.random(),
       pick: 1,
@@ -497,11 +518,12 @@ function startDemocracy()
     } ]
   });
 
-  if (params.get('mock') === 'judge')
+  if (params.get('mock') === 'judge' || params.get('mock') === 'votes')
   {
     room.phase = 'judging';
 
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+    room.players[1].role = 'picking';
 
     room.field.push({
       id: 'Mika',
@@ -523,29 +545,46 @@ function startDemocracy()
       } ]
     });
   
-    matchBroadcast(room);
-  
-    matchLogic = ({ index }) =>
+    if (params.get('mock') === 'votes')
     {
       room.phase = 'transaction';
 
       room.players[0].state = room.playerProperties.state = 'waiting';
-
-      room.field[index].highlight = true;
+      room.players[1].state = 'waiting';
       
-      matchBroadcast(room);
-    };
+      room.field[1].votes = [ 'Skye', 'Mika', 'Mana', 'Aire', 'Husseen', 'Aly Rabeeee3' ];
+      room.field[1].highlight = true;
+
+      room.field[2].votes = [ 'Mana', 'حسين' ];
+    }
+    else
+    {
+      matchLogic = ({ index }) =>
+      {
+        room.phase = 'judging';
+  
+        room.players[0].state = room.playerProperties.state = 'waiting';
+        
+        room.field[index].votes = [ 'Skye' ];
+  
+        matchBroadcast(room);
+      };
+    }
+
+    matchBroadcast(room);
   }
-  else if (params.get('mock') === 'spectating-picking')
+  else if (params.get('mock') === 'spectating')
   {
     room.master = '';
     room.phase = 'picking';
 
     room.players = [ {
       username: 'Mana',
+      role: 'judging',
       state: 'judging'
     }, {
       username: 'Mika',
+      role: 'picking',
       state: 'picking'
     } ];
     
@@ -559,9 +598,9 @@ function startDemocracy()
   {
     room.phase = 'picking';
 
-    room.players[0].state = room.playerProperties.state = 'picking';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'picking';
 
-    room.players[1].state = 'judging';
+    room.players[1].state = room.players[1].role = 'judging';
   
     matchBroadcast(room);
   }

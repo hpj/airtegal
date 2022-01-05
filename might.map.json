@@ -591,11 +591,11 @@
       ]
     },
     {
-      "title": "Democracy (Spectating Picking)",
+      "title": "Democracy (Spectating)",
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&match&gameMode=2&mock=spectating-picking"
+          "value": "/play?quiet&match&gameMode=2&mock=spectating"
         },
         {
           "action": "wait",
@@ -747,6 +747,45 @@
         {
           "action": "wait",
           "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Democracy (Judging)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2&mock=judge"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Democracy (Votes)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2&mock=votes"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Highscorers",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&highscorers"
+        },
+        {
+          "action": "wait",
+          "value": 3
         }
       ]
     }

@@ -52,6 +52,7 @@ export let requestRoomData;
 
 /**
 * @typedef { Object } PlayerProperties
+* @property { 'picking' | 'judging' } role
 * @property { 'waiting' | 'picking' | 'judging' | 'spectating' | 'left' } state
 * @property { boolean } rando
 * @property { number } score
@@ -271,6 +272,9 @@ class RoomOverlay extends StoreComponent
     this.store.set({
       blanks: [],
       entries: [],
+      
+      highScore: 0,
+      highScorers: [],
 
       overlayError: '',
       overlayLoading: false,

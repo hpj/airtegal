@@ -53,16 +53,14 @@ class RoomTrackBar extends StoreComponent
       <div className={ styles.name }>{ username }</div>
     </div>;
 
-    //  separate the judge from the rest of the players
-
-    const judges = roomData?.players.filter(player => player.state === 'judging').map((player, index) =>
+    const judges = roomData?.players.filter(player => player.role === 'judging' && roomData.state === 'match').map((player, index) =>
     {
-      return <Player key={ index } turn={ roomData?.phase === 'judging' } username={ player?.username }/>;
+      return <Player key={ index } turn={ player?.state === 'judging' && roomData.phase === 'judging' } username={ player?.username }/>;
     });
 
-    const players = roomData?.players.filter(player => player.state !== 'judging').map((player, index) =>
+    const players = roomData?.players.filter(player => player.role === 'picking' || roomData.state !== 'match').map((player, index) =>
     {
-      return <Player key={ index } turn={ player?.state === 'picking' } username={ player?.username }/>;
+      return <Player key={ index } turn={ player?.state === 'picking' && roomData.phase === 'picking' } username={ player?.username }/>;
     });
 
     return <div className={ styles.wrapper }>
@@ -72,7 +70,7 @@ class RoomTrackBar extends StoreComponent
       } }>
         <div>
           {
-            judges?.length ? <div className={ styles.title }>
+            judges?.length && roomData.state === 'match' ? <div className={ styles.title }>
               { translation(gameMode === 'kuruit' ? 'judge' : 'judges') }
             </div> : undefined
           }
@@ -81,7 +79,7 @@ class RoomTrackBar extends StoreComponent
 
         <div>
           {
-            judges?.length ? <div className={ styles.title }>
+            players?.length && roomData.state === 'match' ? <div className={ styles.title }>
               { translation(gameMode === 'kuruit' ? 'players' : 'competitors') }
             </div> : undefined
           }

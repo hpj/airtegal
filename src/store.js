@@ -193,8 +193,6 @@ export default class Store
 
     const promises = [];
 
-    const changesFingerprint = booleanify(this.changes);
-
     // loop though all subscriptions to inform components that state will change
     this.subscriptions.forEach(component =>
     {
@@ -208,6 +206,8 @@ export default class Store
         keys.forEach(key => this.changes[key] = this.state[key] = modified[key]);
       }
     });
+
+    const changesFingerprint = booleanify(this.changes);
 
     this.subscriptions.forEach((component) =>
     {
