@@ -74,7 +74,15 @@ class MatchHighlights extends StoreComponent
   {
     const { maxEntries, players, translation, locale } = this.props;
 
-    const { highScore, entries } = this.state;
+    let highScore = 0;
+
+    const { entries } = this.state;
+
+    players.forEach(({ score }) =>
+    {
+      if (score > highScore)
+        highScore = score;
+    });
 
     const highScorers = players
       .filter(({ score }) => score === highScore)

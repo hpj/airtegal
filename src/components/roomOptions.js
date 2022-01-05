@@ -86,14 +86,6 @@ class RoomOptions extends StoreComponent
     {
       wrapperRef.current?.scrollTo({ top: 0 });
 
-      state.highScore = 0;
-
-      players.forEach(({ score }) =>
-      {
-        if (score > state.highScore)
-          state.highScore= score;
-      });
-
       state.optionsUrlCopied = false;
     }
 
@@ -122,7 +114,6 @@ class RoomOptions extends StoreComponent
       {
         this.store.set({
           entries: [],
-          highScore: 0,
           optionsLoading: false
         });
       }, 2500);
