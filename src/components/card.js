@@ -76,10 +76,8 @@ class Card extends React.Component
 
   onChange(e)
   {
-    const { locale } = this.props;
-
     this.setState({
-      content: e.target.value.replace(locale.blank, '').replace(/\s+/g, ' ')
+      content: e.target.value.replace(/\s+/g, ' ')
     });
   }
 
