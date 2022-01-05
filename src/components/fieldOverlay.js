@@ -23,12 +23,6 @@ const colors = getTheme();
 */
 const overlayRef = createRef();
 
-/**
-* @typedef { object } State
-* @prop { import('./roomOverlay').RoomData } roomData
-* @prop { import('./roomOverlay').RoomData['field'] } field
-* @extends {React.Component<{}, State>}
-*/
 class FieldOverlay extends StoreComponent
 {
   constructor()

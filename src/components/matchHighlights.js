@@ -26,12 +26,15 @@ class MatchHighlights extends StoreComponent
   {
     super({
       highScore: 0,
+      highScorers: [],
       entries: []
     });
   }
 
   componentDidMount()
   {
+    super.componentDidMount();
+
     const params = new URL(document.URL).searchParams;
     
     if (process.env.NODE_ENV === 'test' && params.has('highlights'))
@@ -53,9 +56,33 @@ class MatchHighlights extends StoreComponent
     }
   }
 
+  stateWillChange(state)
+  {
+    if (state.roomData?.state === 'match')
+    {
+      let highScore = 0;
+      let highScorers = [];
+  
+      state.roomData?.players.forEach(({ score }) =>
+      {
+        if (score > highScore)
+          highScore = score;
+      });
+
+      highScorers = state.roomData?.players
+        .filter(({ score }) => score === highScore)
+        .map(({ username }) => username);
+
+      return {
+        highScore,
+        highScorers
+      };
+    }
+  }
+
   stateWhitelist(changes)
   {
-    if (changes?.entries || changes?.highScore)
+    if (changes?.entries || changes?.highScore || changes?.highScorers)
       return true;
   }
 
@@ -72,22 +99,9 @@ class MatchHighlights extends StoreComponent
 
   render()
   {
-    const { maxEntries, players, translation, locale } = this.props;
+    const { maxEntries, translation, locale } = this.props;
 
-    let highScore = 0;
-
-    const { entries } = this.state;
-
-    players.forEach(({ score }) =>
-    {
-      if (score > highScore)
-        highScore = score;
-    });
-
-    const highScorers = players
-      .filter(({ score }) => score === highScore)
-      .map(({ username }) => username)
-      .join(translation('and'));
+    const { entries, highScore, highScorers } = this.state;
 
     return (
       <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
@@ -106,7 +120,7 @@ class MatchHighlights extends StoreComponent
             {
               [
                 translation('congrats'),
-                highScorers,
+                highScorers.join(translation('and')),
                 translation('highScorers', highScorers.length),
                 translation('by'),
                 translation('score', highScore, true)

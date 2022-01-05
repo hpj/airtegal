@@ -272,6 +272,9 @@ class RoomOverlay extends StoreComponent
     this.store.set({
       blanks: [],
       entries: [],
+      
+      highScore: 0,
+      highScorers: [],
 
       overlayError: '',
       overlayLoading: false,
