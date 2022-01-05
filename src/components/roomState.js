@@ -108,10 +108,6 @@ class RoomState extends StoreComponent
           captureException(err);
         }
       }
-      else
-      {
-        this.audio.pause();
-      }
 
       if (roomData.phase === 'picking' || roomData.phase === 'judging')
       {
