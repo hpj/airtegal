@@ -129,7 +129,7 @@ class Card extends React.Component
       <div className={ styles.top } data-gamemode={ gameMode } data-phase={ phase } data-type={ type } style={ { direction: locale.direction } }>
         {
           votes?.map((username, i) => <div className={ styles.vote } key={ i }>
-            { username }
+            <div>{ username }</div>
           </div>)
         }
       </div>
@@ -310,7 +310,7 @@ const styles = createStyle({
       padding: '15px 10px'
     },
 
-    '[data-gamemode="democracy"][data-phase="judging"]': {
+    '[data-gamemode="democracy"]:not([data-phase="picking"])': {
       padding: '15px 10px'
     }
   },
@@ -388,7 +388,7 @@ const styles = createStyle({
     },
 
     '[data-gamemode="democracy"][data-type="white"]': {
-      fontSize: 'calc(14px + 0.25vw + 0.25vh)'
+      fontSize: 'calc(13px + 0.25vw + 0.25vh)'
     },
 
     ':focus': {
@@ -448,20 +448,23 @@ const styles = createStyle({
     },
 
     '[data-gamemode="democracy"][data-phase="transaction"]': {
-      textAlign: 'center',
-      
-      fontSize: 'calc(12px + 0.25vw + 0.25vh)',
+      padding: '0 10px',
+      fontSize: 'calc(11px + 0.25vw + 0.25vh)',
 
       '> :nth-child(1)': {
-        display: 'none'
+        padding: '0',
+        transform: 'scale(1.25)'
       }
     }
   },
 
   vote: {
+    display: 'flex',
+    alignItems: 'center',
     color: colors.blackCardForeground,
     backgroundColor: colors.blackCardBackground,
-    height: 'fit-content',
+    height: 'auto',
+    margin: '0px -1px',
     padding: '10px 20px'
   },
 
