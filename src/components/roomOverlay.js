@@ -52,6 +52,7 @@ export let requestRoomData;
 
 /**
 * @typedef { Object } PlayerProperties
+* @property { 'picking' | 'judging' } role
 * @property { 'waiting' | 'picking' | 'judging' | 'spectating' | 'left' } state
 * @property { boolean } rando
 * @property { number } score

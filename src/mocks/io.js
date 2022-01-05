@@ -288,7 +288,9 @@ async function startKuruit()
   {
     room.phase = 'picking';
 
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+
+    room.players[1].role = 'picking';
 
     room.field.push({
       key: Math.random(),
@@ -312,7 +314,8 @@ async function startKuruit()
   {
     room.phase = 'judging';
     
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+    room.players[1].role = 'picking';
 
     room.field.push({
       key: Math.random(),
@@ -354,7 +357,8 @@ async function startKuruit()
   {
     room.phase = 'judging';
 
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+    room.players[1].role = 'picking';
 
     room.field.push({
       id: 'Mika',
@@ -396,9 +400,11 @@ async function startKuruit()
 
     room.players = [ {
       username: 'Mana',
+      role: 'judging',
       state: 'judging'
     }, {
       username: 'Mika',
+      role: 'picking',
       state: 'waiting'
     } ];
     
@@ -430,14 +436,16 @@ async function startKuruit()
   {
     room.phase = 'picking';
 
-    room.players[0].state = room.playerProperties.state = 'picking';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'picking';
 
-    room.players[1].state = 'judging';
+    room.players[1].state = room.players[1].role = 'judging';
   
     matchBroadcast(room);
   
     matchLogic = ({ index, content }) =>
     {
+      room.phase = 'judging';
+
       room.players[0].state = room.playerProperties.state = 'waiting';
 
       const card = room.playerSecretProperties.hand.splice(index, 1)[0];
@@ -505,7 +513,8 @@ async function startDemocracy()
   {
     room.phase = 'judging';
 
-    room.players[0].state = room.playerProperties.state = 'judging';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'judging';
+    room.players[1].role = 'picking';
 
     room.field.push({
       id: 'Mika',
@@ -537,7 +546,7 @@ async function startDemocracy()
       room.field[1].votes = [ 'Skye', 'Mika', 'Mana', 'Aire', 'Husseen', 'Aly Rabeeee3' ];
       room.field[1].highlight = true;
 
-      room.field[2].votes = [ 'Aire', 'Husseen', 'Aly Rabeeee3' ];
+      room.field[2].votes = [ 'Mana', 'حسين' ];
     }
     else
     {
@@ -562,9 +571,11 @@ async function startDemocracy()
 
     room.players = [ {
       username: 'Mana',
+      role: 'judging',
       state: 'judging'
     }, {
       username: 'Mika',
+      role: 'picking',
       state: 'picking'
     } ];
     
@@ -578,9 +589,9 @@ async function startDemocracy()
   {
     room.phase = 'picking';
 
-    room.players[0].state = room.playerProperties.state = 'picking';
+    room.players[0].state = room.players[0].role = room.playerProperties.state = 'picking';
 
-    room.players[1].state = 'judging';
+    room.players[1].state = room.players[1].role = 'judging';
   
     matchBroadcast(room);
   }
