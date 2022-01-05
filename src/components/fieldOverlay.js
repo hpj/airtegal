@@ -75,7 +75,7 @@ class FieldOverlay extends StoreComponent
   {
     if (!allowed)
       return;
-      
+
     const { field } = this.state.roomData;
     
     sendMessage('matchLogic', { index, content }).then(() =>
@@ -191,6 +191,10 @@ class FieldOverlay extends StoreComponent
                   return <div className={ styles.separator } key={ entryIndex }>
                     { translation('or') }
                   </div>;
+                
+                // to counter democracy separators
+                if (roomData.options.gameMode === 'democracy' && entryIndex > 2)
+                  entryIndex -= 1;
 
                 return <div className={ styles.entry } data-gamemode={ gameMode } key={ key }>
                   {
