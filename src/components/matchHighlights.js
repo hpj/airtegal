@@ -106,17 +106,13 @@ class MatchHighlights extends StoreComponent
     return (
       <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
         {
-          highScore > 0 ?
+          highScore > 0 ? <div className={ styles.highScorers }>
             <Lottie
               className={ styles.confetti }
               loop={ process.env.NODE_ENV === 'test' ? false : true }
               initialSegment={ process.env.NODE_ENV === 'test' ? [ 5, 6 ] : undefined }
               animationData={ confettiAnimation }
-            /> : undefined
-        }
-        
-        {
-          highScore > 0 ? <div className={ styles.highScorers }>
+            />
             {
               [
                 translation('congrats'),

@@ -775,6 +775,19 @@
           "value": 2
         }
       ]
+    },
+    {
+      "title": "Highscorers",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&highscorers"
+        },
+        {
+          "action": "wait",
+          "value": 3
+        }
+      ]
     }
   ]
 }

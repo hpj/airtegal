@@ -142,7 +142,22 @@ async function emit(eventName, args)
   }
   else if (eventName === 'create')
   {
-    matchBroadcast();
+    if (params.has('highscorers'))
+    {
+      defaultRoomData.state = 'match';
+      defaultRoomData.players[0].score = 3;
+      defaultRoomData.players[1].score = 3;
+
+      matchBroadcast();
+
+      defaultRoomData.state = 'lobby';
+      
+      setTimeout(() => matchBroadcast(), 1500);
+    }
+    else
+    {
+      matchBroadcast();
+    }
   }
   else if (eventName === 'join')
   {
@@ -223,12 +238,6 @@ function matchBroadcast(roomData)
     ...defaultRoomData,
     ...roomData
   };
-
-  if (params.has('highlights'))
-  {
-    roomData.players[0].score = 3;
-    roomData.players[1].score = 3;
-  }
 
   setTimeout(() => emitter.emit('roomData', roomData));
 }
