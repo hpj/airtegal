@@ -38,7 +38,6 @@
   
   "available-rooms": "الرومات المتاحة",
 
-
   // matchmaking errors
 
   "no-rooms-available": "مفيش رومات",
@@ -53,25 +52,34 @@
   "new-master": "هو دلوقتي صاحب الروم.",
 
   // room options
+
+  "room-options": "اعدادات الروم",
+
+  "change-username": "غير أسمك",
   
   "match-highlights": "هاي لايتز",
 
-  "room-edited": "تم تعديل اعدادت الروم.",
-  "you-were-kicked": "تم طردك من الروم",
+  "congrats": "عاش",
+
+  "highScorers": "هما الي كسبوا الماتش الفات~هو الي كسب الماتش الفات",
+  
+  "score": "نقط~نقطة",
 
   "game-mode": "الجيم مود",
 
-  "free-for-all": "كلة ضد بعض",
-  "co-op": "فرق",
-  
   "kuruit": "كروت",
+  "democracy": "ملك العشؤئيات 2: العودة الديموقراطية",
+  
+  "mode:kuruit": "النكهة الاصلية",
+  "mode:democracy": "ملك العشؤئيات 2: العودة الديموقراطية",
 
   "options": "اعدادات",
 
-  "end-condition": "النهاية:",
-  
   "options-placeholder": "0",
 
+  "by": "بـ",
+  "and": " و",
+  "or": "أو",
   "after": "بعد",
 
   "max-rounds": "جولات~جولة",
@@ -88,7 +96,7 @@
 
   "randos": "أملي باقي الروم بوتات",
 
-  "wait-for-room-master": "استني لحد ما %0 يبدأ الماتش",
+  "wait-for-room-master": "استني لحد ما الروم تبدأ",
 
   "start": "أبدا",
 
@@ -96,6 +104,10 @@
 
   "judge": "القاضي",
   "players": "باقي اللعيبة",
+
+  "judges": "الحكام",
+  "competitors": "المنافسون",
+
   "spectating": "أنت بتتفرج بس",
   "judging": "استني دورك",
 

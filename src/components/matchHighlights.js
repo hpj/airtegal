@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Lottie from 'lottie-react';
+
 import { createStyle } from 'flcss';
 
 import ShareIcon from 'mdi-react/ShareVariantIcon';
@@ -14,6 +16,8 @@ import { fillTheBlanks } from '../utils';
 
 import { StoreComponent } from '../store.js';
 
+import confettiAnimation from '../animations/confetti-2.json';
+
 const colors = getTheme();
 
 class MatchHighlights extends StoreComponent
@@ -21,12 +25,16 @@ class MatchHighlights extends StoreComponent
   constructor()
   {
     super({
+      highScore: 0,
+      highScorers: [],
       entries: []
     });
   }
 
   componentDidMount()
   {
+    super.componentDidMount();
+
     const params = new URL(document.URL).searchParams;
     
     if (process.env.NODE_ENV === 'test' && params.has('highlights'))
@@ -48,9 +56,33 @@ class MatchHighlights extends StoreComponent
     }
   }
 
+  stateWillChange(state)
+  {
+    if (state.roomData?.state === 'match')
+    {
+      let highScore = 0;
+      let highScorers = [];
+  
+      state.roomData?.players.forEach(({ score }) =>
+      {
+        if (score > highScore)
+          highScore = score;
+      });
+
+      highScorers = state.roomData?.players
+        .filter(({ score }) => score === highScore)
+        .map(({ username }) => username);
+
+      return {
+        highScore,
+        highScorers
+      };
+    }
+  }
+
   stateWhitelist(changes)
   {
-    if (changes?.entries)
+    if (changes?.entries || changes?.highScore || changes?.highScorers)
       return true;
   }
 
@@ -67,43 +99,68 @@ class MatchHighlights extends StoreComponent
 
   render()
   {
-    const { maxEntries, locale } = this.props;
+    const { maxEntries, translation, locale } = this.props;
 
-    const { entries } = this.state;
+    const { entries, highScore, highScorers } = this.state;
 
-    if (!entries?.length)
-      return <div/>;
+    return (
+      <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
+        {
+          highScore > 0 ? <div className={ styles.highScorers }>
+            <Lottie
+              className={ styles.confetti }
+              loop={ process.env.NODE_ENV === 'test' ? false : true }
+              initialSegment={ process.env.NODE_ENV === 'test' ? [ 5, 6 ] : undefined }
+              animationData={ confettiAnimation }
+            />
+            {
+              [
+                translation('congrats'),
+                highScorers.join(translation('and')),
+                translation('highScorers', highScorers.length),
+                translation('by'),
+                translation('score', highScore, true)
+              ].join(' ')
+            }
+            { '.' }
+          </div> : undefined
+        }
+        
+        {
+          entries.slice(0, maxEntries)
+            .map(e => fillTheBlanks(e[0], e.slice(1)))
+            .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(entries[k]) }>
+              <div>
+                {
+                  e.split('\n').map((t, i) =>
+                    <span key={ i } style = { { borderBottom: i % 2 ? '2px solid' : undefined } }>
+                      { t }
+                    </span>)
+                }
+              </div>
 
-    return <div id={ 'match-highlights' } className={ styles.container } style={ { direction: locale.direction } }>
-      {
-        entries.slice(0, maxEntries)
-          .map(e => fillTheBlanks(e[0], e.slice(1)))
-          .map((e, k) => <div key={ k } className={ styles.entry } onClick={ () => this.share(entries[k]) }>
-            <div>
-              {
-                e.split('\n').map((t, i) =>
-                  <span key={ i } style = { { borderBottom: i % 2 ? '2px solid' : undefined } }>
-                    { t }
-                  </span>)
-              }
-            </div>
-
-            <ShareIcon className={ styles.icon }/>
-          </div>)
-      }
-    </div>;
+              <ShareIcon className={ styles.icon }/>
+            </div>)
+        }
+      </div>
+    );
   }
 }
 
 const styles = createStyle({
   container: {
     display: 'flex',
+    overflow: 'hidden',
+    position: 'relative',
     flexWrap: 'wrap',
     
     justifyContent: 'center',
 
     gap: '25px',
-    margin: '25px'
+
+    ':not(:empty)': {
+      margin: '25px'
+    }
   },
 
   entry: {
@@ -129,12 +186,25 @@ const styles = createStyle({
     }
   },
 
+  highScorers: {
+    extend: 'entry',
+    flexBasis: '100%',
+    whiteSpace: 'pre',
+    justifyContent: 'center'
+  },
+
+  confetti: {
+    position: 'absolute',
+    pointerEvents: 'none',
+    width: '300%',
+    height: '300%',
+    top: '-100%'
+  },
+
   icon: {
     flexGrow: 1,
-    
     minWidth: '16px',
     height: '16px',
-
     margin: '0 15px'
   }
 });

@@ -1,11 +1,11 @@
 name: test
 
 on:
+  pull_request:
   push:
     branches:
     - development
     - release
-  pull_request:
     
 jobs:
   Might:

@@ -10,7 +10,6 @@ const locales = [
     language: 'en',
     locale: 'en-US',
     direction: 'ltr',
-    blank: /[^A-z0-9 /!؟_\-.]/g,
     data: enUS
   },
   {
@@ -19,7 +18,6 @@ const locales = [
     language: 'ar',
     locale: 'ar-EG',
     direction: 'rtl',
-    blank: /[^\u0621-\u064A0-9 /!؟_\-.]/g,
     data: arEG
   }
 ];

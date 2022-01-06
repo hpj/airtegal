@@ -161,6 +161,22 @@
         },
         {
           "action": "select",
+          "value": "#room-options-select-game-mode"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#room-options-game-mode-2"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
           "value": "#room-options-randos"
         },
         {
@@ -266,7 +282,7 @@
         },
         {
           "action": "select",
-          "value": "#match-highlights > :nth-child(2)"
+          "value": "#match-highlights > :nth-child(3)"
         },
         {
           "action": "click",
@@ -329,7 +345,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&match&mock=spectator"
+          "value": "/play?quiet&match&mock=spectating"
         },
         {
           "action": "wait",
@@ -342,7 +358,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&join=t&mock=spectator"
+          "value": "/play?quiet&join=t&mock=spectating"
         },
         {
           "action": "wait",
@@ -410,7 +426,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&create&highlights=Test?~Yes|Green, ______ and ______.~Red~Blue|Tasty!~Butts|Invalid~Red"
+          "value": "/play?quiet&create&highlights"
         },
         {
           "action": "wait",
@@ -465,7 +481,7 @@
         },
         {
           "action": "select",
-          "value": "#match-highlights > :nth-child(2)"
+          "value": "#match-highlights > :nth-child(3)"
         },
         {
           "action": "click",
@@ -495,7 +511,7 @@
       "steps": [
         {
           "action": "goto",
-          "value": "/play?quiet&list"
+          "value": "/play?quiet&list&reserveLocalStorage"
         },
         {
           "action": "wait",
@@ -571,6 +587,205 @@
         {
           "action": "wait",
           "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Democracy (Spectating)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2&mock=spectating"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Democracy (Picking)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Update Username in Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet"
+        },
+        {
+          "action": "wait",
+          "value": "#username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#username-input"
+        },
+        {
+          "action": "type",
+          "value": "حسين"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Close Username Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet"
+        },
+        {
+          "action": "wait",
+          "value": "#username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        },
+        {
+          "action": "select",
+          "value": "#username-input"
+        },
+        {
+          "action": "type",
+          "value": "حسين"
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "50v"
+          ]
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Username Overlay",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet"
+        },
+        {
+          "action": "wait",
+          "value": "#username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Change Username Inside Room",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create"
+        },
+        {
+          "action": "wait",
+          "value": "#room-options-username"
+        },
+        {
+          "action": "click",
+          "value": "left"
+        },
+        {
+          "action": "select",
+          "value": "#username-input"
+        },
+        {
+          "action": "type",
+          "value": "حسين"
+        },
+        {
+          "action": "swipe",
+          "value": [
+            "0",
+            "0",
+            "0",
+            "50v"
+          ]
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Democracy (Judging)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2&mock=judge"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Democracy (Votes)",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&match&gameMode=2&mock=votes"
+        },
+        {
+          "action": "wait",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "title": "Highscorers",
+      "steps": [
+        {
+          "action": "goto",
+          "value": "/play?quiet&create&highscorers"
+        },
+        {
+          "action": "wait",
+          "value": 3
         }
       ]
     }

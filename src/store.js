@@ -3,6 +3,12 @@
 import React from 'react';
 
 /**
+* @typedef { object } State
+* @prop { import('./components/roomOverlay.js').RoomData } roomData
+* @prop { import('./components/roomOverlay.js').RoomOptionsT } dirtyOptions
+*/
+
+/**
 * @type { Store }
 */
 let store;
@@ -29,11 +35,17 @@ export class StoreComponent extends React.Component
     // get store
     this.store = getStore();
 
+    /**
+    * @type { State }
+    */
     this.state = {
       ...state,
       ...this.store.state
     };
 
+    /**
+    * @type { State }
+    */
     this.store.state = {
       ...state,
       ...this.store.state
@@ -52,8 +64,8 @@ export class StoreComponent extends React.Component
 
   /** Emits before the state changes,
   * allows modification to the state before it's dispatched
-  * @param { {} } newState
-  * @returns { {} | void } modified new state
+  * @param { State } newState
+  * @returns { State | void } modified new state
   */
   stateWillChange(newState)
   {
@@ -63,7 +75,7 @@ export class StoreComponent extends React.Component
   /** whitelist what changes all allowed to be dispatched to this component
   * refusing any dispatch improves app performance and is recommended (specially on large apps)
   * not overriding this function will allow the component to receive all dispatches
-  * @param { {} } changes the changes made to this state dispatch
+  * @param { State } changes the changes made to this state dispatch
   * @returns { boolean }
   */
   stateWhitelist(changes)
@@ -72,9 +84,9 @@ export class StoreComponent extends React.Component
   }
 
   /** Emits after a new state has been dispatched
-  * @param { {} } state
-  * @param { {} } changes
-  * @param { {} } old
+  * @param { State } state
+  * @param { State } changes
+  * @param { State } old
   */
   stateDidChange(state, changes, old)
   {
@@ -181,8 +193,6 @@ export default class Store
 
     const promises = [];
 
-    const changesFingerprint = booleanify(this.changes);
-
     // loop though all subscriptions to inform components that state will change
     this.subscriptions.forEach(component =>
     {
@@ -196,6 +206,8 @@ export default class Store
         keys.forEach(key => this.changes[key] = this.state[key] = modified[key]);
       }
     });
+
+    const changesFingerprint = booleanify(this.changes);
 
     this.subscriptions.forEach((component) =>
     {

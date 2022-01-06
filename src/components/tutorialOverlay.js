@@ -36,7 +36,7 @@ class TutorialOverlay extends React.Component
     
     this.storageKey = 'airtegal-kuruit-tutorial';
 
-    if (!localStorage.getItem(this.storageKey))
+    if (!localStorage.getItem?.(this.storageKey))
       visible = true;
 
     if (process.env.NODE_ENV === 'test' && params?.has('quiet'))

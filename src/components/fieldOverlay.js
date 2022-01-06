@@ -1,14 +1,14 @@
 import React, { createRef } from 'react';
 
-import { createStyle } from 'flcss';
+import { createAnimation, createStyle } from 'flcss';
 
 import { StoreComponent } from '../store.js';
 
-import { socket, sendMessage } from '../utils.js';
+import { sendMessage } from '../utils.js';
 
 import { shareRef } from '../screens/game.js';
 
-import getTheme from '../colors.js';
+import getTheme, { opacity } from '../colors.js';
 
 import { withTranslation } from '../i18n.js';
 
@@ -23,12 +23,6 @@ const colors = getTheme();
 */
 const overlayRef = createRef();
 
-/**
-* @typedef { object } State
-* @prop { import('./roomOverlay').RoomData } roomData
-* @prop { import('./roomOverlay').RoomData['field'] } field
-* @extends {React.Component<{}, State>}
-*/
 class FieldOverlay extends StoreComponent
 {
   constructor()
@@ -75,24 +69,21 @@ class FieldOverlay extends StoreComponent
   {
     if (!allowed)
       return;
-      
-    const { options, field } = this.state.roomData;
+
+    const { field } = this.state.roomData;
     
     sendMessage('matchLogic', { index, content }).then(() =>
     {
       // store the entry for the match highlights
 
-      if (options.gameMode === 'kuruit')
-      {
-        const { entries } = this.state;
+      const { entries } = this.state;
   
-        entries.push([
-          field[0].cards[0].content,
-          ...field[index].cards.map(c => c.content)
-        ]);
+      entries.push([
+        field[0].cards[0].content,
+        ...field[index].cards.map(c => c.content)
+      ]);
 
-        this.store.set({ entries });
-      }
+      this.store.set({ entries });
     });
   }
 
@@ -101,15 +92,12 @@ class FieldOverlay extends StoreComponent
   */
   share(index)
   {
-    const { options, field } = this.state.roomData;
+    const { field } = this.state.roomData;
 
-    if (options.gameMode === 'kuruit')
-    {
-      shareRef.current?.shareEntry({
-        black: field[0]?.cards[0]?.content,
-        white: field[index]?.cards?.map(c => c.content)
-      });
-    }
+    shareRef.current?.shareEntry({
+      black: field[0]?.cards[0]?.content,
+      white: field[index]?.cards?.map(c => c.content)
+    });
   }
 
   render()
@@ -118,9 +106,12 @@ class FieldOverlay extends StoreComponent
 
     const { roomData, fieldHidden, fieldVisible } = this.state;
 
-    const field = roomData?.field ?? [];
+    let field = roomData?.field ?? [];
 
-    const playerState = roomData?.playerProperties[socket.id]?.state;
+    const playerState = roomData?.playerProperties.state;
+
+    const phase = roomData?.phase;
+    const gameMode = roomData?.options.gameMode;
     
     const onMovement = ({ x }) =>
     {
@@ -130,6 +121,16 @@ class FieldOverlay extends StoreComponent
       else if (!fieldHidden || fieldVisible)
         this.store.set({ fieldHidden: false });
     };
+
+    if (gameMode === 'democracy')
+    {
+      // show only the black card
+      if (phase === 'picking')
+        field = [ field[0] ];
+      // add a separator element
+      else if (phase === 'judging' || phase === 'transaction')
+        field = [ field[0], field[1], { type: 'separator' }, field[2] ];
+    }
 
     return <div className={ styles.view }>
       <Interactable
@@ -164,34 +165,52 @@ class FieldOverlay extends StoreComponent
       >
         <div className={ styles.wrapper }>
 
-          <div className={ styles.indicator } style={ { direction: locale.direction } }>
+          <div className={ styles.banner } style={ { direction: locale.direction } }>
             {
-              !playerState ? translation('spectating') :
+              // show spectators a banner that they are only watching
+              playerState === 'spectating' ? translation('spectating') :
+                // show judges a banner that they have to wait
                 roomData?.phase === 'picking' && playerState === 'judging' ? translation('judging') :
                   undefined
             }
           </div>
           
-          <div id={ 'kuruit-field-overlay' } className={ styles.container } style={ { direction: locale.direction } }>
+          <div id={ 'kuruit-field-overlay' } className={ styles[gameMode] } data-phase={ phase } style={ { direction: locale.direction } }>
             {
-              field.map((entry, entryIndex) =>
+              field.map(({ key, id, type, cards, highlight, votes }, entryIndex) =>
               {
                 const allowed = playerState === 'judging' && entryIndex > 0;
 
-                return <div className={ styles.entry } key={ entry.key }>
+                if (type === 'separator')
+                  return <div className={ styles.separator } key={ entryIndex }>
+                    { translation('or') }
+                  </div>;
+                
+                // to counter democracy separators
+                if (roomData.options.gameMode === 'democracy' && entryIndex > 2)
+                  entryIndex -= 1;
+
+                return <div className={ styles.entry } data-gamemode={ gameMode } key={ key }>
                   {
-                    entry.cards?.map((card, cardIndex) => <Card
-                      key={ card.key }
-                      type={ card.type }
-                      content={ card.content }
-                      hidden={ !card.content }
-                      allowed={ allowed }
-                      self={ roomData?.phase === 'transaction' && entry.id === socket.id && card.type === 'white' }
-                      owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? roomData?.playerProperties[entry.id]?.username : undefined }
-                      winner= { entry.highlight }
-                      share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
-                      onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
-                    />)
+                    cards?.map((card, cardIndex) =>
+                    {
+                      return <Card
+                        key={ card.key }
+                        type={ card.type }
+                        content={ card.content }
+                        hidden={ !card.content }
+                        allowed={ allowed }
+                        votes={ votes }
+                        winner= { highlight }
+                        locale={ locale }
+                        translation={ translation }
+                        phase={ phase }
+                        gameMode={ gameMode }
+                        share={ roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 }
+                        owner={ (roomData?.phase === 'transaction' && card.type === 'white') ? id : undefined }
+                        onClick={ () => roomData?.phase === 'transaction' && card.type === 'white' && cardIndex === 0 ? this.share(entryIndex) : this.submit(entryIndex, undefined, allowed) }
+                      />;
+                    })
                   }
                 </div>;
               })
@@ -202,6 +221,38 @@ class FieldOverlay extends StoreComponent
     </div>;
   }
 }
+
+const hoverAnimation = createAnimation({
+  duration: '0.75s',
+  timingFunction: 'ease-in-out',
+  iterationCount: process.env.NODE_ENV === 'test' ? '0' : 'infinite',
+  fillMode: 'forwards',
+  direction: 'alternate',
+  keyframes: {
+    from: {
+      transform: 'translateY(-10px) rotateZ(2deg)'
+    },
+    to: {
+      transform: 'translateY(-5px) rotateZ(-2deg)'
+    }
+  }
+});
+
+const shakeAnimation = createAnimation({
+  duration: '3s',
+  timingFunction: 'cubic-bezier(0.65, 0.05, 0.36, 1)',
+  iterationCount: process.env.NODE_ENV === 'test' ? '0' : 'infinite',
+  fillMode: 'forwards',
+  direction: 'alternate',
+  keyframes: {
+    '0%': {
+      transform: 'translateY(-10px) rotateZ(20deg)'
+    },
+    '100%': {
+      transform: 'translateY(-10px) rotateZ(-20deg)'
+    }
+  }
+});
 
 const styles = createStyle({
   view: {
@@ -229,14 +280,14 @@ const styles = createStyle({
     }
   },
 
-  indicator: {
+  banner: {
     display: 'flex',
     position: 'relative',
     justifyContent: 'center',
 
     userSelect: 'none',
 
-    color: colors.blackText,
+    color: opacity(colors.blackText, colors.semitransparent),
     backgroundColor: colors.trackBarBackground,
   
     fontSize: 'calc(6px + 0.35vw + 0.35vh)',
@@ -256,10 +307,100 @@ const styles = createStyle({
     }
   },
 
-  container: {
+  kuruit: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center'
+  },
+
+  democracy: {
+    display: 'grid',
+
+    ':not([data-phase="picking"])': {
+      height: 'auto',
+      maxWidth: '960px',
+
+      margin: '0 auto',
+      
+      alignItems: 'center',
+
+      gridTemplateAreas: '". . ." "title title title" "a or b" ". . ."',
+      gridTemplateRows: '1fr min-content min-content 1fr',
+
+      '@media screen and (max-width: 840px)': {
+        gridTemplateAreas: '"." "title" "a" "or" "b" "."',
+        gridTemplateRows: '1fr min-content min-content min-content min-content 1fr',
+
+        '> :nth-child(1)': {
+          margin: '5vh auto',
+          transform: 'rotateZ(2deg)'
+        },
+
+        '> :nth-child(2)': {
+          transform: 'rotateZ(-2deg)'
+        },
+
+        '> :nth-child(3)': {
+          transform: 'rotateZ(2deg)'
+        },
+
+        '> :nth-child(4)': {
+          transform: 'rotateZ(4deg)'
+        }
+      },
+
+      '> :nth-child(1)': {
+        gridArea: 'title',
+        margin: '10vh auto',
+        transform: 'rotateZ(2deg)'
+      },
+
+      '> :nth-child(2)': {
+        gridArea: 'a',
+        margin: '2.5vh auto',
+        transform: 'rotateZ(4deg)'
+      },
+
+      '> :nth-child(3)': {
+        gridArea: 'or',
+        animation: shakeAnimation,
+        margin: '15px auto'
+      },
+
+      '> :nth-child(4)': {
+        gridArea: 'b',
+        margin: '2.5vh auto',
+        transform: 'rotateZ(-8deg)'
+      }
+    },
+
+    '[data-phase="picking"]': {
+      height: '50%',
+
+      alignItems: 'center',
+      justifyContent: 'center',
+      
+      '> :nth-child(1)': {
+        animation: hoverAnimation,
+        transform: 'translateY(-10px) rotateZ(2deg)'
+      }
+    }
+  },
+
+  separator: {
+    display: 'flex',
+    userSelect: 'none',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    width: '42px',
+    height: '42px',
+        
+    fontSize: 'calc(11px + 0.25vw + 0.25vh)',
+
+    color: colors.whiteCardForeground,
+    backgroundColor: colors.whiteCardBackground
   },
 
   entry: {
@@ -270,7 +411,8 @@ const styles = createStyle({
       margin: '20px 2.5vw'
     },
 
-    ':after': {
+    // group lines
+    '[data-gamemode="kuruit"]:after': {
       content: '""',
       position: 'absolute',
       backgroundColor: colors.fieldGroupLine,

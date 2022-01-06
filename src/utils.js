@@ -1,10 +1,12 @@
+import * as Sentry from '@sentry/react';
+
 import { io } from 'socket.io-client';
 
 import { locale, translation } from './i18n.js';
 
 import * as mocks from './mocks/io.js';
 
-const version = '2.6';
+const version = '2022.1-0';
 
 /**
 * @type { import('socket.io-client').Socket }
@@ -15,7 +17,7 @@ export let socket;
 export const isTouchScreen = ('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
 
 /**
-* @type { { touch: boolean, randos: boolean, kuruit: boolean } }
+* @type { { touch: boolean, randos: boolean, kuruit: boolean, democracy: boolean } }
 */
 export const features = {};
 
@@ -50,7 +52,7 @@ export function connect()
       };
 
       // all game-modes are turned off
-      if (!features.kuruit)
+      if (!features.kuruit && !features.democracy)
       {
         throw new Error(translation('server-mismatch'));
       }
@@ -189,6 +191,16 @@ export function shuffle(array)
   }
 
   return array;
+}
+
+export function captureException(err, extra)
+{
+  console.error(err);
+
+  Sentry.captureException(err, {
+    extra,
+    level: Sentry.Severity.Error
+  });
 }
 
 /**
