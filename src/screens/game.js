@@ -301,6 +301,8 @@ class Game extends React.Component
 
       const gameMode = room.options.gameMode;
 
+      highlights.push(`${translation(`mode:${gameMode}`)}.`);
+
       if (room.options.endCondition === 'limited')
         highlights.push(`${translation('max-rounds', room.options.maxRounds, true)}.`);
       else if (room.options.endCondition === 'timer')
