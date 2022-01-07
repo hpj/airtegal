@@ -375,12 +375,15 @@ const styles = createStyle({
     overflow: 'hidden',
 
     width: '100%',
+    
+    minHeight: Card.size.height,
 
     padding: 0,
     border: 0,
 
     '[data-gamemode="democracy"]': {
       margin: 'auto 0',
+      minHeight: 'unset',
       fontSize: 'calc(10px + 0.25vw + 0.25vh)',
       textAlign: 'center !important'
     },

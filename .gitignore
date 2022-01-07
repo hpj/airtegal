@@ -2,7 +2,8 @@
 
 __coverage__
 
-might.error.*.*
+might.error.**
+might.diff.**
 
 .todo
 
