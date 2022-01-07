@@ -81,31 +81,17 @@ class RoomState extends StoreComponent
     {
       clearInterval(this.countdownInterval);
 
-      if (roomData.options.gameMode === 'democracy' && roomData.phase === 'picking')
+      if (roomData.options.gameMode === 'democracy' && roomData.phase === 'picking' && roomData.field[0].tts instanceof ArrayBuffer)
       {
-        try
-        {
-          if (roomData.field[0].tts instanceof ArrayBuffer)
-          {
-            const src = window.URL.createObjectURL(new Blob([ roomData.field[0].tts ], { 'type': 'audio/mp3' }));
+        const src = window.URL.createObjectURL(new Blob([ roomData.field[0].tts ], { 'type': 'audio/mp3' }));
 
-            if (this.audio.src !== src)
-            {
-              this.audio.src = src;
-              
-              this.audio.currentTime = 0;
-    
-              this.audio.play();
-            }
-          }
-          else
-          {
-            throw new TypeError('text-to-speech data is not an instance of ArrayBuffer');
-          }
-        }
-        catch (err)
+        if (this.audio.src !== src)
         {
-          captureException(err);
+          this.audio.src = src;
+              
+          this.audio.currentTime = 0;
+    
+          this.audio.play();
         }
       }
 
