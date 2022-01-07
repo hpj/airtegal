@@ -71,7 +71,7 @@ class Card extends React.Component
 
   back()
   {
-    this.textareaRef?.current.blur();
+    this.textareaRef.current?.blur();
   }
 
   onChange(e)
