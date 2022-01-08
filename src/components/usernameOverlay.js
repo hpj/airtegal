@@ -145,7 +145,7 @@ class UsernameOverlay extends React.Component
             id={ 'username-input' }
             className={ styles.input }
             style={ { direction: locale.direction } }
-            maxLength={ 18 }
+            maxLength={ 28 }
             value={ this.state.username }
             placeholder={ translation('placeholder') }
             onChange={ e =>
