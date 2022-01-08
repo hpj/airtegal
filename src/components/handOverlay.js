@@ -166,15 +166,10 @@ class HandOverlay extends StoreComponent
 
     const { textareaRef } = element;
 
-    const value = textareaRef.current?.value.trim();
+    const content = textareaRef.current?.value.trim();
 
-    if ((card.blank && element.focused && value?.length > 0) || !card.blank)
-      this.sendCard(index, value);
-  }
-
-  sendCard(index, content)
-  {
-    sendMessage('matchLogic', { index, content });
+    if (!card.blank || card.blank && content?.length > 0)
+      sendMessage('matchLogic', { index, content });
   }
 
   render()

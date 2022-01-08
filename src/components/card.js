@@ -23,8 +23,6 @@ class Card extends React.Component
   {
     super();
 
-    this.focused = false;
-
     this.state = {
       content: undefined
     };
@@ -34,7 +32,12 @@ class Card extends React.Component
     */
     this.textareaRef = createRef();
 
-    this.back = this.back.bind(this);
+    this.onClick = this.onClick.bind(this);
+
+    this.onFocus = this.onFocus.bind(this);
+    this.onBlur = this.onBlur.bind(this);
+
+    this.onBack = this.onBack.bind(this);
   }
 
   static get size()
@@ -69,9 +72,43 @@ class Card extends React.Component
     };
   }
 
-  back()
+  onFocus()
   {
-    this.textareaRef?.current.blur();
+    const { blank } = this.props;
+
+    if (blank)
+      stack.register(this.onBack);
+  }
+
+  onBlur()
+  {
+    stack.unregister(this.onBack);
+
+    this.setState({
+      focused: false
+    });
+  }
+
+  onClick(e)
+  {
+    e?.preventDefault();
+    e?.stopPropagation();
+
+    if (this.props.blank && !this.state.focused)
+    {
+      this.setState({
+        focused: true
+      });
+    }
+    else
+    {
+      this.props.onClick?.(this);
+    }
+  }
+
+  onBack()
+  {
+    this.textareaRef.current?.blur();
   }
 
   onChange(e)
@@ -84,11 +121,10 @@ class Card extends React.Component
   render()
   {
     const {
-      content,
+      content, type,
       style, blank,
       owner, votes,
       gameMode, phase,
-      type, onClick,
       locale, translation
     } = this.props;
 
@@ -107,7 +143,7 @@ class Card extends React.Component
     if (owner && type === 'white')
       bottom = owner;
     else if (gameMode === 'kuruit' && blank && !hidden)
-      bottom = translation('blank');
+      bottom = translation('blank:title');
     else if (gameMode === 'kuruit' && !hidden)
       bottom = translation('kuruit');
     else if (gameMode === 'democracy')
@@ -139,16 +175,7 @@ class Card extends React.Component
         data-allowed={ (allowed || share) && !hidden }
         data-winner={ winner }
         className={ styles.container }
-        onClick={ e =>
-        {
-          e.preventDefault();
-          e.stopPropagation();
-
-          if (blank)
-            stack.register(this.back);
-
-          onClick(this);
-        } }
+        onClick={ this.onClick }
       >
         {
           hidden ? <div className={ styles.hidden } data-type={ type } style={ { direction: locale.direction } }>
@@ -172,42 +199,22 @@ class Card extends React.Component
 
               maxLength={ 105 }
 
-              placeholder={ blank ? translation('blank') : undefined }
+              placeholder={ blank ? translation('blank:placeholder') : undefined }
               
               data-type={ type }
               data-gamemode={ gameMode }
 
               onKeyDown={ e =>
               {
-                if (!this.focused)
-                  return;
-                
-                if (e.code === 'Enter')
-                  onClick(this);
+                if (e.code === 'Enter' && document.activeElement === this.textareaRef.current)
+                  this.onClick(e);
               } }
 
-              onClick={ e =>
-              {
-                this.focused = true;
+              onClick={ this.onClick }
 
-                e.preventDefault();
-                e.stopPropagation();
+              onFocus={ this.onFocus }
 
-                if (blank)
-                  stack.register(this.back);
-
-                onClick(this);
-              } }
-
-              onBlur={ () =>
-              {
-                this.focused = false;
-
-                this.setState({ content: '' });
-
-                if (blank)
-                  stack.unregister(this.back);
-              } }
+              onBlur={ this.onBlur }
 
               onChange={ e => this.onChange(e) }
             />
@@ -375,12 +382,15 @@ const styles = createStyle({
     overflow: 'hidden',
 
     width: '100%',
+    
+    minHeight: Card.size.height,
 
     padding: 0,
     border: 0,
 
     '[data-gamemode="democracy"]': {
       margin: 'auto 0',
+      minHeight: 'unset',
       fontSize: 'calc(10px + 0.25vw + 0.25vh)',
       textAlign: 'center !important'
     },
