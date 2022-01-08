@@ -167,7 +167,13 @@ const styles = createStyle({
   wrapper: {
     gridArea: 'state',
 
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    
     backgroundColor: colors.trackBarBackground,
+
+    height: '15px',
 
     padding: '10px',
 
