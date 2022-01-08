@@ -44,24 +44,8 @@ class HandOverlay extends StoreComponent
       handBlockDragging: false
     });
 
-    this.onResize = this.onResize.bind(this);
-
     this.onScroll = this.onScroll.bind(this);
     this.onMovement = this.onMovement.bind(this);
-  }
-
-  componentDidMount()
-  {
-    super.componentDidMount();
-
-    window.addEventListener('resize', this.onResize);
-  }
-
-  componentWillUnmount()
-  {
-    super.componentWillUnmount();
-
-    window.removeEventListener('resize', this.onResize);
   }
 
   /**
@@ -99,12 +83,6 @@ class HandOverlay extends StoreComponent
       overlayRef.current.snapTo({ index: 1 });
     else if (!state.handVisible && overlayRef.current?.lastSnapIndex >= 1)
       overlayRef.current.snapTo({ index: 0 });
-  }
-
-  onResize()
-  {
-    // needs to be updated manually on every resize
-    overlayRef.current?.snapTo({ index: overlayRef.current.lastSnapIndex });
   }
 
   /**
@@ -253,7 +231,7 @@ class HandOverlay extends StoreComponent
 
         initialPosition={ { y: size.height } }
       >
-        <div className={ styles.container }>
+        <div className={ styles.container } data-gamemode={ gameMode }>
               
           <div id={ 'kuruit-hand-handler' } className={ styles.handler }>
             <div/>
@@ -344,6 +322,10 @@ const styles = createStyle({
     margin: '0 auto',
     borderRadius: 'calc(10px + 1.5vw) calc(10px + 1.5vw) 0 0',
 
+    '[data-gamemode="democracy"]': {
+      backgroundColor: colors.whiteCardBackground
+    },
+
     // for the portrait overlay
     '@media screen and (max-width: 700px)': {
       width: '100%',
@@ -359,7 +341,6 @@ const styles = createStyle({
     
     '> div': {
       zIndex: 3,
-
       backgroundColor: colors.handler,
       width: 'calc(35px + 2.5%)',
       height: '6px',

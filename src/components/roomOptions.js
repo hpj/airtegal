@@ -482,7 +482,7 @@ class RoomOptions extends StoreComponent
                 required
                 type={ 'number' }
                 min={ '0' }
-                max={ '25' }
+                max={ '50' }
                 maxLength={ 2 }
                 id={ 'room-options-input' }
                 data-master={ master }

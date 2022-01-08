@@ -271,7 +271,7 @@ const styles = createStyle({
       height: '100%'
     },
 
-    '[data-gamemode="democracy"][data-phase="judging"][data-type="white"]': {
+    '[data-gamemode="democracy"][data-type="white"]': {
       width: Card.preview.width
     }
   },
@@ -292,7 +292,12 @@ const styles = createStyle({
     },
 
     '[data-type="white"][data-gamemode="democracy"][data-phase="picking"]': {
-      height: 'calc(100% - 5px)'
+      height: '100%',
+      
+      // for the portrait overlay
+      '@media screen and (max-width: 1080px)': {
+        height: 'calc(100% - 5px)'
+      }
     },
 
     '[data-allowed="true"]:not([data-gamemode="democracy"][data-phase="picking"]):hover': {
@@ -368,12 +373,12 @@ const styles = createStyle({
     },
 
     '[data-type="white"][data-gamemode="democracy"][data-phase="picking"]': {
-      padding: '36px 10px'
+      padding: '45px 10px'
     },
 
     '[data-type="white"][data-gamemode="democracy"]:not([data-phase="picking"])': {
       minHeight: Card.preview.height,
-      padding: '15px 10px'
+      padding: '10px'
     },
 
     '[data-type="black"]> textarea': {
@@ -473,7 +478,7 @@ const styles = createStyle({
     },
 
     '[data-gamemode="democracy"][data-phase="transaction"]': {
-      padding: '0 10px',
+      padding: '0 15px 10px 15px',
       fontSize: 'calc(11px + 0.25vw + 0.25vh)',
 
       '> :nth-child(1)': {

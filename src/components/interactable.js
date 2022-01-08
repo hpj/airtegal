@@ -65,6 +65,8 @@ class Interactable extends React.Component
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
 
+    this.onResize = this.onResize.bind(this);
+
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onDrag = this.onDrag.bind(this);
@@ -72,12 +74,16 @@ class Interactable extends React.Component
 
   componentDidMount()
   {
+    window.addEventListener('resize', this.onResize);
+    
     window.addEventListener('mouseup', this.onMouseUp);
     window.addEventListener('mousemove', this.onMouseMove);
   }
   
   componentWillUnmount()
   {
+    window.removeEventListener('resize', this.onResize);
+
     window.removeEventListener('mouseup', this.onMouseUp);
     window.removeEventListener('mousemove', this.onMouseMove);
   }
@@ -268,6 +274,11 @@ class Interactable extends React.Component
     };
   }
 
+  onResize()
+  {
+    this.props.onMovement?.({ x: this.state.x, y: this.state.y });
+  }
+
   /**
   * @param { { index: number, point: { x: number, y: number }} } param0
   */
@@ -284,26 +295,14 @@ class Interactable extends React.Component
 
     if (this.props.verticalOnly && index === this.lastSnapIndex &&
       this.state.y === snapPoints[index].y)
-    {
-      this.props.onMovement?.(target);
-
       return;
-    }
 
     if (this.props.horizontalOnly && index === this.lastSnapIndex &&
       this.state.x === snapPoints[index].x)
-    {
-      this.props.onMovement?.(target);
-
       return;
-    }
     
     if ((!snapPoints?.[index] && !point) || this.animating)
-    {
-      this.props.onMovement?.(target);
-
       return;
-    }
     
     const frame = this.props.frame ?? { pixels: 2, every: 5 };
     
@@ -374,10 +373,12 @@ class Interactable extends React.Component
     };
 
     this.animating = true;
-    
-    this.lastSnapIndex = index;
 
+    this.lastSnapIndex = index;
+    
     this.props.onSnapStart?.(index);
+
+    this.props.onMovement?.({ x: this.state.x, y: this.state.y });
 
     animate();
   }
