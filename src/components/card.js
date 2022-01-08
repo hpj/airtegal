@@ -491,6 +491,7 @@ const styles = createStyle({
   vote: {
     display: 'flex',
     alignItems: 'center',
+    userSelect: 'none',
     color: colors.blackCardForeground,
     backgroundColor: colors.blackCardBackground,
     height: 'auto',
