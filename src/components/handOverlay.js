@@ -134,9 +134,12 @@ class HandOverlay extends StoreComponent
 
     const handViewport = {
       // 36px for the handler
-      // 31px for portrait mode state bar
-      height: (size.height - y) - 36 - (size.width <= 700 ? 31 : 0)
+      height: (size.height - y) - 36
     };
+    
+    // 31px for portrait mode state bar
+    if (size.width <= 1080)
+      handViewport.height -= 31;
 
     state.handBlockScrolling = y > 0;
 

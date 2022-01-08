@@ -275,17 +275,6 @@ class Interactable extends React.Component
   {
     const { snapPoints } = this.props;
 
-    if (this.props.verticalOnly && index === this.lastSnapIndex &&
-      this.state.y === snapPoints[index].y)
-      return;
-
-    if (this.props.horizontalOnly && index === this.lastSnapIndex &&
-      this.state.x === snapPoints[index].x)
-      return;
-    
-    if ((!snapPoints?.[index] && !point) || this.animating)
-      return;
-    
     const { x, y } = this.state;
 
     const target = {
@@ -293,6 +282,29 @@ class Interactable extends React.Component
       y: Math.round(snapPoints[index]?.y ?? point?.y ?? y)
     };
 
+    if (this.props.verticalOnly && index === this.lastSnapIndex &&
+      this.state.y === snapPoints[index].y)
+    {
+      this.props.onMovement?.(target);
+
+      return;
+    }
+
+    if (this.props.horizontalOnly && index === this.lastSnapIndex &&
+      this.state.x === snapPoints[index].x)
+    {
+      this.props.onMovement?.(target);
+
+      return;
+    }
+    
+    if ((!snapPoints?.[index] && !point) || this.animating)
+    {
+      this.props.onMovement?.(target);
+
+      return;
+    }
+    
     const frame = this.props.frame ?? { pixels: 2, every: 5 };
     
     // get the duration it would take to reach target point based on the frame properties
