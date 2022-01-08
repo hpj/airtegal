@@ -6,7 +6,8 @@
 
   // hand
 
-  "blank": "____",
+  "blank:title": "كرت فاضي",
+  "blank:placeholder": "ينفع تكتب اي حاجة أنت عاوزها هنا",
 
   // error connection errors
 
