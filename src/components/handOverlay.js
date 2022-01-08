@@ -130,14 +130,23 @@ class HandOverlay extends StoreComponent
 
     const state = {};
 
-    const { handVisible, handHidden } = this.state;
+    const {
+      roomData,
+      handVisible,
+      handHidden
+    } = this.state;
+
+    const gameMode = roomData?.options.gameMode;
 
     const handViewport = {
-      // 36px for the handler
-      height: (size.height - y) - 36
+      height: size.height - y
     };
     
-    // 31px for portrait mode state bar
+    // 36px for the handler
+    if (gameMode === 'kuruit')
+      handViewport.height -= 36;
+    
+    // 30px for portrait mode state bar
     if (size.width <= 1080)
       handViewport.height -= 30;
 
@@ -250,28 +259,46 @@ class HandOverlay extends StoreComponent
             <div/>
           </div>
 
-          <div ref={ wrapperRef } className={ styles.wrapper } style={ {
-            // pointer events are disabled meaning that the user can't scroll through the cards
-            // unless the interactable is fully snapped to the top of the screen
-            // but each cards overrides pointer events so cards still can be picked in any snap point
-            pointerEvents: isTouchScreen && handBlockScrolling ? 'none' : 'auto',
-            height: !isTouchScreen ? handViewport?.height : undefined
-          } } onScroll={ this.onScroll }>
+          <div
+            ref={ wrapperRef }
+            className={ styles.wrapper }
+            data-gamemode={ gameMode }
+            style={ {
+              // pointer events are disabled meaning that the user can't scroll through the cards
+              // unless the interactable is fully snapped to the top of the screen
+              // but each cards overrides pointer events so cards still can be picked in any snap point
+              pointerEvents: isTouchScreen && handBlockScrolling ? 'none' : 'auto',
+              height: !isTouchScreen ? handViewport?.height : undefined
+            } }
+            onScroll={ this.onScroll }
+          >
 
-            <div id={ 'kuruit-hand-overlay' } className={ styles.cards } style={ {
-              flexWrap: miniView ? 'wrap' : undefined,
-              direction: locale.direction
-            } }>
+            <div
+              id={ 'kuruit-hand-overlay' }
+              className={ styles.cards }
+              data-gamemode={ gameMode }
+              style={ {
+                flexWrap: miniView ? 'wrap' : undefined,
+                direction: locale.direction
+              } }
+            >
               {
                 hand?.map((card, i) =>
                 {
-                  const deg = i > hand.length * 0.5 ?
-                    -(hand.length / 2) :
-                    (hand.length / 2);
+                  let deg = 0;
 
-                  const y = i > hand.length * 0.5 ?
-                    (hand.length / 3) :
-                    -(hand.length / 3);
+                  let y = 0;
+                  
+                  if (gameMode === 'kuruit')
+                  {
+                    deg = i > hand.length * 0.5 ?
+                      -(hand.length / 2) :
+                      (hand.length / 2);
+
+                    y = i > hand.length * 0.5 ?
+                      (hand.length / 3) :
+                      -(hand.length / 3);
+                  }
 
                   return <Card
                     key={ card.key }
@@ -320,7 +347,6 @@ const styles = createStyle({
     // for the portrait overlay
     '@media screen and (max-width: 700px)': {
       width: '100%',
-
       margin: '0',
       borderRadius: '0'
     }
@@ -330,8 +356,10 @@ const styles = createStyle({
     display: 'flex',
     justifyContent: 'center',
     margin: '15px',
-
+    
     '> div': {
+      zIndex: 3,
+
       backgroundColor: colors.handler,
       width: 'calc(35px + 2.5%)',
       height: '6px',
@@ -340,11 +368,17 @@ const styles = createStyle({
   },
 
   wrapper: {
+    position: 'relative',
     overflow: 'hidden auto',
 
     // 36px for the handler
     // 31px for portrait mode state bar
     height: 'calc(100vh - 36px - 31px)',
+
+    '[data-gamemode="democracy"]': {
+      overflow: 'hidden',
+      top: '-36px'
+    },
 
     '::-webkit-scrollbar':
     {
@@ -359,12 +393,17 @@ const styles = createStyle({
 
   cards: {
     display: 'flex',
+    position: 'relative',
     justifyContent: 'center',
 
-    '> div': {
-      transition: 'margin 0.35s ease',
-      
+    '[data-gamemode="democracy"]': {
+      height: '100%'
+    },
+
+    '[data-gamemode="kuruit"] > div': {
       margin: '20px',
+      
+      transition: 'margin 0.35s ease',
 
       '> [data-type="white"]': {
         border: `1px solid ${colors.whiteCardHover}`
@@ -374,7 +413,7 @@ const styles = createStyle({
         border: `1px solid ${colors.blackCardHover}`
       },
 
-      '[data-gamemode="kuruit"]:hover': {
+      ':hover': {
         margin: '20px 10px !important',
         zIndex: 10
       }
