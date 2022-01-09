@@ -154,7 +154,15 @@ class Card extends React.Component
     if (gameMode === 'democracy' && phase === 'picking' && type === 'white')
       TextArea = 'textarea';
 
-    return <div className={ styles.wrapper } data-gamemode={ gameMode } data-phase={ phase } data-type={ type } style={ style }>
+    return <div
+      className={ styles.wrapper }
+      data-gamemode={ gameMode }
+      data-allowed={ (allowed || share) && !hidden }
+      data-winner={ winner }
+      data-phase={ phase }
+      data-type={ type }
+      style={ style }
+    >
       {
         winner ?
           <Lottie
@@ -162,7 +170,7 @@ class Card extends React.Component
             className={ styles.confetti }
             initialSegment={ process.env.NODE_ENV === 'test' ? [ 10, 11 ] : undefined }
             animationData={ confettiAnimation }
-          /> : undefined
+          /> : <div/>
       }
 
       <div className={ styles.top } data-gamemode={ gameMode } data-phase={ phase } data-type={ type } style={ { direction: locale.direction } }>
@@ -177,8 +185,6 @@ class Card extends React.Component
         data-type={ type }
         data-phase={ phase }
         data-gamemode={ gameMode }
-        data-allowed={ (allowed || share) && !hidden }
-        data-winner={ winner }
         className={ styles.container }
         onClick={ this.onClick }
       >
@@ -273,6 +279,32 @@ const styles = createStyle({
 
     '[data-gamemode="democracy"][data-type="white"]': {
       width: Card.preview.width
+    },
+
+    '[data-allowed="true"]': {
+      cursor: 'pointer'
+    },
+
+    '[data-allowed="true"]:not([data-gamemode="democracy"][data-phase="picking"]):hover': {
+      animationName: `${floatAnimation}, ${hoverAnimation}`,
+      animationDuration: '0.3s, 0.75s',
+      animationDelay: '0s, 0.3s',
+      animationTimingFunction: 'ease-out, ease-in-out',
+      animationIterationCount: '1, infinite',
+      animationFillMode: 'forwards',
+      animationDirection: 'normal, alternate'
+    },
+
+    '[data-type="black"][data-allowed="true"]:hover > :nth-child(3)': {
+      boxShadow: `5px 5px 0px 0px ${colors.blackCardHover}`
+    },
+
+    '[data-type="white"][data-allowed="true"][data-winner="false"]:hover > :nth-child(3)': {
+      boxShadow: `5px 5px 0px 0px ${colors.whiteCardHover}`
+    },
+
+    '[data-winner="true"] > :nth-child(3)': {
+      boxShadow: `5px 5px 0 0 ${colors.whiteCardHighlight}, 5px 5px 10px 0 ${colors.whiteCardHighlight}`
     }
   },
 
@@ -287,10 +319,6 @@ const styles = createStyle({
 
     transition: 'box-shadow 0.25s ease',
 
-    '[data-allowed="true"]': {
-      cursor: 'pointer'
-    },
-
     '[data-type="white"][data-gamemode="democracy"][data-phase="picking"]': {
       height: '100%',
       
@@ -298,28 +326,6 @@ const styles = createStyle({
       '@media screen and (max-width: 1080px)': {
         height: 'calc(100% - 5px)'
       }
-    },
-
-    '[data-allowed="true"]:not([data-gamemode="democracy"][data-phase="picking"]):hover': {
-      animationName: `${floatAnimation}, ${hoverAnimation}`,
-      animationDuration: '0.3s, 0.75s',
-      animationDelay: '0s, 0.3s',
-      animationTimingFunction: 'ease-out, ease-in-out',
-      animationIterationCount: '1, infinite',
-      animationFillMode: 'forwards',
-      animationDirection: 'normal, alternate'
-    },
-
-    '[data-winner="true"]': {
-      boxShadow: `5px 5px 0 0 ${colors.whiteCardHighlight}, 5px 5px 10px 0 ${colors.whiteCardHighlight}`
-    },
-
-    '[data-type="black"][data-allowed="true"]:hover': {
-      boxShadow: `5px 5px 0px 0px ${colors.blackCardHover}`
-    },
-
-    '[data-type="white"][data-allowed="true"][data-winner="false"]:hover': {
-      boxShadow: `5px 5px 0px 0px ${colors.whiteCardHover}`
     },
 
     '[data-type="black"]': {
