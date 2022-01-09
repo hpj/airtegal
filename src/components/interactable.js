@@ -61,6 +61,8 @@ class Interactable extends React.Component
       y: 0
     };
 
+    this.resizeTimeout;
+
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
@@ -276,7 +278,12 @@ class Interactable extends React.Component
 
   onResize()
   {
-    this.props.onMovement?.({ x: this.state.x, y: this.state.y });
+    clearTimeout(this.resizeTimeout);
+
+    this.resizeTimeout = setTimeout(() =>
+    {
+      this.props.onMovement?.({ x: this.state.x, y: this.state.y });
+    }, 150);
   }
 
   /**

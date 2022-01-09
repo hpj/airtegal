@@ -448,14 +448,6 @@ const styles = createStyle({
       
       width: '110%',
 
-      ':nth-child(1)': {
-        transform: 'rotateZ(10deg)'
-      },
-
-      ':nth-child(2)': {
-        transform: 'rotateZ(-10deg)'
-      },
-
       left: '-5%',
       bottom: '90%'
     }

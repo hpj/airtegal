@@ -104,9 +104,9 @@ class HandOverlay extends StoreComponent
 
   onMovement({ y })
   {
-    const { size } = this.props;
-
     const state = {};
+    
+    const { size } = this.props;
 
     const {
       roomData,
