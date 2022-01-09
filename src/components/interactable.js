@@ -65,6 +65,8 @@ class Interactable extends React.Component
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
 
+    this.onResize = this.onResize.bind(this);
+
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onDrag = this.onDrag.bind(this);
@@ -72,12 +74,16 @@ class Interactable extends React.Component
 
   componentDidMount()
   {
+    window.addEventListener('resize', this.onResize);
+    
     window.addEventListener('mouseup', this.onMouseUp);
     window.addEventListener('mousemove', this.onMouseMove);
   }
   
   componentWillUnmount()
   {
+    window.removeEventListener('resize', this.onResize);
+
     window.removeEventListener('mouseup', this.onMouseUp);
     window.removeEventListener('mousemove', this.onMouseMove);
   }
@@ -268,12 +274,24 @@ class Interactable extends React.Component
     };
   }
 
+  onResize()
+  {
+    this.props.onMovement?.({ x: this.state.x, y: this.state.y });
+  }
+
   /**
   * @param { { index: number, point: { x: number, y: number }} } param0
   */
   snapTo({ index, point })
   {
     const { snapPoints } = this.props;
+
+    const { x, y } = this.state;
+
+    const target = {
+      x: Math.round(snapPoints[index]?.x ?? point?.x ?? x),
+      y: Math.round(snapPoints[index]?.y ?? point?.y ?? y)
+    };
 
     if (this.props.verticalOnly && index === this.lastSnapIndex &&
       this.state.y === snapPoints[index].y)
@@ -286,13 +304,6 @@ class Interactable extends React.Component
     if ((!snapPoints?.[index] && !point) || this.animating)
       return;
     
-    const { x, y } = this.state;
-
-    const target = {
-      x: Math.round(snapPoints[index]?.x ?? point?.x ?? x),
-      y: Math.round(snapPoints[index]?.y ?? point?.y ?? y)
-    };
-
     const frame = this.props.frame ?? { pixels: 2, every: 5 };
     
     // get the duration it would take to reach target point based on the frame properties
@@ -362,10 +373,12 @@ class Interactable extends React.Component
     };
 
     this.animating = true;
-    
-    this.lastSnapIndex = index;
 
+    this.lastSnapIndex = index;
+    
     this.props.onSnapStart?.(index);
+
+    this.props.onMovement?.({ x: this.state.x, y: this.state.y });
 
     animate();
   }

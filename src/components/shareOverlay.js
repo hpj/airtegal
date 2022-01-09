@@ -332,6 +332,7 @@ const styles = createStyle({
   button: {
     display: 'flex',
     position: 'relative',
+    userSelect: 'none',
     cursor: 'pointer',
 
     flexGrow: 1,

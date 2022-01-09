@@ -149,7 +149,12 @@ class Card extends React.Component
     else if (gameMode === 'democracy')
       bottom = translation('democracy');
 
-    return <div className={ styles.wrapper } data-gamemode={ gameMode } data-phase={ phase } style={ style }>
+    let TextArea = TextareaAutosize;
+
+    if (gameMode === 'democracy' && phase === 'picking' && type === 'white')
+      TextArea = 'textarea';
+
+    return <div className={ styles.wrapper } data-gamemode={ gameMode } data-phase={ phase } data-type={ type } style={ style }>
       {
         winner ?
           <Lottie
@@ -185,7 +190,7 @@ class Card extends React.Component
 
         {
           !hidden ? <div className={ styles.card } data-type={ type } data-gamemode={ gameMode } data-phase={ phase } style={ { direction: locale.direction } }>
-            <TextareaAutosize
+            <TextArea
               ref={ this.textareaRef }
 
               className={ styles.content }
@@ -257,20 +262,27 @@ const styles = createStyle({
     position: 'relative',
     width: Card.size.width,
 
-    '[data-gamemode="democracy"][data-phase="picking"]': {
+    '[data-gamemode="democracy"][data-type="black"]': {
       width: Card.wide.width
     },
 
-    '[data-gamemode="democracy"]': {
+    '[data-gamemode="democracy"][data-phase="picking"][data-type="white"]': {
+      width: '100%',
+      height: '100%'
+    },
+
+    '[data-gamemode="democracy"][data-type="white"]': {
       width: Card.preview.width
     }
   },
 
   container: {
+    display: 'flex',
+    flexDirection: 'column',
+
     fontWeight: 700,
     fontFamily: '"Montserrat", "Noto Arabic", sans-serif',
 
-    padding: '15px 10px 0',
     boxShadow: '0 0 0 0',
 
     transition: 'box-shadow 0.25s ease',
@@ -279,7 +291,16 @@ const styles = createStyle({
       cursor: 'pointer'
     },
 
-    '[data-allowed="true"]:hover': {
+    '[data-type="white"][data-gamemode="democracy"][data-phase="picking"]': {
+      height: '100%',
+      
+      // for the portrait overlay
+      '@media screen and (max-width: 1080px)': {
+        height: 'calc(100% - 5px)'
+      }
+    },
+
+    '[data-allowed="true"]:not([data-gamemode="democracy"][data-phase="picking"]):hover': {
       animationName: `${floatAnimation}, ${hoverAnimation}`,
       animationDuration: '0.3s, 0.75s',
       animationDelay: '0s, 0.3s',
@@ -309,14 +330,6 @@ const styles = createStyle({
     '[data-type="white"]': {
       color: colors.whiteCardForeground,
       backgroundColor: colors.whiteCardBackground
-    },
-
-    '[data-gamemode="democracy"][data-type="black"]': {
-      padding: '15px 10px'
-    },
-
-    '[data-gamemode="democracy"]:not([data-phase="picking"])': {
-      padding: '15px 10px'
     }
   },
 
@@ -328,9 +341,11 @@ const styles = createStyle({
     userSelect: 'none',
     fontSize: 'calc(8px + 0.4vw + 0.4vh)',
     
-    width: '100%',
-    minHeight: Card.size.height,
     height: 'auto',
+
+    padding: '15px 10px 0',
+    
+    minHeight: Card.size.height,
 
     '> div': {
       margin: '45px 0 0'
@@ -338,27 +353,32 @@ const styles = createStyle({
   },
 
   card: {
+    flexGrow: 1,
+
     display: 'flex',
 
     pointerEvents: 'auto',
 
     userSelect: 'none',
   
-    width: '100%',
     height: 'auto',
 
+    padding: '15px 10px 0',
+    
     minHeight: Card.size.height,
 
-    '[data-gamemode="democracy"][data-type="black"]': {
-      minHeight: 'unset'
+    '[data-type="black"][data-gamemode="democracy"]': {
+      minHeight: 'unset',
+      padding: '15px 10px'
     },
 
-    '[data-gamemode="democracy"][data-type="white"]': {
-      minHeight: Card.preview.height
+    '[data-type="white"][data-gamemode="democracy"][data-phase="picking"]': {
+      padding: '45px 10px'
     },
 
-    '[data-gamemode="democracy"][data-phase="picking"][data-type="white"]': {
-      minHeight: Card.wide.height
+    '[data-type="white"][data-gamemode="democracy"]:not([data-phase="picking"])': {
+      minHeight: Card.preview.height,
+      padding: '10px'
     },
 
     '[data-type="black"]> textarea': {
@@ -382,6 +402,7 @@ const styles = createStyle({
     overflow: 'hidden',
 
     width: '100%',
+    height: '100%',
     
     minHeight: Card.size.height,
 
@@ -440,7 +461,8 @@ const styles = createStyle({
     alignItems: 'center',
     
     minHeight: '25px',
-    padding: '10px 0',
+
+    padding: '10px',
 
     userSelect: 'none',
     overflow: 'hidden',
@@ -456,7 +478,7 @@ const styles = createStyle({
     },
 
     '[data-gamemode="democracy"][data-phase="transaction"]': {
-      padding: '0 10px',
+      padding: '0 15px 10px 15px',
       fontSize: 'calc(11px + 0.25vw + 0.25vh)',
 
       '> :nth-child(1)': {
@@ -469,6 +491,7 @@ const styles = createStyle({
   vote: {
     display: 'flex',
     alignItems: 'center',
+    userSelect: 'none',
     color: colors.blackCardForeground,
     backgroundColor: colors.blackCardBackground,
     height: 'auto',
