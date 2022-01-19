@@ -15,5 +15,3 @@ WORKDIR /app
 COPY . /app
 
 RUN yarn
-
-CMD ["might"]

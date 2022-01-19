@@ -20,15 +20,9 @@ jobs:
         run: yarn install
       - name: Run Tests
         run: yarn might
-      - name: Upload any errors
+      - name: Upload Errors
         if: failure()
         uses: actions/upload-artifact@v2
         with:
           name: errors
           path: might.error.*.*
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./__coverage__/
-          fail_ci_if_error: false

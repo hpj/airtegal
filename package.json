@@ -5,9 +5,7 @@
     "start:test": "yarn start --node-env test",
     "build": "webpack --config webpack.config.prod.js --mode production",
     "build:test": "webpack --config webpack.config.dev.js --mode development --node-env test",
-    "test": "docker run --rm -it --name airtegal_test_container --mount type=bind,src=`pwd`,dst=/app --volume /app/node_modules airtegal_test:latest might",
-    "tests:docker": "docker build --tag airtegal_test:latest --file Dockerfile.test .",
-    "tests:update": "yarn test -u"
+    "test": "docker compose run web might"
   },
   "engines": {
     "node": "16.13.2",
