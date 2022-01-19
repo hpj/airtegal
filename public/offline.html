@@ -1,50 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8"/>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/32.png">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <style>
-      body
-      {
+      body {
         margin: 0;
-      }
 
-      #wrapper
-      {
         display: flex;
 
         justify-content: center;
         align-items: center;
-        
+
+        color: #ffffff;
+        background-color: #000000;
+
         width: 100vw;
         height: 100vh;
-        background-color: #101010;
+
+        font-family: sans-serif;
+        font-weight: 700;
+        font-size: 14px;
       }
 
-      #container
-      {
+      body > div {
         display: flex;
-        align-items: center;
-        justify-content: center;
         flex-direction: column;
       }
 
-      .text
-      {
-        color: #ffffff;
-
-        width: 100%;
-
-        font-family: "Montserrat", "Noto Arabic", sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-
+      body > div > p {
         margin: 8px;
       }
 
-      .rtl
-      {
+      p.rtl {
         direction: rtl;
       }
     </style>
@@ -52,16 +45,13 @@
     <title>Airtegal</title>
     <meta name="title" content="Airtegal">
     <meta name="description" content="The offline page of Airtegal">
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://airtegal.me">
-    <meta property="og:title" content="Airtegal">
-    <meta property="og:description" content="HAHAhahahhaHHAhha........">
-    <meta property="og:image" content="https://airtegal.me/assets/card.png">
+
+    <link rel="manifest" href="/manifest.webmanifest">
+
+    <meta name="theme-color" content="#000000">
 
     <style>
-      @font-face
-      {
+      @font-face {
         font-family: "Montserrat";
         font-style: normal;
         font-weight: normal;
@@ -69,8 +59,7 @@
         src: url("../fonts/Montserrat-Regular.ttf") format("truetype");
       }
 
-      @font-face
-      {
+      @font-face {
         font-family: "Montserrat";
         font-style: normal;
         font-weight: bold;
@@ -78,8 +67,7 @@
         src: url("../fonts/Montserrat-Bold.ttf") format("truetype");
       }
 
-      @font-face
-      {
+      @font-face {
         font-family: "Noto Arabic";
         font-style: normal;
         font-weight: normal;
@@ -87,8 +75,7 @@
         src: url("../fonts/NotoSansArabic-Regular.ttf") format("truetype");
       }
 
-      @font-face
-      {
+      @font-face {
         font-family: "Noto Arabic";
         font-style: normal;
         font-weight: bold;
@@ -98,18 +85,10 @@
     </style>
   </head>
   <body>
-    <div id="wrapper">
-      <div id="container">
-        <div class="text">
-          インターネットが必要
-        </div>
-        <div class="text rtl">
-          ارتجال محتاجة نت علشان تشتغل.
-        </div>
-        <div class="text">
-          Airtegal needs an internet connection.
-        </div>
-      </div>
+    <div id="container">
+      <p>インターネットが必要</p>
+      <p class="rtl">ارتجال محتاجة نت علشان تشتغل.</p>
+      <p>Airtegal needs an internet connection.</p>
     </div>
   </body>
 </html>
