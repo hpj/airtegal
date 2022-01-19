@@ -3,5 +3,3 @@
 __coverage__
 
 webpack.config.*.js
-
-public/**

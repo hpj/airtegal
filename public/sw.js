@@ -1,60 +1,49 @@
-// This is the "Offline page" service worker
+const CACHE = 'airtegal-app';
 
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+const offlineFallbackPage = 'offline.html';
 
-const CACHE = "airtegal-app";
+const assetLinksPage = '.well-known/assetlinks.json';
 
-const offlineFallbackPage = "offline.html";
-const assetLinksPage = ".well-known/assetlinks.json";
-
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
+self.addEventListener('message', (event) =>
+{
+  if (event.data && event.data.type === 'SKIP_WAITING')
     self.skipWaiting();
-  }
 });
 
-self.addEventListener('install', async (event) => {
-  event.waitUntil(
-    caches.open(CACHE)
-      .then((cache) =>
+self.addEventListener('install', async(event) =>
+{
+  event.waitUntil(caches.open(CACHE).then(cache =>
+  {
+    cache.add(offlineFallbackPage);
+    cache.add(assetLinksPage);
+  }));
+});
+
+self.addEventListener('fetch', (event) =>
+{
+  if (event.request.mode === 'navigate')
+  {
+    event.respondWith((async() =>
+    {
+      try
       {
-        cache.add(offlineFallbackPage);
-        cache.add(assetLinksPage);
-      })
-  );
-});
-
-if (workbox.navigationPreload.isSupported()) {
-  workbox.navigationPreload.enable();
-}
-
-self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith((async () => {
-      try {
         const preloadResp = await event.preloadResponse;
 
-        if (preloadResp) {
+        if (preloadResp)
           return preloadResp;
-        }
 
-        const networkResp = await fetch(event.request);
-        
-        return networkResp;
-      } catch (error) {
-        let cachedResp;
-
+        return await fetch(event.request);
+      }
+      catch (error)
+      {
         const cache = await caches.open(CACHE);
 
         const url = new URL(event.request.url);
       
-        if (url.pathname.startsWith('/.well-known/assetlinks.json')) {
-          cachedResp = await cache.match(assetLinksPage)
-        } else {
-          cachedResp = await cache.match(offlineFallbackPage)
-        }
+        if (url.pathname.startsWith('/.well-known/assetlinks.json'))
+          return await cache.match(assetLinksPage);
 
-        return cachedResp;
+        return await cache.match(offlineFallbackPage);
       }
     })());
   }

@@ -31,7 +31,7 @@ let __locale = getDefault();
 
 function getDefault()
 {
-  const browserLocale = navigator.language || navigator.userLanguage || navigator.languages[0];
+  const browserLocale = navigator.language || navigator.languages[0];
 
   return locales.find(e => e.locale === browserLocale) ?? locales[0];
 }
