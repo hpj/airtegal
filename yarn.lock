@@ -2487,11 +2487,6 @@ construct-style-sheets-polyfill@^2.4.16:
   resolved "https://registry.npmjs.org/construct-style-sheets-polyfill/-/construct-style-sheets-polyfill-2.4.17.tgz"
   integrity sha512-rKtZGWWAVFE6HgdBuuui1emic/t8aAKQbePQ7Je6ird8nZYSd3mqqBX9IvFn2CMtnbh7mQTk/vxc9mfaLl7cGQ==
 
-construct-style-sheets-polyfill@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/construct-style-sheets-polyfill/-/construct-style-sheets-polyfill-3.0.5.tgz#cdf2e4982e8f7d9ef3f4dd841e14cdb7e13abb6a"
-  integrity sha512-prLKSx9gYwtmqWtq+pZxppU1SaH9o4ug7JIc0I/1zMV2bFE3GvRtQaMTIpotlhw33XjtC7rGQFOZJsOFnlAAhQ==
-
 content-disposition@0.5.4:
   version "0.5.4"
   resolved "https://registry.npmjs.org/content-disposition/-/content-disposition-0.5.4.tgz"
@@ -2595,7 +2590,7 @@ csso@^4.2.0:
   dependencies:
     css-tree "^1.1.2"
 
-csstype@^3.0.10, csstype@^3.0.2, csstype@^3.0.8:
+csstype@^3.0.2, csstype@^3.0.8:
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.10.tgz#2ad3a7bed70f35b965707c092e5f30b327c290e5"
   integrity sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA==
@@ -3492,30 +3487,15 @@ flatted@^3.1.0:
   resolved "https://registry.npmjs.org/flatted/-/flatted-3.2.4.tgz"
   integrity sha512-8/sOawo8tJ4QOBX8YlQBMxL8+RLZfxMQOif9o0KUKTNTjMYElWPE0r/m5VNFxTRd0NSw8qSy8dajrwX4RYI1Hw==
 
-flcss@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/flcss/-/flcss-2.4.0.tgz#7c97363088e67e2cd0cdd9d5ae25cf940373ba00"
-  integrity sha512-xV57QSPvkcg6GjVczkbEPGVRm+KTiJU+w12xJKsQDlAeP7VclxQxcR812lWRGMMkHZyxXYL/ttp9j1sbIppjqQ==
-  dependencies:
-    construct-style-sheets-polyfill "^3.0.5"
-    csstype "^3.0.10"
-  optionalDependencies:
-    react "^17.0.2"
-
-flcss@^2.2.5:
+flcss@2.2.7, flcss@^2.2.5:
   version "2.2.7"
-  resolved "https://registry.npmjs.org/flcss/-/flcss-2.2.7.tgz"
+  resolved "https://registry.yarnpkg.com/flcss/-/flcss-2.2.7.tgz#226367373eb4694db920e99e33fa848f001d361d"
   integrity sha512-hJO0YDokAeMHZzsU5vId6cra7vXxeslPPCmWg0iYYC0TsL2n0CjWeLn1IH/+D7pw1QAbbphkbA4D29sd9lmswQ==
   dependencies:
     construct-style-sheets-polyfill "^2.4.16"
     csstype "^3.0.8"
 
-follow-redirects@^1.0.0:
-  version "1.14.6"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.6.tgz"
-  integrity sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==
-
-follow-redirects@^1.14.7:
+follow-redirects@^1.0.0, follow-redirects@^1.14.7:
   version "1.14.7"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
   integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==

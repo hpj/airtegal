@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  web:
+    image: airtegal
+    container_name: airtegal_container
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
