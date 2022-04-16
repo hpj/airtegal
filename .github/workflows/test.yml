@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@main
       - uses: actions/setup-node@main
         with:
-          node-version: '16.13.x'
+          node-version: '16.14.x'
       - name: Install Dependencies
         run: yarn install
       - name: Run Tests

@@ -7,7 +7,7 @@ ENV PATH="${PATH}:/app/node_modules/.bin"
 
 RUN npm install -g n yarn@1.22.17 --force
 
-RUN n 16.13.2
+RUN n 16.14.0
 
 # Setup app files and dependencies
 
