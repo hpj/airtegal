@@ -8,8 +8,8 @@
     "test": "docker compose run web might"
   },
   "engines": {
-    "node": "16.14.0",
-    "yarn": "1.22.17"
+    "node": "16.14.2",
+    "yarn": "1.22.18"
   },
   "dependencies": {
     "@sentry/react": "^6.16.1",
