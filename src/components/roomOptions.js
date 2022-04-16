@@ -517,7 +517,7 @@ class RoomOptions extends StoreComponent
       }
 
       {
-        optionsError ? <div className={ styles.error } onClick={ () => this.store({ optionsError: '' }) }>
+        optionsError ? <div className={ styles.error } onClick={ () => this.store.set({ optionsError: '' }) }>
           { optionsError }
         </div> : undefined
       }
