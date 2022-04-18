@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
-import enUS from './i18n/en-US.jsonc';
+// import enUS from './i18n/en-US.jsonc';
 import arEG from './i18n/ar-EG.jsonc';
 
 const locales = [
-  {
-    value: 'united states',
-    label: 'United States',
-    language: 'en',
-    locale: 'en-US',
-    direction: 'ltr',
-    data: enUS
-  },
+  // {
+  //   value: 'united states',
+  //   label: 'United States',
+  //   language: 'en',
+  //   locale: 'en-US',
+  //   direction: 'ltr',
+  //   data: enUS
+  // },
   {
     value: 'egypt',
     label: 'مصر',
