@@ -79,8 +79,8 @@ class Homepage extends React.Component
       <div className={ styles.container }>
         <div className={ styles.header } style={ { direction: locale.direction } }>
           <div className={ styles.airtegal }>{ translation('airtegal') }</div>
-          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ translation('terms-and-conditions') }</a>
-          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ translation('privacy-policy') }</a>
+          {/* <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ translation('terms-and-conditions') }</a>
+          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ translation('privacy-policy') }</a> */}
         </div>
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
