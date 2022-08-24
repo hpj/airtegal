@@ -79,8 +79,6 @@ class Homepage extends React.Component
       <div className={ styles.container }>
         <div className={ styles.header } style={ { direction: locale.direction } }>
           <div className={ styles.airtegal }>{ translation('airtegal') }</div>
-          {/* <a className={ styles.button } href={ 'https://herpproject.com/airtegal/terms' }>{ translation('terms-and-conditions') }</a>
-          <a className={ styles.button } href={ 'https://herpproject.com/airtegal/privacy' }>{ translation('privacy-policy') }</a> */}
         </div>
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
@@ -103,9 +101,6 @@ class Homepage extends React.Component
           <Link className={ styles.play } to={ 'play' }>
             { translation('play') }
           </Link>
-          <div className={ styles.hpj }>
-            <a className={ styles.button } href={ 'https://herpproject.com' }>{ translation('hpj') }</a>
-          </div>
         </div>
       </div>
     </div>;
@@ -229,17 +224,6 @@ const styles = createStyle({
 
     padding: '0',
     margin: '3.5vh auto 2.5vh auto'
-  },
-
-  hpj: {
-    display: 'flex',
-    flexBasis: '100%',
-    flexDirection: 'row-reverse',
-    padding: '18px 0',
-
-    '> a': {
-      fontSize: 'calc(18px + 0.35vw + 0.35vh)'
-    }
   }
 });
 
