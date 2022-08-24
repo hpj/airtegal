@@ -5,18 +5,12 @@
 [build.environment]
   NODE_VERSION = "16.14.2"
   YARN_VERSION = "1.22.18"
-  SENTRY_ORG = "herpproject"
-  SENTRY_PROJECT = "frontend"
-  SENTRY_AUTH_TOKEN = "6c95c196504d49eaa220ca3558f5a5fbdbb4c4ac03c344a4b3dc4f937c7e5d39"
 
 [context.development]
   command = "yarn build:test"
 
 [context.deploy-preview]
   command = "yarn build:test"
-
-[[plugins]]
-  package = "@sentry/netlify-build-plugin"
 
 [[redirects]]
   from = "/*"
