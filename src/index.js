@@ -39,6 +39,7 @@ function loaded()
     <BrowserRouter>
       <Routes>
         <Route path={ '/' } element={ <Homepage/> }/>
+        <Route path={ '/play' } element={ <Homepage/> }/>
         <Route path={ '*' } element={ <NotFound/> }/>
       </Routes>
     </BrowserRouter>;

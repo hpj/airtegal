@@ -82,6 +82,7 @@ class Homepage extends React.Component
         </div>
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
+          <span className={ styles.content }></span>
           {
             `ارتجال ماتت
             7/1/2019
