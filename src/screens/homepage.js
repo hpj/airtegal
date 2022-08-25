@@ -42,7 +42,7 @@ class Homepage extends React.Component
 
   componentWillUnmount()
   {
-    clearInterval(this.interval);
+    // clearInterval(this.interval);
 
     window.removeEventListener('dragstart', this.disableDrag);
   }
@@ -55,24 +55,22 @@ class Homepage extends React.Component
 
   onLocaleChange(translation)
   {
-    let data = shuffle(translation('combos'));
+    // let data = shuffle(translation('combos'));
     
-    data = data.map(({ card, combos }) => fillTheBlanks(card.content, combos.map(c => c.content)));
+    // data = data.map(({ card, combos }) => fillTheBlanks(card.content, combos.map(c => c.content)));
 
-    this.setState({ data }, () => this.interval = setInterval(this.updateIndex, 4500));
+    // this.setState({ data }, () => this.interval = setInterval(this.updateIndex, 4500));
   }
 
   updateIndex()
   {
-    // istanbul ignore if
-    if (process.env.NODE_ENV !== 'test')
-      this.setState({ index: this.state.index + 1 });
+    // // istanbul ignore if
+    // if (process.env.NODE_ENV !== 'test')
+    //   this.setState({ index: this.state.index + 1 });
   }
 
   render()
   {
-    const { index, data } = this.state;
-
     const { locale, translation } = this.props;
 
     return <div id={ 'homepage' }>
