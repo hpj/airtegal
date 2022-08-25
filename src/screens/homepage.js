@@ -83,25 +83,11 @@ class Homepage extends React.Component
 
         <span key={ +new Date() } className={ styles.main } style={ { direction: locale.direction } }>
           {
-            data?.[index]?.split('\n')
-              .map((t, i) => <span
-                key={ i }
-                className={ styles.content }
-                style={ {
-                  paddingBottom: locale.direction === 'ltr' ? '5px' : '15px',
-                  borderBottom: i % 2 ? '4px solid' : undefined
-                } }
-              >
-                { t }
-              </span>)
+            `ارتجال ماتت
+            7/1/2019
+            26/8/2022`
           }
         </span>
-
-        <div className={ styles.footer } style={ { direction: locale.direction } }>
-          <Link className={ styles.play } to={ 'play' }>
-            { translation('play') }
-          </Link>
-        </div>
       </div>
     </div>;
   }

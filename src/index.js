@@ -24,8 +24,6 @@ import ErrorScreen from './components/error.js';
 import NotFound from './screens/404.js';
 import Homepage from './screens/homepage.js';
 
-import Game from './screens/game.js';
-
 let splashVisible = true;
 
 const app = document.body.querySelector('#app');
@@ -41,7 +39,6 @@ function loaded()
     <BrowserRouter>
       <Routes>
         <Route path={ '/' } element={ <Homepage/> }/>
-        <Route path={ '/play' } element={ <Game/> }/>
         <Route path={ '*' } element={ <NotFound/> }/>
       </Routes>
     </BrowserRouter>;
